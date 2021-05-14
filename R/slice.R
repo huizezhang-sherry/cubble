@@ -3,7 +3,7 @@
 #' @param key the dimension to slice
 #'
 #' @return a nested tibble/ tsibble - think through here
-#' @example
+#' @examples
 #' raw %>% slice_by(station)
 #' raw %>% slice_by(param)
 #' raw %>% slice_by(time)

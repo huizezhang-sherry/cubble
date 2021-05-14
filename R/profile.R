@@ -1,7 +1,7 @@
 #' Profile the data cube
 #' @param dt the data cube to profile
 #'
-#' @return # here should be a customised proint of the profile
+#' @return  here should be a customised proint of the profile
 #' @export
 profile_cube <- function(dt){
 
