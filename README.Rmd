@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # xxx
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/huizezhang-sherry/xxx/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/xxx/actions)
 <!-- badges: end -->
 
 The goal of xxx is to ...

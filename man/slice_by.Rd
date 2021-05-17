@@ -18,7 +18,9 @@ a nested tibble/ tsibble - think through here
 Slice the data cube into lower dimension
 }
 \examples{
+\dontrun{
 raw \%>\% slice_by(station)
 raw \%>\% slice_by(param)
 raw \%>\% slice_by(time)
+}
 }

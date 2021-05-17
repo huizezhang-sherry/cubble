@@ -13,7 +13,7 @@ casting and coercion
 \dontrun{
 water <- as_cube(water_small, index = date, key = station, var = parameter)
 attributes(water)
-ped_cube <- as_cube(pedestrian, var = trip)
+ped_cube <- as_cube(pedestrian, var = Count)
 attributes(ped_cube)
 }
 }

@@ -16,6 +16,3 @@ aggregate_time(dt, period, summarised_by)
 \description{
 Aggregate the time axis
 }
-\examples{
-raw \%>\% aggregate_time(period = "month", summarised_by = mean)
-}

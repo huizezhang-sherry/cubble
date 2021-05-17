@@ -1,17 +1,23 @@
 # create an S3 class for data cube from tibble/ tsibble to cube
-# follow https://vctrs.r-lib.org/articles/s3-vector.html
-# learn how a tsibble is built: https://github.com/tidyverts/tsibble/blob/master/R/as-tsibble.R
 # need to define time, id, and param
+
+# thinking:
+# think about if cube should build on tsibble or use the current model
+# think if we should accept long format only or allow wide?
+# better name for the package and cube!
+
+# todo:
+# write functions to fill gap and missing
+# potentially need a var() to extract variable from cube like key() in tsibble
+
+# small tasks:
+# document variables in this script
+
+
 
 #'@importFrom tibble new_tibble
 is_cube <- function(x){
   inherits(x, "tbl_cube")
-}
-
-
-# new implement some detection of the three axis and use that as the printed header
-tbl_sum.tbl_cube <- function(x, ...){
-  c("Cube" = "structure is cube")
 }
 
 
@@ -52,7 +58,7 @@ vec_ptype_abbr.cube <- function(x, ...){
 #' \dontrun{
 #' water <- as_cube(water_small, index = date, key = station, var = parameter)
 #' attributes(water)
-#' ped_cube <- as_cube(pedestrian, var = trip)
+#' ped_cube <- as_cube(pedestrian, var = Count)
 #' attributes(ped_cube)
 #' }
 
