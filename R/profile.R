@@ -24,17 +24,18 @@ profile_cube <- function(dt){
 profile_single <- function(dt, axis){
 
   axis <- enquo(axis)
-  distinct_class <- dt %>% distinct(!!axis) %>% nrow()
+  distinct_class <- dt %>% dplyr::distinct(!!axis) %>% nrow()
 
   count_table <- dt %>%
-    group_by(!!axis) %>%
-    summarise_all(n_distinct) %>%
-    ungroup() %>%
-    summarise_if(is.numeric, sum)
+    dplyr::group_by(!!axis) %>%
+    dplyr::summarise_all(dplyr::n_distinct) %>%
+    dplyr::ungroup() %>%
+    dplyr::summarise_if(is.numeric, sum)
 
   var_non_varying <- names(count_table)[count_table==distinct_class]
   var_varying <- names(count_table)[count_table!=distinct_class]
 
-  tibble(!!axis := var_non_varying)
+  # extend the output for the case where all the variables are var_varying
+  tibble::tibble(!!axis := var_non_varying)
 }
 

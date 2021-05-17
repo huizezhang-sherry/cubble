@@ -9,3 +9,11 @@ as_cube(x, key = NULL, index, var = NULL, ...)
 \description{
 casting and coercion
 }
+\examples{
+\dontrun{
+water <- as_cube(water_small, index = date, key = station, var = parameter)
+attributes(water)
+ped_cube <- as_cube(pedestrian, var = trip)
+attributes(ped_cube)
+}
+}
