@@ -17,11 +17,8 @@ a nested tibble/ tsibble - think through here
 \description{
 Slice the data cube into lower dimension
 }
-<<<<<<< HEAD
 \examples{
 raw \%>\% slice_by(station)
 raw \%>\% slice_by(param)
 raw \%>\% slice_by(time)
 }
-=======
->>>>>>> 9cbdd8779e297002d331ee558698279d215640d2
