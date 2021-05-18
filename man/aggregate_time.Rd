@@ -4,15 +4,26 @@
 \alias{aggregate_time}
 \title{Aggregate the time axis}
 \usage{
-aggregate_time(dt, period, summarised_by)
+aggregate_time(dt, val, unit, op)
 }
 \arguments{
 \item{dt}{the data cube}
 
-\item{period}{the period to be aggregated into}
+\item{val}{the value column to aggregate}
 
-\item{summarised_by}{the summary function applied to aggregation}
+\item{unit}{the time unit to aggregate into, currently support "y", "ym", "ymd"}
+
+\item{op}{a function to summarise by}
+}
+\value{
+a cube with index being aggregated to the instructed value
 }
 \description{
 Aggregate the time axis
+}
+\examples{
+\dontrun{
+ water <- as_cube(water_raw, key = station, index = date, var = parameter)
+ a <- aggregate_time(water, value, "ymd", mean)
+}
 }

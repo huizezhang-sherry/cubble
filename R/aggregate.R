@@ -1,25 +1,94 @@
 #' Aggregate the time axis
 #'
 #' @param dt the data cube
-#' @param period the period to be aggregated into
-#' @param summarised_by the summary function applied to aggregation
-#' @export
+#' @param val the value column to aggregate
+#' @param unit the time unit to aggregate into, currently support "y", "ym", "ymd"
+#' @param op a function to summarise by
+#' @return a cube with index being aggregated to the instructed value
 #'
 #' @examples
-#' \dontrunraw %>% aggregate_time(period = "month", summarised_by = mean)}
-aggregate_time <- function(dt, period, summarised_by){
+#' \dontrun{
+#'  water <- as_cube(water_raw, key = station, index = date, var = parameter)
+#'  a <- aggregate_time(water, value, "ymd", mean)
+#' }
+#' @export
+aggregate_time <- function(dt, val, unit, op){
 
-  # the argument name summarised_by is a bit clumsy
+  if (!is_cube(dt)){
+    abort("the data supplied needs to be of type tbl_cube!")
+  }
 
-  # dt %>%
-  #   # here the column should be the one detected as the axis, rather than time
-  #   # period should translate into a function: "month" -> yearmonth(), "day" -> as_date()
-  #   # also need to check if the period make sense with the current time
-  #   dplyr::mutate(time = as.Date(time)) %>%
-  #   # also you want all the other columns to also be preserved after summarise
-  #   dplyr::group_by(time, parameter, station) %>%
-  #   # the summary function should be dictated by summarised_by rather than fixed as mean
-  #   # think about the case where different summary functions for different parameter
-  #   dplyr::summarise(value = mean(value))
+  val <- ensym(val)
+
+  check_unit(unit)
+
+  # next step: implement index(), key(), and var() to extract attribut
+  index_col <- attr(dt, "index")
+  var_col <- attr(dt, "var")
+  key_col <- attr(dt, "key")
+
+  col <- c(index_col, var_col, key_col)
+  # next step: speed up find_non_varying()
+  var_to_group <- union(col, unlist(map(col, ~find_non_varying(dt, !!sym(.x)))))
+
+  # next step: allow different op for different parameter
+  # next step: allow lambda function for aggregation: can be useful for transformation: (.x)^(1/3)
+  out <- dt %>%
+    dplyr::mutate(!!index_col := recompute_date(unit, !!sym(index_col))) %>%
+    dplyr::group_by(!!!syms(var_to_group)) %>%
+    dplyr::summarise(!!val := exec(op, !!val)) %>%
+    ungroup()
+
+  out
+
+}
+
+#' @keywords internal
+#' @importFrom glue glue glue_collapse
+check_unit <- function(unit){
+
+  supported_units <- c("y", "ym", "ymd")
+
+  if(!unit %in% supported_units){
+    units <- glue::glue_collapse(supported_units, last = " ,and ")
+    abort(glue::glue("only {units} are currently supported"))
+  }
+
+}
+
+#' @keywords internal
+#' @importFrom lubridate year month day
+find_unit_fun <- function(unit){
+
+  char <- as.vector(strsplit(unit, "")[[1]])
+
+  find_fun <- function(char){
+    if (char == "y"){
+      fun <- lubridate::year
+    } else if (char == "m"){
+      fun <- lubridate::month
+    } else if (char == "d"){
+      fun <- lubridate::day
+    } else{
+      abort(glue::glue("can't find the function to convert {char}"))
+    }
+
+    fun
+  }
+
+  map(char, find_fun)
+
+}
+
+#' @keywords internal
+#' @examples
+#' a <- as_datetime("2020-04-21 01:47:59")
+#' recompute_date("ymd", a)
+#' recompute_date("ym", a)
+#' recompute_date("y", a)
+recompute_date <- function(unit, var){
+
+  do.call(lubridate::make_date,
+          map(find_unit_fun(unit), ~exec(.x, var)))
 
 }
