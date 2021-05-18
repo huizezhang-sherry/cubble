@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'  water <- as_cube(water_raw, key = station, index = date, var = parameter)
+#'  water <- as_cube(water_raw, key = station, index = time, var = parameter)
 #'  a <- aggregate_time(water, value, "ymd", mean)
 #' }
 #' @export
@@ -39,7 +39,9 @@ aggregate_time <- function(dt, val, unit, op){
     dplyr::summarise(!!val := exec(op, !!val)) %>%
     ungroup()
 
-  out
+  # think point: whether cube should be built on top of tsibble so it inherent all the infrastructure from tsibble
+  # if so the cube.r need to be changed and build_cube should automatically detect key, index, and var
+  build_cube(out)
 
 }
 

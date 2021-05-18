@@ -2,10 +2,10 @@
 % Please edit documentation in R/cube.R
 \name{build_cube}
 \alias{build_cube}
-\title{build a cube from tibble(tbl_df) or tsibble (tbl_ts)}
+\title{build a cube from a tsibble (tbl_ts)}
 \usage{
 build_cube(x, key = NULL, index = NULL, var = NULL)
 }
 \description{
-build a cube from tibble(tbl_df) or tsibble (tbl_ts)
+build a cube from a tsibble (tbl_ts)
 }

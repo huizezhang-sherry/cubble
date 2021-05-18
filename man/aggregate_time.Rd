@@ -23,7 +23,7 @@ Aggregate the time axis
 }
 \examples{
 \dontrun{
- water <- as_cube(water_raw, key = station, index = date, var = parameter)
+ water <- as_cube(water_raw, key = station, index = time, var = parameter)
  a <- aggregate_time(water, value, "ymd", mean)
 }
 }

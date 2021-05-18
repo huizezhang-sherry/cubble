@@ -24,12 +24,12 @@ is_cube <- function(x){
 #' @export
 tbl_format_setup.tbl_cube <- function(x, width, ...){
   setup <- NextMethod()
-  setup$key <- if (is_tibble(x %@% key)) key_vars(x) else x %@% key
   setup$var <- x %@% var
+  setup$id <- setdiff(key_vars(x), as_label(x %@% var))
   setup$index <- as_character(x %@% index)
   setup$tbl_sum <- c(setup$tbl_sum,
                      "var" = var,
-                     "key" = key,
+                     "id" = key,
                      "index" = index)
   setup
 }
@@ -41,7 +41,8 @@ tbl_format_header.tbl_cube <- function(x, setup,...){
   paste0(crayon::magenta("A cube with"), "\n",
          crayon::magenta("var: "), setup$var, "\n",
          crayon::magenta("index: "), setup$index, "\n",
-         crayon::magenta("key: "), setup$key)
+         crayon::magenta("id: "), setup$id
+         )
 }
 
 
@@ -63,66 +64,27 @@ vec_ptype_abbr.cube <- function(x, ...){
 #' }
 
 as_cube <- function(x, key = NULL, index, var = NULL, ...){
-  ellipsis::check_dots_used()
   UseMethod("as_cube")
 }
 
-#' @keywords internal
-#' @export
-as_cube.tbl_df <- function(x, key = NULL, index = NULL, var = NULL, ...){
+as_cube.tbl_ts <- function(x, key = NULL, index, var = NULL, ...){
 
-  key <- enquo(key)
-  var <- enquo(var)
-  index <- enquo(index)
-
-  build_cube(x, key = !!key, index = !!index, var = !!var)
-}
-
-#' @keywords internal
-#' @export
-as_cube.tbl_ts <- function(x, key = NULL, index = NULL, var = NULL, ...){
-
-  key <- key_vars(x)
-  index <- index(x)
   var <- enquo(var)
 
-  build_cube(x, key = !!key, index = !!index, var = !!var)
+  build_cube(x,var = !!var)
 }
 
-#' @keywords internal
-#' @export
-#' @importFrom rlang abort
-as_cube.default <- function(x, ...){
-  rlang::abort("don't know how to convert `x` into a cube")
+as_cube.default <- function(...){
+    abort("Cube is a sub-class of tsibble - please first build a tsibble!")
 }
 
 
-#' build a cube from tibble(tbl_df) or tsibble (tbl_ts)
+#' build a cube from a tsibble (tbl_ts)
 #' @export
 build_cube <- function(x, key = NULL, index = NULL, var = NULL){
-  #browser()
-  UseMethod("build_cube")
-}
-
-#' @keywords internal
-#' @export
-build_cube.tbl_df <- function(x, key = NULL, index = NULL, var = NULL, ...){
-  index <- rlang::enquo(index)
-  var <- rlang::enquo(var)
-  key <- rlang::enquo(key)
-  x <- tibble::new_tibble(x,
-                          "index" = quo_name(index),
-                          "var" = quo_name(var),
-                          "key" = quo_name(key),
-                          nrow = vec_size(x), class = "tbl_cube")
-  x
-}
-
-#' @keywords internal
-#' @export
-build_cube.tbl_ts <- function(x, key = NULL, index = NULL, var = NULL, ...){
   var <- rlang::enquo(var)
   # this part is not good enough - currently var is a quosure and ideally it should be a string
   x <- tsibble::new_tsibble(x, "var" = quo_get_expr(var), class = "tbl_cube")
   x
 }
+

@@ -1,0 +1,50 @@
+---
+title: "workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(xxx)
+library(dplyr)
+library(lubridate)
+library(tsibble)
+```
+
+## Build a cube from tsibble 
+
+Cube is a subclass of tsibble with an additional attribute `var`. In a tsibble, each row is uniquely identified by a key-index pair while in a cube data structure, the key variable is further divided into `var` and `id`, where `var` records the multivariate variables and `id` is the homogeneous individual or subject recorded.
+
+```{r eval = FALSE}
+water <- water_raw %>% 
+  as_tsibble(key = c(parameter, station), index = time, regular = FALSE) %>% 
+  as_cube(var = parameter)
+water
+```
+
+
+## Aggregate time 
+
+```{r eval = FALSE}
+water <- water_raw %>% 
+  filter(year(time) >= 2020) %>% 
+  as_cube(key = station, index = time, var = parameter)
+  
+water_agg <- aggregate_time(water, value, "ymd", mean)
+
+water_agg %>% 
+  group_by(parameter, station) %>% 
+  fill_gaps()
+
+```
+
