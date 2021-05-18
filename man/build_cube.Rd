@@ -4,7 +4,7 @@
 \alias{build_cube}
 \title{build a cube from a tsibble (tbl_ts)}
 \usage{
-build_cube(x, key = NULL, index = NULL, var = NULL)
+build_cube(x, key = NULL, index = NULL, param = NULL)
 }
 \description{
 build a cube from a tsibble (tbl_ts)

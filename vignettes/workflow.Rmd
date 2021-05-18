@@ -28,9 +28,16 @@ Cube is a subclass of tsibble with an additional attribute `var`. In a tsibble, 
 ```{r eval = FALSE}
 water <- water_raw %>% 
   as_tsibble(key = c(parameter, station), index = time, regular = FALSE) %>% 
-  as_cube(var = parameter)
+  as_cube(param = parameter)
 water
 ```
+
+```{r eval = FALSE}
+pedestrian %>% 
+  tidyr::pivot_longer(cols = Count, names_to = "count", values_to = "val") %>% 
+  as_cube(param = count)
+```
+
 
 
 ## Aggregate time 

@@ -4,16 +4,18 @@
 \alias{as_cube}
 \title{casting and coercion}
 \usage{
-as_cube(x, key = NULL, index, var = NULL, ...)
+as_cube(x, key = NULL, index, param = NULL, ...)
 }
 \description{
 casting and coercion
 }
 \examples{
 \dontrun{
-water <- as_cube(water_small, index = date, key = station, var = parameter)
-attributes(water)
-ped_cube <- as_cube(pedestrian, var = Count)
-attributes(ped_cube)
+water <- water_raw \%>\%
+as_tsibble(key = c(parameter, station), index = time, regular = FALSE) \%>\%
+as_cube(param = parameter)
+pedestrian \%>\%
+tidyr::pivot_longer(cols = Count, names_to = "count", values_to = "val") \%>\%
+as_cube(param = count)
 }
 }

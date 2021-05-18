@@ -2,13 +2,10 @@
 # need to define time, id, and param
 
 # thinking:
-# think about if cube should build on tsibble or use the current model
-# think if we should accept long format only or allow wide?
-# better name for the package and cube!
+# better name for the packag and  cube
 
 # todo:
 # write functions to fill gap and missing
-# potentially need a var() to extract variable from cube like key() in tsibble
 
 # small tasks:
 # document variables in this script
@@ -24,13 +21,11 @@ is_cube <- function(x){
 #' @export
 tbl_format_setup.tbl_cube <- function(x, width, ...){
   setup <- NextMethod()
-  setup$var <- x %@% var
-  setup$id <- setdiff(key_vars(x), as_label(x %@% var))
-  setup$index <- as_character(x %@% index)
-  setup$tbl_sum <- c(setup$tbl_sum,
-                     "var" = var,
-                     "id" = key,
-                     "index" = index)
+  # in tsibble key() for extracting the symbol, key_var() for extracting the symbol as string
+  # calling the third dimension var would break this pattern - may need to change a name
+  setup$param <- param_var(x)
+  setup$id <- setdiff(key_vars(x), param_var(x))
+  setup$index <- index_var(x)
   setup
 }
 
@@ -38,8 +33,9 @@ tbl_format_setup.tbl_cube <- function(x, width, ...){
 #' @export
 tbl_format_header.tbl_cube <- function(x, setup,...){
   # can add more details of each attribution here
-  paste0(crayon::magenta("A cube with"), "\n",
-         crayon::magenta("var: "), setup$var, "\n",
+  paste0(crayon::magenta("A cube: "), setup$tbl_sum[1],
+         crayon::magenta(" with \n"),
+         crayon::magenta("param: "), setup$param, "\n",
          crayon::magenta("index: "), setup$index, "\n",
          crayon::magenta("id: "), setup$id
          )
@@ -57,21 +53,22 @@ vec_ptype_abbr.cube <- function(x, ...){
 #' @importFrom ellipsis check_dots_used
 #' @examples
 #' \dontrun{
-#' water <- as_cube(water_small, index = date, key = station, var = parameter)
-#' attributes(water)
-#' ped_cube <- as_cube(pedestrian, var = Count)
-#' attributes(ped_cube)
+#' water <- water_raw %>%
+#' as_tsibble(key = c(parameter, station), index = time, regular = FALSE) %>%
+#' as_cube(param = parameter)
+#' pedestrian %>%
+#' tidyr::pivot_longer(cols = Count, names_to = "count", values_to = "val") %>%
+#' as_cube(param = count)
 #' }
-
-as_cube <- function(x, key = NULL, index, var = NULL, ...){
+as_cube <- function(x, key = NULL, index, param = NULL, ...){
   UseMethod("as_cube")
 }
 
-as_cube.tbl_ts <- function(x, key = NULL, index, var = NULL, ...){
+as_cube.tbl_ts <- function(x, key = NULL, index, param = NULL, ...){
 
-  var <- enquo(var)
+  param <- enquo(param)
 
-  build_cube(x,var = !!var)
+  build_cube(x, param = !!param)
 }
 
 as_cube.default <- function(...){
@@ -81,10 +78,25 @@ as_cube.default <- function(...){
 
 #' build a cube from a tsibble (tbl_ts)
 #' @export
-build_cube <- function(x, key = NULL, index = NULL, var = NULL){
-  var <- rlang::enquo(var)
+build_cube <- function(x, key = NULL, index = NULL, param = NULL){
+  param <- rlang::enquo(param)
   # this part is not good enough - currently var is a quosure and ideally it should be a string
-  x <- tsibble::new_tsibble(x, "var" = quo_get_expr(var), class = "tbl_cube")
+  x <- tsibble::new_tsibble(x, "param" = quo_get_expr(param), class = "tbl_cube")
   x
 }
 
+param <- function(x){
+  UseMethod("param")
+}
+
+param.tbl_cube <- function(x){
+  x %@% param
+}
+
+param.default <- function(x){
+  abort("The data needs to be of class tbl_cube to have a var attribute")
+}
+
+param_var <- function(x){
+  as.character(param(x))
+}
