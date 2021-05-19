@@ -22,14 +22,12 @@ aggregate_time <- function(dt, val, unit, op){
 
   check_unit(unit)
 
-  # next step: implement index(), key(), and var() to extract attribut
   index_col <- index(dt)
   param_col <- param(dt)
   id_col <- id(dt)
   key_col <- c(as_label(param_col), as_label(id_col))
 
   col <- c(index_col, param_col, id_col)
-  # next step: speed up find_non_varying()
   var_to_group <- find_non_varying(dt, !!!col)
 
   # next step: allow different op for different parameter
@@ -42,8 +40,6 @@ aggregate_time <- function(dt, val, unit, op){
     ungroup() %>%
     as_tsibble(index = !!index_col, key = all_of(key_col)) %>%
     build_cube(param = !!param_col)
-  # think point: whether cube should be built on top of tsibble so it inherent all the infrastructure from tsibble
-  # if so the cube.r need to be changed and build_cube should automatically detect key, index, and var
 }
 
 

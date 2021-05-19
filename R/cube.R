@@ -4,9 +4,6 @@
 # thinking:
 # better name for the packag and  cube
 
-# todo:
-# write functions to fill gap and missing
-
 # small tasks:
 # document variables in this script
 
@@ -21,8 +18,6 @@ is_cube <- function(x){
 #' @export
 tbl_format_setup.tbl_cube <- function(x, width, ...){
   setup <- NextMethod()
-  # in tsibble key() for extracting the symbol, key_var() for extracting the symbol as string
-  # calling the third dimension var would break this pattern - may need to change a name
   setup$param <- param_var(x)
   setup$id <- id_var(x)
   setup$index <- index_var(x)
@@ -43,7 +38,7 @@ tbl_format_header.tbl_cube <- function(x, setup,...){
 
 
 #' @export
-vec_ptype_abbr.cube <- function(x, ...){
+vec_ptype_abbr.tbl_cube <- function(x, ...){
   "cube"
 }
 
@@ -61,6 +56,7 @@ vec_ptype_abbr.cube <- function(x, ...){
 #' as_cube(param = count)
 #' }
 as_cube <- function(x, key = NULL, index, param = NULL, ...){
+  # next step: currently need to first as_tsibble() and then as_cube() - should only need as_cube()
   UseMethod("as_cube")
 }
 
@@ -80,7 +76,6 @@ as_cube.default <- function(...){
 #' @export
 build_cube <- function(x, key = NULL, index = NULL, param = NULL){
   param <- rlang::enquo(param)
-  # this part is not good enough - currently var is a quosure and ideally it should be a string
   x <- tsibble::new_tsibble(x, "param" = quo_get_expr(param), class = "tbl_cube")
   x
 }
