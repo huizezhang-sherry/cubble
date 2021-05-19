@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE, warning = FALSE
 )
 ```
 
@@ -44,9 +45,10 @@ pedestrian %>%
 ```{r eval = FALSE}
 water_day <- aggregate_time(water, value, "ymd", mean)
 
-water_agg %>% 
+water_day_nomissing <- water_day %>% 
   group_by(parameter, station) %>% 
-  fill_gaps()
+  fill_gaps() %>% 
+  ungroup()
 
 ```
 
