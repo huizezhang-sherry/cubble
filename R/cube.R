@@ -24,7 +24,7 @@ tbl_format_setup.tbl_cube <- function(x, width, ...){
   # in tsibble key() for extracting the symbol, key_var() for extracting the symbol as string
   # calling the third dimension var would break this pattern - may need to change a name
   setup$param <- param_var(x)
-  setup$id <- setdiff(key_vars(x), param_var(x))
+  setup$id <- id_var(x)
   setup$index <- index_var(x)
   setup
 }
@@ -94,9 +94,25 @@ param.tbl_cube <- function(x){
 }
 
 param.default <- function(x){
-  abort("The data needs to be of class tbl_cube to have a var attribute")
+  abort("The data needs to be of class tbl_cube to have a param attribute")
 }
 
 param_var <- function(x){
   as.character(param(x))
+}
+
+id <- function(x){
+  UseMethod("id")
+}
+
+id.tbl_cube <- function(x){
+  sym(setdiff(key_vars(x), param_var(x)))
+}
+
+id.default <- function(x){
+  abort("The data needs to be of class tbl_cube to have an id attribute")
+}
+
+id_var <- function(x){
+  as.character(id(x))
 }

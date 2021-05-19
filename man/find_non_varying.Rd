@@ -4,7 +4,7 @@
 \alias{find_non_varying}
 \title{Slice the data cube into lower dimension}
 \usage{
-find_non_varying(dt, key)
+find_non_varying(dt, ...)
 }
 \arguments{
 \item{dt}{the raw dataframe to slice, in long form - does it has to be long form?}
@@ -19,8 +19,6 @@ Slice the data cube into lower dimension
 }
 \examples{
 \dontrun{
-water_raw \%>\% find_non_varying(station)
-water_raw \%>\% find_non_varying(param)
-water_raw \%>\% find_non_varying(time)
+water_raw \%>\% find_non_varying(station, parameter, time)
 }
 }

@@ -5,28 +5,20 @@
 #' @return a nested tibble/ tsibble - think through here
 #' @examples
 #' \dontrun{
-#' water_raw %>% find_non_varying(station)
-#' water_raw %>% find_non_varying(param)
-#' water_raw %>% find_non_varying(time)
+#' water_raw %>% find_non_varying(station, parameter, time)
 #' }
 #' @export
-find_non_varying <- function(dt, key){
-  # implement multiple keys
-  key <- ensym(key)
+find_non_varying <- function(dt, ...){
+  key <- ensyms(...)
 
-  distinct_class <- dt %>% dplyr::distinct(!!key) %>% nrow()
+  distinct_class <- map_dbl(key, ~dt %>% dplyr::distinct(!!.x) %>% nrow())
 
-  count_table <- dt %>%
-    dplyr::group_by(!!key) %>%
-    # summarise_all is superseded - change to use across
-    dplyr::summarise_all(n_distinct) %>%
-    dplyr::ungroup() %>%
-    # summarise_if is superseded - change to use across
-    dplyr::summarise_if(is.numeric, sum)
+  var_length <- map_dbl(colnames(dt), ~nrow(unique(dt[.x])))
 
-  var_non_varying <- names(count_table)[count_table==distinct_class]
+  out <- unlist(map(distinct_class, ~colnames(dt)[var_length == .x]))
+  names(out) <- NULL
+  out
 
-  c(as_label(key), var_non_varying)
 }
 
 
