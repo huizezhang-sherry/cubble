@@ -10,15 +10,17 @@
 #' @export
 find_non_varying <- function(dt, ...){
   key <- ensyms(...)
-
-  distinct_class <- map_dbl(key, ~dt %>% dplyr::distinct(!!.x) %>% nrow())
-
-  var_length <- map_dbl(colnames(dt), ~nrow(unique(dt[.x])))
-
-  out <- unlist(map(distinct_class, ~colnames(dt)[var_length == .x]))
+  out <- unlist(map(key, find_one, dt = dt))
   names(out) <- NULL
   out
 
 }
 
 
+find_one <- function(dt, key){
+
+  subset <- dt %>% tidyr::nest(data = -(!!!key)) %>% pull(data) %>% .[[1]]
+  var_length <- map_dbl(colnames(subset), ~nrow(unique(subset[.x])))
+  c(as_name(key), colnames(subset)[var_length == 1])
+
+}
