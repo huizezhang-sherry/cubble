@@ -10,7 +10,12 @@
 #' @export
 find_non_varying <- function(dt, ...){
   key <- ensyms(...)
-  out <- unlist(map(key, find_one, dt = dt))
+  # currently don't process the non-varying variables for the index axis
+  include_index <- any(key != index(dt))
+  key <- key[key != index(dt)]
+
+  out <- unique(unlist(map(key, find_one, dt = dt)))
+  if(include_index) out <- c(out, as_label(index(dt)))
   names(out) <- NULL
   out
 
@@ -18,8 +23,7 @@ find_non_varying <- function(dt, ...){
 
 
 find_one <- function(dt, key){
-
-  subset <- dt %>% tidyr::nest(data = -(!!!key)) %>% pull(data) %>% .[[1]]
+  subset <- dt %>% as_tibble() %>% tidyr::nest(data = -(!!!key)) %>% pull(data) %>% .[[1]]
   var_length <- map_dbl(colnames(subset), ~nrow(unique(subset[.x])))
   c(as_name(key), colnames(subset)[var_length == 1])
 
