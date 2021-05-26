@@ -3,6 +3,7 @@
 S3method(vec_ptype_abbr,tbl_cube)
 export("%>%")
 export(aggregate_id)
+export(aggregate_param)
 export(aggregate_time)
 export(as_cube)
 export(build_cube)
