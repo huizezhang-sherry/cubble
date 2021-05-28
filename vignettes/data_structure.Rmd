@@ -1,0 +1,49 @@
+---
+title: "data_structure"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{data_structure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r setup}
+library(xxx)
+library(tsibble)
+library(sf)
+library(ozmaps)
+```
+
+# Motivation for a new data structure:
+
+```{r}
+climate_monthly
+
+# build a tsibble
+climate_tsibble <- climate_monthly %>% 
+  mutate(date = yearmonth(date)) %>% 
+  as_tsibble(key = c(station, param), index = date)
+
+# build an sf from tsibble (can also build from tibble)
+climate_sf <- climate_tsibble %>% filter(!is.na(lat)) %>% 
+  st_as_sf(coords = c("long", "lat"), crs = st_crs(ozmap_country))
+
+# sf operations on geometry returns an object of both class sf and tbl_ts - so far so good
+a <- climate_sf %>% 
+  mutate(geometry = geometry + 1)
+class(a)
+
+# tsibble operations on fill in gaps returns an object of tbl_ts only. Further sf operations on b fails
+b <- a %>% fill_gaps()
+class(b)  
+st_geometry(b)
+```
+
