@@ -17,13 +17,16 @@
 #'   as_tsibble(key = c(parameter, station), index = date) %>%
 #'   as_cube(param = parameter)
 #' aggregate_id(water_small_cube, value, long, ~ggplot2::cut_interval(.x, 3))
+#' aggregate_id(water_small_cube, val = value, along = river_name)
 #' }
 #' @export
 aggregate_id <- function(dt, val, along, ..., FUN = mean){
 
+  # issue: cut_interval would approximate a decimal number to integer before cutting: 143.xxx -> 144 -> [144, 145]
+
   along <- ensym(along)
   val <- ensym(val)
-  expr <- purrr::as_mapper(...)
+  if (!is_missing(...)) expr <- purrr::as_mapper(...)
 
   param_col <- param(dt)
   id_col <- id(dt)
@@ -35,7 +38,6 @@ aggregate_id <- function(dt, val, along, ..., FUN = mean){
   }
 
   if (is.numeric(eval_tidy(along, dt))){
-
     dt <- dt %>%
       as_tibble() %>%
       mutate({{along}} := expr(eval_tidy(along, dt))) %>%
@@ -49,6 +51,6 @@ aggregate_id <- function(dt, val, along, ..., FUN = mean){
     dplyr::summarise({{val}} := exec(FUN, {{val}}, na.rm = TRUE)) %>%
     ungroup() %>%
     as_tsibble(index = !!index_col, key = c(!!along, !!param_col)) %>%
-    build_cube(param = !!along)
+    build_cube(param = !!param_col)
 }
 

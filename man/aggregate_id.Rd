@@ -33,5 +33,6 @@ water_small_cube <- water_small \%>\%
   as_tsibble(key = c(parameter, station), index = date) \%>\%
   as_cube(param = parameter)
 aggregate_id(water_small_cube, value, long, ~ggplot2::cut_interval(.x, 3))
+aggregate_id(water_small_cube, val = value, along = river_name)
 }
 }

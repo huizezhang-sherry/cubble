@@ -20,6 +20,8 @@
 aggregate_param <- function(dt, weight){
 
   # linear combinations would make more sense if values are standardised first
+  # think: how to supply more than one linear combination
+  # in the meta it would be nice to show: param: comb_1: Electrical_conductivity * 0.1 + ...
 
   param_col <- param(dt)
   id_col <- id(dt)
@@ -35,7 +37,10 @@ aggregate_param <- function(dt, weight){
     as_tibble() %>%
     tidyr::pivot_wider(names_from = parameter, values_from = value) %>%
     group_by(!!!id_non_varying, !!index_col) %>%
-    transmute(comb_1 = eval(single))
+    transmute(comb_1 = eval(single)) %>%
+    ungroup() %>%
+    as_tsibble(index = !!index_col, key = c(!!id_col)) %>%
+    build_cube(param = comb_1)
 
 }
 
