@@ -43,7 +43,45 @@ class(a)
 
 # turning it to tsibble again loses the sf structure
 b <- a %>% as_tsibble(index = date, key = c(station, param))
+
 class(b)
 
 # hence would be nice to have a data structure that houses both tsibble and sf (with additional operations)
 ```
+
+# Existing and similar work:
+
+## Data structure: 
+
+-   `spacetime` builds a spatiotemporal object based on `xts` and `sp` class for handling time and spatial dimension. Both classes have been superseded by modern data structure, namely, `tsibble` and `sf`, respectively.
+
+    -   Spacetime: Spatio-Temporal Data in R
+
+```{=html}
+<!-- -->
+```
+-   `stars` package defines the spatiotemporal data as an array and provides operations based on the array structure. This definition fits well with the satellite imagery from remote sensing, where pixels in the image corresponds to the cells in the array.
+
+    -   <https://github.com/r-spatial/stars/>
+
+    -   "Multidimensional Arrays for anlaysing geoscientific data"
+
+    -   "Spatio-temporal change detection from multidimensional arrays: Detecting deforestation from MOBIS time series"
+
+-   `cubelyr` implements a `tbl_cube` class for tidyverse operations on arrays.
+
+    -   <https://github.com/hadley/cubelyr/blob/master/R/cube.R>
+
+## Data wrangling operations:
+
+-   There are also array operations defined in the following paper: **Select, scale, reduce, rearrange, and compute**.
+
+    -   Spatio-temporal change detection from multidimensional arrays: Detecting deforestation from MOBIS time series"
+
+-   The package is still in experimental and the operations supported includes **select, rename filter, mutate, arrange, group_by/ungroup, and summarise (no join).**
+
+    -   `cubelyr`
+
+## How my work differs:
+
+-   
