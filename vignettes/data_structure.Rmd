@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(xxx)
 library(tsibble)
+library(dplyr)
+library(ozmaps)
 library(sf)
 library(ozmaps)
 ```
@@ -32,21 +34,23 @@ climate_tsibble <- climate %>%
   mutate(date = yearmonth(date)) %>% 
   as_tsibble(key = c(station, param), index = date)
 
-# build an sf from tsibble (can also build from tibble)
+# build an sf from tsibble - so far so good
 climate_sf <- climate_tsibble %>% filter(!is.na(lat)) %>% 
   st_as_sf(coords = c("long", "lat"), crs = st_crs(ozmap_country))
+class(climate_sf)
 
-# spatial join returns an tibble/ sf
+# spatial join returns an tibble/ sf - lose the tsibble structure
 a <- climate_sf %>% 
   st_join(ozmap_states, join = st_within)
 class(a) 
 
 # turning it to tsibble again loses the sf structure
 b <- a %>% as_tsibble(index = date, key = c(station, param))
-
 class(b)
+b %>% st_join(ozmap_states, join = st_within)
 
-# hence would be nice to have a data structure that houses both tsibble and sf (with additional operations)
+# hence would be nice to have a data structure that deal with both dimensions
+# Building such a data structure would mean dependence on both tsibble and sf 
 ```
 
 # Existing and similar work:
@@ -102,3 +106,29 @@ class(b)
         -   can be regular or irregular grid
 
 -   A flat data structure for saptiotemporal data built on top of `tibble` means the adoption of tidyverse workflow where the data type and inputs and outputs are predictable and hence operations can be concatenated on top of one another. This workflow enhances the reproducibility of data analysis.
+
+
+```{r}
+water_large
+spatio <- water_large %>% select(station, name, lat, long) %>% distinct()
+
+dist <- expand_grid(from = spatio$station, to = spatio$station) %>% 
+  left_join(spatio, by = c("from" = "station")) %>% 
+  left_join(spatio, by = c("to" = "station")) %>% 
+  mutate(dist = sqrt((lat.x - lat.y)^2 + (long.x - long.y)^2)) %>% 
+  filter(dist != 0) %>% 
+  nest(-c(from, name.x, lat.x, long.x)) %>% 
+  mutate(data = map(data, ~.x %>% select(to, dist, name.y) %>% arrange(dist))) 
+
+
+# cross tabulate the key to create a separate spatio sheet 
+water_large %>% 
+  # nested calculation of distance on the spatio sheet
+  compute(dist = closest(n = 10), on_spatio = TRUE) %>%  
+  # dist is on the spatio sheet but can be called by the main sheet 
+  # find the distance < 1 for station 221224
+  # look at spatial sheet for filtering if key is involved???? 
+  filter(dist < 1, station == "221224")
+  
+```
+
