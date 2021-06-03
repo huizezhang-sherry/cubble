@@ -51,15 +51,12 @@ class(b)
 
 # Existing and similar work:
 
-## Data structure: 
+## Data structure:
 
 -   `spacetime` builds a spatiotemporal object based on `xts` and `sp` class for handling time and spatial dimension. Both classes have been superseded by modern data structure, namely, `tsibble` and `sf`, respectively.
 
     -   Spacetime: Spatio-Temporal Data in R
 
-```{=html}
-<!-- -->
-```
 -   `stars` package defines the spatiotemporal data as an array and provides operations based on the array structure. This definition fits well with the satellite imagery from remote sensing, where pixels in the image corresponds to the cells in the array.
 
     -   <https://github.com/r-spatial/stars/>
@@ -72,9 +69,17 @@ class(b)
 
     -   <https://github.com/hadley/cubelyr/blob/master/R/cube.R>
 
+-   `sf` implements a flat data structure for handling different geometry types in spatial data and introduces a set of operations based on the geometrical relations.
+
+    -   Simple Features for R: standardized support for spatial vector data
+
+-   `tsibble` implements a data structure for temporal data through defining the `key` and `index` variable
+
+    -   A new tidy data structure to support exploration and modeling of temporal data
+
 ## Data wrangling operations:
 
--   There are also array operations defined in the following paper: **Select, scale, reduce, rearrange, and compute**.
+-   There are also array operations defined in the following paper: **select, scale, reduce, rearrange, and compute**.
 
     -   Spatio-temporal change detection from multidimensional arrays: Detecting deforestation from MOBIS time series"
 
@@ -84,4 +89,16 @@ class(b)
 
 ## How my work differs:
 
--   
+-   fixed set of locations + interest in time domain
+
+    -   While satellite imagery can record information on a continuous spatial domain, other spatial information are recorded at a fixed set of locations characterised by latitude, longitude, and other spatial metadata. Examples of this type of data includes climate measures from weather observation stations and river level data recorded by electronic gauges. Analysing this data requires less considerations on the geometry type and map projection while more on how measures in these fixed locations changes across the time domain and whether these changes are related for adjacent locations.
+
+    -   characteristics:
+
+        -   less focus on complex geometry structure (point geometry) and projection
+
+        -   more focus on the time dimension
+
+        -   can be regular or irregular grid
+
+-   A flat data structure for saptiotemporal data built on top of `tibble` means the adoption of tidyverse workflow where the data type and inputs and outputs are predictable and hence operations can be concatenated on top of one another. This workflow enhances the reproducibility of data analysis.
