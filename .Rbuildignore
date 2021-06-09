@@ -4,3 +4,5 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^\.github$
+^doc$
+^Meta$
