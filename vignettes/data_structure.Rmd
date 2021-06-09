@@ -16,12 +16,11 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(xxx)
+library(cubble)
 library(tsibble)
 library(dplyr)
 library(ozmaps)
 library(sf)
-library(ozmaps)
 ```
 
 # Motivation for a new data structure:
@@ -131,4 +130,3 @@ water_large %>%
   filter(dist < 1, station == "221224")
   
 ```
-

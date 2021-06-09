@@ -16,10 +16,11 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(xxx)
+library(cubble)
 library(dplyr)
 library(lubridate)
 library(tsibble)
+library(stringr)
 ```
 
 ## Build a cube from tsibble 
@@ -43,9 +44,7 @@ pedestrian %>%
 ## Aggregate time 
 
 ```{r eval = FALSE}
-water_day <- aggregate_time(water, value, "ymd", mean)
-
-water_day_nomissing <- water_day %>% 
+water_day <- aggregate_time(water, value, "ymd", mean) %>% 
   group_by(parameter, station) %>% 
   fill_gaps() %>% 
   ungroup()
@@ -53,10 +52,17 @@ water_day_nomissing <- water_day %>%
 
 ```{r eval = FALSE}
 water_small_cube <- water_small %>% 
+  mutate(river_name = str_extract(name, "^[^\\@]+ "),
+         river_name = as.factor(str_trim(river_name)),
+         river_name = tolower(word(river_name, 1, 2, sep = " "))) %>% 
   as_tsibble(key = c(parameter, station), index = date) %>% 
   as_cube(param = parameter)
 
+small_month <- water_small_cube %>% 
+  aggregate_time(value, "ym", mean)
+
+
 find_non_varying(water_small_cube, station)
+find_non_varying(water_small_cube, parameter)
 find_non_varying(water_small_cube, station, parameter, date)
 ```
-

@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# xxx
+# Cubble
 
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/huizezhang-sherry/xxx/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/xxx/actions)
 <!-- badges: end -->
 
-The goal of xxx is to …
+The goal of cubble is to …
 
 ## Installation
 
@@ -16,14 +16,14 @@ You can install the released version of xxx from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("xxx")
+install.packages("cubble")
 ```
 
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("huizezhang-sherry/xxx")
+devtools::install_github("huizezhang-sherry/cubble")
 ```
 
 ## Example
@@ -31,7 +31,9 @@ devtools::install_github("huizezhang-sherry/xxx")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(xxx)
+library(cubble)
+#> Warning: replacing previous import 'tibble::data_frame' by 'vctrs::data_frame'
+#> when loading 'cubble'
 ## basic example code
 ```
 
