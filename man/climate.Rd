@@ -5,7 +5,7 @@
 \alias{climate}
 \title{Australian climate data in 2020}
 \format{
-A tibble with 87,639 rows and 13 columns
+A tsibble with 87,639 rows and 13 columns
 \describe{
 \item{date}{date of the record}
 \item{station}{weather stations recorded. See \code{station} dataset for metadata of each station}
