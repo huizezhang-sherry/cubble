@@ -131,3 +131,16 @@ water_large %>%
   filter(dist < 1, station == "221224")
   
 ```
+
+# A relational data structure
+
+In spatiotemporal data, A single table data structure repeats the recording of time-invariant measures. This significantly increases the computation time and storage needed for those data that are long in the time dimension. Cubble implements a relational data structure with two tables that separately record time-variant and invariant variables for spatiotemporal data. After creating a cubble object, the two main verbs `choose` and `cubble_join` choose the table to work on and join the output results to either the main or item sheet depending on whether the results are time-variant or invariant. All the intermediate syntaxes can be written as usual without being affected.
+
+```{r}
+df <- cubble(climate, station, key = c("station" = "id"))
+
+df %>% 
+  choose(climate) %>% 
+  ... %>% 
+  cubble_join()
+```
