@@ -1,6 +1,6 @@
 ^README\.Rmd$
 ^LICENSE\.md$
-^xxx\.Rproj$
+^cubble\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
 ^\.github$

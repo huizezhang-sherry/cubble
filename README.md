@@ -12,7 +12,7 @@ The goal of cubble is to …
 
 ## Installation
 
-You can install the released version of xxx from
+You can install the released version of cubble from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
@@ -32,8 +32,6 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(cubble)
-#> Warning: replacing previous import 'tibble::data_frame' by 'vctrs::data_frame'
-#> when loading 'cubble'
 ## basic example code
 ```
 
