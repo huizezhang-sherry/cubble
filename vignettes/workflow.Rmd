@@ -20,51 +20,37 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(cubble)
 library(dplyr)
-library(lubridate)
-library(tsibble)
-library(stringr)
 ```
 
-## Build a cube from tsibble 
+# Create a cubble
 
-Cube is a subclass of tsibble with an additional attribute `var`. In a tsibble, each row is uniquely identified by a key-index pair while in a cube data structure, the key variable is further divided into `var` and `id`, where `var` records the multivariate variables and `id` is the homogeneous individual or subject recorded.
 
-```{r eval = FALSE}
-water <- water_raw %>% 
-  filter(year(time) >= 2020) %>% 
-  as_tsibble(key = c(parameter, station), index = time, regular = FALSE) %>% 
-  as_cube(param = parameter)
-water
+```{r}
+df <- cubble(climate, station, by = c("station" = "id"))
 ```
 
-```{r eval = FALSE}
-pedestrian %>% 
-  tidyr::pivot_longer(cols = Count, names_to = "count", values_to = "val") %>% 
-  as_cube(param = count)
+
+# Use cubble with tidyverts
+
+```{r}
+library(tsibbledata)
+library(fable)
+# raw country sheet
+wmap <- rworldmap::getMap(resolution="high")
+country <- rgeos::gCentroid(wmap, byid=TRUE) %>% 
+  as_tibble(rownames = "Country") %>% 
+  filter(Country %in% unique(global_economy$Country))
+
+economy <- global_economy %>%
+  filter(Country %in% country$country)
+
+df <- cubble(economy, country, by = c("Country" = "Country"))
+
+df %>% 
+  choose(main) %>% 
+  model(arima210 = ARIMA(Exports ~ pdq(2,1,0))) %>% 
+  cubble_join()
+
+```
 ```
 
-## Aggregate time 
-
-```{r eval = FALSE}
-water_day <- aggregate_time(water, value, "ymd", mean) %>% 
-  group_by(parameter, station) %>% 
-  fill_gaps() %>% 
-  ungroup()
-```
-
-```{r eval = FALSE}
-water_small_cube <- water_small %>% 
-  mutate(river_name = str_extract(name, "^[^\\@]+ "),
-         river_name = as.factor(str_trim(river_name)),
-         river_name = tolower(word(river_name, 1, 2, sep = " "))) %>% 
-  as_tsibble(key = c(parameter, station), index = date) %>% 
-  as_cube(param = parameter)
-
-small_month <- water_small_cube %>% 
-  aggregate_time(value, "ym", mean)
-
-
-find_non_varying(water_small_cube, station)
-find_non_varying(water_small_cube, parameter)
-find_non_varying(water_small_cube, station, parameter, date)
-```

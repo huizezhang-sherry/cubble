@@ -66,13 +66,21 @@ vec_ptype_abbr.tbl_cb <- function(x, ...) "cb"
 #' @param x a cubble object
 #' @export
 is_cubble <- function(x) {
-  inherits(x, 'tbl_cb')
+  inherits(x, "tbl_cb")
+}
+
+
+#' Test whether an object is a single cubble
+#'
+#' @param x a single cubble
+#' @export
+is_single_cubble <- function(x){
+  inherits(x, "single_cb")
 }
 
 by_var <- function(x){
   x %@% by
 }
-
 
 
 # print
