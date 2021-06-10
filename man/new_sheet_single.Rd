@@ -4,14 +4,14 @@
 \alias{new_sheet_single}
 \title{Create a single cubble object}
 \usage{
-new_sheet_single(single_sheet, by, cb_other)
+new_sheet_single(single_sheet, by, cb)
 }
 \arguments{
 \item{single_sheet}{one of the sheet in a cubble object}
 
 \item{by}{the joining variable}
 
-\item{cb_other}{the other sheet in the cubble object}
+\item{cb}{the other sheet in the cubble object}
 }
 \description{
 Create a single cubble object

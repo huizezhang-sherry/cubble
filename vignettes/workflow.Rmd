@@ -29,6 +29,44 @@ library(dplyr)
 df <- cubble(climate, station, by = c("station" = "id"))
 ```
 
+# Workflow
+
+```{r}
+count_var <- function(dt){
+  dt %>% 
+    as_tibble() %>% 
+    pivot_longer(prcp:tavg, names_to = "datatype", values_to = "value") %>% 
+    group_by(datatype) %>% 
+    # think of a better way to filter out those block missing
+    summarise(missing = sum(value, na.rm = TRUE)) %>% 
+    filter(missing != 0) %>% nrow()
+}
+
+
+out <- df %>% 
+  choose(main) %>% 
+  nest(-station)  %>%
+  mutate(var_recorded = map_dbl(data, count_var)) %>% 
+  cubble_join()
+
+chosen <- df %>% choose(main) 
+
+nested <- chosen %>% nest(-station)  
+
+mutated <- nested %>% mutate(var_recorded = map_dbl(data, count_var)) 
+
+joined <- mutated %>% cubble_join()
+
+# whether to fix the main sheet to be wide -> implication on downstream operation
+
+# more summary to understand whether a station is a good or not, first time/ end time, count proportion of missing/complete
+
+# map: what's the region of my data, in order to find a map(abs, openstreetmap, ...) to plot
+
+# reproduce some early result using the cubble object
+```
+
+
 
 # Use cubble with tidyverts
 
@@ -42,7 +80,7 @@ country <- rgeos::gCentroid(wmap, byid=TRUE) %>%
   filter(Country %in% unique(global_economy$Country))
 
 economy <- global_economy %>%
-  filter(Country %in% country$country)
+  filter(Country %in% country$Country)
 
 df <- cubble(economy, country, by = c("Country" = "Country"))
 
@@ -51,6 +89,5 @@ df %>%
   model(arima210 = ARIMA(Exports ~ pdq(2,1,0))) %>% 
   cubble_join()
 
-```
 ```
 

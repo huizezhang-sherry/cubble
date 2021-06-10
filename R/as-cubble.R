@@ -69,20 +69,6 @@ is_cubble <- function(x) {
   inherits(x, "tbl_cb")
 }
 
-
-#' Test whether an object is a single cubble
-#'
-#' @param x a single cubble
-#' @export
-is_single_cubble <- function(x){
-  inherits(x, "single_cb")
-}
-
-by_var <- function(x){
-  x %@% by
-}
-
-
 # print
 
 # cli head 3 main: climate: A tsibble: 487,639 x 13 [1D]
