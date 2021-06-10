@@ -2,7 +2,7 @@
 
 export("%>%")
 export(cubble)
-export(is.tbl_cb)
+export(is_cubble)
 import(rlang)
 import(tibble)
 import(tidyselect)

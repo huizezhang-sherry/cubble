@@ -1,8 +1,10 @@
 #' Create a cubble object
-#'
+#' @param main the main sheet (a tsibble)
+#' @param item the item sheet (a tibble)
+#' @param by the variable that join the two sheets
 #' @examples
 #' df <- cubble(climate, station, by = c("station" = "id"))
-#' @rdname cubble
+#' @rdname cubble-package
 #' @export
 cubble <- function(main, item, by = NULL){
   # check whether main is a tsibble
@@ -43,7 +45,7 @@ cubble <- function(main, item, by = NULL){
   new_cubble(main = main, item = item, by = by)
 }
 
-#' @rdname cubble
+#' @rdname cubble-package
 new_cubble <- function(main, item, by){
 
   new_list_of(list(main = main, item = item), by = by, class = "tbl_cb")
@@ -51,7 +53,7 @@ new_cubble <- function(main, item, by){
 }
 
 
-#' @rdname cubble
+#' @rdname cubble-package
 as_cubble <- function(){
 
 }
@@ -59,9 +61,11 @@ as_cubble <- function(){
 vec_ptype_full.tbl_cb <- function(x, ...) "cubble"
 vec_ptype_abbr.tbl_cb <- function(x, ...) "cb"
 
-#' @rdname cubble
+#' Test whether an object is a cubble
+#'
+#' @param x a cubble object
 #' @export
-is.tbl_cb <- function(x) {
+is_cubble <- function(x) {
   inherits(x, 'tbl_cb')
 }
 

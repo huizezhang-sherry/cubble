@@ -1,13 +1,13 @@
 Package: cubble
-Title: What the Package Does (One Line, Title Case)
+Title: A Relational Data Structure for Spatiotemperal Data
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Sherry",
+           family = "Zhang",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "huize.zhang@monash.edu",
+           comment = c(ORCID = "0000-0002-7122-1463"))
+Description: A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
