@@ -56,14 +56,6 @@ nested <- chosen %>% nest(-station)
 mutated <- nested %>% mutate(var_recorded = map_dbl(data, count_var)) 
 
 joined <- mutated %>% cubble_join()
-
-# whether to fix the main sheet to be wide -> implication on downstream operation
-
-# more summary to understand whether a station is a good or not, first time/ end time, count proportion of missing/complete
-
-# map: what's the region of my data, in order to find a map(abs, openstreetmap, ...) to plot
-
-# reproduce some early result using the cubble object
 ```
 
 

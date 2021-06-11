@@ -8,7 +8,7 @@
 #' @export
 cubble <- function(main, item, by = NULL){
   # check whether main is a tsibble
-  tsibble::is_tsibble(main)
+  is_tsibble(main)
 
   # check whether item is a tibble
   tibble::is_tibble(item)

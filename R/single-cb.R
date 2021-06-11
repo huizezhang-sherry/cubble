@@ -6,8 +6,8 @@
 new_sheet_single <- function(single_sheet, by, cb){
   if(is_tsibble(single_sheet)){
     new_tsibble(single_sheet, by = by, cb = cb, class = "single_cb")
-  } else if (is_tibble(single_sheet)){
-    new_tibble(single_sheet, by = by, cb = cb, class = "single_cb")
+  } else if (tibble::is_tibble(single_sheet)){
+    tibble::new_tibble(single_sheet, by = by, cb = cb, class = "single_cb")
   }
 
 }
