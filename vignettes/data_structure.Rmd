@@ -144,3 +144,56 @@ df %>%
   ... %>% 
   cubble_join()
 ```
+
+# Nesting
+
+`nest_by` is a verb I recently discovered in dplyr. It is powered by the `rowwise` operation to create a list-column that nests each group into one row. I think it is a nice structure that makes compute station-wise values much easier (see below). However, I think the unnest workflow can be improved a bit further: currently, one need to use both `unnest` + `ungroup` to restore to the initial unnested and ungrouped stage. It would be nice to have these two operations combined.
+
+```{r}
+start_end <- climate %>% 
+  nest_by(station) %>% 
+  mutate(start = min(data$date), end = max(data$date))
+```
+
+```{r}
+start_end %>% 
+  unnest(data) %>% 
+  ungroup()
+```
+
+The associated `nest_by()` can join two data frames while keep a nesting structure. With `rowwise`, this is elegant to compute station-wise information. Currently, it doesn't support the nested list to be a tsibble tho.
+
+```{r}
+joined <- station %>% nest_join(climate, by = c("id" = "station"))
+
+joined %>% 
+  rowwise() %>% 
+  mutate(start = min(climate$date))
+
+joined2 <- climate %>% nest_join(station, by = c("station" = "id"))
+```
+
+Also, referening to variables in the list-column is not particularly convenient with the current infrastructure. For example,  in an example to add the proportion of presence for `prcp` column, it would be nice if we can drop `data$` when referening to variable in the nested list.
+
+```{r}
+start_end %>% 
+  mutate(prcp_missing = sum(is.na(data$prcp) / length(data$prcp)))
+```
+
+Also to repeat this calculation for all the variables (`prcp`: `tavg`) in an unnested structure, we can do
+
+```{r}
+climate %>% mutate(across(prcp: tavg, ~sum(is.na(.x))/ length(.x)))
+```
+
+But this won't work in list-column
+
+```{r eval = FALSE}
+start_end %>% mutate(across(data$prcp: data$tavg, ~sum(is.na(.x))/ length(.x)))
+# Error: Problem with `mutate()` input `..1`.
+# ℹ `..1 = across(data$prcp:data$tavg, ~sum(is.na(.x))/length(.x))`.
+# x object of type 'closure' is not subsettable
+# ℹ The error occurred in row 1.
+# Run `rlang::last_error()` to see where the error occurred.
+```
+
