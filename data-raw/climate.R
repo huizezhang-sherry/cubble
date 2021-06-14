@@ -80,6 +80,13 @@ station <- station_meta %>%
   select(-c(state, gsn_flag)) %>%
   filter(id %in% good)
 
+############################################################
+############################################################
+nested <- climate %>%
+  nest_by(station) %>%
+  left_join(station, by = c("station" = "id")) %>%
+  mutate(data = list(as_tsibble(data, index = date)))
 
 usethis::use_data(climate, overwrite = TRUE)
 usethis::use_data(station, overwrite = TRUE)
+usethis::use_data(nested, overwrite = TRUE)

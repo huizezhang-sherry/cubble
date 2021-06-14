@@ -58,6 +58,22 @@ mutated <- nested %>% mutate(var_recorded = map_dbl(data, count_var))
 joined <- mutated %>% cubble_join()
 ```
 
+# Workflow of nested structure
+
+```{r}
+sample <- nested$station %>% unique() %>% head(5)
+
+expand <- nested %>% 
+  filter(station %in% sample) %>% 
+  mutate(data = list(fill_gaps(data)))
+
+## some functions to unnest into a tsibble structure, tried unnest_tsibble/ unnest
+## some functions to move variables in/ out of nested list
+## some functions to allow data masking within list
+## reproduce old result: think about how would you plot the data with list-column structure
+
+
+```
 
 
 # Use cubble with tidyverts
