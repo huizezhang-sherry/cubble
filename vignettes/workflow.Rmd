@@ -75,6 +75,68 @@ expand <- nested %>%
 
 ```
 
+Reproduce old result
+
+```{r eval = FALSE}
+library(tidyr)
+library(dplyr)
+library(stringr)
+library(lubridate)
+library(purrr)
+library(ggplot2)
+nested <- oz_climate %>%
+  mutate(name = as.factor(str_remove(tolower(name), ", as"))) %>% 
+  nest(date, prcp, tmax, tmin) %>% 
+  rowwise() 
+  #mutate(data = list(as_tsibble(data, index = date))) # currently no unnest method works for tsibble
+
+mutated <- nested %>% mutate(year_1998 = any(year(data$date) == 1998))
+
+# some summary stats: equivalent number of years recorded
+nested %>% 
+  mutate(obs = nrow(data)/365) %>% 
+  arrange(-obs)
+
+
+
+# currently you can't filter within nested list, flattern the list to filter for now
+# Don't work: nested %>% filter(year(data$date) == 1998)
+
+# filter some stations to do a basic plot
+name <- nested %>% mutate(choose = any(!is.na(data$tmax))) %>% filter(choose) %>% pull(station)
+set.seed(123456)
+samples <- sample(name, size = 5)
+
+filtered <- nested %>% 
+  unnest(data) %>% 
+  filter(year(date) > 2015, station %in% samples)
+
+filtered %>% 
+  ggplot(aes(x = date, y = tmax)) + 
+  geom_line() + 
+  facet_wrap(vars(name))
+  
+# plot max temp for a few places
+nested %>% 
+  unnest(data) %>% 
+  filter(name == "cape leeuwin") %>% 
+  ggplot(aes(x = date, y = tmax)) + 
+  geom_line()
+
+nested %>% 
+  filter(name == "cape leeuwin") %>% 
+  unnest(data) %>% 
+  mutate(yday = yday(date),
+         year = year(date)) %>% 
+  ggplot(aes(x = yday, y = tmax,group = interaction(name, year))) + 
+  geom_line(alpha = 0.1) + 
+  ggtitle("Cape leeuwin")
+```
+
+
+
+
+
 
 # Use cubble with tidyverts
 
