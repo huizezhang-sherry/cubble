@@ -22,7 +22,7 @@ cubble_join <- function(single_cb){
     to_join <- single_cb %>% dplyr::select(by, index_var, to_join_names)
     by_main <- by_var(single_cb)[by_var(single_cb) %in% colnames(relational$main)]
     main <- relational$main %>%
-      dplyr::left_join(to_join, by = c(setNames(as_string(by), as_string(by_item)), as_string(index_var)))
+      dplyr::left_join(to_join, by = c(setNames(as_string(by), as_string(by_main)), as_string(index_var)))
     new_cubble(main = main, item = relational$item, by = by_var(relational))
   } else{
     # go to item sheet

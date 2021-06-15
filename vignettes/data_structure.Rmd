@@ -150,27 +150,29 @@ df %>%
 `nest_by` is a verb I recently discovered in dplyr. It is powered by the `rowwise` operation to create a list-column that nests each group into one row. I think it is a nice structure that makes compute station-wise values much easier (see below). However, I think the unnest workflow can be improved a bit further: currently, one need to use both `unnest` + `ungroup` to restore to the initial unnested and ungrouped stage. It would be nice to have these two operations combined.
 
 ```{r}
+start_end <- climate %>% 
+  nest_by(station) %>% 
+  mutate(start = min(data$date), 
+         end = max(data$date))
 
 count_var <- function(dt){
   dt %>% 
     as_tibble() %>% 
-    pivot_longer(prcp:tavg, names_to = "datatype", values_to = "value") %>% 
+    tidyr::pivot_longer(prcp:tavg, names_to = "datatype", values_to = "value") %>% 
     group_by(datatype) %>% 
     # think of a better way to filter out those block missing
     summarise(missing = sum(value, na.rm = TRUE)) %>% 
     filter(missing != 0) %>% nrow()
 }
 
-start_end <- climate %>% 
+climate %>% 
   nest_by(station) %>% 
-  mutate(start = min(data$date), 
-         end = max(data$date),
-         var_count = count_var(data))
+  mutate(var_count = count_var(data))
 ```
 
 ```{r}
 start_end %>% 
-  unnest(data) %>% 
+  tidyr::unnest(data) %>% 
   ungroup()
 ```
 
@@ -186,7 +188,7 @@ joined %>%
 joined2 <- climate %>% nest_join(station, by = c("station" = "id"))
 ```
 
-Also, referening to variables in the list-column is not particularly convenient with the current infrastructure. For example,  in an example to add the proportion of presence for `prcp` column, it would be nice if we can drop `data$` when referening to variable in the nested list.
+Also, referening to variables in the list-column is not particularly convenient with the current infrastructure. For example,  in an example to add the proportion of presence for `prcp` column, it would be nice if we can drop `data$` when referencing to variable in the nested list.
 
 ```{r}
 start_end %>% 
