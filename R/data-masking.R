@@ -5,21 +5,42 @@
 #' @export
 #' @rdname data-structure
 global <- function(data, key){
+  UseMethod("global")
 
+}
+
+find_nest_var <- function(data, key){
   key <- enquo(key)
   # temporarily only one key
   non_varying_var <- find_non_varying_var(data, !!key)
   col_names <- names2(data)
   nest_var <- col_names[!col_names %in% non_varying_var]
 
-  list_col <- data %>%
-    tidyr::nest(!!!nest_var) %>%
+  list(nest_var= nest_var, non_varying_var = non_varying_var)
+}
+
+global.cubble_df <- function(data, key){
+  key <- enquo(key)
+  nest_var <- find_nest_var(data, !!key)
+  meta_data <- data %@% meta
+  out <- as_tibble(data) %>%
+    dplyr::left_join(as_tibble(meta_data)) %>%
+    tidyr::nest(!!!nest_var$nest_var) %>%
     dplyr::rowwise()
-  meta_data <- list_col[non_varying_var]
+
+  cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = "wide")
+}
 
 
-  cubble_df(list_col, group_vars = as_name(key), meta_data = meta_data, format = "wide")
+global.tbl_df <- function(data, key){
+  key <- enquo(key)
+  nest_var <- find_nest_var(data, !!key)
 
+  out <- data %>%
+    tidyr::nest(!!!nest_var$nest_var) %>%
+    dplyr::rowwise()
+  meta_data <- out[nest_var$non_varying_var]
+  cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = "wide")
 }
 
 cubble_df <- function(data, group_vars, meta_data, format){
@@ -81,12 +102,8 @@ zoom <- function(dt, col){
 }
 
 
-dplyr_col_modify.cubble_df <- function(data, cols){
+dplyr_col_modify.cubble_df <- dplyr:::dplyr_col_modify.rowwise_df
 
 
-}
+dplyr_reconstruct.cubble_df <- dplyr:::dplyr_reconstruct.rowwise_df
 
-
-dplyr_reconstruct.cubble_df <- function(data, template){
-
-}
