@@ -19,6 +19,7 @@ find_nest_var <- function(data, key){
   list(nest_var= nest_var, non_varying_var = non_varying_var)
 }
 
+#' @export
 global.cubble_df <- function(data, key){
   key <- enquo(key)
   nest_var <- find_nest_var(data, !!key)
@@ -31,7 +32,7 @@ global.cubble_df <- function(data, key){
   cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = "wide")
 }
 
-
+#' @export
 global.tbl_df <- function(data, key){
   key <- enquo(key)
   nest_var <- find_nest_var(data, !!key)
@@ -50,7 +51,6 @@ cubble_df <- function(data, group_vars, meta_data, format){
 
 
 new_cubble_df <- function(data, group_vars, meta_data, format){
-
   if (format == "wide"){
     nrow <- nrow(data)
     group_data <- as_tibble(data)[group_vars]
@@ -62,7 +62,7 @@ new_cubble_df <- function(data, group_vars, meta_data, format){
   }
 
 
-  new_tibble(data, groups = group_data, meta = meta_data, format = format, class = "cubble_df")
+  new_tibble(data, groups = group_data, meta = meta_data, format = format, class = c("cubble_df", "rowwise_df"))
 }
 
 find_non_varying_var <- function(data, key){
@@ -101,9 +101,30 @@ zoom <- function(dt, col){
   cubble_df(out, group_vars = group_var, meta_data = meta_data, format = "long")
 }
 
+#' @export
+dplyr_col_modify.cubble_df <- function(data, cols){
 
-dplyr_col_modify.cubble_df <- dplyr:::dplyr_col_modify.rowwise_df
+  out <- dplyr_col_modify(as_tibble(data), cols)
+  group_vars <- names2(data %@% groups)[1]
+  meta_data <- data %@% meta
+  cubble_df(out, group_vars = group_vars, meta_data = meta_data, format = "wide")
+}
 
+#' @export
+dplyr_row_slice.cubble_df <- function(data, i, ...){
 
-dplyr_reconstruct.cubble_df <- dplyr:::dplyr_reconstruct.rowwise_df
+  out <- vec_slice(data, i)
+  group_vars <- names2(data %@% groups)[1]
+  meta_data <- data %@% meta
+  cubble_df(out, group_vars = group_vars, meta_data = meta_data, format = "long")
+}
+
+#' @export
+dplyr_reconstruct.cubble_df <- function(data, template){
+
+  group_vars <-  names2(data %@% groups)[1]
+  meta_data <- data %@% meta
+
+  cubble_df(data, group_vars = group_vars, meta_data = meta_data, format = "long")
+}
 
