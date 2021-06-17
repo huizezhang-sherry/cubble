@@ -7,7 +7,7 @@
 #' }
 #' @examples
 #' library(tidyr)
-#' climate %>% pivot_longer(prcp: tavg, names_to = "param", values_to = "value")
+#' climate %>% pivot_longer(prcp:tavg, names_to = "param", values_to = "value")
 "climate"
 
 #' Australian weather stations

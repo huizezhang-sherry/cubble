@@ -1,0 +1,107 @@
+#' Data structure
+#' @examples
+#' global <- global(oz_climate, station)
+#' zoom <- global %>% zoom(data)
+#' @export
+#' @rdname data-structure
+global <- function(data, key) {
+  UseMethod("global")
+}
+
+#' @export
+global.cubble_df <- function(data, key) {
+  key <- enquo(key)
+  nest_var <- find_nest_var(data, !!key)
+  meta_data <- data %@% meta
+  out <- as_tibble(data) %>%
+    dplyr::left_join(as_tibble(meta_data)) %>%
+    tidyr::nest(!!!nest_var$nest_var) %>%
+    dplyr::rowwise()
+
+  cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = "wide")
+}
+
+#' @export
+global.tbl_df <- function(data, key) {
+  key <- enquo(key)
+  nest_var <- find_nest_var(data, !!key)
+
+  out <- data %>%
+    tidyr::nest(!!!nest_var$nest_var) %>%
+    dplyr::rowwise()
+  meta_data <- out[nest_var$non_varying_var]
+  cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = "wide")
+}
+
+cubble_df <- function(data, group_vars, meta_data, format) {
+  new_cubble_df(data, group_vars, meta_data, format = format)
+}
+
+
+new_cubble_df <- function(data, group_vars, meta_data, format, others = NULL) {
+
+  # dots <- dplyr:::dplyr_quosures(...)
+
+  if (format == "wide") {
+    nrow <- nrow(data)
+    group_data <- as_tibble(data)[group_vars]
+    group_data <- new_tibble(dplyr:::dplyr_vec_data(group_data), nrow = nrow)
+    group_data$.rows <- new_list_of(as.list(seq_len(nrow)), ptype = integer())
+  } else if (format == "long") {
+    nrow <- nrow(meta_data)
+    group_data <- dplyr:::compute_groups(data, as_name(group_vars))
+  }
+
+  # class_raw <- class(data)
+  # if ("class" %in% names(dots)){
+  #   class <- vec_c(class_raw, as_name(dots[[1]]))
+  # } else{
+  #   class <- class_raw
+  # }
+
+  # attr <- list(x = data,
+  #              groups = group_data,
+  #              meta = meta_data,
+  #              format = format,
+  #              class = class)
+  #
+  # attr_all <- c(attr, others)
+  #
+  #   rlang::exec("new_tibble", !!!attr_all)
+
+  new_tibble(data, groups = group_data, meta = meta_data, format = format, class = c("cubble_df", "rowwise_df"))
+}
+
+
+#' @importFrom  tibble tbl_sum
+#' @export
+tbl_sum.cubble_df <- function(data) {
+  c(
+    NextMethod(),
+    "Cubble" = data %@% format
+  )
+}
+
+
+#' @export
+#' @rdname data-structure
+zoom <- function(data, col) {
+
+  # check from a global_df
+  col <- enquo(col)
+
+  if (!is_list(eval_tidy(col, data))) {
+    abort("The column to zoom need to be a list-column")
+  }
+
+  group_var <- sym(names(data %@% groups)[1])
+  meta_data <- data %@% meta
+
+  out <- data %>%
+    dplyr::select(group_var, !!col) %>%
+    tidyr::unnest(!!col)
+
+  nrow <- nrow(data)
+
+  cubble_df(out, group_vars = group_var, meta_data = meta_data, format = "long")
+}
