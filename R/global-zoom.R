@@ -12,7 +12,7 @@ global <- function(data, key) {
 global.cubble_df <- function(data, key) {
   key <- enquo(key)
   nest_var <- find_nest_var(data, !!key)
-  meta_data <- data %@% meta
+  meta_data <- meta(data)
   out <- as_tibble(data) %>%
     dplyr::left_join(as_tibble(meta_data)) %>%
     tidyr::nest(!!!nest_var$nest_var) %>%
@@ -78,7 +78,7 @@ new_cubble_df <- function(data, group_vars, meta_data, format, others = NULL) {
 tbl_sum.cubble_df <- function(data) {
   c(
     NextMethod(),
-    "Cubble" = data %@% format
+    "Cubble" = format(data)
   )
 }
 
@@ -94,8 +94,8 @@ zoom <- function(data, col) {
     abort("The column to zoom need to be a list-column")
   }
 
-  group_var <- sym(names(data %@% groups)[1])
-  meta_data <- data %@% meta
+  group_var <- sym(group_vars(data))
+  meta_data <- meta(data)
 
   out <- data %>%
     dplyr::select(group_var, !!col) %>%
@@ -105,3 +105,38 @@ zoom <- function(data, col) {
 
   cubble_df(out, group_vars = group_var, meta_data = meta_data, format = "long")
 }
+
+#' @export
+is_cubble <- function(data){
+  inherits(data, "cubble_df")
+}
+
+
+#' get attributes for a cubble object
+#'
+#' @param data an cubble object
+#'
+#' @export
+#' @rdname attributes
+format <- function(data){
+  test_cubble(data)
+  data %@% format
+}
+
+#' @export
+#' @rdname attributes
+meta <- function(data){
+  test_cubble(data)
+  data %@% meta
+}
+
+#' @export
+#' @rdname attributes
+group_vars <- function(data){
+  test_cubble(data)
+  groups <- data %@% groups
+  names <- names2(groups)
+  names[names != ".rows"]
+}
+
+

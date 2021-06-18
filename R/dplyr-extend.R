@@ -2,8 +2,8 @@
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
   out <- dplyr:::dplyr_col_modify(as_tibble(data), cols)
-  group_vars <- names2(data %@% groups)[1]
-  meta_data <- data %@% meta
+  group_vars <- group_vars(data)
+  meta_data <- meta(data)
 
   # if ("tbl_ts" %in% class(data)){
   #   attr_data <- attributes(data)
@@ -20,16 +20,17 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
 #' @export
 dplyr_row_slice.cubble_df <- function(data, i, ...) {
   out <- vec_slice(data, i)
-  group_vars <- names2(data %@% groups)[1]
-  meta_data <- data %@% meta
+  group_vars <- group_vars(data)
+  meta_data <- meta(data)
   cubble_df(out, group_vars = group_vars, meta_data = meta_data, format = "long")
 }
 
 #' @importFrom dplyr dplyr_reconstruct dplyr_row_slice
 #' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
-  group_vars <- names2(data %@% groups)[1]
-  meta_data <- data %@% meta
+  group_vars <- group_vars(data)
+  meta_data <- meta(data)
 
   cubble_df(data, group_vars = group_vars, meta_data = meta_data, format = "long")
 }
+

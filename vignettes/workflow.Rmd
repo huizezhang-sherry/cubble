@@ -134,6 +134,31 @@ nested %>%
 ```
 
 
+```{r}
+oz_global <- oz_climate  %>% global(station)
+oz_zoom <- oz_global %>% zoom(data)
+back <- oz_zoom %>% global(station)
+
+station_wise <- oz_global %>% 
+  mutate(start = min(data$date),
+         end = max(data$date), 
+         prcp_missing = sum(is.na(data$prcp) / length(data$prcp)))
+
+# still working on more verbs: group_by, summarise, filter with changes on key, so that the following code would run
+time_wise <- oz_zoom %>% 
+  as_tsibble(index = date, key = station) %>% 
+  mutate(ym = yearmonth(date)) %>% 
+  # index_by(ym) %>% 
+  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE))) %>% 
+  filter(year(ym) >= 2015)
+  
+# For now, mutate works, filter works but the metadata is not updated
+time_wise <- oz_zoom %>% 
+  mutate(ym = yearmonth(date)) %>% 
+  filter(station == "ASN00001019") %>%
+  group_by(ym) %>% 
+  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
+```
 
 
 

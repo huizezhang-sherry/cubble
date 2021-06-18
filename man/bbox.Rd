@@ -4,10 +4,10 @@
 \alias{bbox}
 \title{extract bbox of the coordinate with a buffer}
 \usage{
-bbox(dt, lat, long, buffer_ratio = 0.01)
+bbox(data, lat, long, buffer_ratio = 0.01)
 }
 \arguments{
-\item{dt}{the data object}
+\item{data}{the data object}
 
 \item{lat}{the latitude column}
 
@@ -21,5 +21,5 @@ extract bbox of the coordinate with a buffer
 \examples{
 aus_map <- get_map(location = bbox(nested), source = "osm")
 ggmap(aus_map) +
-   geom_point(data = nested, aes(x = long, y = lat))
+  geom_point(data = nested, aes(x = long, y = lat))
 }

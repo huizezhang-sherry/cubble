@@ -7,7 +7,7 @@
 \usage{
 global(data, key)
 
-zoom(dt, col)
+zoom(data, col)
 }
 \description{
 Data structure

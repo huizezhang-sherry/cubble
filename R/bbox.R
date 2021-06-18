@@ -1,26 +1,27 @@
 #' extract bbox of the coordinate with a buffer
-#' @param dt the data object
+#' @param data the data object
 #' @param lat the latitude column
 #' @param long the longitude column
 #' @param buffer_ratio the percentage to add/deduct to the max/min lat/long when querying the map
 #'
 #' @examples
+#' library(ggmap)
 #' aus_map <- get_map(location = bbox(nested), source = "osm")
 #' ggmap(aus_map) +
 #'   geom_point(data = nested, aes(x = long, y = lat))
 #' @importFrom dplyr summarise across ends_with mutate
 #' @importFrom tidyr unnest
 #' @export
-bbox <- function(dt, lat, long, buffer_ratio = 0.01) {
+bbox <- function(data, lat, long, buffer_ratio = 0.01) {
 
   # check data structure
   # check lat, long present in the data
 
-  if ("rowwise_df" %in% class(dt)) {
-    dt <- dt %>% tidyr::unnest()
+  if ("rowwise_df" %in% class(data)) {
+    data <- data %>% tidyr::unnest()
   }
 
-  out <- dt %>%
+  out <- data %>%
     dplyr::summarise(dplyr::across(lat:long, list(min = min, max = max))) %>%
     relocate(long_min, lat_min, long_max, lat_max)
 
