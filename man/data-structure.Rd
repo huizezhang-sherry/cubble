@@ -13,6 +13,7 @@ zoom(data, col)
 Data structure
 }
 \examples{
-global <- global(oz_climate, station)
-zoom <- global \%>\% zoom(data)
+oz_global <- global(oz_climate, station)
+oz_zoom <- oz_global \%>\% zoom(data)
+back <- oz_zoom \%>\% global(station)
 }

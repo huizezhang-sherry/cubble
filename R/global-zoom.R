@@ -1,7 +1,8 @@
 #' Data structure
 #' @examples
-#' global <- global(oz_climate, station)
-#' zoom <- global %>% zoom(data)
+#' oz_global <- global(oz_climate, station)
+#' oz_zoom <- oz_global %>% zoom(data)
+#' back <- oz_zoom %>% global(station)
 #' @export
 #' @rdname data-structure
 global <- function(data, key) {
@@ -33,14 +34,13 @@ global.tbl_df <- function(data, key) {
   cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = "wide")
 }
 
-cubble_df <- function(data, group_vars, meta_data, format) {
+#' @export
+cubble_df <- function(data, group_vars, meta_data,  format) {
   new_cubble_df(data, group_vars, meta_data, format = format)
+
 }
 
-
 new_cubble_df <- function(data, group_vars, meta_data, format, others = NULL) {
-
-  # dots <- dplyr:::dplyr_quosures(...)
 
   if (format == "wide") {
     nrow <- nrow(data)
@@ -52,24 +52,26 @@ new_cubble_df <- function(data, group_vars, meta_data, format, others = NULL) {
     group_data <- dplyr:::compute_groups(data, as_name(group_vars))
   }
 
-  # class_raw <- class(data)
-  # if ("class" %in% names(dots)){
-  #   class <- vec_c(class_raw, as_name(dots[[1]]))
-  # } else{
-  #   class <- class_raw
-  # }
+  if ("tbl_ts" %in% class(data)){
+    attr <- attributes(data)
+    attr_to_add <- attr[!names(attr) %in% c("names", "row.names", "class")]
 
-  # attr <- list(x = data,
-  #              groups = group_data,
-  #              meta = meta_data,
-  #              format = format,
-  #              class = class)
-  #
-  # attr_all <- c(attr, others)
-  #
-  #   rlang::exec("new_tibble", !!!attr_all)
+    class <- c("cubble_df", "rowwise_df", class(data))
 
-  new_tibble(data, groups = group_data, meta = meta_data, format = format, class = c("cubble_df", "rowwise_df"))
+    attr_basics <- list(x = data,
+                        groups = group_data,
+                        meta = meta_data,
+                        format = format,
+                        class = class)
+
+    attr_all <- c(attr_basics, attr_to_add)
+
+    rlang::exec("new_tibble", !!!attr_all)
+
+  } else{
+    new_tibble(data, groups = group_data, meta = meta_data, format = format, class = c("cubble_df", "rowwise_df"))
+  }
+
 }
 
 
@@ -86,8 +88,13 @@ tbl_sum.cubble_df <- function(data) {
 #' @export
 #' @rdname data-structure
 zoom <- function(data, col) {
+  UseMethod("zoom")
+}
 
-  # check from a global_df
+#' @export
+zoom.cubble_df <- function(data, col){
+
+  test_cubble(data)
   col <- enquo(col)
 
   if (!is_list(eval_tidy(col, data))) {
@@ -97,14 +104,21 @@ zoom <- function(data, col) {
   group_var <- sym(group_vars(data))
   meta_data <- meta(data)
 
-  out <- data %>%
-    dplyr::select(group_var, !!col) %>%
-    tidyr::unnest(!!col)
-
-  nrow <- nrow(data)
+  if ("tbl_ts" %in% class(data %>% dplyr::pull(!!col) %>% .[[1]])){
+    data$data <- map(data$data, as_tibble)
+    out <- data[vec_c(as_name(group_var), as_name(col))]
+    out <- out %>%
+      tidyr::unnest(!!col) %>%
+      tsibble::as_tsibble(key = !!group_var)
+  } else{
+    out <- data %>%
+      dplyr::select(!!group_var, !!col) %>%
+      tidyr::unnest(!!col)
+  }
 
   cubble_df(out, group_vars = group_var, meta_data = meta_data, format = "long")
 }
+
 
 #' @export
 is_cubble <- function(data){
