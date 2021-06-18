@@ -160,6 +160,23 @@ time_wise <- oz_zoom %>%
   summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
 ```
 
+work with tsibble:
+
+```{r}
+library(tsibble)
+oz_climate_tsibble <- oz_climate %>% as_tsibble(index = date, key = station)
+oz_global2 <- oz_climate_tsibble %>% global(station)
+oz_zoom2 <- oz_global2 %>% zoom(data)
+
+# work
+time_wise <- oz_zoom %>% 
+  as_tsibble(index = date, key = station)
+
+# lose the tbl_ts class after mutate
+time_wise <- oz_zoom %>% 
+  as_tsibble(index = date, key = station) %>% 
+  mutate(ym = yearmonth(date))
+```
 
 
 
