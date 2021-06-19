@@ -2,7 +2,7 @@
 % Please edit documentation in R/bbox.R
 \name{bbox}
 \alias{bbox}
-\title{extract bbox of the coordinate with a buffer}
+\title{Extract bbox of the coordinate with a buffer}
 \usage{
 bbox(data, lat, long, buffer_ratio = 0.01)
 }
@@ -16,7 +16,7 @@ bbox(data, lat, long, buffer_ratio = 0.01)
 \item{buffer_ratio}{the percentage to add/deduct to the max/min lat/long when querying the map}
 }
 \description{
-extract bbox of the coordinate with a buffer
+Extract bbox of the coordinate with a buffer
 }
 \examples{
 library(ggmap)

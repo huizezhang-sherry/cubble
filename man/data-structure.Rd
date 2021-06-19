@@ -9,6 +9,13 @@ global(data, key)
 
 zoom(data, col)
 }
+\arguments{
+\item{data}{the data to zoom}
+
+\item{key}{the spatio identifier}
+
+\item{col}{the list-column in the data to zoom into}
+}
 \description{
 Data structure
 }

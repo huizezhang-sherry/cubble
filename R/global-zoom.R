@@ -1,4 +1,7 @@
 #' Data structure
+#' @param data the data to be converted into a cubble object
+#' @param key the spatio identifier
+#'
 #' @examples
 #' oz_global <- global(oz_climate, station)
 #' oz_zoom <- oz_global %>% zoom(data)
@@ -85,6 +88,8 @@ tbl_sum.cubble_df <- function(data) {
 }
 
 
+#' @param data the data to zoom
+#' @param col the list-column in the data to zoom into
 #' @export
 #' @rdname data-structure
 zoom <- function(data, col) {
@@ -104,7 +109,9 @@ zoom.cubble_df <- function(data, col){
   group_var <- sym(group_vars(data))
   meta_data <- meta(data)
 
-  if ("tbl_ts" %in% class(data %>% dplyr::pull(!!col) %>% .[[1]])){
+  list_col <- data %>% dplyr::pull(!!col)
+
+  if ("tbl_ts" %in% class(list_col[[1]])){
     data$data <- map(data$data, as_tibble)
     out <- data[vec_c(as_name(group_var), as_name(col))]
     out <- out %>%
