@@ -1,18 +1,15 @@
 #' @importFrom dplyr dplyr_col_modify
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
-  out <- dplyr:::dplyr_col_modify(as_tibble(data), cols)
+
   group_vars <- group_vars(data)
   meta_data <- meta(data)
 
-  # if ("tbl_ts" %in% class(data)){
-  #   attr_data <- attributes(data)
-  #   attr_tsibble_all <- attributes(out)
-  #   attr_tsibble <- attr_tsibble_all[setdiff(names(attr_tsibble_all), names(attr_data))]
-  #   cubble_df(out, group_vars = group_vars, meta_data = meta_data, class = "tbl_ts", others = attr_tsibble, format = "wide")
-  # } else{
-  #   cubble_df(out, group_vars = group_vars, meta_data = meta_data, format = "wide")
-  # }
+  if ("tbl_ts" %in% class(data)){
+    out <- dplyr:::dplyr_col_modify(as_tsibble(as_tibble(data), key = !!group_vars), cols)
+  } else{
+    out <- dplyr:::dplyr_col_modify(as_tibble(data), cols)
+  }
 
   cubble_df(out, group_vars = group_vars, meta_data = meta_data, format = "wide")
 }
