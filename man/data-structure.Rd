@@ -2,17 +2,32 @@
 % Please edit documentation in R/global-zoom.R
 \name{global}
 \alias{global}
+\alias{cubble_df}
+\alias{new_cubble_df}
 \alias{zoom}
+\alias{is_cubble}
 \title{Data structure}
 \usage{
 global(data, key)
 
+cubble_df(data, group_vars, meta_data, format)
+
+new_cubble_df(data, group_vars, meta_data, format)
+
 zoom(data, col)
+
+is_cubble(data)
 }
 \arguments{
-\item{data}{the data to zoom}
+\item{data}{the data to be converted into a cubble object}
 
 \item{key}{the spatio identifier}
+
+\item{group_vars}{the spatio identifier}
+
+\item{meta_data}{metadata to include in the attributes}
+
+\item{format}{whether the long or wide format}
 
 \item{col}{the list-column in the data to zoom into}
 }

@@ -21,3 +21,17 @@
 #'   \item{wmo_id}{the world meterological organisation station number, if has one}
 #' }
 "station"
+
+#' A nested data
+#' @format A rowwise dataframe iwth 1,451 rows adn 7 columns
+#' \describe{
+#'   \item{station}{station id}
+#'   \item{data}{a list-column that nests all the time-wise measures}
+#'   \item{lat}{latitude of the station}
+#'   \item{long}{longitude of the station}
+#'   \item{elev}{elevation of the station}
+#'   \item{name}{station name}
+#'   \item{wmo_id}{the world meterological organisation station number, if has one}
+#' }
+"nested"
+

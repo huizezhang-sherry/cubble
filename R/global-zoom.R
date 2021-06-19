@@ -1,7 +1,10 @@
 #' Data structure
 #' @param data the data to be converted into a cubble object
 #' @param key the spatio identifier
-#'
+#' @param col the list-column in the data to zoom into
+#' @param group_vars the spatio identifier
+#' @param meta_data metadata to include in the attributes
+#' @param format whether the long or wide format
 #' @examples
 #' oz_global <- global(oz_climate, station)
 #' oz_zoom <- oz_global %>% zoom(data)
@@ -37,18 +40,22 @@ global.tbl_df <- function(data, key) {
   cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = "wide")
 }
 
+
+#' @rdname data-structure
 #' @export
 cubble_df <- function(data, group_vars, meta_data,  format) {
   new_cubble_df(data, group_vars, meta_data, format = format)
 
 }
 
-new_cubble_df <- function(data, group_vars, meta_data, format, others = NULL) {
+#' @rdname data-structure
+#' @export
+new_cubble_df <- function(data, group_vars, meta_data, format) {
 
   if (format == "wide") {
     nrow <- nrow(data)
     group_data <- as_tibble(data)[group_vars]
-    group_data <- new_tibble(dplyr:::dplyr_vec_data(group_data), nrow = nrow)
+    group_data <- new_tibble(vec_data(group_data), nrow = nrow)
     group_data$.rows <- new_list_of(as.list(seq_len(nrow)), ptype = integer())
   } else if (format == "long") {
     nrow <- nrow(meta_data)
@@ -87,9 +94,6 @@ tbl_sum.cubble_df <- function(data) {
   )
 }
 
-
-#' @param data the data to zoom
-#' @param col the list-column in the data to zoom into
 #' @export
 #' @rdname data-structure
 zoom <- function(data, col) {
@@ -126,7 +130,7 @@ zoom.cubble_df <- function(data, col){
   cubble_df(out, group_vars = group_var, meta_data = meta_data, format = "long")
 }
 
-
+#' @rdname data-structure
 #' @export
 is_cubble <- function(data){
   inherits(data, "cubble_df")

@@ -20,7 +20,7 @@ Extract bbox of the coordinate with a buffer
 }
 \examples{
 library(ggmap)
-aus_map <- get_map(location = bbox(nested), source = "osm")
-ggmap(aus_map) +
-  geom_point(data = nested, aes(x = long, y = lat))
+library(ggplot2)
+aus_map <- get_map(location = bbox(station), source = "osm")
+ggmap(aus_map) + geom_point(data = station, aes(x = long, y = lat))
 }

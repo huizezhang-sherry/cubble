@@ -9,6 +9,11 @@
 
 \method{index_by}{cubble_df}(data, ...)
 }
+\arguments{
+\item{data}{the data object to be operated on}
+
+\item{...}{other arguments passed onto the function}
+}
 \description{
 tsibble related functions
 }

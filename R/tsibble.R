@@ -1,4 +1,7 @@
 #' tsibble related functions
+#' @param data the data object to be operated on
+#' @param ... other arguments passed onto the function
+#'
 #' @export
 #' @rdname tsibble
 as_tsibble.cubble_df <- function(data, ...) {

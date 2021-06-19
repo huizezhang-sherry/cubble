@@ -82,10 +82,12 @@ station <- station_meta %>%
 
 ############################################################
 ############################################################
+samples <- sample(station$id, 100)
 nested <- climate %>%
   nest_by(station) %>%
   left_join(station, by = c("station" = "id")) %>%
-  mutate(data = list(as_tsibble(data, index = date)))
+  mutate(data = list(as_tsibble(data, index = date))) %>%
+  filter(station %in% samples)
 
 usethis::use_data(climate, overwrite = TRUE)
 usethis::use_data(station, overwrite = TRUE)

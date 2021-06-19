@@ -29,7 +29,8 @@ Imports:
 Suggests: 
     rmarkdown,
     knitr,
-    ggmap
+    ggmap,
+    ggplot2
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
