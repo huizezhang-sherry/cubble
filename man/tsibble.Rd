@@ -3,11 +3,14 @@
 \name{as_tsibble.cubble_df}
 \alias{as_tsibble.cubble_df}
 \alias{index_by.cubble_df}
+\alias{summarise.cubble_df}
 \title{tsibble related functions}
 \usage{
 \method{as_tsibble}{cubble_df}(data, ...)
 
 \method{index_by}{cubble_df}(data, ...)
+
+\method{summarise}{cubble_df}(data, ...)
 }
 \arguments{
 \item{data}{the data object to be operated on}

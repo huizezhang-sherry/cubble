@@ -170,7 +170,6 @@ oz_zoom2 <- oz_global2 %>% zoom(data)
 
 # work
 indexed <- oz_zoom2 %>% 
-  as_tsibble(index = date, key = station) %>% 
   mutate(ym = yearmonth(date)) %>% 
   index_by(ym)
 
