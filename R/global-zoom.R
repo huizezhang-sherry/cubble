@@ -2,7 +2,7 @@
 #' @param data the data to be converted into a cubble object
 #' @param key the spatio identifier
 #' @param col the list-column in the data to zoom into
-#' @param group_vars the spatio identifier
+#' @param group the spatio identifier
 #' @param meta_data metadata to include in the attributes
 #' @param format whether the long or wide format
 #' @examples

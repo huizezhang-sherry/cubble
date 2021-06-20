@@ -17,8 +17,12 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
   meta_data <- meta(data)
-  col <- meta_data[[group_vars]] %in% unique(out[[group_vars]])
-  meta_data <- meta_data[col,]
+
+  # update meta data
+  meta_col <- group_vars[map_lgl(group_vars, ~has_name(meta_data, .x))]
+  row <- meta_data[[meta_col]] %in% unique(out[[meta_col]])
+  meta_data <- meta_data[row,]
+
   cubble_df(out, group = group_vars, meta_data = meta_data, format = determine_format(out) )
 }
 

@@ -152,7 +152,7 @@ time_wise <- oz_zoom %>%
 # goal2
 time_wise <- oz_zoom %>% 
   mutate(ym = yearmonth(date)) %>% 
-  filter(station == "ASN00001019") %>%
+  dplyr::filter(station == "ASN00001019") %>%
   group_by(ym) %>% 
   summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
 
