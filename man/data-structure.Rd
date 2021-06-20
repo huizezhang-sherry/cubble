@@ -10,9 +10,9 @@
 \usage{
 global(data, key)
 
-cubble_df(data, group_vars, meta_data, format)
+cubble_df(data, group, meta_data, format)
 
-new_cubble_df(data, group_vars, meta_data, format)
+new_cubble_df(data, group, meta_data, format)
 
 zoom(data, col)
 
@@ -23,13 +23,13 @@ is_cubble(data)
 
 \item{key}{the spatio identifier}
 
-\item{group_vars}{the spatio identifier}
-
 \item{meta_data}{metadata to include in the attributes}
 
 \item{format}{whether the long or wide format}
 
 \item{col}{the list-column in the data to zoom into}
+
+\item{group_vars}{the spatio identifier}
 }
 \description{
 Data structure

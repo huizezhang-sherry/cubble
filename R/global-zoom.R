@@ -25,7 +25,7 @@ global.cubble_df <- function(data, key) {
     tidyr::nest(!!!nest_var$nest_var) %>%
     dplyr::rowwise()
 
-  cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, format = determine_format(out))
 }
 
 #' @export
@@ -37,41 +37,46 @@ global.tbl_df <- function(data, key) {
     tidyr::nest(!!!nest_var$nest_var) %>%
     dplyr::rowwise()
   meta_data <- out[nest_var$non_varying_var]
-  cubble_df(out, group_vars = as_name(key), meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, format = determine_format(out))
 }
 
 
 #' @rdname data-structure
 #' @export
-cubble_df <- function(data, group_vars, meta_data,  format) {
-  new_cubble_df(data, group_vars, meta_data, format = format)
+cubble_df <- function(data, group, meta_data,  format) {
+  new_cubble_df(data, group, meta_data, format = format)
 
 }
 
 #' @rdname data-structure
 #' @export
-new_cubble_df <- function(data, group_vars, meta_data, format) {
+new_cubble_df <- function(data, group, meta_data, format) {
   if (format == "list-col") {
     nrow <- nrow(data)
-    group_data <- as_tibble(data)[group_vars]
+    group_data <- as_tibble(data)[group]
     group_data <- new_tibble(vec_data(group_data), nrow = nrow)
     group_data$.rows <- new_list_of(as.list(seq_len(nrow)), ptype = integer())
   } else if (format == "long") {
     nrow <- nrow(meta_data)
-    group_data <- dplyr:::compute_groups(data, map_chr(group_vars, as_name))
+    group_data <- dplyr:::compute_groups(data, union(map_chr(group, as_name), group_vars(data)))
   }
 
+  if (format == "list-col"){
+    class <- c("cubble_df", "rowwise_df", class(data))
+  } else if (format == "long" & "grouped_df" %in% class(data)){
+    class <- c("cubble_df", class(data))
+  } else if (format == "long" & !"grouped_df" %in% class(data)){
+    class <- c("cubble_df", "grouped_df", class(data))
+  } else{
+    abort("{format} meeds to be either long or list-col")
+  }
+
+
   if ("tbl_ts" %in% class(data)){
+
     attr <- attributes(data)
     attr_to_add <- attr[!names(attr) %in% c("names", "row.names", "class")]
 
-    if (format == "list-col"){
-      class <- c("cubble_df", "rowwise_df", class(data))
-    } else if (format == "long"){
-      class <- c("cubble_df", class(data))
-    } else{
-      abort("{format} meeds to be either long or list-col")
-    }
 
 
     attr_basics <- list(x = data,
@@ -81,19 +86,12 @@ new_cubble_df <- function(data, group_vars, meta_data, format) {
                         class = class)
 
     attr_all <- c(attr_basics, attr_to_add)
+    attr_all[duplicated(names(attr_all))] <- NULL
+
 
     rlang::exec("new_tibble", !!!attr_all)
 
   } else{
-
-    if (format == "list-col"){
-      class <- c("cubble_df", "rowwise_df")
-    } else if (format == "long"){
-      class <- c("cubble_df")
-    } else{
-      abort("{format} meeds to be either long or list-col")
-    }
-
 
     new_tibble(data, groups = group_data, meta = meta_data, format = format, class = class)
   }
@@ -150,7 +148,7 @@ zoom.cubble_df <- function(data, col){
       tidyr::unnest(!!col)
   }
 
-  cubble_df(out, group_vars = group_var, meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = group_var, meta_data = meta_data, format = determine_format(out))
 }
 
 #' @rdname data-structure
@@ -191,7 +189,6 @@ meta <- function(data){
 #' @export
 #' @rdname attributes
 group_vars <- function(data){
-  test_cubble(data)
   groups <- data %@% groups
   names <- names2(groups)
   names[names != ".rows"]

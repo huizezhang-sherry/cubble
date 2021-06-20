@@ -10,7 +10,7 @@ as_tsibble.cubble_df <- function(data, ...) {
   meta_data <- meta(data)
 
   out <- as_tsibble(as_tibble(data), key = !!group_vars)
-  cubble_df(out, group_vars = group_vars, meta_data = meta_data,  format = determine_format(out))
+  cubble_df(out, group = group_vars, meta_data = meta_data,  format = determine_format(out))
 }
 
 #' @export
@@ -20,16 +20,6 @@ index_by.cubble_df <- function(data, ...) {
   meta_data <- meta(data)
 
   out <- index_by(NextMethod(data),  ...)
-  cubble_df(out, group_vars = group_vars, meta_data = meta_data, format = determine_format(out))
-}
-
-#' @export
-#' @rdname tsibble
-summarise.cubble_df <- function(data, ...) {
-  group_vars <- group_vars(data)
-  meta_data <- meta(data)
-
-  out <- summarise(NextMethod(), ...)
-  cubble_df(out, group_vars = group_vars, meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = group_vars, meta_data = meta_data, format = determine_format(out))
 }
 

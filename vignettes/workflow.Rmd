@@ -144,19 +144,25 @@ station_wise <- oz_global %>%
          end = max(data$date), 
          prcp_missing = sum(is.na(data$prcp) / length(data$prcp)))
 
-# still working on more verbs: group_by, summarise, filter with changes on key, so that the following code would run
+# goal 1 - work now
 time_wise <- oz_zoom %>% 
-  as_tsibble(index = date, key = station) %>% 
   mutate(ym = yearmonth(date)) %>% 
-  index_by(ym) %>% 
-  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE))) %>% 
-  filter(year(ym) >= 2015)
+  dplyr::filter(lubridate::year(ym) >= 2015)
   
-# For now, mutate works, filter works but the metadata is not updated
+# goal2
 time_wise <- oz_zoom %>% 
   mutate(ym = yearmonth(date)) %>% 
   filter(station == "ASN00001019") %>%
   group_by(ym) %>% 
+  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
+
+# work
+filtered <- oz_zoom %>%
+  mutate(ym = yearmonth(date)) %>% 
+  dplyr::filter(station == "ASN00001019") 
+
+# implement summarise
+summarised <- filtered %>%
   summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
 ```
 
@@ -171,11 +177,21 @@ oz_zoom2 <- oz_global2 %>% zoom(data)
 # work
 indexed <- oz_zoom2 %>% 
   mutate(ym = yearmonth(date)) %>% 
-  index_by(ym)
+  index_by(ym) %>% 
+  dplyr::filter(station == "ASN00001019")
 
-# need the group thing to do summarise
+# summarise is still not working
 time_wise <- indexed %>% 
   summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE))) 
+
+
+## goal 
+time_wise <- oz_zoom2 %>% 
+  mutate(ym = yearmonth(date)) %>% 
+  index_by(ym) %>% 
+  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE))) %>% 
+  filter(year(ym) >= 2015)
+
 ```
 
 
