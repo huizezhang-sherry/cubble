@@ -20,8 +20,8 @@ global.cubble_df <- function(data, key) {
   key <- enquo(key)
   nest_var <- find_nest_var(data, !!key)
   meta_data <- meta(data)
-  out <- as_tibble(data) %>%
-    dplyr::left_join(as_tibble(meta_data)) %>%
+  out <- tibble::as_tibble(data) %>%
+    dplyr::left_join(tibble::as_tibble(meta_data)) %>%
     tidyr::nest(!!!nest_var$nest_var) %>%
     dplyr::rowwise()
 
@@ -51,10 +51,11 @@ cubble_df <- function(data, group, meta_data,  format) {
 #' @rdname data-structure
 #' @export
 new_cubble_df <- function(data, group, meta_data, format) {
+  #browser()
   if (format == "list-col") {
     nrow <- nrow(data)
-    group_data <- as_tibble(data)[group]
-    group_data <- new_tibble(vec_data(group_data), nrow = nrow)
+    group_data <- tibble::as_tibble(data)[group]
+    group_data <- tibble::new_tibble(vec_data(group_data), nrow = nrow)
     group_data$.rows <- new_list_of(as.list(seq_len(nrow)), ptype = integer())
   } else if (format == "long") {
     nrow <- nrow(meta_data)
@@ -65,6 +66,9 @@ new_cubble_df <- function(data, group, meta_data, format) {
     class <- c("cubble_df", "rowwise_df", class(data))
   } else if (format == "long" & "grouped_df" %in% class(data)){
     class <- c("cubble_df", class(data))
+    # cls <- class(data)
+    # cls <- cls[!cls == "grouped_df"]
+    # class <- c("cubble_df", "grouped_df", cls)
   } else if (format == "long" & !"grouped_df" %in% class(data)){
     class <- c("cubble_df", "grouped_df", class(data))
   } else{
@@ -137,7 +141,7 @@ zoom.cubble_df <- function(data, col){
   list_col <- data %>% dplyr::pull(!!col)
 
   if ("tbl_ts" %in% class(list_col[[1]])){
-    data$data <- map(data$data, as_tibble)
+    data$data <- map(data$data, tibble::as_tibble)
     out <- data[vec_c(as_name(group_var), as_name(col))]
     out <- out %>%
       tidyr::unnest(!!col) %>%

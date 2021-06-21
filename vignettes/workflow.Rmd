@@ -146,7 +146,7 @@ station_wise <- oz_global %>%
 
 # goal 1 - work now
 time_wise <- oz_zoom %>% 
-  mutate(ym = yearmonth(date)) %>% 
+  mutate(ym = tsibble::yearmonth(date)) %>% 
   dplyr::filter(lubridate::year(ym) >= 2015)
   
 # goal2
@@ -158,11 +158,14 @@ time_wise <- oz_zoom %>%
 
 # work
 filtered <- oz_zoom %>%
-  mutate(ym = yearmonth(date)) %>% 
+  mutate(ym = tsibble::yearmonth(date)) %>% 
   dplyr::filter(station == "ASN00001019") 
 
 # implement summarise
-summarised <- filtered %>%
+a <- filtered %>%
+  group_by(ym) 
+
+summarised <- a %>% 
   summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
 ```
 
@@ -170,28 +173,19 @@ work with tsibble:
 
 ```{r}
 library(tsibble)
-oz_climate_tsibble <- oz_climate %>% as_tsibble(index = date, key = station)
+oz_climate_tsibble <- oz_climate %>% tsibble::as_tsibble(index = date, key = station)
 oz_global2 <- oz_climate_tsibble %>% global(station)
 oz_zoom2 <- oz_global2 %>% zoom(data)
 
-# work
-indexed <- oz_zoom2 %>% 
-  mutate(ym = yearmonth(date)) %>% 
-  index_by(ym) %>% 
-  dplyr::filter(station == "ASN00001019")
-
-# summarise is still not working
-time_wise <- indexed %>% 
-  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE))) 
-
-
-## goal 
-time_wise <- oz_zoom2 %>% 
-  mutate(ym = yearmonth(date)) %>% 
-  index_by(ym) %>% 
+# goal achieved :ta-da:
+time_wise2 <- oz_zoom2 %>% 
+  dplyr::filter(station == "ASN00001019") %>% 
+  mutate(ym = tsibble::yearmonth(date)) %>% 
+  tsibble::index_by(ym) %>% 
   summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE))) %>% 
-  filter(year(ym) >= 2015)
+  dplyr::filter(lubridate::year(ym) >= 2015)
 
+time_wise2 %>% global(station)
 ```
 
 

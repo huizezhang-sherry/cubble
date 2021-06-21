@@ -4,17 +4,19 @@
 #'
 #' @export
 #' @rdname tsibble
+#' @importFrom tsibble as_tsibble
 as_tsibble.cubble_df <- function(data, ...) {
 
   group_vars <- group_vars(data)
   meta_data <- meta(data)
 
-  out <- as_tsibble(as_tibble(data), key = !!group_vars)
+  out <- as_tsibble(tibble::as_tibble(data), key = !!group_vars)
   cubble_df(out, group = group_vars, meta_data = meta_data,  format = determine_format(out))
 }
 
 #' @export
 #' @rdname tsibble
+#' @importFrom tsibble index_by
 index_by.cubble_df <- function(data, ...) {
   group_vars <- group_vars(data)
   meta_data <- meta(data)
