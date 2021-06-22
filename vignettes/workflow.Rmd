@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(cubble)
+library(tsibble)
+library(lubridate)
 library(dplyr)
 ```
 
@@ -26,10 +28,66 @@ library(dplyr)
 
 
 ```{r}
-df <- cubble(climate, station, by = c("station" = "id"))
+oz_global <- oz_climate  %>% global(station)
+oz_zoom <- oz_global %>% zoom(data)
+back <- oz_zoom %>% global(station)
 ```
 
 # Workflow
+
+Some operations: 
+
+  - `dplyr`: `filter`, `mutate`, `summarise`
+
+```{r}
+station_wise <- oz_global %>% 
+  mutate(start = min(data$date),
+         end = max(data$date), 
+         prcp_missing = sum(is.na(data$prcp) / length(data$prcp)))
+
+# work
+time_wise <- oz_zoom %>% 
+  mutate(ym = yearmonth(date)) %>% 
+  dplyr::filter(year(ym) >= 2015, station == "ASN00001019") %>% 
+  summarise(prcp = sum(prcp, na.rm = TRUE),
+            across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
+  
+# goal: still need to implement group_by
+time_wise <- oz_zoom %>% 
+  mutate(ym = yearmonth(date)) %>% 
+  dplyr::filter(station == "ASN00001019") %>%
+  group_by(ym) %>% 
+  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
+
+
+```
+
+## Work with tsibble
+
+- `tsibble`: `as_tsibble`, `index_by`
+
+```{r}
+oz_climate_tsibble <- oz_climate %>% tsibble::as_tsibble(index = date, key = station)
+oz_global2 <- oz_climate_tsibble %>% global(station)
+oz_zoom2 <- oz_global2 %>% zoom(data)
+
+
+# goal achieved :ta-da:
+time_wise2 <- oz_zoom2 %>% 
+  filter(lubridate::year(date) >= 2015, station == "ASN00001019") %>% 
+  mutate(ym = tsibble::yearmonth(date)) %>% 
+  tsibble::index_by(ym) %>% 
+  summarise(prcp = sum(prcp, na.rm = TRUE),
+            across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
+
+# this is a bit of a hack need to figure out nest/unndest for cubble_df. In find_non_varying_var(), nest keeps iterating until Error: C stack usage  7969520 is too close to the limit for grouped_df
+cls <- class(time_wise2)
+class(time_wise2) <- cls[cls != "grouped_df"]
+time_wise2 %>% global(station)
+```
+
+
+# Old stuff
 
 ```{r}
 count_var <- function(dt){
@@ -42,174 +100,9 @@ count_var <- function(dt){
     filter(missing != 0) %>% nrow()
 }
 
-
-out <- df %>% 
-  choose(main) %>% 
-  nest(-station)  %>%
-  mutate(var_recorded = map_dbl(data, count_var)) %>% 
-  cubble_join()
-
-chosen <- df %>% choose(main) 
-
-nested <- chosen %>% nest(-station)  
-
-mutated <- nested %>% mutate(var_recorded = map_dbl(data, count_var)) 
-
-joined <- mutated %>% cubble_join()
 ```
 
-# Workflow of nested structure
-
-```{r}
-sample <- nested$station %>% unique() %>% head(5)
-
-expand <- nested %>% 
-  filter(station %in% sample) %>% 
-  mutate(data = list(fill_gaps(data)))
-
-## some functions to unnest into a tsibble structure, tried unnest_tsibble/ unnest
-## some functions to move variables in/ out of nested list
-## some functions to allow data masking within list
-## reproduce old result: think about how would you plot the data with list-column structure
-
-
-```
-
-Reproduce old result
-
-```{r eval = FALSE}
-library(tidyr)
-library(dplyr)
-library(stringr)
-library(lubridate)
-library(purrr)
-library(ggplot2)
-nested <- oz_climate %>%
-  mutate(name = as.factor(str_remove(tolower(name), ", as"))) %>% 
-  nest(date, prcp, tmax, tmin) %>% 
-  rowwise() 
-  #mutate(data = list(as_tsibble(data, index = date))) # currently no unnest method works for tsibble
-
-mutated <- nested %>% mutate(year_1998 = any(year(data$date) == 1998))
-
-# some summary stats: equivalent number of years recorded
-nested %>% 
-  mutate(obs = nrow(data)/365) %>% 
-  arrange(-obs)
-
-
-
-# currently you can't filter within nested list, flattern the list to filter for now
-# Don't work: nested %>% filter(year(data$date) == 1998)
-
-# filter some stations to do a basic plot
-name <- nested %>% mutate(choose = any(!is.na(data$tmax))) %>% filter(choose) %>% pull(station)
-set.seed(123456)
-samples <- sample(name, size = 5)
-
-filtered <- nested %>% 
-  unnest(data) %>% 
-  filter(year(date) > 2015, station %in% samples)
-
-filtered %>% 
-  ggplot(aes(x = date, y = tmax)) + 
-  geom_line() + 
-  facet_wrap(vars(name))
-  
-# plot max temp for a few places
-nested %>% 
-  unnest(data) %>% 
-  filter(name == "cape leeuwin") %>% 
-  ggplot(aes(x = date, y = tmax)) + 
-  geom_line()
-
-nested %>% 
-  filter(name == "cape leeuwin") %>% 
-  unnest(data) %>% 
-  mutate(yday = yday(date),
-         year = year(date)) %>% 
-  ggplot(aes(x = yday, y = tmax,group = interaction(name, year))) + 
-  geom_line(alpha = 0.1) + 
-  ggtitle("Cape leeuwin")
-```
-
-
-```{r}
-oz_global <- oz_climate  %>% global(station)
-oz_zoom <- oz_global %>% zoom(data)
-back <- oz_zoom %>% global(station)
-
-station_wise <- oz_global %>% 
-  mutate(start = min(data$date),
-         end = max(data$date), 
-         prcp_missing = sum(is.na(data$prcp) / length(data$prcp)))
-
-# goal 1 - work now
-time_wise <- oz_zoom %>% 
-  mutate(ym = tsibble::yearmonth(date)) %>% 
-  dplyr::filter(lubridate::year(ym) >= 2015)
-  
-# goal2
-time_wise <- oz_zoom %>% 
-  mutate(ym = yearmonth(date)) %>% 
-  dplyr::filter(station == "ASN00001019") %>%
-  group_by(ym) %>% 
-  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
-
-# work
-filtered <- oz_zoom %>%
-  mutate(ym = tsibble::yearmonth(date)) %>% 
-  dplyr::filter(station == "ASN00001019") 
-
-# implement summarise
-a <- filtered %>%
-  group_by(ym) 
-
-summarised <- a %>% 
-  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
-```
-
-work with tsibble:
-
-```{r}
-library(tsibble)
-oz_climate_tsibble <- oz_climate %>% tsibble::as_tsibble(index = date, key = station)
-oz_global2 <- oz_climate_tsibble %>% global(station)
-oz_zoom2 <- oz_global2 %>% zoom(data)
-
-# goal achieved :ta-da:
-time_wise2 <- oz_zoom2 %>% 
-  dplyr::filter(station == "ASN00001019") %>% 
-  mutate(ym = tsibble::yearmonth(date)) %>% 
-  tsibble::index_by(ym) %>% 
-  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE))) %>% 
-  dplyr::filter(lubridate::year(ym) >= 2015)
-
-time_wise2 %>% global(station)
-```
-
-
-
-# Use cubble with tidyverts
-
-```{r}
-library(tsibbledata)
-library(fable)
-# raw country sheet
-wmap <- rworldmap::getMap(resolution="high")
-country <- rgeos::gCentroid(wmap, byid=TRUE) %>% 
-  as_tibble(rownames = "Country") %>% 
-  filter(Country %in% unique(global_economy$Country))
-
-economy <- global_economy %>%
-  filter(Country %in% country$Country)
-
-df <- cubble(economy, country, by = c("Country" = "Country"))
-
-df %>% 
-  choose(main) %>% 
-  model(arima210 = ARIMA(Exports ~ pdq(2,1,0))) %>% 
-  cubble_join()
-
-```
-
+* some functions to unnest into a tsibble structure, tried unnest_tsibble/ unnest
+* some functions to move variables in/ out of nested list - migrate
+* some functions to allow data masking within list
+* reproduce old result: think about how would you plot the data with list-column structure
