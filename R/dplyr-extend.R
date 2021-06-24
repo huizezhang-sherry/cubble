@@ -1,4 +1,5 @@
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
+#' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
   #browser()
   group_vars <- group_vars(data)
@@ -13,6 +14,7 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   cubble_df(out, group = group_vars, meta_data = meta_data, format = determine_format(out))
 }
 
+#' @export
 dplyr_row_slice.cubble_df <- function(data, i, ...) {
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
@@ -26,6 +28,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
   cubble_df(out, group = group_vars, meta_data = meta_data, format = determine_format(out) )
 }
 
+#' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
   group_vars <- group_vars(data)
   meta_data <- meta(data)
