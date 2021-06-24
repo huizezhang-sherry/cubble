@@ -93,5 +93,5 @@ usethis::use_data(climate, overwrite = TRUE)
 usethis::use_data(station, overwrite = TRUE)
 usethis::use_data(nested, overwrite = TRUE)
 
-# temporarily include oz_climate data for easier examples
+# temporarily include oz_climate data for easier examples (filtered with year >= 2015)
 usethis::use_data(oz_climate, overwrite = TRUE)
