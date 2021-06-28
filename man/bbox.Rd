@@ -19,5 +19,10 @@ bbox(data, lat, long, buffer_ratio = 0.01)
 Extract bbox of the coordinate with a buffer
 }
 \examples{
-bbox(station)
+\dontrun{
+library(ggplot2)
+library(ggmap)
+aus_map <- get_map(location = bbox(station), source = "osm")
+ggmap(aus_map) + geom_point(data = oz_global2, aes(x = long, y = lat))
+}
 }

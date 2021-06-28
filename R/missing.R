@@ -22,7 +22,7 @@ add_missing_prct <- function(data, vars){
   var_names <- data %>% zoom() %>% names()
 
   if (!all(vars %in% var_names)){
-    bad_vars <- var[which(!vars %in% var_names )]
+    bad_vars <- vars[which(!vars %in% var_names )]
     abort(glue::glue("Variable not presented in the long form: {bad_vars}"))
   }
 
@@ -40,7 +40,7 @@ add_missing_dscrb <- function(data, cutoff = c(0, 0.95)){
   test_cubble(data)
 
   all_names <- names(data)
-  vars <- syms(all_names[stringr::str_detect(all_names, "missing")])
+  vars <- syms(all_names[grep("missing", all_names)])
 
   cutoff_lower <- cutoff[1]
   cutoff_upper <- cutoff[2]
@@ -48,8 +48,7 @@ add_missing_dscrb <- function(data, cutoff = c(0, 0.95)){
   calls <- map(vars, ~quo(ifelse(!!.x >= cutoff_upper, "almost all missing",
                                  ifelse(!!.x <= cutoff_lower, "almost no missing", "some missing"))))
 
-  vars_name <- map_chr(vars, ~as_name(.x) %>% stringr::str_extract(".*?(?=\\_)"))
-  names(calls) <- glue::glue("{vars_name}_dscrb")
+  names(calls) <- map_chr(vars, ~sub("missing", "dscrb", .x))
 
   dscrb <- purrr::map_dfr(calls, ~eval_tidy(.x, data = data))
   out <- tibble::as_tibble(data) %>% dplyr::bind_cols(dscrb)

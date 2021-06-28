@@ -1,5 +1,5 @@
 #' @import vctrs tidyselect rlang
-#' @importFrom dplyr distinct group_by summarise_all ungroup summarise_if n_distinct mutate
+#' @importFrom dplyr group_by ungroup summarise_if n_distinct mutate
 #' @importFrom tidyr nest
 #' @importFrom tibble is_tibble new_tibble
 #' @importFrom rlang .data

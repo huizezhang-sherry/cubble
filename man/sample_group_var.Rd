@@ -16,3 +16,11 @@ sample_group_var(data, size = 5, ...)
 \description{
 Sample group variables for cubble
 }
+\examples{
+\dontrun{
+set.seed(123)
+out <- oz_zoom2 \%>\% sample_group_var(size = 3)
+out \%>\% global(station)
+meta(out)
+}
+}

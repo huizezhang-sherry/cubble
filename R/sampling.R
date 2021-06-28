@@ -19,7 +19,7 @@ sample_group_var <- function(data, size = 5, ...){
   group_var <- group_vars(data)
   var_sampled <- sample(meta[[group_var]], size = size, ...)
 
-  data %>% filter(!!sym(group_var) %in% var_sampled)
+  data %>% dplyr::filter(!!sym(group_var) %in% var_sampled)
 
 
 }

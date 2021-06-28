@@ -14,6 +14,7 @@ global <- function(data, key) {
   UseMethod("global")
 }
 
+#' @importFrom tsibble index
 #' @export
 global.cubble_df <- function(data, key) {
   key <- enquo(key)
@@ -25,7 +26,7 @@ global.cubble_df <- function(data, key) {
     dplyr::rowwise()
 
   if ("tbl_ts" %in% class(data)){
-    out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = index(data))))
+    out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
   cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))

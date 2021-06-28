@@ -28,8 +28,6 @@ is_cubble(data)
 \item{meta_data}{metadata to include in the attributes}
 
 \item{form}{whether the long or wide form}
-
-\item{col}{the list-column in the data to zoom into}
 }
 \description{
 Data structure
