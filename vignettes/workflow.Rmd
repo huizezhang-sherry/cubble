@@ -29,7 +29,7 @@ library(dplyr)
 
 ```{r}
 oz_global <- oz_climate  %>% global(station)
-oz_zoom <- oz_global %>% zoom(data)
+oz_zoom <- oz_global %>% zoom()
 back <- oz_zoom %>% global(station)
 ```
 
@@ -69,7 +69,7 @@ time_wise <- oz_zoom %>%
 ```{r}
 oz_climate_tsibble <- oz_climate %>% tsibble::as_tsibble(index = date, key = station)
 oz_global2 <- oz_climate_tsibble %>% global(station)
-oz_zoom2 <- oz_global2 %>% zoom(data)
+oz_zoom2 <- oz_global2 %>% zoom()
 
 
 # goal achieved :ta-da:

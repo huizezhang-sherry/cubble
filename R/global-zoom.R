@@ -7,7 +7,7 @@
 #' @param format whether the long or wide format
 #' @examples
 #' oz_global <- global(oz_climate, station)
-#' oz_zoom <- oz_global %>% zoom(data)
+#' oz_zoom <- oz_global %>% zoom()
 #' back <- oz_zoom %>% global(station)
 #' @export
 #' @rdname data-structure
@@ -22,8 +22,12 @@ global.cubble_df <- function(data, key) {
   meta_data <- meta(data)
   out <- tibble::as_tibble(data) %>%
     dplyr::left_join(tibble::as_tibble(meta_data)) %>%
-    tidyr::nest(!!!nest_var$nest_var) %>%
+    tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
     dplyr::rowwise()
+
+  if ("tbl_ts" %in% class(data)){
+    out <- out %>% mutate(ts = list(as_tsibble(ts, index = index(data))))
+  }
 
   cubble_df(out, group = as_name(key), meta_data = meta_data, format = determine_format(out))
 }
@@ -34,7 +38,7 @@ global.tbl_df <- function(data, key) {
   nest_var <- find_nest_var(data, !!key)
 
   out <- data %>%
-    tidyr::nest(!!!nest_var$nest_var) %>%
+    tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
     dplyr::rowwise()
   meta_data <- out[nest_var$non_varying_var]
   cubble_df(out, group = as_name(key), meta_data = meta_data, format = determine_format(out))
@@ -51,7 +55,6 @@ cubble_df <- function(data, group, meta_data,  format) {
 #' @rdname data-structure
 #' @export
 new_cubble_df <- function(data, group, meta_data, format) {
-  #browser()
   if (format == "list-col") {
     nrow <- nrow(data)
     group_data <- tibble::as_tibble(data)[group]
@@ -122,14 +125,15 @@ tbl_sum.cubble_df <- function(data) {
 
 #' @export
 #' @rdname data-structure
-zoom <- function(data, col) {
+zoom <- function(data) {
+  test_cubble(data)
   UseMethod("zoom")
 }
 
 #' @export
-zoom.cubble_df <- function(data, col){
-  test_cubble(data)
-  col <- enquo(col)
+zoom.cubble_df <- function(data){
+
+  col <- sym(names(data)[map_chr(data, class) == "list"])
 
   if (!is_list(eval_tidy(col, data))) {
     abort("The column to zoom need to be a list-column")
@@ -141,7 +145,7 @@ zoom.cubble_df <- function(data, col){
   list_col <- data %>% dplyr::pull(!!col)
 
   if ("tbl_ts" %in% class(list_col[[1]])){
-    data$data <- map(data$data, tibble::as_tibble)
+    data$ts <- map(data$ts, tibble::as_tibble)
     out <- data[vec_c(as_name(group_var), as_name(col))]
     out <- out %>%
       tidyr::unnest(!!col) %>%

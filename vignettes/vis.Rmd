@@ -32,7 +32,7 @@ library(GGally)
 ```{r}
 oz_climate_tsibble <- oz_climate %>% as_tsibble(index = date, key = station)
 oz_global2 <- oz_climate_tsibble %>% global(station)
-oz_zoom2 <- oz_global2 %>% zoom(data)
+oz_zoom2 <- oz_global2 %>% zoom()
 ```
 
 
