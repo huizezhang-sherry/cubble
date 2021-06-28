@@ -14,7 +14,7 @@ cubble_df(data, group, meta_data, format)
 
 new_cubble_df(data, group, meta_data, format)
 
-zoom(data, col)
+zoom(data)
 
 is_cubble(data)
 }
@@ -36,6 +36,6 @@ Data structure
 }
 \examples{
 oz_global <- global(oz_climate, station)
-oz_zoom <- oz_global \%>\% zoom(data)
+oz_zoom <- oz_global \%>\% zoom()
 back <- oz_zoom \%>\% global(station)
 }
