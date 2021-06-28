@@ -1,5 +1,6 @@
 find_non_varying_var <- function(data, key) {
   key <- enexpr(key)
+  data <- tibble::as_tibble(data)
 
   list_col <- data %>%
     tidyr::nest(data = -(!!key)) %>%
@@ -16,6 +17,8 @@ find_non_varying_var <- function(data, key) {
 
 find_nest_var <- function(data, key) {
   key <- enquo(key)
+  data <- tibble::as_tibble(data)
+
   # temporarily only one key
   non_varying_var <- find_non_varying_var(data, !!key)
   col_names <- names2(data)
