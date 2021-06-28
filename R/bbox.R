@@ -4,10 +4,10 @@
 #' @param long the longitude column
 #' @param buffer_ratio the percentage to add/deduct to the max/min lat/long when querying the map
 #' @examples
-#' library(ggmap)
 #' library(ggplot2)
+#' library(ggmap)
 #' aus_map <- get_map(location = bbox(station), source = "osm")
-#' ggmap(aus_map) + geom_point(data = station, aes(x = long, y = lat))
+#' ggmap(aus_map) + geom_point(data = oz_global2, aes(x = long, y = lat))
 #' @importFrom dplyr summarise across ends_with mutate relocate
 #' @importFrom tidyr unnest
 #' @export

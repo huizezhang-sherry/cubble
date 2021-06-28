@@ -10,9 +10,9 @@
 \usage{
 global(data, key)
 
-cubble_df(data, group, meta_data, format)
+cubble_df(data, group, meta_data, form)
 
-new_cubble_df(data, group, meta_data, format)
+new_cubble_df(data, group, meta_data, form)
 
 zoom(data)
 
@@ -27,7 +27,7 @@ is_cubble(data)
 
 \item{meta_data}{metadata to include in the attributes}
 
-\item{format}{whether the long or wide format}
+\item{form}{whether the long or wide form}
 
 \item{col}{the list-column in the data to zoom into}
 }

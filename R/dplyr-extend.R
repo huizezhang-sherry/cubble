@@ -11,7 +11,7 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }
 
-  cubble_df(out, group = group_vars, meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out))
 }
 
 #' @export
@@ -25,7 +25,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
   row <- meta_data[[meta_col]] %in% unique(out[[meta_col]])
   meta_data <- meta_data[row,]
 
-  cubble_df(out, group = group_vars, meta_data = meta_data, format = determine_format(out) )
+  cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out) )
 }
 
 #' @export
@@ -33,7 +33,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   group_vars <- group_vars(data)
   meta_data <- meta(data)
 
-  cubble_df(data, group = group_vars, meta_data = meta_data, format = determine_format(data))
+  cubble_df(data, group = group_vars, meta_data = meta_data, form = determine_form(data))
 }
 
 
@@ -43,5 +43,5 @@ summarise.cubble_df <- function(data, ...){
   meta_data <- meta(data)
   out <- NextMethod("summarise")
 
-  cubble_df(out, group = group_vars, meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out))
 }

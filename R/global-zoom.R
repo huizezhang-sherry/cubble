@@ -1,10 +1,9 @@
 #' Data structure
 #' @param data the data to be converted into a cubble object
 #' @param key the spatio identifier
-#' @param col the list-column in the data to zoom into
 #' @param group the spatio identifier
 #' @param meta_data metadata to include in the attributes
-#' @param format whether the long or wide format
+#' @param form whether the long or wide form
 #' @examples
 #' oz_global <- global(oz_climate, station)
 #' oz_zoom <- oz_global %>% zoom()
@@ -26,10 +25,10 @@ global.cubble_df <- function(data, key) {
     dplyr::rowwise()
 
   if ("tbl_ts" %in% class(data)){
-    out <- out %>% mutate(ts = list(as_tsibble(ts, index = index(data))))
+    out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = index(data))))
   }
 
-  cubble_df(out, group = as_name(key), meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))
 }
 
 #' @export
@@ -41,41 +40,41 @@ global.tbl_df <- function(data, key) {
     tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
     dplyr::rowwise()
   meta_data <- out[nest_var$non_varying_var]
-  cubble_df(out, group = as_name(key), meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))
 }
 
 
 #' @rdname data-structure
 #' @export
-cubble_df <- function(data, group, meta_data,  format) {
-  new_cubble_df(data, group, meta_data, format = format)
+cubble_df <- function(data, group, meta_data,  form) {
+  new_cubble_df(data, group, meta_data, form = form)
 
 }
 
 #' @rdname data-structure
 #' @export
-new_cubble_df <- function(data, group, meta_data, format) {
-  if (format == "list-col") {
+new_cubble_df <- function(data, group, meta_data, form) {
+  if (form == "list-col") {
     nrow <- nrow(data)
     group_data <- tibble::as_tibble(data)[group]
     group_data <- tibble::new_tibble(vec_data(group_data), nrow = nrow)
     group_data$.rows <- new_list_of(as.list(seq_len(nrow)), ptype = integer())
-  } else if (format == "long") {
+  } else if (form == "long") {
     nrow <- nrow(meta_data)
     group_data <- dplyr:::compute_groups(data, union(map_chr(group, as_name), group_vars(data)))
   }
 
-  if (format == "list-col"){
+  if (form == "list-col"){
     class <- c("cubble_df", "rowwise_df", class(data))
-  } else if (format == "long" & "grouped_df" %in% class(data)){
+  } else if (form == "long" & "grouped_df" %in% class(data)){
     class <- c("cubble_df", class(data))
     # cls <- class(data)
     # cls <- cls[!cls == "grouped_df"]
     # class <- c("cubble_df", "grouped_df", cls)
-  } else if (format == "long" & !"grouped_df" %in% class(data)){
+  } else if (form == "long" & !"grouped_df" %in% class(data)){
     class <- c("cubble_df", "grouped_df", class(data))
   } else{
-    abort("{format} meeds to be either long or list-col")
+    abort("{form} meeds to be either long or list-col")
   }
 
 
@@ -89,7 +88,7 @@ new_cubble_df <- function(data, group, meta_data, format) {
     attr_basics <- list(x = data,
                         groups = group_data,
                         meta = meta_data,
-                        format = format,
+                        form = form,
                         class = class)
 
     attr_all <- c(attr_basics, attr_to_add)
@@ -100,7 +99,7 @@ new_cubble_df <- function(data, group, meta_data, format) {
 
   } else{
 
-    new_tibble(data, groups = group_data, meta = meta_data, format = format, class = class)
+    new_tibble(data, groups = group_data, meta = meta_data, form = form, class = class)
   }
 
 }
@@ -110,10 +109,10 @@ new_cubble_df <- function(data, group, meta_data, format) {
 #' @export
 tbl_sum.cubble_df <- function(data) {
 
-  if(format(data) == "list-col"){
+  if(form(data) == "list-col"){
     item <- group_vars(data)[1]
     msg <- glue::glue("{item}-wise: list-column")
-  } else if(format(data) == "long"){
+  } else if(form(data) == "long"){
     msg <- glue::glue("tiem-wise: long form")
   }
 
@@ -156,7 +155,7 @@ zoom.cubble_df <- function(data){
       tidyr::unnest(!!col)
   }
 
-  cubble_df(out, group = group_var, meta_data = meta_data, format = determine_format(out))
+  cubble_df(out, group = group_var, meta_data = meta_data, form = determine_form(out))
 }
 
 #' @rdname data-structure
@@ -172,12 +171,12 @@ is_cubble <- function(data){
 #'
 #' @export
 #' @rdname attributes
-format <- function(data){
+form <- function(data){
   test_cubble(data)
-  data %@% format
+  data %@% form
 }
 
-determine_format <- function(data){
+determine_form <- function(data){
   cls <- unlist(map(data, class))
 
   if ("list" %in% cls){
