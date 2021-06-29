@@ -5,9 +5,31 @@
 #' @param meta_data metadata to include in the attributes
 #' @param form whether the long or wide form
 #' @examples
+#' \dontrun{
 #' oz_global <- global(oz_climate, station)
 #' oz_zoom <- oz_global %>% zoom()
-#' back <- oz_zoom %>% global(station)
+#' back <- oz_zoom %>% global()
+#'
+#'
+#'oz_climate_tsibble <- oz_climate %>% as_tsibble(index = date, key = station)
+#'oz_global2 <- oz_climate_tsibble %>% global(station)
+#'oz_zoom2 <- oz_global2 %>% zoom()
+#'back <- oz_zoom2 %>% global()
+#'
+#'outer <- water_small %>%
+#'  global(station) %>%
+#'  mutate(river_name = stringr::str_extract(name, "(^.+)(?=( RIVER| CREEK))"),
+#'    river_id = stringr::str_sub(river_name, 1, 1)) %>%
+#'  global(key = river_name)
+#'
+#'mid <- outer %>% zoom()
+#'inner <- mid %>% zoom()
+#'
+#'# now convert inner back will cause station-wise variables: station, name, lat, and long to lost
+#'back <- inner %>% global()
+#'meta(back)
+#'}
+#'
 #' @export
 #' @rdname data-structure
 global <- function(data, key) {
@@ -22,14 +44,29 @@ global.cubble_df <- function(data, key) {
 
   key <- enquo(key)
   if (quo_is_missing(key)){
-    key <- group_vars(data)
+    key <- quo(!!group_vars(data))
   }
 
   nest_var <- find_nest_var(data, !!key)
-  meta_data <- meta(data)
-  out <- tibble::as_tibble(data) %>%
-    dplyr::left_join(tibble::as_tibble(meta_data)) %>%
-    tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
+  if (quo_get_expr(key) == group_vars(data)){
+    meta_data <- meta(data)
+  } else{
+    meta_data <- data[, find_non_varying_var(data, !!key)]
+  }
+
+  out <- tibble::as_tibble(data)
+
+  if (form(data) == "long"){
+    out <- out %>%
+      dplyr::left_join(tibble::as_tibble(meta_data))
+  }
+
+  #if (!any(map_chr(data, class) == "list")){
+    out <- out %>%
+      tidyr::nest(ts = c(!!!nest_var$nest_var))
+  #}
+
+  out <- out %>%
     dplyr::rowwise()
 
   if ("tbl_ts" %in% class(data)){
@@ -42,6 +79,11 @@ global.cubble_df <- function(data, key) {
 #' @export
 global.tbl_df <- function(data, key) {
   key <- enquo(key)
+
+  if (quo_is_missing(key)){
+    abort("Please specify the key variable for grouping")
+
+  }
   nest_var <- find_nest_var(data, !!key)
 
   out <- data %>%
@@ -132,13 +174,13 @@ tbl_sum.cubble_df <- function(data) {
 
 #' @export
 #' @rdname data-structure
-zoom <- function(data) {
+zoom <- function(data, key) {
   test_cubble(data)
   UseMethod("zoom")
 }
 
 #' @export
-zoom.cubble_df <- function(data){
+zoom.cubble_df <- function(data, key){
 
   col <- sym(names(data)[map_chr(data, class) == "list"])
 
@@ -146,24 +188,37 @@ zoom.cubble_df <- function(data){
     abort("The column to zoom need to be a list-column")
   }
 
-  group_var <- sym(group_vars(data))
-  meta_data <- meta(data)
+  key <- enquo(key)
+
+  if (quo_is_missing(key)){
+    key <- quo(!!group_vars(data))
+  } else{
+    key <- quo_get_expr(key)
+  }
+
+
+  if (quo_get_expr(key) == group_vars(data)){
+    meta_data <- meta(data)
+  } else{
+    meta_data <- data[, find_non_varying_var(data, !!key)]
+  }
+
 
   list_col <- data %>% dplyr::pull(!!col)
 
   if ("tbl_ts" %in% class(list_col[[1]])){
     data$ts <- map(data$ts, tibble::as_tibble)
-    out <- data[vec_c(as_name(group_var), as_name(col))]
+    out <- data[vec_c(as_name(key), as_name(col))]
     out <- out %>%
       tidyr::unnest(!!col) %>%
-      tsibble::as_tsibble(key = !!group_var)
+      tsibble::as_tsibble(key = !!key)
   } else{
     out <- data %>%
-      dplyr::select(!!group_var, !!col) %>%
+      dplyr::select(!!key, !!col) %>%
       tidyr::unnest(!!col)
   }
 
-  cubble_df(out, group = group_var, meta_data = meta_data, form = determine_form(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))
 }
 
 #' @rdname data-structure

@@ -14,7 +14,7 @@ cubble_df(data, group, meta_data, form)
 
 new_cubble_df(data, group, meta_data, form)
 
-zoom(data)
+zoom(data, key)
 
 is_cubble(data)
 }
@@ -33,7 +33,29 @@ is_cubble(data)
 Data structure
 }
 \examples{
+\dontrun{
 oz_global <- global(oz_climate, station)
 oz_zoom <- oz_global \%>\% zoom()
-back <- oz_zoom \%>\% global(station)
+back <- oz_zoom \%>\% global()
+
+
+oz_climate_tsibble <- oz_climate \%>\% as_tsibble(index = date, key = station)
+oz_global2 <- oz_climate_tsibble \%>\% global(station)
+oz_zoom2 <- oz_global2 \%>\% zoom()
+back <- oz_zoom2 \%>\% global()
+
+outer <- water_small \%>\%
+ global(station) \%>\%
+ mutate(river_name = stringr::str_extract(name, "(^.+)(?=( RIVER| CREEK))"),
+   river_id = stringr::str_sub(river_name, 1, 1)) \%>\%
+ global(key = river_name)
+
+mid <- outer \%>\% zoom()
+inner <- mid \%>\% zoom()
+
+# now convert inner back will cause station-wise variables: station, name, lat, and long to lost
+back <- inner \%>\% global()
+meta(back)
+}
+
 }
