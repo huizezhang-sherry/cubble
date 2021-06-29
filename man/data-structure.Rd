@@ -21,7 +21,7 @@ is_cubble(data)
 \arguments{
 \item{data}{the data to be converted into a cubble object}
 
-\item{key}{the spatio identifier}
+\item{key}{the spatio identifier. key can be automatically detected for a cubble object}
 
 \item{group}{the spatio identifier}
 

@@ -1,6 +1,6 @@
 #' Data structure
 #' @param data the data to be converted into a cubble object
-#' @param key the spatio identifier
+#' @param key the spatio identifier. key can be automatically detected for a cubble object
 #' @param group the spatio identifier
 #' @param meta_data metadata to include in the attributes
 #' @param form whether the long or wide form
@@ -17,7 +17,14 @@ global <- function(data, key) {
 #' @importFrom tsibble index
 #' @export
 global.cubble_df <- function(data, key) {
+
+  test_cubble(data)
+
   key <- enquo(key)
+  if (quo_is_missing(key)){
+    key <- group_vars(data)
+  }
+
   nest_var <- find_nest_var(data, !!key)
   meta_data <- meta(data)
   out <- tibble::as_tibble(data) %>%
