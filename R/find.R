@@ -1,6 +1,8 @@
 find_non_varying_var <- function(data, key) {
   key <- enexpr(key)
   data <- tibble::as_tibble(data)
+  # remove list-column, useful in a list-column form
+  data[map_chr(data, class) == "list"] <- NULL
 
   list_col <- data %>%
     tidyr::nest(data = -(!!key)) %>%
