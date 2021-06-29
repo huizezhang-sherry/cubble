@@ -5,4 +5,5 @@ onLoad <- function(...) {
   #s3_register("tsibble::as_tsibble", "cubble_df")
   s3_register("tsibble::index_by", "cubble_df")
   s3_register("dplyr::summarise", "cubble_df")
+  s3_register("dplyr::left_join", "cubble_df")
 }
