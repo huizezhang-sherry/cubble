@@ -10,6 +10,7 @@
 #' out %>% global()
 #' }
 #' @importFrom dplyr left_join
+#' @export
 migrate <- function(data, ...){
 
   vars <- enquos(...)

@@ -12,8 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message = FALSE, 
-  warning = FALSE,
-  eval = FALSE
+  warning = FALSE
 )
 ```
 
@@ -26,53 +25,93 @@ library(dplyr)
 
 # Create a cubble
 
+A cubble object uses a list-column form and a long form, powered by the `rowwise_df` and `grouped_df`, to allow flexible group-wise and time-wise computation for spatial-temporal data.
+
+To create a cubble object in the list-column form, use `global()` with a supply of the grouping variable. This would add `cubble_df` and `rowwise_df` to the underlying data structure the object is built upon. On top of the attributes inherent from tibble (`name` and `row.names`) and rowwise_df (`groups`), a cubble has two additional attributes: `meta` and `form`. `meta` stores the group-wise information so that the object can be switched between the list-column and long form without the lost of information while `form` specifies whether the data object is a list-column or long form.
+
+In the list-column form, each distinct key value constitutes a row and all the time-specific measures are nested into a column named `ts`. This form is convenient for calculating group-wise measures.
 
 ```{r}
 oz_global <- oz_climate  %>% global(station)
-oz_zoom <- oz_global %>% zoom()
-back <- oz_zoom %>% global(station)
+oz_global
 ```
 
-# Workflow
-
-Some operations: 
-
-  - `dplyr`: `filter`, `mutate`, `summarise`
+`zoom()` switches a cubble object into the long form where all the group-specific variables are suppressed into the `meta` attributes. This form is time-centric and is useful to compute time-wise variables.
 
 ```{r}
-station_wise <- oz_global %>% 
-  mutate(start = min(data$date),
-         end = max(data$date), 
-         prcp_missing = sum(is.na(data$prcp) / length(data$prcp)))
-
-# work
-time_wise <- oz_zoom %>% 
-  mutate(ym = yearmonth(date)) %>% 
-  dplyr::filter(year(ym) >= 2015, station == "ASN00001019") %>% 
-  summarise(prcp = sum(prcp, na.rm = TRUE),
-            across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
-  
-# goal: still need to implement group_by
-time_wise <- oz_zoom %>% 
-  mutate(ym = yearmonth(date)) %>% 
-  dplyr::filter(station == "ASN00001019") %>%
-  group_by(ym) %>% 
-  summarise(across(prcp:tmin, ~mean(.x, na.rm = TRUE)))  
-
-
+oz_zoom <- oz_global %>% zoom()
+oz_zoom
 ```
 
-## Work with tsibble
+The long form and the list-column form can be switched between each other by using `global()` on a long form cubble and `zoom()` on a list-column cubble. Since a cubble has a grouping variable as an attribute, there's no need to specify the grouping variable again.
 
-- `tsibble`: `as_tsibble`, `index_by`
+```{r}
+back <- oz_zoom %>% global()
+back
+```
+
+# Manipulation
+
+## Work with dplyr verbs
+
+Currently, verbs in the `dplyr` package supported by cubble includes `filter`, `mutate`, `summarise`. In the example below, we want to calculate the sum of precipitation and the average max/min temperature for each month after 2015. Since the calculation is time-specific, we start with the time-wise long form.
+
+```{r}
+time_wise <- oz_zoom %>%
+  mutate(ym = yearmonth(date)) %>% 
+  filter(year(ym) >= 2015) %>% 
+  summarise(prcp = sum(prcp, na.rm = TRUE),
+            across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
+
+time_wise
+```
+
+The summarised cubble can be switched back to the list-column format again to compute station-wise variables
+
+```{r}
+time_wise %>% global()
+```
+
+Joining can be performed on both the long/ list-column form. Variable joined that are group-specific will also be added to the `meta` attributes. 
+
+```{r}
+# join wmo_id for each station
+to_join <- station %>% select(id, wmo_id)
+joined <- oz_global %>% 
+  left_join(to_join, by = c("station" = "id")) %>% 
+  zoom()
+joined
+meta(joined)
+```
+
+A shortcut for joining variables from metadata to the long form is via `migrate()`. This can be useful for creating visualisation that involves both the group-wise and time-wise variables, i.e. glyph map. 
+
+```{r}
+oz_zoom %>% 
+  migrate(lat, long) 
+  
+```
+
+
+
+## Time series as a tsibble object
+
+Cubble also support a tsibble data structure for time series computation. 
+
+A cubble can also be created from a tsibble object, this time, in the list-column form, each item in the `ts` column is a tsibble, rather than tibble object and in the long form, the object is by default a tsibble object.
 
 ```{r}
 oz_climate_tsibble <- oz_climate %>% tsibble::as_tsibble(index = date, key = station)
 oz_global2 <- oz_climate_tsibble %>% global(station)
 oz_zoom2 <- oz_global2 %>% zoom()
 
+oz_global2
+oz_zoom2
+```
 
-# goal achieved :ta-da:
+With a tsibble structure, we can further make the summary above into monthly summar by using the `index_by` function in `tsibble`:
+
+```{r}
 time_wise2 <- oz_zoom2 %>% 
   filter(lubridate::year(date) >= 2015, station == "ASN00001019") %>% 
   mutate(ym = tsibble::yearmonth(date)) %>% 
@@ -80,11 +119,30 @@ time_wise2 <- oz_zoom2 %>%
   summarise(prcp = sum(prcp, na.rm = TRUE),
             across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
 
-# this is a bit of a hack need to figure out nest/unndest for cubble_df. In find_non_varying_var(), nest keeps iterating until Error: C stack usage  7969520 is too close to the limit for grouped_df
-cls <- class(time_wise2)
-class(time_wise2) <- cls[cls != "grouped_df"]
-time_wise2 %>% global(station)
+time_wise2
 ```
+
+## Sampling and add missing summary
+
+`sample_group_var()` makes random sampling of the grouping variable for plotting. It is similar to `brolgar::sample_n_keys()` but the brolgar function doesn't deal with class `grouped_df`.
+
+```{r}
+oz_global2 %>% 
+  sample_group_var(size = 10) 
+```
+
+
+Missing summary gives a better view of the data quality recorded in each station. 
+
+  - `add_missing_prct()` binds `{VAR}_missing` columns to calculate the percentage of missing for  each station.
+  - `add_missing_dscrb()` categories the percentage missing calculated into three categories:  almost no missing, some missing, and almost all missing. The two cutoff values can be specified for switching between categories. This categorisation is to be further used for the viz [more on this].
+
+```{r}
+oz_global2 %>% 
+  add_missing_prct(vars = c("prcp", "tmin", "tmax")) %>% 
+  add_missing_dscrb(cutoff = c(0, 0.95))
+```
+
 
 
 # Old stuff

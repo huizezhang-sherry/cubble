@@ -12,6 +12,7 @@
 #' out2 <- out %>% add_missing_dscrb()
 #' }
 #' @rdname missing
+#' @export
 add_missing_prct <- function(data, vars){
 
   test_cubble(data)
@@ -36,6 +37,7 @@ add_missing_prct <- function(data, vars){
 
 #' @rdname missing
 #' @importFrom purrr map_dfr
+#' @export
 add_missing_dscrb <- function(data, cutoff = c(0, 0.95)){
   test_cubble(data)
 
