@@ -31,11 +31,12 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
 #' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
   group_vars <- group_vars(template)
+  group_vars <- group_vars[group_vars %in% names(meta(template))]
 
   col_to_add <- c(group_vars, setdiff(find_non_varying_var(data, !!group_vars), names(meta(template))))
   meta_to_add <- data[col_to_add] %>% unique()
   meta_data <- meta(template)
-  meta_data <- meta_data %>% left_join(meta_to_add, by = group_vars)
+  meta_data <- meta_data %>% merge(meta_to_add, by = group_vars, all.x = TRUE)
 
   cubble_df(data, group = group_vars, meta_data = meta_data, form = determine_form(template))
 }
@@ -57,7 +58,7 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
     abort("data1 needs to be a cubble object")
   }
 
-  if (form(data1) == "long" & by == group_vars(data1)){
+  if (form(data1) == "long" && by == group_vars(data1)){
     inform("Joining variable(s) being invariant to the group variable ...")
   }
 

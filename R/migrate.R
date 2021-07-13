@@ -27,7 +27,8 @@ migrate <- function(data, ...){
   }
 
   key <- group_vars(data)
-  to_join <- meta(data) %>% dplyr::select(key, !!!vars)
-  data %>% left_join(to_join, by = key)
+  key_to_join <- key[key %in% names(meta(data))]
+  to_join <- meta(data) %>% dplyr::select(key_to_join, !!!vars)
+  data %>% left_join(to_join, by = key_to_join)
 
 }
