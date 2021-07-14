@@ -10,8 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
+  comment = "#>"
 )
 ```
 
@@ -62,17 +61,13 @@ ggmap(aus_map) + geom_point(data = oz_global2, aes(x = long, y = lat))
 # add missing proportion
 global2_2020 <- oz_zoom2 %>% 
   filter(year(date) == 2020) %>%
-  global(station) %>% 
-  mutate(data = list(as_tsibble(data, index = date)),
-         prcp_missing = sum(is.na(data$prcp)) / length(data$prcp),
-         tmax_missing = sum(is.na(data$tmax)) / length(data$tmax),
-         tmin_missing = sum(is.na(data$tmin)) / length(data$tmin)) #  nest time-wise back to list-column form is not working for tsibble
+  global() %>% 
+  add_missing_prct(prcp:tmin) %>% 
+  add_missing_dscrb()
 
 # add number of variables that are block missing for ordering
 global2_quality <- global2_2020 %>% 
-  mutate(missing_num = ifelse(prcp_missing > 0.95, 1, 0) + 
-           ifelse(tmax_missing > 0.95, 1, 0) + 
-           ifelse( tmin_missing> 0.95, 1, 0)) %>% 
+  mutate(missing_num = sum(c_across(ends_with("missing")) == "almost all missing")) %>% 
   tidyr::pivot_longer(prcp_missing:tmin_missing, names_to = "var", values_to = "value")
  
 
@@ -94,30 +89,11 @@ global2_quality2 %>%
 
 ## Plot with long format
 
-### Data quality plot 
-
-```{r}
-oz_zoom2 %>% 
-  filter(year(date) == 2020) %>% 
-  left_join(num_missing_df, by = "station")
-
-g <- global2_quality %>% 
-  tidyr::pivot_wider(names_from = var, values_from = value) %>% 
-  tidyr::pivot_longer(contains("missing"), names_to = "var", values_to = "value") %>% 
-  rowwise() %>% 
-  mutate(data = list(as_tibble(data))) %>% 
-  tidyr::unnest(data) %>% 
-  global(station) %>% 
-  zoom(data) %>% 
-  tidyr::pivot_wider(names_from = var, values_from = value)
-
-```
-
 ### Precipitation
 
 Time series plot seems slow to make for all 93 stations:  
 
-```{r eval = FALSE}
+```{r}
 oz_zoom2_2020 <- oz_zoom2 %>% filter(year(date) == 2020) 
 
 oz_zoom2_2020 %>% 
@@ -127,22 +103,6 @@ oz_zoom2_2020 %>%
   theme_void()
 ```
 
-try sample a couple station: try sample_n_keys from brolgar and find that it doesn't work with grouped data. See example: 
-
-```{r}
-# pedestrain is not grouped (doesn't have grouped_ts and grouped_df as class) and it works fine
-library(brolgar)
-set.seed(123)
-ped_sample_good <- tsibble::pedestrian %>% sample_n_keys(size = 2)
-
-# group pedestrain by key add grouped_ts and grouped_df in the class attributes and sample_n_keys() doesn't work
-ped_gf <- tsibble::pedestrian %>% group_by_key()
-class(ped_gf)
-set.seed(123)
-ped_sample_bad <- ped_gf %>% sample_n_keys(size = 2)
-ped_sample_bad
-
-```
 
 ### Max temperature
 
@@ -162,12 +122,12 @@ There are block missing for some stations, would be good to have a function to s
 
 ```{r}
 oz_zoom2_tmax <- oz_global2 %>% 
-  zoom(data) %>% 
+  zoom() %>% 
   filter(year(date) == 2020) %>% 
-  global(station) %>% # some work here needs to be done here to make sure after global the list-col is still tsibble
-  mutate(tmax_missing = sum(data$tmax, na.rm = TRUE)) %>% 
+  global() %>% # some work here needs to be done here to make sure after global the list-col is still tsibble
+  mutate(tmax_missing = sum(ts$tmax, na.rm = TRUE)) %>% 
   filter(tmax_missing != 0) %>% 
-  zoom(data)
+  zoom()
 
 oz_zoom2_tmax %>% 
   ggplot() + 
@@ -199,12 +159,10 @@ Can do more aggregation to reduce the noise
 oz_zoom2_prep <- oz_zoom2 %>% 
   dplyr::filter(lubridate::year(date) == 2020) %>% 
   mutate(yday = lubridate::yday(date)) %>% 
-  as_tsibble() %>% 
   mutate(ym = yearmonth(date)) %>% 
   index_by(ym) %>% 
   summarise(across(tmax:tmin, ~mean(.x, na.rm = TRUE))) %>% 
-  as_tibble() %>% # need to implement a migrate verb
-  dplyr::left_join(station %>% dplyr::select(id, lat, long), by = c("station" = "id"))
+  migrate(lat, long)
 
 gly <- oz_zoom2_prep %>% glyphs("long", "ym", "lat", "tmax", height = 1, width = 2)
 aus_map <- get_map(location = bbox(station), source = "osm")
@@ -215,5 +173,19 @@ ggmap(aus_map) +
   #add_ref_boxes(gly, color = "grey90") +
   geom_path(data = gly, aes(x = gx, y = gy, group = gid)) +
   theme_void()
+```
+
+
+```{r}
+library(ozmaps)
+ozmaps::ozmap_country
+ggplot() + 
+  geom_sf(data = ozmaps::ozmap_country, aes(geometry = geometry)) + 
+  # ggplot(gly, aes(x = gx, y = gy,  group = gid)) +
+  #add_ref_lines(gly,color = "grey90") +
+  #add_ref_boxes(gly, color = "grey90") +
+  geom_path(data = gly, aes(x = gx, y = gy, group = gid)) +
+  theme_void()
+
 ```
 
