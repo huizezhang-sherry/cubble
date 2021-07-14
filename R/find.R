@@ -10,8 +10,9 @@ find_non_varying_var <- function(data, key) {
 
   subset <- list_col[[1]]
   var_length <- map_dbl(colnames(subset), ~ nrow(unique(subset[.x])))
+  all_na <- map_lgl(map(subset, is.na), all)
 
-  out <- c(as_name(key), colnames(subset)[var_length == 1])
+  out <- c(as_name(key), colnames(subset)[var_length == 1 & !all_na])
   names(out) <- NULL
 
   out
