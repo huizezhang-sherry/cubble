@@ -13,23 +13,26 @@
 #' }
 #' @rdname missing
 #' @export
-add_missing_prct <- function(data, vars){
+add_missing_prct <- function(data, ...){
 
   test_cubble(data)
+
+  exprs <- expr(...)
+  vars <- tidyselect::eval_select(exprs, data %>% zoom())
 
   # different scenarios for long/ list-column form
   # now assume list-column form
 
   var_names <- data %>% zoom() %>% names()
 
-  if (!all(vars %in% var_names)){
+  if (!all(names(vars) %in% var_names)){
     bad_vars <- vars[which(!vars %in% var_names )]
     abort(glue::glue("Variable not presented in the long form: {bad_vars}"))
   }
 
 
-  calls <- map(vars,  ~quo(sum(is.na(ts[[.x]]))/length(ts[[.x]])))
-  names(calls) <- glue::glue("{vars}_missing")
+  calls <- map(names(vars),  ~quo(sum(is.na(ts[[.x]]))/length(ts[[.x]])))
+  names(calls) <- glue::glue("{names(vars)}_missing")
   out <- data %>% mutate(missing = list(map(calls, ~eval(.x)))) %>% tidyr::unnest_wider(missing)
 
   cubble_df(out, group = group_vars(data), meta_data = meta(data), form = determine_form(data))
@@ -38,17 +41,15 @@ add_missing_prct <- function(data, vars){
 #' @rdname missing
 #' @importFrom purrr map_dfr
 #' @export
-add_missing_dscrb <- function(data, cutoff = c(0, 0.95)){
+add_missing_dscrb <- function(data, cutoff = 0.99){
   test_cubble(data)
 
   all_names <- names(data)
   vars <- syms(all_names[grep("missing", all_names)])
 
-  cutoff_lower <- cutoff[1]
-  cutoff_upper <- cutoff[2]
 
-  calls <- map(vars, ~quo(ifelse(!!.x >= cutoff_upper, "almost all missing",
-                                 ifelse(!!.x <= cutoff_lower, "almost no missing", "some missing"))))
+  calls <- map(vars, ~quo(ifelse(!!.x >= cutoff, "almost all missing",
+                                 ifelse(!!.x == 0, "no missing", "partly missing"))))
 
   names(calls) <- map_chr(vars, ~sub("missing", "dscrb", .x))
 
