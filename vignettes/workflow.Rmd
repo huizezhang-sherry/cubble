@@ -81,7 +81,7 @@ joined <- oz_global %>%
   left_join(to_join, by = c("station" = "id")) %>% 
   zoom()
 joined
-meta(joined)
+meta(joined) %>% head()
 ```
 
 A shortcut for joining variables from metadata to the long form is via `migrate()`. This can be useful for creating visualisation that involves both the group-wise and time-wise variables, i.e. glyph map. 
@@ -139,8 +139,8 @@ Missing summary gives a better view of the data quality recorded in each station
 
 ```{r}
 oz_global2 %>% 
-  add_missing_prct(vars = c("prcp", "tmin", "tmax")) %>% 
-  add_missing_dscrb(cutoff = c(0, 0.95))
+  add_missing_prct(prcp:tmin) %>% 
+  add_missing_dscrb()
 ```
 
 

@@ -31,7 +31,9 @@ Suggests:
     rmarkdown,
     knitr,
     ggmap,
-    ggplot2
+    ggplot2,
+    GGally,
+    forcats
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

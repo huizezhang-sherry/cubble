@@ -5,18 +5,17 @@
 \alias{add_missing_dscrb}
 \title{Compute statistics for variable missingness}
 \usage{
-add_missing_prct(data, vars)
+add_missing_prct(data, ...)
 
-add_missing_dscrb(data, cutoff = c(0, 0.95))
+add_missing_dscrb(data, cutoff = 0.99)
 }
 \arguments{
 \item{data}{a cubble object}
 
-\item{vars}{the variable to compute missingness}
+\item{...}{the variable to compute \code{add_missing_prct()}}
 
-\item{cutoff}{the lower and upper threshold value, below or above which the variable
-will be described as "almost no missing" and "almost all missing". ("some missing" for
-if in between). Only used in \code{add_missing_dscrb()}}
+\item{cutoff}{the threshold value, above which the variable
+will be described as "almost all missing". Only used in \code{add_missing_dscrb()}}
 }
 \description{
 Compute statistics for variable missingness

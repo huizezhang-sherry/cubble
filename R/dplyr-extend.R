@@ -58,7 +58,7 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
     abort("data1 needs to be a cubble object")
   }
 
-  if (form(data1) == "long" && by == group_vars(data1)){
+  if (form(data1) == "long" && any(by == group_vars(data1))){
     inform("Joining variable(s) being invariant to the group variable ...")
   }
 

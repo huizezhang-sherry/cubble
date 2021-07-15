@@ -1,10 +1,9 @@
 #' Compute statistics for variable missingness
 #'
 #' @param data a cubble object
-#' @param vars the variable to compute missingness
-#' @param cutoff the lower and upper threshold value, below or above which the variable
-#'   will be described as "almost no missing" and "almost all missing". ("some missing" for
-#'   if in between). Only used in \code{add_missing_dscrb()}
+#' @param ... the variable to compute \code{add_missing_prct()}
+#' @param cutoff the threshold value, above which the variable
+#'   will be described as "almost all missing". Only used in \code{add_missing_dscrb()}
 #' @examples
 #'
 #' \dontrun{

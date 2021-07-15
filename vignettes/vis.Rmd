@@ -10,7 +10,10 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE, 
+  warning = FALSE, 
+  out.width = "100%"
 )
 ```
 
@@ -18,12 +21,10 @@ knitr::opts_chunk$set(
 library(cubble)
 library(tsibble)
 library(lubridate)
-library(ggplot2)
-library(ggmap)
 library(dplyr)
-library(forcats)
-library(ggrepel)
+library(ggmap)
 library(GGally)
+library(forcats)
 ```
 
 # Set up `cubble_df` object
@@ -177,15 +178,15 @@ ggmap(aus_map) +
 
 
 ```{r}
-library(ozmaps)
-ozmaps::ozmap_country
-ggplot() + 
-  geom_sf(data = ozmaps::ozmap_country, aes(geometry = geometry)) + 
-  # ggplot(gly, aes(x = gx, y = gy,  group = gid)) +
-  #add_ref_lines(gly,color = "grey90") +
-  #add_ref_boxes(gly, color = "grey90") +
-  geom_path(data = gly, aes(x = gx, y = gy, group = gid)) +
-  theme_void()
+# library(ozmaps)
+# ozmaps::ozmap_country
+# ggplot() + 
+#   geom_sf(data = ozmaps::ozmap_country, aes(geometry = geometry)) + 
+#   # ggplot(gly, aes(x = gx, y = gy,  group = gid)) +
+#   #add_ref_lines(gly,color = "grey90") +
+#   #add_ref_boxes(gly, color = "grey90") +
+#   geom_path(data = gly, aes(x = gx, y = gy, group = gid)) +
+#   theme_void()
 
 ```
 
