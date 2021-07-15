@@ -54,22 +54,23 @@ back
 
 ## Work with dplyr verbs
 
-Currently, verbs in the `dplyr` package supported by cubble includes `filter`, `mutate`, `summarise`. In the example below, we want to calculate the sum of precipitation and the average max/min temperature for each month after 2015. Since the calculation is time-specific, we start with the time-wise long form.
+Currently, verbs in the `dplyr` package supported by cubble includes `filter`, `mutate`, `summarise`. In the example below, we want to only focus on the 2020 record and remove the stations that don't have tmax recorded.  Since the calculation is time-specific, we start with the time-wise long form.
+
+TODO: write down how to do
 
 ```{r}
+# station ASN00004032 don't have tmax recorded at all. We want to remove stations like these
+# detect problemetic stations
+oz_global %>% filter(station == "ASN00004032") %>% pull(ts)
+
 time_wise <- oz_zoom %>%
-  mutate(ym = yearmonth(date)) %>% 
-  filter(year(ym) >= 2015) %>% 
-  summarise(prcp = sum(prcp, na.rm = TRUE),
-            across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
-
-time_wise
-```
-
-The summarised cubble can be switched back to the list-column format again to compute station-wise variables
-
-```{r}
-time_wise %>% global()
+  filter(year(date) == 2020) %>% 
+  global() %>% 
+  mutate(tmax_missing = sum(ts$tmax, na.rm = TRUE)) %>% 
+  filter(tmax_missing != 0) %>% 
+  zoom()
+  
+time_wise 
 ```
 
 Joining can be performed on both the long/ list-column form. Variable joined that are group-specific will also be added to the `meta` attributes. 
@@ -89,7 +90,6 @@ A shortcut for joining variables from metadata to the long form is via `migrate(
 ```{r}
 oz_zoom %>% 
   migrate(lat, long) 
-  
 ```
 
 
@@ -109,7 +109,7 @@ oz_global2
 oz_zoom2
 ```
 
-With a tsibble structure, we can further make the summary above into monthly summar by using the `index_by` function in `tsibble`:
+With a tsibble structure, we can further make the summary above into monthly summary by using the `index_by` function in `tsibble`:
 
 ```{r}
 time_wise2 <- oz_zoom2 %>% 
@@ -120,6 +120,7 @@ time_wise2 <- oz_zoom2 %>%
             across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
 
 time_wise2
+# has a problem to switch back to list-column form since now there are two keys: station, ym
 ```
 
 ## Sampling and add missing summary
