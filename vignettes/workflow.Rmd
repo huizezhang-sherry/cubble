@@ -54,51 +54,57 @@ back
 
 ## Work with dplyr verbs
 
-Currently, verbs in the `dplyr` package supported by cubble includes `filter`, `mutate`, `summarise`. In the example below, we want to only focus on the 2020 record and remove the stations that don't have tmax recorded.  Since the calculation is time-specific, we start with the time-wise long form.
+Below are three examples on how to manipulate a cubble object with dplyr verbs:
 
-TODO: write down how to do
+### Example 1 
+
+In the first example, we want to only keep the stations that have `tmax` recorded in 2020. This requires first narrow down the records to those in 2020, determine if `tmax` is missing for each station, and then retain those stations that have `tmax` recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has `tmax` recorded is a result of each station, rather than of each time point, hence we need to switch to the list-column form with `global()`. To calculate whether `tmax` is recorded, we mutate a column `tmax_missing` that takes `TRUE` if all the `tmax` in the nested list column `ts` are `NA` and `FALSE` otherwise. To get the stations that we want, we need another filter on `tmax_missing`.
+
 
 ```{r}
-# station ASN00004032 don't have tmax recorded at all. We want to remove stations like these
-# detect problemetic stations
-oz_global %>% filter(station == "ASN00004032") %>% pull(ts)
-
-time_wise <- oz_zoom %>%
+out <- oz_zoom %>%
   filter(year(date) == 2020) %>% 
   global() %>% 
-  mutate(tmax_missing = sum(ts$tmax, na.rm = TRUE)) %>% 
-  filter(tmax_missing != 0) %>% 
-  zoom()
-  
-time_wise 
+  mutate(tmax_missing = ifelse(all(is.na(ts$tmax)), TRUE, FALSE)) %>% 
+  filter(!tmax_missing)
+
+out
 ```
 
-Joining can be performed on both the long/ list-column form. Variable joined that are group-specific will also be added to the `meta` attributes. 
+### Example 2
+
+Now we want to select the stations that have been registered with world meteorological organisation (WMO) and the dataset `station` has a column `wmo_id` that records this information. To do this task, we first need to join the `station` dataset with our climate dataset and then filter out those stations that don't have the WMO id. Since the join is by station rather than by time, we start with the list-column form and write the exact same syntax of join and filter as with tidyverse. 
 
 ```{r}
 # join wmo_id for each station
 to_join <- station %>% select(id, wmo_id)
-joined <- oz_global %>% 
+out <- oz_global %>% 
   left_join(to_join, by = c("station" = "id")) %>% 
-  zoom()
-joined
-meta(joined) %>% head()
+  filter(!is.na(wmo_id))
+out
 ```
 
-A shortcut for joining variables from metadata to the long form is via `migrate()`. This can be useful for creating visualisation that involves both the group-wise and time-wise variables, i.e. glyph map. 
+### Example 3
+
+Sometimes, we would like to have station-wise and time-wise variables in the same form (i.e. when plotting glyph maps). This can also be seen as a joining task, on the long form, with the dataset to join being the metadata. `migrate()` is a verb introduced as the shortcut for `left_join()` with a cubble's metadata and below is the comparison of the two syntaxes.
 
 ```{r}
-oz_zoom %>% 
-  migrate(lat, long) 
+out %>% 
+  zoom() %>% 
+  migrate(lat, long)
+
+out %>% 
+  zoom() %>% 
+  left_join(meta(out) %>% select(station, lat, long))
 ```
-
-
 
 ## Time series as a tsibble object
 
 Cubble also support a tsibble data structure for time series computation. 
 
-A cubble can also be created from a tsibble object, this time, in the list-column form, each item in the `ts` column is a tsibble, rather than tibble object and in the long form, the object is by default a tsibble object.
+### Creation
+
+A cubble can also be created from an underlying tsibble object. The resulting list-column form shows a `tbl_ts` type for each nested cell in the `ts` column and a tsibble heading in the long form.
 
 ```{r}
 oz_climate_tsibble <- oz_climate %>% tsibble::as_tsibble(index = date, key = station)
@@ -109,18 +115,19 @@ oz_global2
 oz_zoom2
 ```
 
-With a tsibble structure, we can further make the summary above into monthly summary by using the `index_by` function in `tsibble`:
+### Manipulation
+
+With a tsibble structure, we can make a monthly summary of our variables. Here is an example on calculating the monthly total precipitation and average max/min temperature in 2020. As before, we start with the long form to filter out the records that are not in 2020 and add a `ym` variable as the yearmonth representation of the date. `index_by` adds another grouping on the `ym` variable for computing the corresponding monthly summary.
 
 ```{r}
 time_wise2 <- oz_zoom2 %>% 
-  filter(lubridate::year(date) >= 2015, station == "ASN00001019") %>% 
+  filter(lubridate::year(date) == 2020) %>% 
   mutate(ym = tsibble::yearmonth(date)) %>% 
-  tsibble::index_by(ym) %>% 
+  index_by(ym) %>% 
   summarise(prcp = sum(prcp, na.rm = TRUE),
             across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
 
 time_wise2
-# has a problem to switch back to list-column form since now there are two keys: station, ym
 ```
 
 ## Sampling and add missing summary
@@ -140,7 +147,7 @@ Missing summary gives a better view of the data quality recorded in each station
 
 ```{r}
 oz_global2 %>% 
-  add_missing_prct(prcp:tmin) %>% 
+  add_missing_prct(prcp: tmax) %>% 
   add_missing_dscrb()
 ```
 
