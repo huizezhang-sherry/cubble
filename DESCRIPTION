@@ -20,6 +20,7 @@ Imports:
     glue,
     lubridate,
     magrittr,
+    patchwork,
     purrr,
     rlang,
     tibble,
