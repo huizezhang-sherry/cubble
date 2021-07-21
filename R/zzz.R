@@ -6,4 +6,10 @@
   s3_register("tsibble::index_by", "cubble_df")
   s3_register("dplyr::summarise", "cubble_df")
   s3_register("dplyr::left_join", "cubble_df")
+
+  s3_register("dplyr::slice_head", "cubble_df")
+  s3_register("dplyr::slice_tail", "cubble_df")
+  s3_register("dplyr::slice_min", "cubble_df")
+  s3_register("dplyr::slice_max", "cubble_df")
+  s3_register("dplyr::slice_sample", "cubble_df")
 }

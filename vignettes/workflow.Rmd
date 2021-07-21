@@ -132,13 +132,7 @@ time_wise2
 
 ## Sampling and add missing summary
 
-`sample_group_var()` makes random sampling of the grouping variable for plotting. It is similar to `brolgar::sample_n_keys()` but the brolgar function doesn't deal with class `grouped_df`.
-
-```{r}
-oz_global2 %>% 
-  sample_group_var(size = 10) 
-```
-
+[add documentation on slicing]
 
 Missing summary gives a better view of the data quality recorded in each station. 
 
