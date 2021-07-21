@@ -51,7 +51,7 @@ global.cubble_df <- function(data, key) {
   if (quo_get_expr(key) == group_vars(data)){
     meta_data <- meta(data)
   } else{
-    meta_data <- data[, find_non_varying_var(data, !!key)]
+    meta_data <- tibble::as_tibble(data[, find_non_varying_var(data, !!key)])
   }
 
   out <- tibble::as_tibble(data)
@@ -89,7 +89,7 @@ global.tbl_df <- function(data, key) {
   out <- data %>%
     tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
     dplyr::rowwise()
-  meta_data <- out[nest_var$non_varying_var]
+  meta_data <- tibble::as_tibble(out[nest_var$non_varying_var])
   cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))
 }
 
