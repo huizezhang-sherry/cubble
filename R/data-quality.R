@@ -5,7 +5,6 @@
 #' @param order_op the operation on the variables for ordering, default to identity
 #'
 #' @examples
-#' library(patchwork)
 #' # create a tibble object
 #' climate_2020 <- oz_climate %>%
 #'                 dplyr::filter(lubridate::year(date) == 2020)

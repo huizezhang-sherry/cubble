@@ -17,7 +17,6 @@ quality_plot(data, ..., order_op = I)
 data quality plot
 }
 \examples{
-library(patchwork)
 # create a tibble object
 climate_2020 <- oz_climate \%>\%
                 dplyr::filter(lubridate::year(date) == 2020)
