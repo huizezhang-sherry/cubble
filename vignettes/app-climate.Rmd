@@ -1,0 +1,217 @@
+---
+title: "app-climate"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{app-climate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(cubble)
+library(stringr)
+library(ggplot2)
+library(fabletools)
+library(tidyr)
+library(broom)
+library(dplyr)
+filter <- dplyr::filter
+```
+
+```{r}
+df <- oz_climate %>% 
+  mutate(name = as.factor(str_to_lower(str_remove(name, ", AS")))) %>% 
+  global(station) 
+  
+#  rename(elev = elevation)
+# add rename: https://github.com/tidyverse/dplyr/blob/master/R/rename.R
+
+df_tmax <- df %>% 
+  mutate(tmax_missing = all(is.na(ts$tmax))) %>% 
+  filter(!tmax_missing) 
+
+df_tmax %>% 
+  zoom() %>% 
+  migrate(name) %>% 
+  ggplot(aes(x = date ,y = tmax)) + 
+  geom_line() + 
+  facet_wrap(vars(name))
+
+```
+
+## Location of all the stations
+
+```{r}
+ggplot() +  
+  geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
+  geom_point(data = oz_global2, aes(x = long, y = lat)) + 
+  coord_sf() + 
+  theme_minimal()
+```
+
+## Features on tmax
+
+```{r}
+feat_tmax <- df_tmax %>% 
+  tidyr::unnest(ts) %>% 
+  as_tsibble(index = date, key = station) %>% 
+  features(tmax, feature_set(pkgs = "feasts"))
+
+feat_tmax_clean <- feat_tmax %>% 
+  dplyr::select(-contains(c("lb", "bp", "zero", "pp", "diffs", "lambda")))
+
+pca_tmax <- feat_tmax_clean %>% 
+  dplyr::select(-station) %>% 
+  prcomp(scale = TRUE) %>% 
+  augment(feat_tmax_clean)
+```
+
+```{r}
+df_tmax_pca <- df_tmax %>% 
+  left_join(pca_tmax %>% dplyr::select(station, .fittedPC1, .fittedPC2)) 
+
+df_tmax_pca %>% 
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) + 
+  geom_point() + 
+  coord_equal()
+```
+
+think about how to show these three stations are different from others
+
+```{r}
+# see those stations on the map
+ggplot() +  
+  geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
+  geom_point(data = df, aes(x = long, y = lat)) + 
+  geom_point(data = df_tmax_pca %>% filter(.fittedPC1 < -5), 
+             aes(x = long, y = lat), color = "red") + 
+  coord_sf() + 
+  theme_minimal()
+
+# average across station doesn't work currently :(
+average <- df_tmax_pca %>% 
+  filter(.fittedPC1 >= -5) %>% 
+  zoom() %>%
+  as_tibble() %>% 
+  group_by(date) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
+  mutate(name = "average")
+
+# plot the tmax series along with the average of all others - averaging makes the series smoother ....
+df_tmax_pca %>% 
+  filter(.fittedPC1 < -5) %>% 
+  zoom() %>% 
+  migrate(name) %>% 
+  bind_rows(average) %>% 
+  ggplot(aes(x = date , y = tmax)) + 
+  geom_line() + 
+  facet_wrap(vars(name), ncol = 1)
+
+```
+
+## Features on prcp
+
+```{r}
+df_prcp <- df %>% 
+  mutate(prcp_missing = all(is.na(ts$prcp) | ts$prcp == 0)) %>% 
+  filter(!prcp_missing) 
+
+feat_prcp <- df_prcp %>% 
+  tidyr::unnest(ts) %>% 
+  as_tsibble(index = date, key = station) %>% 
+  features(prcp, feature_set(pkgs = "feasts"))
+
+feat_prcp_clean <- feat_prcp %>% 
+  dplyr::select(-contains(c("lb", "bp", "zero", "pp", "diffs", "lambda", "pacf", "kpss", "hurst")))
+
+pca_prcp <- feat_prcp_clean %>% 
+  dplyr::select(-station) %>% 
+  prcomp(scale = TRUE) %>% 
+  augment(feat_prcp_clean)
+```
+
+```{r}
+df_prcp_pca <- df_prcp %>% 
+  left_join(pca_prcp %>% dplyr::select(station, .fittedPC1, .fittedPC2)) 
+
+df_prcp_pca %>% 
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) + 
+  geom_point() + 
+  coord_equal()
+
+```
+
+```{r}
+# see those stations on the map
+ggplot() +  
+  geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
+  geom_point(data = df, aes(x = long, y = lat)) + 
+  geom_point(data = df_prcp_pca %>% filter(.fittedPC1 > 4), 
+             aes(x = long, y = lat), color = "red") + 
+  coord_sf() + 
+  theme_minimal()
+
+# plot the tmax series along with the average of all others
+df_prcp_pca %>% 
+  filter(.fittedPC1 > 4) %>% 
+  zoom() %>% 
+  migrate(name) %>% 
+  ggplot(aes(x = date , y = prcp)) + 
+  geom_line() + 
+  facet_wrap(vars(name))
+
+```
+
+
+## Features on tmin
+
+```{r}
+df_tmin <- df %>% 
+  mutate(tmin_missing = all(is.na(ts$tmin)), 
+         first_day = is.na(ts$tmin[1])) %>% 
+  filter(!tmin_missing, !first_day) 
+
+feat_tmin <- df_tmin %>% 
+  tidyr::unnest(ts) %>% 
+  as_tsibble(index = date, key = station) %>% 
+  features(tmin, feature_set(pkgs = "feasts"))
+
+feat_tmin_clean <- feat_tmin %>% 
+  dplyr::select(-contains(c("lb", "bp", "zero", "pp", "diffs", "lambda", "pacf", "hurst", "kpss", "spikiness"))) %>% 
+  filter(station != "ASN00040223")
+
+pca_tmin <- feat_tmin_clean %>% 
+  dplyr::select(-station) %>% 
+  prcomp(scale = TRUE) %>% 
+  augment(feat_tmin_clean)
+```
+
+```{r}
+df_tmin_pca <- df_tmin %>% 
+  left_join(pca_tmin %>% dplyr::select(station, .fittedPC1, .fittedPC2)) 
+
+df_tmin_pca %>% 
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) + 
+  geom_point() + 
+  coord_equal()
+```
+
+```{r}
+# see those stations on the map
+ggplot() +  
+  geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
+  geom_point(data = df, aes(x = long, y = lat)) + 
+  geom_point(data = df_tmin_pca %>% filter(.fittedPC1 > 6), 
+             aes(x = long, y = lat), color = "red") + 
+  coord_sf() + 
+  theme_minimal()
+```
+
+add cross linking between PC plot and map
