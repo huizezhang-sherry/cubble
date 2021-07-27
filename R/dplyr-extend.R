@@ -66,3 +66,10 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
   dplyr_reconstruct(out, data1)
 
 }
+
+#' @export
+ungroup.cubble_df <- function(data, ...){
+  out <- NextMethod("ungroup")
+
+  dplyr_reconstruct(out, data)
+}
