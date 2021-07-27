@@ -196,12 +196,7 @@ zoom.cubble_df <- function(data, key){
     key <- quo_get_expr(key)
   }
 
-
-  if (quo_get_expr(key) == group_vars(data)){
-    meta_data <- meta(data)
-  } else{
-    meta_data <- data[, find_non_varying_var(data, !!key)]
-  }
+  meta_data <- data[, find_non_varying_var(data, !!key)]
 
 
   list_col <- data %>% dplyr::pull(!!col)
