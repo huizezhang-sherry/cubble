@@ -228,3 +228,178 @@ ggplot() +
 ```
 
 
+## Cross linking on map and PC plot
+
+```{r}
+library(crosstalk)
+library(plotly)
+shared_dt <- SharedData$new(df_tmax_pca %>% mutate(less_than_5 = ifelse(.fittedPC1 < -5, TRUE, FALSE)))
+p1 <- shared_dt %>%  
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) + 
+  geom_point() + 
+  coord_equal()
+
+p2 <- ggplot() +  
+  geom_sf(data = state_map, aes(geometry = geometry)) +
+  geom_point(data = shared_dt, aes(x = long, y = lat), color = "red") + 
+  coord_sf() + 
+  theme_void()
+
+bscols(ggplotly(p1), ggplotly(p2))
+```
+
+
+
+## Decomposition
+
+```{r}
+df_monthly <- df_daily %>% 
+  zoom() %>% 
+  mutate(ym = tsibble::yearmonth(date)) %>% 
+  index_by(ym) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE),
+            tmin = mean(tmin, na.rm = TRUE), 
+            prcp = sum(prcp, na.rm = TRUE)) %>% 
+  ungroup(ym) %>% 
+  filter(year(ym) < 2021) %>% 
+  mutate(year = as.factor(year(ym)),
+         month = as.factor(month(ym)), 
+         prcp = sqrt(prcp + 0.001))
+```
+
+
+Link monthly tmax with map
+
+
+```{r}
+smooth_plot <- df_monthly %>% 
+  ggplot(aes(x = as.Date(ym), y = tmax, group = station)) + 
+  stat_smooth(se = FALSE) # gam
+
+smoother <- layer_data(smooth_plot) %>% 
+  group_by(group) %>% 
+  summarise(y_diff = max(y) - min(y))
+
+df_tmax_smoother <- df_monthly %>% 
+  global() %>% 
+  bind_cols(smoother) %>% 
+  arrange(-y_diff)
+
+shared_dt <- df_tmax_smoother %>% 
+  zoom() %>% 
+  migrate(lat, long, y_diff) %>% 
+  highlight_key(~station)
+
+p1 <- shared_dt %>% 
+  ggplot() + 
+  geom_sf(data = state_map, aes(geometry = geometry)) +
+  geom_point(aes(x = long, y = lat, color = y_diff, group = station)) + 
+  theme_void()
+
+map <- highlight(ggplotly(p1), selectize = TRUE, on = "plotly_selected")
+
+p2 <- shared_dt %>% 
+  ggplot(aes(x = as.Date(ym), y = tmax, group = station, color = y_diff), alpha = .1) + 
+  geom_line()
+
+line <- highlight(ggplotly(p2), on = "plotly_hover")
+
+bscols(map, line)
+
+```
+
+See yearly variation of different stations
+
+```{r}
+df_into_month <- df_monthly %>% 
+  group_by(month, station) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE),
+            tmin = mean(tmin, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  left_join(meta(df_monthly)) %>% # a bit of hacky to get around with group_by
+  global(station)
+```
+
+tmax
+
+```{r}
+ df_monthly %>% 
+    ggplot(aes(x = month, y = tmax, group = interaction(year, station), color = year)) + 
+    geom_line() + 
+    facet_wrap(vars(station))
+```
+
+Temperature difference for stations
+
+Summarises the monthly mean temperature across each year for all the stations and calculate the mean temperature difference. Plot the two averaged temperature series as line and on the map for each station. 
+
+Those stations along the coastline are the ones with small temperature difference and this makes sense because water body has the effect to neutralise temperature. 
+
+TODO: Add linking 
+
+```{r}
+df_monthly_ordered <- df_into_month %>% 
+  mutate(tdiff = mean(ts$tmax - ts$tmin, na.rm = TRUE)) %>% 
+  zoom() %>%
+  migrate(tdiff, name)
+
+p1 <- df_monthly_ordered %>% 
+  ggplot() + 
+  geom_line(aes(x = month, y = tmin, group = name, color = tdiff)) + 
+  geom_line(aes(x = month, y = tmax, group = name, color = tdiff)) + 
+  facet_wrap(vars(fct_reorder(name, -tdiff)), labeller = label_wrap_gen(width=20)) + 
+  ylab("temperature")
+
+p2 <- df_monthly_ordered %>% 
+  global() %>% 
+  ggplot() + 
+  geom_sf(data = state_map, aes(geometry = geometry)) +
+  geom_point(aes(x = long, y = lat, color = tdiff, group = name)) + 
+  theme_void()
+
+p1 | p2
+```
+
+prcp
+
+- steps
+
+Those with more rains are in the north or along the eastern coast
+
+- add interactivity
+- investigate station ASN00090015
+
+```{r}
+df_prcp_weekly <- df_daily %>% 
+  zoom() %>% 
+  mutate(week = week(date)) %>% 
+  index_by(week) %>% 
+  summarise(prcp = sum(prcp, na.rm = TRUE)) %>% 
+  ungroup(week) %>% 
+  mutate(prcp = sqrt(prcp + 0.001)) %>% 
+   global() %>% 
+  mutate(prcp_max = max(ts$prcp))
+
+p1 <- df_prcp_weekly %>% 
+  zoom() %>% 
+  migrate(prcp_max) %>% 
+  ggplot(aes(x = week, y = prcp, group = station, color = prcp_max)) + 
+  geom_line() + 
+  facet_wrap(vars(station))
+
+p2 <- df_prcp_weekly %>% 
+  ggplot() + 
+  geom_sf(data = state_map, aes(geometry = geometry)) +
+  geom_point(aes(x = long, y = lat, group = name, color = prcp_max)) + 
+  theme_void()
+
+p1 | p2
+```
+
+see also how those heavily rained stations map to the geo map
+
+also the line plot looks spike - try with weekly aggregation rather than monthly?
+  
+  
+  
+  also use glyph map
