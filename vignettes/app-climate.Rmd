@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  eval = FALSE
 )
 ```
 
@@ -22,22 +23,32 @@ library(fabletools)
 library(tidyr)
 library(broom)
 library(dplyr)
+library(feasts)
+library(rmapshaper)
+library(forcats)
+library(lubridate)
+state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 filter <- dplyr::filter
 ```
 
 ```{r}
 df <- oz_climate %>% 
   mutate(name = as.factor(str_to_lower(str_remove(name, ", AS")))) %>% 
+  as_tsibble(index = date, key = station) %>% 
   global(station) 
   
 #  rename(elev = elevation)
 # add rename: https://github.com/tidyverse/dplyr/blob/master/R/rename.R
 
-df_tmax <- df %>% 
-  mutate(tmax_missing = all(is.na(ts$tmax))) %>% 
-  filter(!tmax_missing) 
+df_daily <- df %>% 
+  mutate(tmax_missing = all(is.na(ts$tmax)),
+         tmin_missing = all(is.na(ts$tmin))) %>% 
+  filter(!tmax_missing, !tmin_missing, 
+         name != "coffs harbour mo",# too many missing from 2016 - 2020 for coffs harbour mo
+         station != "ASN00016098" # almost all missing for tmin
+         ) 
 
-df_tmax %>% 
+df_daily %>% 
   zoom() %>% 
   migrate(name) %>% 
   ggplot(aes(x = date ,y = tmax)) + 
@@ -50,16 +61,16 @@ df_tmax %>%
 
 ```{r}
 ggplot() +  
-  geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
-  geom_point(data = oz_global2, aes(x = long, y = lat)) + 
+  geom_sf(data = state_map, aes(geometry = geometry)) +
+  geom_point(data = df, aes(x = long, y = lat)) + 
   coord_sf() + 
-  theme_minimal()
+  theme_void()
 ```
 
 ## Features on tmax
 
 ```{r}
-feat_tmax <- df_tmax %>% 
+feat_tmax <- df_daily %>% 
   tidyr::unnest(ts) %>% 
   as_tsibble(index = date, key = station) %>% 
   features(tmax, feature_set(pkgs = "feasts"))
@@ -67,14 +78,16 @@ feat_tmax <- df_tmax %>%
 feat_tmax_clean <- feat_tmax %>% 
   dplyr::select(-contains(c("lb", "bp", "zero", "pp", "diffs", "lambda")))
 
-pca_tmax <- feat_tmax_clean %>% 
+pca_res <- feat_tmax_clean %>% 
   dplyr::select(-station) %>% 
-  prcomp(scale = TRUE) %>% 
+  prcomp(scale = TRUE) 
+
+pca_tmax <- pca_res %>% 
   augment(feat_tmax_clean)
 ```
 
 ```{r}
-df_tmax_pca <- df_tmax %>% 
+df_tmax_pca <- df_daily %>% 
   left_join(pca_tmax %>% dplyr::select(station, .fittedPC1, .fittedPC2)) 
 
 df_tmax_pca %>% 
@@ -88,12 +101,12 @@ think about how to show these three stations are different from others
 ```{r}
 # see those stations on the map
 ggplot() +  
-  geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
+  geom_sf(data = state_map, aes(geometry = geometry)) +
   geom_point(data = df, aes(x = long, y = lat)) + 
   geom_point(data = df_tmax_pca %>% filter(.fittedPC1 < -5), 
              aes(x = long, y = lat), color = "red") + 
   coord_sf() + 
-  theme_minimal()
+  theme_void()
 
 # average across station doesn't work currently :(
 average <- df_tmax_pca %>% 
@@ -151,7 +164,7 @@ df_prcp_pca %>%
 ```{r}
 # see those stations on the map
 ggplot() +  
-  geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
+  geom_sf(data = state_map, aes(geometry = geometry)) +
   geom_point(data = df, aes(x = long, y = lat)) + 
   geom_point(data = df_prcp_pca %>% filter(.fittedPC1 > 4), 
              aes(x = long, y = lat), color = "red") + 
@@ -214,4 +227,4 @@ ggplot() +
   theme_minimal()
 ```
 
-add cross linking between PC plot and map
+
