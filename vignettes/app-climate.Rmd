@@ -10,8 +10,10 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>", 
-  eval = FALSE
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE,
+  out.width = "100%"
 )
 ```
 
@@ -27,13 +29,22 @@ library(lubridate)
 library(patchwork)
 library(crosstalk)
 library(plotly)
+library(tsibble)
 state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 filter <- dplyr::filter
 ```
 
+# Prelim
+
+-   clean the `oz_climate`
+-   for a peirod from 2015 - 2020
+-   create a cubble object
+-   filter out the stations that don't have `tmax` or `tmin` recorded and also some stations that don't have proper records
+
 ```{r}
 df <- oz_climate %>% 
   mutate(name = as.factor(str_to_lower(str_remove(name, ", AS")))) %>% 
+  filter(year(date) < 2021) %>% 
   as_tsibble(index = date, key = station) %>% 
   global(station) 
   
@@ -47,16 +58,27 @@ df_daily <- df %>%
          name != "coffs harbour mo",# too many missing from 2016 - 2020 for coffs harbour mo
          !station %in% c("ASN00016098", # almost all missing for tmin
                       "ASN00090015")  # have no prcp recorded (either 0 or NA)
-         
          ) 
+```
 
+## A first glance on these series
+
+A first overview of these series:
+
+-   some have small variation across year, e.g. gove airport, kalumburu, townsville aero, weipa aero
+-   some have strong yearly seasonality, e.g. deniliquin airport aws
+-   some have more fluctuation in summer than winter, e.g. melbourne airport
+
+```{r}
 df_daily %>% 
   zoom() %>% 
   migrate(name) %>% 
-  ggplot(aes(x = date ,y = tmax)) + 
-  geom_line() + 
+  mutate(year = year(date),
+         yday = yday(date),
+         month = month(date)) %>% 
+  ggplot(aes(x = yday ,y = tmax, group = interaction(station, year))) + 
+  geom_line(alpha = 0.5) + 
   facet_wrap(vars(name))
-
 ```
 
 ## Location of all the stations
@@ -69,16 +91,21 @@ ggplot() +
   theme_void()
 ```
 
-## Features on tmax
+# Features on the series
 
-```{r}
+-   compute features on `tmax`
+-   plot the first two PCs and its locations on the map
+-   PCA diagnostics: too many variables from the features - want to subset to a smaller group
+
+```{r eval = FALSE}
 feat_tmax <- df_daily %>% 
+  mutate(ts = list(as_tibble(ts))) %>% 
   tidyr::unnest(ts) %>% 
   as_tsibble(index = date, key = station) %>% 
   features(tmax, feature_set(pkgs = "feasts"))
 
 feat_tmax_clean <- feat_tmax %>% 
-  dplyr::select(-contains(c("lb", "bp", "zero", "pp", "diffs", "lambda")))
+  dplyr::select(-contains(c("lb", "bp", "zero", "pp", "diffs", "lambda", "pacf", "hurst")))
 
 pca_res <- feat_tmax_clean %>% 
   dplyr::select(-station) %>% 
@@ -88,52 +115,51 @@ pca_tmax <- pca_res %>%
   augment(feat_tmax_clean)
 ```
 
-```{r}
+```{r eval = FALSE}
 df_tmax_pca <- df_daily %>% 
-  left_join(pca_tmax %>% dplyr::select(station, .fittedPC1, .fittedPC2)) 
+  left_join(pca_tmax %>% dplyr::select(station, .fittedPC1, .fittedPC2)) %>% 
+  highlight_key(~station)
 
-df_tmax_pca %>% 
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) + 
+p1 <- df_tmax_pca %>% 
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, label = name, group = station)) + 
   geom_point() + 
   coord_equal()
-```
 
-think about how to show these three stations are different from others
-
-```{r}
-# see those stations on the map
-ggplot() +  
-  geom_sf(data = state_map, aes(geometry = geometry)) +
-  geom_point(data = df, aes(x = long, y = lat)) + 
-  geom_point(data = df_tmax_pca %>% filter(.fittedPC1 < -5), 
-             aes(x = long, y = lat), color = "red") + 
+p2 <- df_tmax_pca %>% 
+  ggplot() +  
+  geom_point(aes(x = long, y = lat, label = name, group = station)) + 
+  geom_sf(data = state_map, aes(geometry = geometry), alpha = 0.1) +
   coord_sf() + 
   theme_void()
 
-# average across station doesn't work currently :(
-average <- df_tmax_pca %>% 
-  filter(.fittedPC1 >= -5) %>% 
-  zoom() %>%
-  as_tibble() %>% 
-  group_by(date) %>% 
-  summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
-  mutate(name = "average")
-
-# plot the tmax series along with the average of all others - averaging makes the series smoother ....
-df_tmax_pca %>% 
-  filter(.fittedPC1 < -5) %>% 
-  zoom() %>% 
-  migrate(name) %>% 
-  bind_rows(average) %>% 
-  ggplot(aes(x = date , y = tmax)) + 
-  geom_line() + 
-  facet_wrap(vars(name), ncol = 1)
-
+bscols(ggplotly(p1, width = 800, height = 800, tooltip = c("label", "group")) %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"),
+       ggplotly(p2,width = 800, height = 800, tooltip = c("label", "group")) %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"))
 ```
 
-## Features on prcp
-
 ```{r}
+p3 <- pca_res %>% 
+  tidy(matrix = "rotation") %>% 
+  pivot_wider(names_from = "PC", names_prefix = "PC", values_from = "value") %>%
+  ggplot(aes(PC1, PC2)) +
+  geom_segment(xend = 0, yend = 0, 
+               arrow = arrow(angle = 20, ends = "first", 
+                             type = "closed", length = grid::unit(8, "pt"))) + 
+  ggrepel::geom_text_repel(aes(label = column), nudge_x = -0.02) + 
+  coord_fixed()
+
+p4 <- pca_res %>% 
+  tidy(matrix = "eigenvalues") %>% 
+  ggplot(aes(PC, percent)) +
+  geom_col() 
+
+p3 | p4
+```
+
+### Repeat the same on prcp & tmin
+
+```{r eval = FALSE}
 df_prcp <- df %>% 
   mutate(prcp_missing = all(is.na(ts$prcp) | ts$prcp == 0)) %>% 
   filter(!prcp_missing) 
@@ -150,9 +176,7 @@ pca_prcp <- feat_prcp_clean %>%
   dplyr::select(-station) %>% 
   prcomp(scale = TRUE) %>% 
   augment(feat_prcp_clean)
-```
 
-```{r}
 df_prcp_pca <- df_prcp %>% 
   left_join(pca_prcp %>% dplyr::select(station, .fittedPC1, .fittedPC2)) 
 
@@ -161,9 +185,6 @@ df_prcp_pca %>%
   geom_point() + 
   coord_equal()
 
-```
-
-```{r}
 # see those stations on the map
 ggplot() +  
   geom_sf(data = state_map, aes(geometry = geometry)) +
@@ -184,10 +205,7 @@ df_prcp_pca %>%
 
 ```
 
-
-## Features on tmin
-
-```{r}
+```{r eval = FALSE}
 df_tmin <- df %>% 
   mutate(tmin_missing = all(is.na(ts$tmin)), 
          first_day = is.na(ts$tmin[1])) %>% 
@@ -206,9 +224,7 @@ pca_tmin <- feat_tmin_clean %>%
   dplyr::select(-station) %>% 
   prcomp(scale = TRUE) %>% 
   augment(feat_tmin_clean)
-```
 
-```{r}
 df_tmin_pca <- df_tmin %>% 
   left_join(pca_tmin %>% dplyr::select(station, .fittedPC1, .fittedPC2)) 
 
@@ -216,9 +232,7 @@ df_tmin_pca %>%
   ggplot(aes(x = .fittedPC1, y = .fittedPC2)) + 
   geom_point() + 
   coord_equal()
-```
 
-```{r}
 # see those stations on the map
 ggplot() +  
   geom_sf(data = ozmaps::abs_ste, aes(geometry = geometry)) +
@@ -229,28 +243,9 @@ ggplot() +
   theme_minimal()
 ```
 
+# Plot & aggregate series in various different ways
 
-## Cross linking on map and PC plot
-
-```{r}
-shared_dt <- SharedData$new(df_tmax_pca %>% mutate(less_than_5 = ifelse(.fittedPC1 < -5, TRUE, FALSE)))
-p1 <- shared_dt %>%  
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2)) + 
-  geom_point() + 
-  coord_equal()
-
-p2 <- ggplot() +  
-  geom_sf(data = state_map, aes(geometry = geometry)) +
-  geom_point(data = shared_dt, aes(x = long, y = lat), color = "red") + 
-  coord_sf() + 
-  theme_void()
-
-bscols(ggplotly(p1), ggplotly(p2))
-```
-
-
-
-## Decomposition
+-   aggregate to monthly measure
 
 ```{r}
 df_monthly <- df_daily %>% 
@@ -260,71 +255,59 @@ df_monthly <- df_daily %>%
   summarise(tmax = mean(tmax, na.rm = TRUE),
             tmin = mean(tmin, na.rm = TRUE), 
             prcp = sum(prcp, na.rm = TRUE)) %>% 
-  ungroup(ym) %>% 
-  filter(year(ym) < 2021) %>% 
+  ungroup(ym) %>%
   mutate(year = as.factor(year(ym)),
          month = as.factor(month(ym)), 
          prcp = sqrt(prcp + 0.001))
 ```
 
+## Maximum temperature by month 
 
-Link monthly tmax with map
+-   break the series by year for each station
 
+-   ordered by the median tmax
+
+-   We learn that, obviously, those in the north have higher median tmax
 
 ```{r}
-smooth_plot <- df_monthly %>% 
-  ggplot(aes(x = as.Date(ym), y = tmax, group = station)) + 
-  stat_smooth(se = FALSE) # gam
+median_tmax <- df_monthly %>% 
+  mutate(median_tmax = median(tmax, na.rm = TRUE)) %>% 
+  select(station, median_tmax) %>% 
+  distinct()
 
-smoother <- layer_data(smooth_plot) %>% 
-  group_by(group) %>% 
-  summarise(y_diff = max(y) - min(y))
-
-df_tmax_smoother <- df_monthly %>% 
-  global() %>% 
-  bind_cols(smoother) %>% 
-  arrange(-y_diff)
-
-shared_dt <- df_tmax_smoother %>% 
+tmax_data <- df_monthly %>% 
+  global(station) %>% 
+  left_join(median_tmax) %>% 
   zoom() %>% 
-  migrate(lat, long, y_diff) %>% 
+  migrate(median_tmax, lat, long, name) %>% 
   highlight_key(~station)
 
-p1 <- shared_dt %>% 
+p1 <- tmax_data %>% 
+    ggplot(aes(x = month, y = tmax, group = interaction(year, station), 
+               color = median_tmax, label = name)) + 
+    geom_line() + 
+    facet_wrap(vars(fct_reorder(station, -median_tmax))) + 
+  theme(legend.position = "none")
+
+p2 <- tmax_data %>% 
   ggplot() + 
   geom_sf(data = state_map, aes(geometry = geometry)) +
-  geom_point(aes(x = long, y = lat, color = y_diff, group = station)) + 
+  geom_point(aes(x = long, y = lat, color = median_tmax, label = name)) + 
   theme_void()
 
-map <- highlight(ggplotly(p1), selectize = TRUE, on = "plotly_selected")
-
-p2 <- shared_dt %>% 
-  ggplot(aes(x = as.Date(ym), y = tmax, group = station, color = y_diff), alpha = .1) + 
-  geom_line()
-
-line <- highlight(ggplotly(p2), on = "plotly_hover")
-
-bscols(map, line)
-
+bscols(ggplotly(p1, width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"),
+       ggplotly(p2,width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red")
 ```
 
-See yearly variation of different stations
+-   order by the maximum yearly temperature difference
 
-```{r}
-df_into_month <- df_monthly %>% 
-  group_by(month, station) %>% 
-  summarise(tmax = mean(tmax, na.rm = TRUE),
-            tmin = mean(tmin, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  left_join(meta(df_monthly)) %>% # a bit of hacky to get around with group_by
-  global(station)
-```
+    -   large value means there is a large max temperature difference between summer & winter
 
-tmax
+-   We learn that those have large max temperature difference in the year are the inland stations
 
-Inland stations have much larger monthly fluctuation of tmax, than the coast stations
-
-```{r}
+```{r eval = FALSE}
 yearly_diff <- df_monthly %>% 
   group_by(year, station) %>% 
   mutate(yearly_diff = max(tmax) - min(tmax)) %>% 
@@ -335,15 +318,15 @@ yearly_diff <- df_monthly %>%
   distinct()
   
 tmax_data <- df_monthly %>% 
-  global() %>% 
+  global(station) %>% 
   left_join(yearly_diff) %>% 
   zoom() %>% 
   migrate(yearly_diff, lat, long, name) %>% 
   highlight_key(~station)
   
-
 p1 <- tmax_data %>% 
-    ggplot(aes(x = month, y = tmax, group = interaction(year, station), color = yearly_diff, label = name)) + 
+    ggplot(aes(x = month, y = tmax, group = interaction(year, station), 
+               color = yearly_diff, label = name)) + 
     geom_line() + 
     facet_wrap(vars(fct_reorder(station, -yearly_diff))) + 
   theme(legend.position = "none")
@@ -354,19 +337,84 @@ p2 <- tmax_data %>%
   geom_point(aes(x = long, y = lat, color = yearly_diff, label = name)) + 
   theme_void()
 
-bscols(ggplotly(p1, height = 600, tooltip = "label"),
-       ggplotly(p2, tooltip = "label"))
+bscols(ggplotly(p1, width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"),
+       ggplotly(p2,width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"))
 ```
 
-Temperature difference for stations
+## Temperature difference of the day
 
-<!-- Summarises the monthly mean temperature across each year for all the stations and calculate the mean temperature difference. Plot the two averaged temperature series as line and on the map for each station.  -->
+-   calculate the daily temperature difference and take average of each week
 
-<!-- Those stations along the coastline are the ones with small temperature difference and this makes sense because water body has the effect to neutralise temperature.  -->
+-   add a smoother
 
-looks like some places a larger temperature difference during winter and smaller during summer (blue ones - those are the stations in the north) while others have the opposite pattern (red - those are the stations in the south)
+-   order by the median difference
 
-```{r}
+-   we learn that those stations close to the coast have smaller day-and-night temperature difference. Those stations are closer to the water, which has a moderating effect on the change of temperature
+
+```{r eval = FALSE}
+tdiff_data <- df_daily %>% 
+  zoom() %>% 
+  mutate(daily_diff = tmax - tmin,
+         yearweek = yearweek(date)) %>% 
+  index_by(yearweek) %>% 
+  summarise(daily_diff = mean(daily_diff, na.rm  = TRUE)) %>% 
+  ungroup(yearweek) %>% 
+  mutate(year = year(yearweek),
+         week = week(yearweek))
+
+smoother <- tdiff_data %>% 
+  ggplot(aes(x = week, y = daily_diff)) + 
+  stat_smooth(aes(group = station), se = FALSE)
+
+median_y <- layer_data(smoother) %>% 
+  group_by(group) %>% 
+  mutate(median_y = median(y, na.rm = TRUE)) %>% 
+  select(group, median_y) %>% 
+  distinct() %>% 
+  bind_cols(station = unique(tdiff_data$station)) %>% 
+  select(station, median_y)
+
+
+tdiff_smoother_data <- tdiff_data %>% 
+  left_join(median_y) %>%
+  migrate(lat, long, name) %>% 
+  highlight_key(~station)
+
+p1 <- tdiff_smoother_data %>% 
+  ggplot(aes(x = week, y = daily_diff, label = name)) + 
+  geom_line(aes(group = interaction(station, year)), alpha = 0.2, size = 0.5) + 
+  geom_smooth(aes(group = station, color = median_y), se = FALSE) + 
+  facet_wrap(vars(fct_reorder(station, -median_y))) + 
+  colorspace::scale_color_continuous_sequential("Reds 3", l1 = 30,  l2 = 100, c1 = 30, rev = FALSE)
+
+
+p2 <- tdiff_smoother_data %>% 
+  ggplot() + 
+  geom_sf(data = state_map, aes(geometry = geometry), alpha = 0.1) +
+  geom_point(aes(x = long, y = lat, color = median_y, label = name)) + 
+  theme_void() + 
+  colorspace::scale_color_continuous_sequential("Reds 3",l1 = 30,  l2 = 100, rev = FALSE)
+
+# p1 | p2
+bscols(ggplotly(p1, width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"),
+       ggplotly(p2,width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"))
+```
+
+-   order by the largest difference of the smoother (negative if peak in the middle and positive if trough in the middle)
+
+    -   a value close to zero means the area has a constant day and night temperature difference
+
+    -   a positive value means the temperature difference is smaller in winter
+
+    -   a negative value means the temperature difference is larger in winter
+
+-   It looks like those with positive difference are in the south and negative diff in the north
+
+```{r eval = FALSE}
 tdiff_data <- df_daily %>% 
   zoom() %>% 
   mutate(daily_diff = tmax - tmin,
@@ -403,7 +451,7 @@ tdiff_smoother_data <- tdiff_data %>%
 
 p1 <- tdiff_smoother_data %>% 
   ggplot(aes(x = week, y = daily_diff, label = name)) + 
-  geom_line(aes(group = interaction(station, year)), alpha = 0.5) + 
+  geom_line(aes(group = interaction(station, year)), alpha = 0.2, size = 0.5) + 
   geom_smooth(aes(group = station, color = ydiff), se = FALSE) + 
   facet_wrap(vars(fct_reorder(station, ydiff))) +
   scale_color_continuous_diverging(palette = "Blue-Red")
@@ -417,23 +465,20 @@ p2 <- tdiff_smoother_data %>%
   scale_color_continuous_diverging(palette = "Blue-Red")
 
 # p1 | p2
-bscols(ggplotly(p1, height = 600, tooltip = "label"),
-       ggplotly(p2, tooltip = "label"))
+bscols(ggplotly(p1, width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"),
+       ggplotly(p2,width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"))
 
 ```
 
-prcp
+## Weekly precipitation
 
-- summarise the weekly average across 2015 - 2020 for each station (compute on the time, hence zoom to the long form) 
-- apply a square root transformation to adjust the scale
-- compute the maximum average weekly rain for each station. Since the result is for each station, need to switch with `global()`
-- migrate some variables to the long form. This makes sure that the dataset used for creating the time series plot and map are the same for cross-linking.   
+-   summarise the weekly average across 2015 - 2020 for each station then square root transformation
+-   ordered by the maximum weekly prcp
+-   we learn that those with more rains are in the north or along the eastern coast
 
-Those with more rains are in the north or along the eastern coast
-
-- add interactivity
-
-```{r}
+```{r eval = FALSE}
 # average over all 5 years to avoid particular stations having no records of prcp in some weeks
 # try with filter(year(date) == 2020) has a stronger effect on the north and eastern coast
 prcp_data <- df_daily %>% 
@@ -468,17 +513,20 @@ p2 <- shared_data %>%
 # (p1 | p2)
 
 # interactive
-bscols(ggplotly(p1, height = 600, tooltip = "group"),
-       ggplotly(p2, tooltip = "group"))
+bscols(ggplotly(p1, width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"),
+       ggplotly(p2,width = 800, height = 800, tooltip = "label") %>% 
+         highlight(on = "plotly_selected", off = "plotly_deselect", color = "red"))
 
-# comment
+
+# notes to my self
 # plotly::subplot() doesn't work well with the map - it shrinks to one point
 # I was trying to use key = station in SharedData$new() to create a group but it doesn't work ... The default is to have each row as a group so the link from map to line doesn't work (shared_data <- SharedData$new(prcp_data, key = station))
 ```
-  
+
 The same thing on a glyph map
 
-```{r}
+```{r eval = FALSE}
 glyph_data <- prcp_data %>% 
   GGally::glyphs("long", "week", "lat", "prcp", height = 0.8, width = 2)
 
@@ -491,5 +539,3 @@ ggplot(glyph_data, aes(gx, gy, group = gid)) +
   theme_void()
 
 ```
-
-  
