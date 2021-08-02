@@ -1,6 +1,7 @@
 ## code to prepare `climate` dataset goes here
 library(rnoaa)
 library(tidyverse)
+library(lubridate)
 library(progress)
 
 # extract all the australian stations
@@ -94,4 +95,22 @@ usethis::use_data(station, overwrite = TRUE)
 usethis::use_data(nested, overwrite = TRUE)
 
 # temporarily include oz_climate data for easier examples (filtered with year >= 2015)
+############################################################
+############################################################
+climate_small <- oz_climate %>%
+  mutate(name = as.factor(str_to_lower(str_remove(name, ", AS")))) %>%
+  filter(year(date) < 2021) %>%
+  as_tsibble(index = date, key = station) %>%
+  global(station) %>%
+  mutate(tmax_missing = all(is.na(ts$tmax)),
+         tmin_missing = all(is.na(ts$tmin)),
+         tmin_missing_first = is.na(ts$tmin[1])) %>%
+  filter(!tmax_missing, !tmin_missing, !tmin_missing_first,
+         name != "coffs harbour mo",# too many missing from 2016 - 2020 for coffs harbour mo
+         !station %in% c("ASN00016098", # almost all missing for tmin
+                         "ASN00090015")  # have no prcp recorded (either 0 or NA)
+) %>%
+  select(-contains("missing"))
+
 usethis::use_data(oz_climate, overwrite = TRUE)
+usethis::use_data(climate_small, overwrite = TRUE)
