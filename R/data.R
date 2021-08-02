@@ -36,7 +36,7 @@
 "nested"
 
 #' oz_climate
-#' @format A rowwise dataframe iwth 1,451 rows and 7 columns
+#' @format A rowwise dataframe with 1,451 rows and 7 columns
 #' \describe{
 #'   \item{station}{station id}
 #'   \item{date}{date}
@@ -49,5 +49,14 @@
 #' }
 "oz_climate"
 
-
+#' climate_small
+#' @format a climate dataset with 55 stations recorded across Australia
+#' \describe{
+#'   \item{station}{station id}
+#'   \item{lat}{latitude of the station}
+#'   \item{long}{longitude of the station}
+#'   \item{elev}{elevation of the station}
+#'   \item{ts}{a list-column with variables `date`, `prcp`, `tmax` and `tmin` nested}
+#' }
+"climate_small"
 

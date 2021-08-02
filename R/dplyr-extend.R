@@ -73,3 +73,10 @@ ungroup.cubble_df <- function(data, ...){
 
   dplyr_reconstruct(out, data)
 }
+
+#' @export
+select.cubble_df <- function(data, ...){
+  out <- NextMethod("select")
+
+  dplyr_reconstruct(out, data)
+}
