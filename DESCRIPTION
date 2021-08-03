@@ -34,7 +34,6 @@ Suggests:
     knitr,
     ggmap,
     ggplot2,
-    GGally,
     forcats
 VignetteBuilder: knitr
 Depends: 

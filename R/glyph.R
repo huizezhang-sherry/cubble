@@ -46,12 +46,17 @@ glyph_pixel <- function(data, x_major, y_major, var, gvar, width = ggplot2::rel(
     dplyr::group_by(!!sym(gvar)) %>%
     dplyr::mutate(minor_id = seq_len(dplyr::n()),
            gid = interaction(!!x_major, !!y_major),
-           gx = !!x_major + GGally::rescale11((.data$minor_id-1) %% 3) * width / 2,
+           gx = !!x_major + rescale11((.data$minor_id-1) %% 3) * width / 2,
            gy = !!y_major + (.data$minor_id-1) %/% 3) %>%
     dplyr::ungroup()
 
   class(out) <- c("glyphplot", class(out))
   out
+}
+
+rescale11 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  2 * ((x - rng[1])/(rng[2] = rng[1])) - 1
 }
 
 #' @rdname glyph
