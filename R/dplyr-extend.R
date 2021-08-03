@@ -15,6 +15,7 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
 
 #' @export
 dplyr_row_slice.cubble_df <- function(data, i, ...) {
+
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
   meta_data <- meta(data)
@@ -24,6 +25,9 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
   row <- meta_data[[meta_col]] %in% unique(out[[meta_col]])
   meta_data <- meta_data[row,]
 
+  if ("tbl_ts" %in% class(data)){
+    out <- build_tsibble(out, key = names(out %@% key)[1])
+  }
   cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out) )
 }
 

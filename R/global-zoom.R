@@ -114,15 +114,11 @@ new_cubble_df <- function(data, group, meta_data, form) {
     group_data <- dplyr:::compute_groups(data, group)
   }
 
+  cls <- class(data)[class(data) != c("cubble_df", "grouped_df", "rowwise_df")]
   if (form == "list-col"){
-    class <- unique(c("cubble_df", "rowwise_df", class(data)))
-  } else if (form == "long" & "grouped_df" %in% class(data)){
-    class <- unique(c("cubble_df", class(data)))
-    # cls <- class(data)
-    # cls <- cls[!cls == "grouped_df"]
-    # class <- c("cubble_df", "grouped_df", cls)
-  } else if (form == "long" & !"grouped_df" %in% class(data)){
-    class <- unique(c("cubble_df", "grouped_df", class(data)))
+    class <- c("cubble_df", "rowwise_df", cls)
+  } else if (form == "long"){
+    class <- c("cubble_df", "grouped_df", cls)
   } else{
     abort("{form} meeds to be either long or list-col")
   }
