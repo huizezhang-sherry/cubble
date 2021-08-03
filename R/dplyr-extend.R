@@ -9,9 +9,18 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }
 
-  # update meta data
-  key <- group_vars(data)
-  meta_data <- out[, find_non_varying_var(out, !!key)]
+  # update meta data:
+  # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
+  form <- determine_form(data)
+  if (form == "list-col"){
+    key <- group_vars(data)
+    meta_data <- out[, find_non_varying_var(out, !!key)]
+  } else if (form == "long"){
+    meta_data = meta(data)
+  } else{
+    abort("{form} meeds to be either long or list-col")
+  }
+
 
   cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out))
 }
@@ -29,7 +38,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
   meta_data <- meta_data[row,]
 
   if ("tbl_ts" %in% class(data)){
-    out <- tsibble::build_tsibble(out, key = names(out %@% key)[1])
+    out <- tsibble::build_tsibble(out, key = group_vars(data)[1])
   }
   cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out) )
 }
@@ -83,7 +92,7 @@ select.cubble_df <- function(data, ...){
 #' @export
 group_by.cubble_df <- function(data, ...){
   new_group_var <- enquos(..., .named = TRUE)
-  group_var <- c(group_vars(data), names(new_group_var))
+  group_var <- union(group_vars(data), names(new_group_var))
 
   cubble_df(data, group = group_var, meta_data = meta(data), form = determine_form(data))
 }
