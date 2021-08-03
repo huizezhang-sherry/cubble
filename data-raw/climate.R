@@ -83,16 +83,18 @@ station <- station_meta %>%
 
 ############################################################
 ############################################################
-samples <- sample(station$id, 100)
-nested <- climate %>%
-  nest_by(station) %>%
+climate_large <- climate %>%
   left_join(station, by = c("station" = "id")) %>%
-  mutate(data = list(as_tsibble(data, index = date))) %>%
-  filter(station %in% samples)
+  global(station) %>%
+  mutate(tmax_missing = all(is.na(ts$tmax)),
+         tmin_missing = all(is.na(ts$tmin)),
+         tmin_missing_first = is.na(ts$tmin[1])) %>%
+  filter(!tmax_missing, !tmin_missing, !tmin_missing_first) %>%
+  select(-contains("missing"))
 
 usethis::use_data(climate, overwrite = TRUE)
 usethis::use_data(station, overwrite = TRUE)
-usethis::use_data(nested, overwrite = TRUE)
+usethis::use_data(climate_large, overwrite = TRUE)
 
 # temporarily include oz_climate data for easier examples (filtered with year >= 2015)
 ############################################################
@@ -112,5 +114,10 @@ climate_small <- oz_climate %>%
 ) %>%
   select(-contains("missing"))
 
-usethis::use_data(oz_climate, overwrite = TRUE)
+climate_flat <- climate_small %>%
+  mutate(ts = list(as_tibble(ts))) %>%
+  unnest() %>%
+  ungroup()
+
+usethis::use_data(climate_flat, overwrite = TRUE)
 usethis::use_data(climate_small, overwrite = TRUE)

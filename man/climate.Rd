@@ -22,4 +22,7 @@ Australian climate data in 2020
 library(tidyr)
 climate \%>\% pivot_longer(prcp:tavg, names_to = "param", values_to = "value")
 }
+\seealso{
+station climate_large
+}
 \keyword{datasets}

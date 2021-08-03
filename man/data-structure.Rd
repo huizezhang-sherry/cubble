@@ -34,13 +34,13 @@ Data structure
 }
 \examples{
 \dontrun{
-oz_global <- global(oz_climate, station)
+oz_global <- climate_flat \%>\% global(station)
 oz_zoom <- oz_global \%>\% zoom()
 back <- oz_zoom \%>\% global()
 
 
-oz_climate_tsibble <- oz_climate \%>\% as_tsibble(index = date, key = station)
-oz_global2 <- oz_climate_tsibble \%>\% global(station)
+climate_tsibble <- climate_flat \%>\% as_tsibble(index = date, key = station)
+oz_global2 <- climate_tsibble \%>\% global(station)
 oz_zoom2 <- oz_global2 \%>\% zoom()
 back <- oz_zoom2 \%>\% global()
 

@@ -17,13 +17,8 @@ quality_plot(data, ..., order_op = I)
 data quality plot
 }
 \examples{
-# create a tibble object
-climate_2020 <- oz_climate \%>\%
-                dplyr::filter(lubridate::year(date) == 2020)
-
 # add missing summaries
-out <- climate_2020 \%>\%
-         global(station) \%>\%
+out <- climate_small \%>\%
          add_missing_prct(prcp:tmin) \%>\%
          add_missing_dscrb()
 

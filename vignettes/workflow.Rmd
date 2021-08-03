@@ -32,7 +32,7 @@ To create a cubble object in the list-column form, use `global()` with a supply 
 In the list-column form, each distinct key value constitutes a row and all the time-specific measures are nested into a column named `ts`. This form is convenient for calculating group-wise measures.
 
 ```{r}
-oz_global <- oz_climate  %>% global(station)
+oz_global <- climate_flat  %>% global(station)
 oz_global
 ```
 
@@ -107,8 +107,8 @@ Cubble also support a tsibble data structure for time series computation.
 A cubble can also be created from an underlying tsibble object. The resulting list-column form shows a `tbl_ts` type for each nested cell in the `ts` column and a tsibble heading in the long form.
 
 ```{r}
-oz_climate_tsibble <- oz_climate %>% tsibble::as_tsibble(index = date, key = station)
-oz_global2 <- oz_climate_tsibble %>% global(station)
+climate_tsibble <- climate_flat %>% tsibble::as_tsibble(index = date, key = station)
+oz_global2 <- climate_tsibble %>% global(station)
 oz_zoom2 <- oz_global2 %>% zoom()
 
 oz_global2
