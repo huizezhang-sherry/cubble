@@ -1,7 +1,6 @@
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
-  #browser()
   group_vars <- group_vars(data)
   meta_data <- meta(data)
 
@@ -41,7 +40,6 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   cubble_df(data, group = group_vars, meta_data = meta_data, form = determine_form(template))
 }
 
-
 #' @export
 summarise.cubble_df <- function(data, ...){
   group_vars <- group_vars(data)
@@ -68,15 +66,36 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
 }
 
 #' @export
-ungroup.cubble_df <- function(data, ...){
-  out <- NextMethod("ungroup")
-
-  dplyr_reconstruct(out, data)
-}
-
-#' @export
 select.cubble_df <- function(data, ...){
   out <- NextMethod("select")
 
   dplyr_reconstruct(out, data)
+}
+
+
+#' @export
+group_by.cubble_df <- function(data, ...){
+  new_group_var <- enquos(..., .named = TRUE)
+  group_var <- c(group_vars(data), names(new_group_var))
+
+  cubble_df(data, group = group_var, meta_data = meta(data), form = determine_form(data))
+}
+
+#' @export
+ungroup.cubble_df <- function(data, ...){
+  ungroup_var <- names(enquos(..., .named = TRUE))
+
+  if (!all(ungroup_var %in% names(data))){
+    problem <- ungroup_var[!ungroup_var %in% names(data)]
+    abort(glue::glue("the ungroup variable: {problem} is not found in the data"))
+  }
+
+  if (group_vars(data)[1] %in% ungroup_var){
+    abort("Can't ungroup the spatio identifier!")
+  }
+
+
+  updated_group_var <- setdiff(group_vars(data), ungroup_var)
+
+  cubble_df(data, group = updated_group_var, meta_data = meta(data), form = determine_form(data))
 }
