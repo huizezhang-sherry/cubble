@@ -45,13 +45,18 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
 
 #' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
-  group_vars <- group_vars(template)
-  group_vars <- group_vars[group_vars %in% names(meta(template))]
 
-  col_to_add <- c(group_vars, setdiff(find_non_varying_var(data, !!group_vars), names(meta(template))))
-  meta_to_add <- data[col_to_add] %>% unique()
-  meta_data <- meta(template)
-  meta_data <- meta_data %>% merge(meta_to_add, by = group_vars, all.x = TRUE)
+  group_vars <- group_vars(template)
+  form <- determine_form(template)
+
+  if (form == "list-col"){
+    key <- group_vars(template)
+    meta_data <- data[, find_non_varying_var(data, !!key)]
+  } else if (form == "long"){
+    meta_data = meta(template)
+  } else{
+    abort("{form} meeds to be either long or list-col")
+  }
 
   cubble_df(data, group = group_vars, meta_data = meta_data, form = determine_form(template))
 }
