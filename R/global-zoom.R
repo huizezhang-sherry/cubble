@@ -101,7 +101,6 @@ cubble_df <- function(data, group, meta_data,  form) {
 #' @rdname data-structure
 #' @export
 new_cubble_df <- function(data, group, meta_data, form) {
-  browser()
   if (form == "list-col") {
     # this part will be simplified once we can create cubble from a subclass of rowwise_df
     nrow <- nrow(data)
@@ -127,6 +126,7 @@ new_cubble_df <- function(data, group, meta_data, form) {
                meta = meta_data,
                form = form,
                class = class)
+  tsibble_attr <- NULL
 
   if ("tbl_ts" %in% class(data)){
 
