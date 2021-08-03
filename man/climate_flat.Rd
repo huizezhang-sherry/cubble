@@ -3,9 +3,9 @@
 \docType{data}
 \name{climate_flat}
 \alias{climate_flat}
-\title{Australia climate data (small)}
+\title{Australia climate data (minimal)}
 \format{
-A tibble object with 120, 321 rows and 9 columns
+A tibble object with 732 rows and 9 columns
 \describe{
 \item{station}{station id}
 \item{lat}{latitude of the station}
@@ -20,8 +20,8 @@ A tibble object with 120, 321 rows and 9 columns
 climate_flat
 }
 \description{
-Climate data recorded in 55 stations from 2015 - 2020 in Australia.
-This data has the same content as \link{climate_small} but in a tibble format.
+A minimal 2020 climate dataset recorded in 2 stations in a tibble format. This data is used to
+show how to create a cubble object from tibble.
 }
 \seealso{
 climate_small

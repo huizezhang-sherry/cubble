@@ -56,7 +56,8 @@ climate <- climate_raw %>%
   ) %>%
   as_tsibble(key = c(station, datatype), index = date) %>%
   pivot_wider(id_cols = c(date, station), names_from = datatype, values_from = value) %>%
-  mutate(across(c(tmax, tmin, prcp, tavg, starts_with("md")), ~ .x / 10))
+  mutate(across(c(tmax, tmin, prcp, tavg, starts_with("md")), ~ .x / 10)) %>%
+  select(date:tmin, tavg)
 
 # filter out good stations with less than 3 measures
 climate_nested <- climate %>%
@@ -81,6 +82,9 @@ station <- station_meta %>%
   select(-c(state, gsn_flag)) %>%
   filter(id %in% good)
 
+# save in the inst/extdata to reduce the data/ size, even after compression
+save(climate, file = here::here("inst/extdata/climate.rda"), compress = "xz")
+
 ############################################################
 ############################################################
 climate_large <- climate %>%
@@ -92,9 +96,8 @@ climate_large <- climate %>%
   filter(!tmax_missing, !tmin_missing, !tmin_missing_first) %>%
   select(-contains("missing"))
 
-usethis::use_data(climate, overwrite = TRUE)
-usethis::use_data(station, overwrite = TRUE)
-usethis::use_data(climate_large, overwrite = TRUE)
+usethis::use_data(station, overwrite = TRUE, compress = "xz")
+usethis::use_data(climate_large, overwrite = TRUE, compress = "xz")
 
 # temporarily include oz_climate data for easier examples (filtered with year >= 2015)
 ############################################################
@@ -117,7 +120,8 @@ climate_small <- oz_climate %>%
 climate_flat <- climate_small %>%
   mutate(ts = list(as_tibble(ts))) %>%
   unnest() %>%
-  ungroup()
+  ungroup() %>%
+  filter(year(date) == 2020, station %in% c("ASN00001019", "ASN00002012"))
 
-usethis::use_data(climate_flat, overwrite = TRUE)
-usethis::use_data(climate_small, overwrite = TRUE)
+usethis::use_data(climate_flat, overwrite = TRUE, compress = "xz")
+usethis::use_data(climate_small, overwrite = TRUE, compress = "xz")

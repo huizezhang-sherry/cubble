@@ -22,6 +22,6 @@ station
 Australian weather stations
 }
 \seealso{
-climate climate_large
+climate_large
 }
 \keyword{datasets}

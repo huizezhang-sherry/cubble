@@ -22,10 +22,9 @@ climate_large
 }
 \description{
 One year worth (2020) of climate data recorded  in 478 stations across Australia.
-The data is computed from the two raw data \link{climate} and \link{station}
-obtained from National Oceanic and Atmospheric Administration (NOAA) using the \code{rnoaa} package.
+The data is computed from National Oceanic and Atmospheric Administration (NOAA) using the \code{rnoaa} package.
 }
 \seealso{
-climate station
+station
 }
 \keyword{datasets}

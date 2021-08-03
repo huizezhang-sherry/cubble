@@ -62,7 +62,8 @@ In the first example, we want to only keep the stations that have `tmax` recorde
 
 
 ```{r}
-out <- oz_zoom %>%
+out <- climate_small %>%
+  zoom() %>% 
   filter(year(date) == 2020) %>% 
   global() %>% 
   mutate(tmax_missing = ifelse(all(is.na(ts$tmax)), TRUE, FALSE)) %>% 
@@ -78,7 +79,7 @@ Now we want to select the stations that have been registered with world meteorol
 ```{r}
 # join wmo_id for each station
 to_join <- station %>% select(id, wmo_id)
-out <- oz_global %>% 
+out <- climate_small %>% 
   left_join(to_join, by = c("station" = "id")) %>% 
   filter(!is.na(wmo_id))
 out
@@ -120,7 +121,8 @@ oz_zoom2
 With a tsibble structure, we can make a monthly summary of our variables. Here is an example on calculating the monthly total precipitation and average max/min temperature in 2020. As before, we start with the long form to filter out the records that are not in 2020 and add a `ym` variable as the yearmonth representation of the date. `index_by` adds another grouping on the `ym` variable for computing the corresponding monthly summary.
 
 ```{r}
-time_wise2 <- oz_zoom2 %>% 
+time_wise2 <- climate_small %>% 
+  zoom() %>% 
   filter(lubridate::year(date) == 2020) %>% 
   mutate(ym = tsibble::yearmonth(date)) %>% 
   index_by(ym) %>% 
@@ -140,7 +142,7 @@ Missing summary gives a better view of the data quality recorded in each station
   - `add_missing_dscrb()` categories the percentage missing calculated into three categories:  almost no missing, some missing, and almost all missing. The two cutoff values can be specified for switching between categories. This categorisation is to be further used for the viz [more on this].
 
 ```{r}
-oz_global2 %>% 
+climate_small %>% 
   add_missing_prct(prcp: tmax) %>% 
   add_missing_dscrb()
 ```
