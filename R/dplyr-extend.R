@@ -2,13 +2,16 @@
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
   group_vars <- group_vars(data)
-  meta_data <- meta(data)
 
   if ("tbl_ts" %in% class(data)){
     out <- dplyr_col_modify(tsibble::as_tsibble(tibble::as_tibble(data), key = !!group_vars), cols)
   } else{
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }
+
+  # update meta data
+  key <- group_vars(data)
+  meta_data <- out[, find_non_varying_var(out, !!key)]
 
   cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out))
 }
@@ -26,7 +29,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
   meta_data <- meta_data[row,]
 
   if ("tbl_ts" %in% class(data)){
-    out <- build_tsibble(out, key = names(out %@% key)[1])
+    out <- tsibble::build_tsibble(out, key = names(out %@% key)[1])
   }
   cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out) )
 }
