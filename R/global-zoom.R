@@ -147,16 +147,27 @@ new_cubble_df <- function(data, group, meta_data, form) {
 #' @export
 tbl_sum.cubble_df <- function(data) {
 
+  group <- group_vars(data)
+  group_n <- map_dbl(group, ~length(unique(groups(data)[[.x]])))
+  group_msg <- glue::glue_collapse(glue::glue("{group} [{group_n}]"), sep = ", ")
+
+  meta_names <- meta(data) %>% names()
+  type_sum <- map_chr(meta(data), pillar::type_sum)
+  meta_msg <- glue::glue_collapse(glue::glue("{meta_names} [{type_sum}]"), sep = ", ")
+
+
   if(form(data) == "list-col"){
     item <- group_vars(data)[1]
     msg <- glue::glue("{item}-wise: list-column")
   } else if(form(data) == "long"){
-    msg <- glue::glue("tiem-wise: long form")
+    msg <- glue::glue("time-wise: long form")
   }
 
   c(
-    NextMethod(),
-    "Cubble" = msg
+    "Cubble" = msg,
+    "Group" = group_msg,
+    "Meta" = meta_msg
+
   )
 }
 
@@ -184,7 +195,7 @@ zoom.cubble_df <- function(data, key){
     key <- quo_get_expr(key)
   }
 
-  meta_data <- data[, find_non_varying_var(data, !!key)]
+  meta_data <- tibble::as_tibble(data[, find_non_varying_var(data, !!key)])
 
 
   list_col <- data %>% dplyr::pull(!!col)
@@ -242,9 +253,13 @@ meta <- function(data){
 #' @export
 #' @rdname attributes
 group_vars <- function(data){
-  groups <- data %@% groups
+  groups <- groups(data)
   names <- names2(groups)
   names[names != ".rows"]
 }
 
-
+#' @export
+#' @rdname attributes
+groups <- function(data){
+  data %@% groups
+}
