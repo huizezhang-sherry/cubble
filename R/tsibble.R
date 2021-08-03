@@ -15,10 +15,9 @@
 #' @export
 #' @importFrom tsibble index_by
 index_by.cubble_df <- function(data, ...) {
-  group_vars <- group_vars(data)
   meta_data <- meta(data)
-
   out <- index_by(NextMethod(data),  ...)
+  group_vars <- group_vars(out)
   cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out))
 }
 
