@@ -4,7 +4,7 @@
 \alias{form}
 \alias{meta}
 \alias{group_vars}
-\alias{group}
+\alias{groups}
 \title{get attributes for a cubble object}
 \usage{
 form(data)
@@ -13,7 +13,7 @@ meta(data)
 
 group_vars(data)
 
-group(data)
+groups(data)
 }
 \arguments{
 \item{data}{an cubble object}
