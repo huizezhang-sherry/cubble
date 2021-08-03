@@ -21,6 +21,7 @@ Imports:
     lubridate,
     magrittr,
     patchwork,
+    pillar,
     plotly,
     purrr,
     rlang,

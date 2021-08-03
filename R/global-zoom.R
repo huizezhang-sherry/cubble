@@ -163,6 +163,10 @@ tbl_sum.cubble_df <- function(data) {
     msg <- glue::glue("time-wise: long form")
   }
 
+  if ("tbl_ts" %in% class(data)){
+    msg <- glue::glue("{msg} [tsibble]")
+  }
+
   c(
     "Cubble" = msg,
     "Group" = group_msg,
