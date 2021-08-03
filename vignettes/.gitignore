@@ -1,2 +1,4 @@
 *.html
 *.R
+app-climate_cache
+app-climate_files
