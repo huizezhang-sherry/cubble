@@ -114,7 +114,7 @@ new_cubble_df <- function(data, group, meta_data, form) {
     group_data <- dplyr:::compute_groups(data, group)
   }
 
-  cls <- class(data)[class(data) != c("cubble_df", "grouped_df", "rowwise_df")]
+  cls <- class(data)[!class(data) %in% c("cubble_df", "grouped_df", "rowwise_df")]
   if (form == "list-col"){
     class <- c("cubble_df", "rowwise_df", cls)
   } else if (form == "long"){
