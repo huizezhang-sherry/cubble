@@ -39,41 +39,38 @@ global <- function(data, key) {
 #' @importFrom tsibble index
 #' @export
 global.cubble_df <- function(data, key) {
-
   test_cubble(data)
 
+  # will only keep the first grouping variable if more than one
   key <- enquo(key)
   if (quo_is_missing(key)){
-    key <- quo(!!group_vars(data))
+    grp <- group_vars(data)
+    if (length(grp) > 1) grp <- grp[1]
+    key <- quo(!!sym(grp))
   }
 
+  # compute metadata again if change to a different key
   nest_var <- find_nest_var(data, !!key)
-  if (quo_get_expr(key) == group_vars(data)){
+  if (as_name(key) %in% group_vars(data)){
     meta_data <- meta(data)
   } else{
     meta_data <- tibble::as_tibble(data[, find_non_varying_var(data, !!key)])
   }
 
-  out <- tibble::as_tibble(data)
-
   if (form(data) == "long"){
-    out <- out %>%
-      dplyr::left_join(tibble::as_tibble(meta_data))
+    out <- tibble::as_tibble(data) %>%
+      left_join(meta_data) %>%
+      tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
+      dplyr::rowwise()
+  } else{
+    abort("Currently `global.cubble_df` is only for switching form long form to list-column form")
   }
-
-  #if (!any(map_chr(data, class) == "list")){
-    out <- out %>%
-      tidyr::nest(ts = c(!!!nest_var$nest_var))
-  #}
-
-  out <- out %>%
-    dplyr::rowwise()
 
   if ("tbl_ts" %in% class(data)){
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
-  cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "list-col")
 }
 
 #' @export
@@ -90,7 +87,7 @@ global.tbl_df <- function(data, key) {
     tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
     dplyr::rowwise()
   meta_data <- tibble::as_tibble(out[nest_var$non_varying_var])
-  cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "list-col")
 }
 
 
@@ -104,7 +101,9 @@ cubble_df <- function(data, group, meta_data,  form) {
 #' @rdname data-structure
 #' @export
 new_cubble_df <- function(data, group, meta_data, form) {
+  browser()
   if (form == "list-col") {
+    # this part will be simplified once we can create cubble from a subclass of rowwise_df
     nrow <- nrow(data)
     group_data <- tibble::as_tibble(data)[group]
     group_data <- tibble::new_tibble(vec_data(group_data), nrow = nrow)
@@ -123,30 +122,23 @@ new_cubble_df <- function(data, group, meta_data, form) {
     abort("{form} meeds to be either long or list-col")
   }
 
+  attr <- list(x = data,
+               groups = group_data,
+               meta = meta_data,
+               form = form,
+               class = class)
 
   if ("tbl_ts" %in% class(data)){
 
-    attr <- attributes(data)
-    attr_to_add <- attr[!names(attr) %in% c("names", "row.names", "class")]
-
-
-
-    attr_basics <- list(x = data,
-                        groups = group_data,
-                        meta = meta_data,
-                        form = form,
-                        class = class)
-
-    attr_all <- c(attr_basics, attr_to_add)
-    attr_all[duplicated(names(attr_all))] <- NULL
-
-
-    rlang::exec("new_tibble", !!!attr_all)
-
-  } else{
-
-    new_tibble(data, groups = group_data, meta = meta_data, form = form, class = class)
+    # `key` attribute is not included since it is already there
+    tsibble_attr_name <- c("index", "index2", "interval")
+    tsibble_attr <- list(data %@% "index",
+                         data %@% "index2",
+                         data %@% "interval")
   }
+  attr <- c(attr, tsibble_attr)
+
+  rlang::exec("new_tibble", !!!attr)
 
 }
 
@@ -209,7 +201,7 @@ zoom.cubble_df <- function(data, key){
       tidyr::unnest(!!col)
   }
 
-  cubble_df(out, group = as_name(key), meta_data = meta_data, form = determine_form(out))
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "long")
 }
 
 #' @rdname data-structure
