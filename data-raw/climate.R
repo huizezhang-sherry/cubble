@@ -94,6 +94,7 @@ climate_large <- climate %>%
          tmin_missing = all(is.na(ts$tmin)),
          tmin_missing_first = is.na(ts$tmin[1])) %>%
   filter(!tmax_missing, !tmin_missing, !tmin_missing_first) %>%
+  mutate(station = fct_drop(station)) %>%
   select(-contains("missing"))
 
 usethis::use_data(station, overwrite = TRUE, compress = "xz")
@@ -103,8 +104,10 @@ usethis::use_data(climate_large, overwrite = TRUE, compress = "xz")
 ############################################################
 ############################################################
 climate_small <- oz_climate %>%
-  mutate(name = as.factor(str_to_lower(str_remove(name, ", AS")))) %>%
-  filter(year(date) < 2021) %>%
+  mutate(
+    station = as.factor(station),
+    name = as.factor(str_to_lower(str_remove(name, ", AS")))) %>%
+  filter(between(year(date), 2015, 2020)) %>%
   as_tsibble(index = date, key = station) %>%
   global(station) %>%
   mutate(tmax_missing = all(is.na(ts$tmax)),
@@ -115,6 +118,7 @@ climate_small <- oz_climate %>%
          !station %in% c("ASN00016098", # almost all missing for tmin
                          "ASN00090015")  # have no prcp recorded (either 0 or NA)
 ) %>%
+  mutate(station = fct_drop(station)) %>%
   select(-contains("missing"))
 
 climate_flat <- climate_small %>%
