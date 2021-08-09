@@ -128,19 +128,19 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for cubble_df</span>
-<span class='fu'>slice_head</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_head</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for cubble_df</span>
-<span class='fu'>slice_tail</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_tail</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for cubble_df</span>
-<span class='fu'>slice_min</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_min</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for cubble_df</span>
-<span class='fu'>slice_max</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for cubble_df</span>
-<span class='fu'>slice_sample</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_sample</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,15 +165,15 @@
          <span class='fu'><a href='global.html'>global</a></span><span class='op'>(</span><span class='va'>station</span><span class='op'>)</span>
 
 <span class='co'># slice the first 50 stations from the top/ bottom</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'>slice_head</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'>slice_tail</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
+<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_head</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
+<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_tail</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
 
 <span class='co'># slice based on the max/ min of a variable</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'>slice_max</span><span class='op'>(</span><span class='va'>elev</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'>slice_min</span><span class='op'>(</span><span class='va'>lat</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span><span class='va'>elev</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_min</a></span><span class='op'>(</span><span class='va'>lat</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 
 <span class='co'># random sample</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'>slice_sample</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_sample</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>
