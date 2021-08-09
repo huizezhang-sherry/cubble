@@ -25,6 +25,7 @@ group-specific variables.s
 }
 \examples{
 library(lubridate)
+library(dplyr)
 
 # create a cubble object from a tibble
 climate_flat \%>\% global(station)
