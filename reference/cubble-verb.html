@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract cubble attributes — cubble_df • cubble</title>
+<title>Incorporate group-wise metadata into a long form cubble — migrate • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Extract cubble attributes — cubble_df" />
-<meta property="og:description" content="Extract cubble attributes" />
+<meta property="og:title" content="Incorporate group-wise metadata into a long form cubble — migrate" />
+<meta property="og:description" content="Incorporate group-wise metadata into a long form cubble" />
 
 
 
@@ -118,39 +118,56 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract cubble attributes</h1>
+    <h1>Incorporate group-wise metadata into a long form cubble</h1>
     
-    <div class="hidden name"><code>data-structure.Rd</code></div>
+    <div class="hidden name"><code>cubble-verb.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Extract cubble attributes</p>
+    <p>Incorporate group-wise metadata into a long form cubble</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cubble_df</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>group</span>, <span class='va'>meta_data</span>, <span class='va'>form</span><span class='op'>)</span>
-
-<span class='fu'>new_cubble_df</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>group</span>, <span class='va'>meta_data</span>, <span class='va'>form</span><span class='op'>)</span>
-
-<span class='fu'>is_cubble</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>migrate</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>group</th>
-      <td><p>the spatio identifier</p></td>
+      <th>data</th>
+      <td><p>a long form tibble object</p></td>
     </tr>
     <tr>
-      <th>meta_data</th>
-      <td><p>metadata to include in the attributes</p></td>
-    </tr>
-    <tr>
-      <th>form</th>
-      <td><p>whether the long or wide form</p></td>
+      <th>...</th>
+      <td><p>variables in metadata to included into the long form</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>Some spatio-temporal visualisations, i.e. a glyph map, require both group-wise variables
+and time-wise variables to make the plot. While data manipulation can be easier when separating
+those two types of variables, the last step before plotting the data is to transfer the useful
+group-wise variables into the long form. <code>migrate()</code> is a shortcut for transferring group-wise
+variables from cubble's metadata. For transfering other group-wise variables, use <code>left_join</code>.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='zoom.html'>zoom</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>migrate</span><span class='op'>(</span><span class='va'>lat</span>, <span class='va'>long</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
+#&gt; <span style='color: #949494;'># Group:  station [55]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+#&gt;    station     date        prcp  tmax  tmin   lat  long
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 2015-01-01   164  31.5  25   -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00001019 2015-01-02   124  31.3  25   -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00001019 2015-01-03    50  29.2  24.7 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00001019 2015-01-04   204  32.1  24.3 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00001019 2015-01-05   412  31.4  24.6 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00001019 2015-01-06   200  28.7  25.1 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00001019 2015-01-07   822  30.2  24.5 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00001019 2015-01-08    22  31    26.6 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00001019 2015-01-09    62  32.7  26.2 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00001019 2015-01-10   274  32.9  22.6 -<span style='color: #BB0000;'>14.3</span>  127.
+#&gt; <span style='color: #949494;'># … with 120,311 more rows</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
