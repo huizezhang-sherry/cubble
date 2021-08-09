@@ -13,6 +13,8 @@ new_cubble_df(data, group, meta_data, form)
 is_cubble(data)
 }
 \arguments{
+\item{data}{the object to be created or tested as cubble}
+
 \item{group}{the spatio identifier}
 
 \item{meta_data}{metadata to include in the attributes}

@@ -1,4 +1,5 @@
 #' Extract cubble attributes
+#' @param data the object to be created or tested as cubble
 #' @param group the spatio identifier
 #' @param meta_data metadata to include in the attributes
 #' @param form whether the long or wide form
@@ -93,44 +94,3 @@ is_cubble <- function(data){
 }
 
 
-#' get attributes for a cubble object
-#'
-#' @param data an cubble object
-#'
-#' @export
-#' @rdname attributes
-form <- function(data){
-  test_cubble(data)
-  data %@% form
-}
-
-determine_form <- function(data){
-  cls <- unlist(map(data, class))
-
-  if ("list" %in% cls){
-    "list-col"
-  } else{
-    "long"
-  }
-}
-
-#' @export
-#' @rdname attributes
-meta <- function(data){
-  test_cubble(data)
-  data %@% meta
-}
-
-#' @export
-#' @rdname attributes
-group_vars <- function(data){
-  groups <- groups(data)
-  names <- names2(groups)
-  names[names != ".rows"]
-}
-
-#' @export
-#' @rdname attributes
-groups <- function(data){
-  data %@% groups
-}
