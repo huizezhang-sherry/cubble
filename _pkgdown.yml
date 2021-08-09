@@ -1,3 +1,35 @@
 template:
   params:
     bootswatch: cosmo
+
+reference:
+- title: "Create and change mode of a cubble"
+- contents:
+  - global
+  - zoom
+  - migrate
+- title: "S3 implementation on cubble"
+- contents:
+  - form
+  - meta
+  - group_vars
+  - groups
+  - cubble_df
+  - new_cubble_df
+  - is_cubble()
+- title: "Data quality"
+- contents:
+  - starts_with("add")
+  - starts_with("quality")
+  - glyph_pixel
+- title: "Data manipulation"
+- contents:
+  - contains("index")
+  - contains("slice")
+- title: "Map"
+- contents:
+  - bbox
+- title: "In-built data"
+- contents:
+  - starts_with("climate")
+  - station
