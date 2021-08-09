@@ -125,7 +125,8 @@ climate_flat <- climate_small %>%
   mutate(ts = list(as_tibble(ts))) %>%
   unnest() %>%
   ungroup() %>%
-  filter(year(date) == 2020, station %in% c("ASN00001019", "ASN00002012"))
+  filter(year(date) == 2020, station %in% c("ASN00001019", "ASN00002012")) %>%
+  mutate(station = fct_drop(station))
 
 usethis::use_data(climate_flat, overwrite = TRUE, compress = "xz")
 usethis::use_data(climate_small, overwrite = TRUE, compress = "xz")
