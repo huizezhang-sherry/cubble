@@ -1,12 +1,13 @@
 Package: cubble
 Title: A Relational Data Structure for Spatiotemperal Data
 Version: 0.0.1.0000
-Authors@R: 
-    person(given = "Sherry",
-           family = "Zhang",
-           role = c("aut", "cre"),
-           email = "huize.zhang@monash.edu",
-           comment = c(ORCID = "0000-0002-7122-1463"))
+Authors@R: c(
+    person("H. Sherry","Zhang", email = "huize.zhang@monash.edu", role = c("aut","cre"), comment = c(ORCID = "0000-0002-7122-1463")),
+    person("Dianne", "Cook", email = "dicook@monash.edu", role = "aut", comment = c(ORCID = "0000-0002-3813-7155")),
+    person("Ursula", "Laa", email = "ursula.laa@boku.ac.at", role = "aut", comment = c(ORCID = "0000-0002-0249-6439")),
+    person("Nicolas", "Langrené", email = "nicolas.langrene@csiro.au", role = "aut", comment = c(ORCID = "0000-0001-7601-4618")),
+    person("Patricia", "Menéndez", email = "patricia.menendez@monash.edu", role = "aut", comment = c(ORCID = "0000-0003-0701-6315"))
+    )
 Description: A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -14,9 +15,7 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
-    crayon,
     dplyr,
-    ellipsis,
     glue,
     lubridate,
     magrittr,

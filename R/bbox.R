@@ -10,7 +10,6 @@
 #' aus_map <- get_map(location = bbox(station), source = "osm")
 #' ggmap(aus_map) + geom_point(data = oz_global2, aes(x = long, y = lat))
 #' }
-#' @importFrom dplyr summarise across mutate
 #' @export
 bbox <- function(data, lat, long, buffer_ratio = 0.01) {
 

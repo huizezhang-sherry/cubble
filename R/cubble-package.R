@@ -1,7 +1,7 @@
-#' @import vctrs tidyselect rlang
-#' @importFrom dplyr group_by ungroup summarise_if n_distinct mutate select left_join arrange
+#' @import rlang vctrs
+#' @importFrom dplyr filter group_by ungroup summarise n_distinct mutate select left_join arrange across ends_with
+#' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr nest
-#' @importFrom tibble is_tibble new_tibble
 #' @importFrom rlang .data
 #' @aliases cubble-package
 #' @keywords internal

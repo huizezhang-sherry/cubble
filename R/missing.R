@@ -11,6 +11,7 @@
 #' out2 <- out %>% add_missing_dscrb()
 #' }
 #' @rdname missing
+#' @importFrom tidyselect eval_select
 #' @export
 add_missing_prct <- function(data, ...){
 
