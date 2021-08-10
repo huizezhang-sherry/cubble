@@ -24,25 +24,20 @@
 \item{...}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
 }
 \description{
-Slicing a cubble
+Slicing can be useful when the number of site is too large to be all visualised in a
+single plot. The slicing family in cubble wraps around the \code{\link[dplyr:slice]{dplyr::slice()}} family to
+allow slicing from top and bottom, based on a variable, or in random.
 }
 \examples{
-\dontrun{
-library(cubble)
-# create a cubble object
-all <- climate \%>\%
-         dplyr::left_join(station, by = c("station" = "id")) \%>\%
-         global(station)
-
+library(dplyr)
 # slice the first 50 stations from the top/ bottom
-all \%>\% slice_head(n = 50)
-all \%>\% slice_tail(n = 50)
+climate_small \%>\% slice_head(n = 50)
+climate_small \%>\% slice_tail(n = 50)
 
 # slice based on the max/ min of a variable
-all \%>\% slice_max(elev, n = 10)
-all \%>\% slice_min(lat, n = 10)
+climate_small \%>\% slice_max(elevation, n = 10)
+climate_small \%>\% slice_min(lat, n = 10)
 
 # random sample
-all \%>\% slice_sample(n = 10)
-}
+climate_small \%>\% slice_sample(n = 10)
 }
