@@ -1,15 +1,17 @@
-#' Compute statistics for variable missingness
+#' Compute missing summary
+#'
+#' @details
+#' * `add_missing_prct()` computes the percentage of missing for the selected variables
+#' * `add_missing_dscrb()` gives a descriptive label (no missing, partly missing, and almost all missing)
+#' for those variables that have missing percentage computed
 #'
 #' @param data a cubble object
-#' @param ... the variable to compute \code{add_missing_prct()}
+#' @param ... variables to compute percentage missing (support tidyselect)
 #' @param cutoff the threshold value, above which the variable
-#'   will be described as "almost all missing". Only used in \code{add_missing_dscrb()}
+#'   will be described as "almost all missing".
 #' @examples
-#'
-#' \dontrun{
-#' out <- oz_global2 %>% add_missing_prct(vars = c("prcp", "tmin", "tmax"))
-#' out2 <- out %>% add_missing_dscrb()
-#' }
+#' climate_small %>% add_missing_prct(prcp:tmin)
+#' climate_small %>% add_missing_prct(prcp:tmin) %>% add_missing_dscrb()
 #' @rdname missing
 #' @importFrom tidyselect eval_select
 #' @export
@@ -47,6 +49,10 @@ add_missing_dscrb <- function(data, cutoff = 0.99){
   all_names <- names(data)
   vars <- syms(all_names[grep("missing", all_names)])
 
+  if (is_empty(vars)){
+    abort("you need to first select the variables to compute missing percentage
+          before using `add_missing_dscrb`.")
+  }
 
   calls <- map(vars, ~quo(ifelse(!!.x >= cutoff, "almost all missing",
                                  ifelse(!!.x == 0, "no missing", "partly missing"))))

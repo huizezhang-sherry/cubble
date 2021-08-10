@@ -17,9 +17,11 @@ reference:
   - cubble_df
   - new_cubble_df
   - is_cubble()
-- title: "Data quality"
+- title: "Missing summary"
 - contents:
   - starts_with("add")
+- title: "Data quality"
+- contents:
   - starts_with("quality")
   - glyph_pixel
 - title: "Data manipulation"

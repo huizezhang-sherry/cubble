@@ -3,7 +3,7 @@
 \name{add_missing_prct}
 \alias{add_missing_prct}
 \alias{add_missing_dscrb}
-\title{Compute statistics for variable missingness}
+\title{Compute missing summary}
 \usage{
 add_missing_prct(data, ...)
 
@@ -12,18 +12,22 @@ add_missing_dscrb(data, cutoff = 0.99)
 \arguments{
 \item{data}{a cubble object}
 
-\item{...}{the variable to compute \code{add_missing_prct()}}
+\item{...}{variables to compute percentage missing (support tidyselect)}
 
 \item{cutoff}{the threshold value, above which the variable
-will be described as "almost all missing". Only used in \code{add_missing_dscrb()}}
+will be described as "almost all missing".}
 }
 \description{
-Compute statistics for variable missingness
+Compute missing summary
+}
+\details{
+\itemize{
+\item \code{add_missing_prct()} computes the percentage of missing for the selected variables
+\item \code{add_missing_dscrb()} gives a descriptive label (no missing, partly missing, and almost all missing)
+for those variables that have missing percentage computed
+}
 }
 \examples{
-
-\dontrun{
-out <- oz_global2 \%>\% add_missing_prct(vars = c("prcp", "tmin", "tmax"))
-out2 <- out \%>\% add_missing_dscrb()
-}
+climate_small \%>\% add_missing_prct(prcp:tmin)
+climate_small \%>\% add_missing_prct(prcp:tmin) \%>\% add_missing_dscrb()
 }
