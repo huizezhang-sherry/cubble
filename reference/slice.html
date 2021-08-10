@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Slicing a cubble — slice_head.cubble_df" />
-<meta property="og:description" content="Slicing a cubble" />
+<meta property="og:description" content="Slicing can be useful when the number of site is too large to be all visualised in a
+single plot. The slicing family in cubble wraps around the dplyr::slice() family to
+allow slicing from top and bottom, based on a variable, or in random." />
 
 
 
@@ -121,7 +123,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Slicing a cubble</p>
+    <p>Slicing can be useful when the number of site is too large to be all visualised in a
+single plot. The slicing family in cubble wraps around the <code><a href='https://dplyr.tidyverse.org/reference/slice.html'>dplyr::slice()</a></code> family to
+allow slicing from top and bottom, based on a variable, or in random.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for cubble_df</span>
@@ -154,25 +158,95 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>cubble</span><span class='op'>)</span>
-<span class='co'># create a cubble object</span>
-<span class='va'>all</span> <span class='op'>&lt;-</span> <span class='va'>climate</span> <span class='op'>%&gt;%</span>
-         <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span><span class='op'>(</span><span class='va'>station</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"station"</span> <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-         <span class='fu'><a href='global.html'>global</a></span><span class='op'>(</span><span class='va'>station</span><span class='op'>)</span>
-
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='co'># slice the first 50 stations from the top/ bottom</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_head</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_tail</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
-
+<span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_head</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+#&gt; <span style='color: #949494;'># Group:  station [50]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
+#&gt; #   [list]</span>
+#&gt;    station       lat  long elevation name                ts                  
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>              
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumburu           <span style='color: #949494;'>&lt;tbl_ts [2,147 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.     422   halls creek airport <span style='color: #949494;'>&lt;tbl_ts [2,191 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00003003 -<span style='color: #BB0000;'>17.9</span>  122.       7.4 broome airport      <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarvon airport   <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.      15.4 perth airport       <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00009193 -<span style='color: #BB0000;'>32.0</span>  116.      43.1 rottnest island     <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00009518 -<span style='color: #BB0000;'>34.4</span>  115.      13   cape leeuwin        <span style='color: #949494;'>&lt;tbl_ts [2,184 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00009789 -<span style='color: #BB0000;'>33.8</span>  122.      25   esperance           <span style='color: #949494;'>&lt;tbl_ts [2,187 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00010286 -<span style='color: #BB0000;'>31.6</span>  117.     217.  cunderdin airfield  <span style='color: #949494;'>&lt;tbl_ts [2,190 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00010917 -<span style='color: #BB0000;'>32.7</span>  117.     275   wandering           <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4]&gt;</span>
+#&gt; <span style='color: #949494;'># … with 40 more rows</span></div><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_tail</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+#&gt; <span style='color: #949494;'># Group:  station [50]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
+#&gt; #   [list]</span>
+#&gt;    station       lat  long elevation name                        ts             
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                       <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>         
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00009193 -<span style='color: #BB0000;'>32.0</span>  116.      43.1 rottnest island             <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00009518 -<span style='color: #BB0000;'>34.4</span>  115.      13   cape leeuwin                <span style='color: #949494;'>&lt;tbl_ts [2,184</span>…
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00009789 -<span style='color: #BB0000;'>33.8</span>  122.      25   esperance                   <span style='color: #949494;'>&lt;tbl_ts [2,187</span>…
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00010286 -<span style='color: #BB0000;'>31.6</span>  117.     217.  cunderdin airfield          <span style='color: #949494;'>&lt;tbl_ts [2,190</span>…
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00010917 -<span style='color: #BB0000;'>32.7</span>  117.     275   wandering                   <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00011052 -<span style='color: #BB0000;'>30.8</span>  128.     159   forrest                     <span style='color: #949494;'>&lt;tbl_ts [2,191</span>…
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00012038 -<span style='color: #BB0000;'>30.8</span>  121.     365.  kalgoorlie boulder airport  <span style='color: #949494;'>&lt;tbl_ts [2,187</span>…
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00013017 -<span style='color: #BB0000;'>25.0</span>  128.     598   giles meteorological office <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00014508 -<span style='color: #BB0000;'>12.3</span>  137.      51.6 gove airport                <span style='color: #949494;'>&lt;tbl_ts [2,191</span>…
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00015135 -<span style='color: #BB0000;'>19.6</span>  134.     376.  tennant creek airport       <span style='color: #949494;'>&lt;tbl_ts [2,189</span>…
+#&gt; <span style='color: #949494;'># … with 40 more rows</span></div><div class='input'>
 <span class='co'># slice based on the max/ min of a variable</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span><span class='va'>elev</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_min</a></span><span class='op'>(</span><span class='va'>lat</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-
+<span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span><span class='va'>elevation</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+#&gt; <span style='color: #949494;'># Group:  station [10]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
+#&gt; #   [list]</span>
+#&gt;    station       lat  long elevation name                        ts             
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                       <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>         
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00096033 -<span style='color: #BB0000;'>41.9</span>  147.     <span style='text-decoration: underline;'>1</span>057  liawenee                    <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00013017 -<span style='color: #BB0000;'>25.0</span>  128.      598  giles meteorological office <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00015590 -<span style='color: #BB0000;'>23.8</span>  134.      546  alice springs airport       <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.      422  halls creek airport         <span style='color: #949494;'>&lt;tbl_ts [2,191</span>…
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00015135 -<span style='color: #BB0000;'>19.6</span>  134.      376. tennant creek airport       <span style='color: #949494;'>&lt;tbl_ts [2,189</span>…
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00012038 -<span style='color: #BB0000;'>30.8</span>  121.      365. kalgoorlie boulder airport  <span style='color: #949494;'>&lt;tbl_ts [2,187</span>…
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00042112 -<span style='color: #BB0000;'>26.7</span>  150.      305. miles constance street      <span style='color: #949494;'>&lt;tbl_ts [2,165</span>…
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00030124 -<span style='color: #BB0000;'>18.3</span>  144.      302. georgetown airport          <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00044021 -<span style='color: #BB0000;'>26.4</span>  146.      302. charleville aero            <span style='color: #949494;'>&lt;tbl_ts [2,183</span>…
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00065070 -<span style='color: #BB0000;'>32.2</span>  149.      284  dubbo airport aws           <span style='color: #949494;'>&lt;tbl_ts [2,187</span>…</div><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_min</a></span><span class='op'>(</span><span class='va'>lat</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+#&gt; <span style='color: #949494;'># Group:  station [10]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
+#&gt; #   [list]</span>
+#&gt;    station       lat  long elevation name                    ts                 
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                   <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>             
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00094008 -<span style='color: #BB0000;'>42.8</span>  148.       4   hobart airport          <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00096033 -<span style='color: #BB0000;'>41.9</span>  147.    <span style='text-decoration: underline;'>1</span>057   liawenee                <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00091306 -<span style='color: #BB0000;'>41.7</span>  147.     148   cressy research station <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00091293 -<span style='color: #BB0000;'>41.1</span>  147.       3   low head                <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00091245 -<span style='color: #BB0000;'>40.7</span>  145.      94   cape grim baps          <span style='color: #949494;'>&lt;tbl_ts [2,191 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00090184 -<span style='color: #BB0000;'>38.4</span>  142.      45.4 cape nelson lighthouse  <span style='color: #949494;'>&lt;tbl_ts [2,178 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00087031 -<span style='color: #BB0000;'>37.9</span>  145.      20.1 laverton raaf           <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00086282 -<span style='color: #BB0000;'>37.7</span>  145.     113.  melbourne airport       <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00022823 -<span style='color: #BB0000;'>35.8</span>  137.     158   cape borda              <span style='color: #949494;'>&lt;tbl_ts [2,187 × 4</span>…
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00074258 -<span style='color: #BB0000;'>35.6</span>  145.      94   deniliquin airport aws  <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…</div><div class='input'>
 <span class='co'># random sample</span>
-<span class='va'>all</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_sample</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+<span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_sample</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+#&gt; <span style='color: #949494;'># Group:  station [10]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
+#&gt; #   [list]</span>
+#&gt;    station       lat  long elevation name                          ts           
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                         <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>       
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00068151 -<span style='color: #BB0000;'>35.1</span>  151.      85   jervis bay point perpendicula <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00027045 -<span style='color: #BB0000;'>12.7</span>  142.      18   weipa aero                    <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00012038 -<span style='color: #BB0000;'>30.8</span>  121.     365.  kalgoorlie boulder airport    <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00045025 -<span style='color: #BB0000;'>28.0</span>  144.     131.  thargomindah airport          <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00048027 -<span style='color: #BB0000;'>31.5</span>  146.     260   cobar mo                      <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00074258 -<span style='color: #BB0000;'>35.6</span>  145.      94   deniliquin airport aws        <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00090184 -<span style='color: #BB0000;'>38.4</span>  142.      45.4 cape nelson lighthouse        <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00040004 -<span style='color: #BB0000;'>27.6</span>  153.      24.2 amberley amo                  <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarvon airport             <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00091245 -<span style='color: #BB0000;'>40.7</span>  145.      94   cape grim baps                <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
