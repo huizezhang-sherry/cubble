@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute statistics for variable missingness — add_missing_prct • cubble</title>
+<title>Compute missing summary — add_missing_prct • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Compute statistics for variable missingness — add_missing_prct" />
-<meta property="og:description" content="Compute statistics for variable missingness" />
+<meta property="og:title" content="Compute missing summary — add_missing_prct" />
+<meta property="og:description" content="Compute missing summary" />
 
 
 
@@ -115,13 +115,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compute statistics for variable missingness</h1>
+    <h1>Compute missing summary</h1>
     
     <div class="hidden name"><code>missing.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Compute statistics for variable missingness</p>
+    <p>Compute missing summary</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_missing_prct</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -137,23 +137,60 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>the variable to compute <code>add_missing_prct()</code></p></td>
+      <td><p>variables to compute percentage missing (support tidyselect)</p></td>
     </tr>
     <tr>
       <th>cutoff</th>
       <td><p>the threshold value, above which the variable
-will be described as "almost all missing". Only used in <code>add_missing_dscrb()</code></p></td>
+will be described as "almost all missing".</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    
+<ul>
+<li><p><code>add_missing_prct()</code> computes the percentage of missing for the selected variables</p></li>
+<li><p><code>add_missing_dscrb()</code> gives a descriptive label (no missing, partly missing, and almost all missing)
+for those variables that have missing percentage computed</p></li>
+</ul>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>out</span> <span class='op'>&lt;-</span> <span class='va'>oz_global2</span> <span class='op'>%&gt;%</span> <span class='fu'>add_missing_prct</span><span class='op'>(</span>vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"prcp"</span>, <span class='st'>"tmin"</span>, <span class='st'>"tmax"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>out2</span> <span class='op'>&lt;-</span> <span class='va'>out</span> <span class='op'>%&gt;%</span> <span class='fu'>add_missing_dscrb</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'>add_missing_prct</span><span class='op'>(</span><span class='va'>prcp</span><span class='op'>:</span><span class='va'>tmin</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+#&gt; <span style='color: #949494;'># Group:  station [55]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+#&gt;    station       lat  long elevation name     ts       prcp_missing tmax_missing
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>          <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumbu… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.038<span style='text-decoration: underline;'>7</span>       0.004<span style='text-decoration: underline;'>19</span>
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.     422   halls c… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.079<span style='text-decoration: underline;'>9</span>       0.018<span style='text-decoration: underline;'>3</span> 
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00003003 -<span style='color: #BB0000;'>17.9</span>  122.       7.4 broome … <span style='color: #949494;'>&lt;tbl_ts</span>…      0.004<span style='text-decoration: underline;'>56</span>      0.002<span style='text-decoration: underline;'>28</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarv… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.059<span style='text-decoration: underline;'>8</span>       0.011<span style='text-decoration: underline;'>4</span> 
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.      15.4 perth a… <span style='color: #949494;'>&lt;tbl_ts</span>…      0            0      
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00009193 -<span style='color: #BB0000;'>32.0</span>  116.      43.1 rottnes… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.011<span style='text-decoration: underline;'>9</span>       0.005<span style='text-decoration: underline;'>02</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00009518 -<span style='color: #BB0000;'>34.4</span>  115.      13   cape le… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.010<span style='text-decoration: underline;'>5</span>       0.002<span style='text-decoration: underline;'>29</span>
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00009789 -<span style='color: #BB0000;'>33.8</span>  122.      25   esperan… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.157        0.008<span style='text-decoration: underline;'>69</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00010286 -<span style='color: #BB0000;'>31.6</span>  117.     217.  cunderd… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.015<span style='text-decoration: underline;'>1</span>       0.001<span style='text-decoration: underline;'>83</span>
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00010917 -<span style='color: #BB0000;'>32.7</span>  117.     275   wanderi… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.004<span style='text-decoration: underline;'>56</span>      0      
+#&gt; <span style='color: #949494;'># … with 45 more rows, and 1 more variable: tmin_missing &lt;dbl&gt;</span></div><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'>add_missing_prct</span><span class='op'>(</span><span class='va'>prcp</span><span class='op'>:</span><span class='va'>tmin</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>add_missing_dscrb</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+#&gt; <span style='color: #949494;'># Group:  station [55]</span>
+#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+#&gt;    station       lat  long elevation name     ts       prcp_missing tmax_missing
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>          <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumbu… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.038<span style='text-decoration: underline;'>7</span>       0.004<span style='text-decoration: underline;'>19</span>
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.     422   halls c… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.079<span style='text-decoration: underline;'>9</span>       0.018<span style='text-decoration: underline;'>3</span> 
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00003003 -<span style='color: #BB0000;'>17.9</span>  122.       7.4 broome … <span style='color: #949494;'>&lt;tbl_ts</span>…      0.004<span style='text-decoration: underline;'>56</span>      0.002<span style='text-decoration: underline;'>28</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarv… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.059<span style='text-decoration: underline;'>8</span>       0.011<span style='text-decoration: underline;'>4</span> 
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.      15.4 perth a… <span style='color: #949494;'>&lt;tbl_ts</span>…      0            0      
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00009193 -<span style='color: #BB0000;'>32.0</span>  116.      43.1 rottnes… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.011<span style='text-decoration: underline;'>9</span>       0.005<span style='text-decoration: underline;'>02</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00009518 -<span style='color: #BB0000;'>34.4</span>  115.      13   cape le… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.010<span style='text-decoration: underline;'>5</span>       0.002<span style='text-decoration: underline;'>29</span>
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00009789 -<span style='color: #BB0000;'>33.8</span>  122.      25   esperan… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.157        0.008<span style='text-decoration: underline;'>69</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00010286 -<span style='color: #BB0000;'>31.6</span>  117.     217.  cunderd… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.015<span style='text-decoration: underline;'>1</span>       0.001<span style='text-decoration: underline;'>83</span>
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00010917 -<span style='color: #BB0000;'>32.7</span>  117.     275   wanderi… <span style='color: #949494;'>&lt;tbl_ts</span>…      0.004<span style='text-decoration: underline;'>56</span>      0      
+#&gt; <span style='color: #949494;'># … with 45 more rows, and 4 more variables: tmin_missing &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   prcp_dscrb &lt;chr&gt;, tmax_dscrb &lt;chr&gt;, tmin_dscrb &lt;chr&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
