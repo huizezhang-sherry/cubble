@@ -2,7 +2,6 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  data_structure: data_structure.html
   workflow: workflow.html
-last_built: 2021-08-10T11:50Z
+last_built: 2021-08-10T11:54Z
 
