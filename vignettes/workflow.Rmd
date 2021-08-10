@@ -149,22 +149,3 @@ climate_small %>%
 
 
 
-# Old stuff
-
-```{r}
-count_var <- function(dt){
-  dt %>% 
-    as_tibble() %>% 
-    pivot_longer(prcp:tavg, names_to = "datatype", values_to = "value") %>% 
-    group_by(datatype) %>% 
-    # think of a better way to filter out those block missing
-    summarise(missing = sum(value, na.rm = TRUE)) %>% 
-    filter(missing != 0) %>% nrow()
-}
-
-```
-
-* some functions to unnest into a tsibble structure, tried unnest_tsibble/ unnest
-* some functions to move variables in/ out of nested list - migrate
-* some functions to allow data masking within list
-* reproduce old result: think about how would you plot the data with list-column structure
