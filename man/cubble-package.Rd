@@ -4,7 +4,7 @@
 \name{cubble-package}
 \alias{cubble-package}
 \alias{_PACKAGE}
-\title{cubble: A Relational Data Structure for Spatiotemperal Data}
+\title{cubble: A Vector Spatio-Temporal Data Structure for Data Analysis}
 \description{
 A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables.
 }

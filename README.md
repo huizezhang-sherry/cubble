@@ -5,10 +5,10 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/huizezhang-sherry/xxx/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/xxx/actions)
+[![R-CMD-check](https://github.com/huizezhang-sherry/cubble/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions)
 <!-- badges: end -->
 
-The goal of cubble is to …
+Cubble is a vector spatio-temporal data structure for data analysis.
 
 ## Installation
 
@@ -22,42 +22,70 @@ install.packages("cubble")
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("huizezhang-sherry/cubble")
+# install.packages("remotes")
+remotes::install_github("huizezhang-sherry/cubble")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Using `global()` to create a cubble in the list-column form by supply
+the variable that identifies each site:
 
 ``` r
 library(cubble)
-## basic example code
+library(dplyr)
+climate_flat %>% 
+  global(station) 
+#> # Cubble: station-wise: list-column
+#> # Group:  station [2]
+#> # Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]
+#>   station       lat  long elevation name                ts                
+#>   <fct>       <dbl> <dbl>     <dbl> <fct>               <list>            
+#> 1 ASN00001019 -14.3  127.        23 kalumburu           <tibble [366 × 4]>
+#> 2 ASN00002012 -18.2  128.       422 halls creek airport <tibble [366 × 4]>
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Use `zoom()` to switch to the long form and filter to January records:
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+climate_flat %>% 
+  global(station) %>% 
+  zoom() %>% 
+  filter(lubridate::month(date) == 1)
+#> # Cubble: time-wise: long form
+#> # Group:  station [2]
+#> # Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]
+#>    station     date        prcp  tmax  tmin
+#>    <fct>       <date>     <dbl> <dbl> <dbl>
+#>  1 ASN00001019 2020-01-01    46  38.6  25.1
+#>  2 ASN00001019 2020-01-02     0  38.8  28.1
+#>  3 ASN00001019 2020-01-03   266  37.9  23.6
+#>  4 ASN00001019 2020-01-04     0  34.3  26.2
+#>  5 ASN00001019 2020-01-05    46  35.4  26.7
+#>  6 ASN00001019 2020-01-06   760  27.5  24.8
+#>  7 ASN00001019 2020-01-07  1168  31.6  23.2
+#>  8 ASN00001019 2020-01-08  1178  32.7  24  
+#>  9 ASN00001019 2020-01-09    48  34.2  25.1
+#> 10 ASN00001019 2020-01-10     0  35.4  26.7
+#> # … with 52 more rows
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
+Switch back to the list-column form with `global()` and add a count on
+the number of day with no rain for each station:
 
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+``` r
+climate_flat %>% 
+  global(station) %>% 
+  zoom() %>% 
+  filter(lubridate::month(date) == 1) %>% 
+  global() %>% 
+  mutate(zero_rain = sum(ts$prcp == 0, na.rm = TRUE))
+#> # Cubble: station-wise: list-column
+#> # Group:  station [2]
+#> # Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct],
+#> #   zero_rain [int]
+#>   station       lat  long elevation name               ts              zero_rain
+#>   <fct>       <dbl> <dbl>     <dbl> <fct>              <list>              <int>
+#> 1 ASN00001019 -14.3  127.        23 kalumburu          <tibble [31 × …        12
+#> 2 ASN00002012 -18.2  128.       422 halls creek airpo… <tibble [31 × …        13
+```

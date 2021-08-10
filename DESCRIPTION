@@ -1,5 +1,5 @@
 Package: cubble
-Title: A Relational Data Structure for Spatiotemperal Data
+Title: A Vector Spatio-Temporal Data Structure for Data Analysis
 Version: 0.0.1.0000
 Authors@R: c(
     person("H. Sherry","Zhang", email = "huize.zhang@monash.edu", role = c("aut","cre"), comment = c(ORCID = "0000-0002-7122-1463")),
