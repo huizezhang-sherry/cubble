@@ -8,11 +8,13 @@ find_non_varying_var <- function(data, key) {
     tidyr::nest(data = -(!!key)) %>%
     dplyr::pull(data)
 
-  subset <- list_col[[1]]
-  var_length <- map_dbl(colnames(subset), ~ nrow(unique(subset[.x])))
-  all_na <- map_lgl(map(subset, is.na), all)
+  out <- map(list_col, function(data){
+    var_length <- map_dbl(colnames(data), ~ nrow(unique(data[.x])))
+    all_na <- map_lgl(map(data, is.na), all)
+    c(as_name(key), colnames(data)[var_length == 1 & !all_na])
+  })
 
-  out <- c(as_name(key), colnames(subset)[var_length == 1 & !all_na])
+  out <- Reduce(intersect, out)
   names(out) <- NULL
 
   out
