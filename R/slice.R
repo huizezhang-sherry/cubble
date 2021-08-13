@@ -1,8 +1,9 @@
 # helper
 slice_factory <- function(f, ...){
   function(data, ...){
-    if (form(data) != "list-col"){
-      abort("slicing should be performed in the list-col form on the grouping variable")
+    if (form(data) != "nested"){
+      # think about slicing on the long form
+      abort("slicing should be performed in the nested form on the grouping variable")
     }
 
     group_vars <- group_vars(data)

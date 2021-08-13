@@ -33,7 +33,7 @@ determine_form <- function(data){
   cls <- unlist(map(data, class))
 
   if ("list" %in% cls){
-    "list-col"
+    "nested"
   } else{
     "long"
   }

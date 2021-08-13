@@ -12,13 +12,13 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   # update meta data:
   # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
   form <- determine_form(data)
-  if (form == "list-col"){
+  if (form == "nested"){
     key <- group_vars(data)
     meta_data <- out[, find_non_varying_var(out, !!key)]
   } else if (form == "long"){
     meta_data = meta(data)
   } else{
-    abort("{form} meeds to be either long or list-col")
+    abort("{form} meeds to be either long or nested")
   }
 
 
@@ -49,13 +49,13 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   group_vars <- group_vars(template)
   form <- determine_form(template)
 
-  if (form == "list-col"){
+  if (form == "nested"){
     key <- group_vars(template)
     meta_data <- data[, find_non_varying_var(data, !!key)]
   } else if (form == "long"){
     meta_data = meta(template)
   } else{
-    abort("{form} meeds to be either long or list-col")
+    abort("{form} meeds to be either long or nested")
   }
 
   cubble_df(data, group = group_vars, meta_data = meta_data, form = determine_form(template))

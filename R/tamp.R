@@ -1,13 +1,13 @@
-#' Formulate or switch an object into a cubble list-column form
+#' Formulate or switch an object into a cubble in the nested form
 #'
-#' Create a cubble object or switch an existing cubble object into the list-column form
+#' Create a cubble object or switch an existing cubble object into the nested form
 #'
 #' @details
 #' * For an object that is not `cubble_df`, `tamp()` will initialise a cubble object upon
 #' providing a `group` variable.
 #'
 #' * For an existing `cubble` in the long form, `tamp()`
-#' switches the object back to the list-column form. This form is easier to computing
+#' switches the object back to the nested form. This form is easier to computing
 #' group-specific variables.
 #'
 #' @param data the data to be converted into a cubble object
@@ -19,7 +19,7 @@
 #' # create a cubble object from a tibble
 #' climate_flat %>% tamp(station)
 #'
-#' # switch to list-column form from the long form
+#' # switch to the nested form from the long form
 #' climate_small %>%
 #'   zoom() %>%
 #'   filter(year(date) == 2020) %>%
@@ -57,14 +57,14 @@ tamp.cubble_df <- function(data, key) {
       tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
       dplyr::rowwise()
   } else{
-    abort("Currently `tamp.cubble_df` is only for switching form long form to list-column form")
+    abort("Currently `tamp.cubble_df` is only for switching form long form to nested form")
   }
 
   if ("tbl_ts" %in% class(data)){
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
-  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "list-col")
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "nested")
 }
 
 #' @export
@@ -81,5 +81,5 @@ tamp.tbl_df <- function(data, key) {
     tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
     dplyr::rowwise()
   meta_data <- tibble::as_tibble(out[nest_var$non_varying_var])
-  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "list-col")
+  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "nested")
 }

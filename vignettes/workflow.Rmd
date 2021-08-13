@@ -26,11 +26,11 @@ library(dplyr)
 
 # Create a cubble
 
-A cubble object uses a list-column form and a long form, powered by the `rowwise_df` and `grouped_df`, to allow flexible group-wise and time-wise computation for spatial-temporal data.
+A cubble object uses a nested form and a long form, powered by the `rowwise_df` and `grouped_df`, to allow flexible group-wise and time-wise computation for spatial-temporal data.
 
-To create a cubble object in the list-column form, use `tamp()` with a supply of the grouping variable. This would add `cubble_df` and `rowwise_df` to the underlying data structure the object is built upon. On top of the attributes inherent from tibble (`name` and `row.names`) and rowwise_df (`groups`), a cubble has two additional attributes: `meta` and `form`. `meta` stores the group-wise information so that the object can be switched between the list-column and long form without the lost of information while `form` specifies whether the data object is a list-column or long form.
+To create a cubble object in the nested form, use `tamp()` with a supply of the grouping variable. This would add `cubble_df` and `rowwise_df` to the underlying data structure the object is built upon. On top of the attributes inherent from tibble (`name` and `row.names`) and rowwise_df (`groups`), a cubble has two additional attributes: `meta` and `form`. `meta` stores the group-wise information so that the object can be switched between the list-column and long form without the lost of information while `form` specifies whether the data object is a list-column or long form.
 
-In the list-column form, each distinct key value constitutes a row and all the time-specific measures are nested into a column named `ts`. This form is convenient for calculating group-wise measures.
+In the nested form, each distinct key value constitutes a row and all the time-specific measures are nested into a column named `ts`. This form is convenient for calculating group-wise measures.
 
 ```{r}
 oz_global <- climate_flat  %>% global(station)
@@ -44,7 +44,7 @@ oz_zoom <- oz_global %>% zoom()
 oz_zoom
 ```
 
-The long form and the list-column form can be switched between each other by using `global()` on a long form cubble and `zoom()` on a list-column cubble. Since a cubble has a grouping variable as an attribute, there's no need to specify the grouping variable again.
+The long form and the nested form can be switched between each other by using `global()` on a long form cubble and `zoom()` on a list-column cubble. Since a cubble has a grouping variable as an attribute, there's no need to specify the grouping variable again.
 
 ```{r}
 back <- oz_zoom %>% global()
@@ -59,7 +59,7 @@ Below are three examples on how to manipulate a cubble object with dplyr verbs:
 
 ### Example 1 
 
-In the first example, we want to only keep the stations that have `tmax` recorded in 2020. This requires first narrow down the records to those in 2020, determine if `tmax` is missing for each station, and then retain those stations that have `tmax` recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has `tmax` recorded is a result of each station, rather than of each time point, hence we need to switch to the list-column form with `global()`. To calculate whether `tmax` is recorded, we mutate a column `tmax_missing` that takes `TRUE` if all the `tmax` in the nested list column `ts` are `NA` and `FALSE` otherwise. To get the stations that we want, we need another filter on `tmax_missing`.
+In the first example, we want to only keep the stations that have `tmax` recorded in 2020. This requires first narrow down the records to those in 2020, determine if `tmax` is missing for each station, and then retain those stations that have `tmax` recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has `tmax` recorded is a result of each station, rather than of each time point, hence we need to switch to the nested form with `global()`. To calculate whether `tmax` is recorded, we mutate a column `tmax_missing` that takes `TRUE` if all the `tmax` in the nested list column `ts` are `NA` and `FALSE` otherwise. To get the stations that we want, we need another filter on `tmax_missing`.
 
 
 ```{r}
@@ -75,7 +75,7 @@ out
 
 ### Example 2
 
-Now we want to select the stations that have been registered with world meteorological organisation (WMO) and the dataset `station` has a column `wmo_id` that records this information. To do this task, we first need to join the `station` dataset with our climate dataset and then filter out those stations that don't have the WMO id. Since the join is by station rather than by time, we start with the list-column form and write the exact same syntax of join and filter as with tidyverse. 
+Now we want to select the stations that have been registered with world meteorological organisation (WMO) and the dataset `station` has a column `wmo_id` that records this information. To do this task, we first need to join the `station` dataset with our climate dataset and then filter out those stations that don't have the WMO id. Since the join is by station rather than by time, we start with the nested form and write the exact same syntax of join and filter as with tidyverse. 
 
 ```{r}
 # join wmo_id for each station
@@ -106,7 +106,7 @@ Cubble also support a tsibble data structure for time series computation.
 
 ### Creation
 
-A cubble can also be created from an underlying tsibble object. The resulting list-column form shows a `tbl_ts` type for each nested cell in the `ts` column and a tsibble heading in the long form.
+A cubble can also be created from an underlying tsibble object. The resulting nested form shows a `tbl_ts` type for each nested cell in the `ts` column and a tsibble heading in the long form.
 
 ```{r}
 climate_tsibble <- climate_flat %>% tsibble::as_tsibble(index = date, key = station)

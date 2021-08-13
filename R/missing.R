@@ -22,8 +22,8 @@ add_missing_prct <- function(data, ...){
   exprs <- expr(...)
   vars <- tidyselect::eval_select(exprs, data %>% zoom())
 
-  # different scenarios for long/ list-column form
-  # now assume list-column form
+  # different scenarios for long/nested form
+  # now assume a nested form
 
   var_names <- data %>% zoom() %>% names()
 

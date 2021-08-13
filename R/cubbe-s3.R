@@ -13,7 +13,7 @@ cubble_df <- function(data, group, meta_data,  form) {
 #' @rdname data-structure
 #' @export
 new_cubble_df <- function(data, group, meta_data, form) {
-  if (form == "list-col") {
+  if (form == "nested") {
     # this part will be simplified once we can create cubble from a subclass of rowwise_df
     nrow <- nrow(data)
     group_data <- tibble::as_tibble(data)[group]
@@ -25,12 +25,12 @@ new_cubble_df <- function(data, group, meta_data, form) {
   }
 
   cls <- class(data)[!class(data) %in% c("cubble_df", "grouped_df", "rowwise_df")]
-  if (form == "list-col"){
+  if (form == "nested"){
     class <- c("cubble_df", "rowwise_df", cls)
   } else if (form == "long"){
     class <- c("cubble_df", "grouped_df", cls)
   } else{
-    abort("{form} meeds to be either long or list-col")
+    abort("{form} meeds to be either long or nested")
   }
 
   attr <- list(x = data,
@@ -58,7 +58,6 @@ new_cubble_df <- function(data, group, meta_data, form) {
 #' @importFrom  tibble tbl_sum
 #' @export
 tbl_sum.cubble_df <- function(data) {
-
   group <- group_vars(data)
   group_n <- map_dbl(group, ~length(unique(groups(data)[[.x]])))
   group_msg <- glue::glue_collapse(glue::glue("{group} [{group_n}]"), sep = ", ")
@@ -67,9 +66,9 @@ tbl_sum.cubble_df <- function(data) {
   meta_msg <- glue::glue_collapse(glue::glue("{meta_names} [{type_sum}]"), sep = ", ")
 
 
-  if(form(data) == "list-col"){
+  if(form(data) == "nested"){
     item <- group_vars(data)[1]
-    msg <- glue::glue("{item}-wise: list-column")
+    msg <- glue::glue("{item}-wise: nested form")
   } else if(form(data) == "long"){
     msg <- glue::glue("time-wise: long form")
   }

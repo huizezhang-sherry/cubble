@@ -38,32 +38,32 @@ remotes::install_github("huizezhang-sherry/cubble")
 ```
 ## Example
 
-Using `global()` to create a cubble in the list-column form by supply the variable that identifies each site: 
+Using `tamp()` to create a cubble in the list-column form by supply the variable that identifies each site: 
 
 ```{r}
 library(cubble)
 library(dplyr)
 climate_flat %>% 
-  global(station) 
+  tamp(station) 
 ```
 
 Use `zoom()` to switch to the long form and filter to January records:
 
 ```{r}
 climate_flat %>% 
-  global(station) %>% 
+  tamp(station) %>% 
   zoom() %>% 
   filter(lubridate::month(date) == 1)
 ```
 
-Switch back to the list-column form with `global()` and add a count on the number of day with no rain for each station: 
+Switch back to the list-column form with `tamp()` and add a count on the number of day with no rain for each station: 
 
 ```{r}
 climate_flat %>% 
-  global(station) %>% 
+  tamp(station) %>% 
   zoom() %>% 
   filter(lubridate::month(date) == 1) %>% 
-  global() %>% 
+  tamp() %>% 
   mutate(zero_rain = sum(ts$prcp == 0, na.rm = TRUE))
 ```
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tamp.R
 \name{tamp}
 \alias{tamp}
-\title{Formulate or switch an object into a cubble list-column form}
+\title{Formulate or switch an object into a cubble in the nested form}
 \usage{
 tamp(data, key)
 }
@@ -12,14 +12,14 @@ tamp(data, key)
 \item{key}{the spatio identifier. Key can be automatically detected for a cubble object}
 }
 \description{
-Create a cubble object or switch an existing cubble object into the list-column form
+Create a cubble object or switch an existing cubble object into the nested form
 }
 \details{
 \itemize{
 \item For an object that is not \code{cubble_df}, \code{tamp()} will initialise a cubble object upon
 providing a \code{group} variable.
 \item For an existing \code{cubble} in the long form, \code{tamp()}
-switches the object back to the list-column form. This form is easier to computing
+switches the object back to the nested form. This form is easier to computing
 group-specific variables.
 }
 }
@@ -30,7 +30,7 @@ library(dplyr)
 # create a cubble object from a tibble
 climate_flat \%>\% tamp(station)
 
-# switch to list-column form from the long form
+# switch to the nested form from the long form
 climate_small \%>\%
   zoom() \%>\%
   filter(year(date) == 2020) \%>\%
