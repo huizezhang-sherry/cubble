@@ -2,26 +2,26 @@
 #' @param data a cubble object
 #' @param key the spatio identifier. Key can be automatically detected for a cubble object
 #' @details
-#' `zoom()` switch a cubble object into the long form where the combination of group identifier
+#' `stretch()` switch a cubble object into the long form where the combination of group identifier
 #' and timestamp defines a row. The long form cubble is always of class `cubble_df` and `grouped_df`.
 #'
 #' @examples
-#' climate_flat %>% tamp(station) %>% zoom()
+#' climate_flat %>% tamp(station) %>% stretch()
 #'
 #' @export
 #' @seealso Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
-zoom <- function(data, key) {
+stretch <- function(data, key) {
   test_cubble(data)
-  UseMethod("zoom")
+  UseMethod("stretch")
 }
 
 #' @export
-zoom.cubble_df <- function(data, key){
+stretch.cubble_df <- function(data, key){
 
   col <- sym(names(data)[map_chr(data, class) == "list"])
 
   if (!is_list(eval_tidy(col, data))) {
-    abort("The column to zoom need to be a list-column")
+    abort("The column to stretch need to be a list-column")
   }
 
   key <- enquo(key)

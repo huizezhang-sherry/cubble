@@ -19,7 +19,7 @@
 #' group_vars(climate_small)
 #'
 #' # print out the attribute names of cubble with a tsibble underlying class
-#' names(attributes(climate_small %>% zoom()))
+#' names(attributes(climate_small %>% stretch()))
 #' @param data an cubble object
 #'
 #' @export

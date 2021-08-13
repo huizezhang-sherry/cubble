@@ -10,7 +10,7 @@
 #' @param data a long form tibble object
 #' @param ... variables in metadata to included into the long form
 #' @examples
-#' climate_small %>% zoom() %>% migrate(lat, long)
+#' climate_small %>% stretch() %>% migrate(lat, long)
 #' @export
 #' @rdname cubble-verb
 migrate <- function(data, ...){
@@ -19,7 +19,7 @@ migrate <- function(data, ...){
   test_cubble(data)
 
   if (form(data) != "long"){
-    abort("data needs to be in long form, convert using `zoom()`")
+    abort("data needs to be in long form, convert using `stretch()`")
   }
 
   in_meta <- map_lgl(names(dots), ~.x %in% names(meta(data)))

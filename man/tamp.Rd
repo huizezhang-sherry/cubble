@@ -32,10 +32,10 @@ climate_flat \%>\% tamp(station)
 
 # switch to the nested form from the long form
 climate_small \%>\%
-  zoom() \%>\%
+  stretch() \%>\%
   filter(year(date) == 2020) \%>\%
   tamp()
 }
 \seealso{
-Other cubble verbs include \code{\link{zoom}} and \code{\link{migrate}}
+Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}
 }

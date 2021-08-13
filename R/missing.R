@@ -20,12 +20,12 @@ add_missing_prct <- function(data, ...){
   test_cubble(data)
 
   exprs <- expr(...)
-  vars <- tidyselect::eval_select(exprs, data %>% zoom())
+  vars <- tidyselect::eval_select(exprs, data %>% stretch())
 
   # different scenarios for long/nested form
   # now assume a nested form
 
-  var_names <- data %>% zoom() %>% names()
+  var_names <- data %>% stretch() %>% names()
 
   if (!all(names(vars) %in% var_names)){
     bad_vars <- vars[which(!vars %in% var_names )]

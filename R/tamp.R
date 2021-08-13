@@ -21,11 +21,11 @@
 #'
 #' # switch to the nested form from the long form
 #' climate_small %>%
-#'   zoom() %>%
+#'   stretch() %>%
 #'   filter(year(date) == 2020) %>%
 #'   tamp()
 #' @export
-#' @seealso Other cubble verbs include \code{\link{zoom}} and \code{\link{migrate}}
+#' @seealso Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}
 tamp <- function(data, key) {
   UseMethod("tamp")
 }

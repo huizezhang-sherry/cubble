@@ -64,7 +64,7 @@ tbl_sum.cubble_df <- function(data) {
 
 
   if (form(data) == "nested"){
-    dt <- data %>% zoom() %>% tibble::as_tibble() %>% select(!group_vars(data))
+    dt <- data %>% stretch() %>% tibble::as_tibble() %>% select(!group_vars(data))
     meta_names <-  dt %>% names()
     meta_names <- meta_names[meta_names != group_vars(data)]
 
