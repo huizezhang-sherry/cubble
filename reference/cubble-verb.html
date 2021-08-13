@@ -151,7 +151,7 @@ variables from cubble's metadata. For transfering other group-wise variables, us
     <pre class="examples"><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='zoom.html'>zoom</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>migrate</span><span class='op'>(</span><span class='va'>lat</span>, <span class='va'>long</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
 #&gt; <span style='color: #949494;'># Group:  station [55]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+#&gt; <span style='color: #949494;'># Meta:   lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
 #&gt;    station     date        prcp  tmax  tmin   lat  long
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 2015-01-01   164  31.5  25   -<span style='color: #BB0000;'>14.3</span>  127.
