@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Formulate or switch an object into a cubble list-column form — tamp • cubble</title>
+<title>Formulate or switch an object into a cubble in the nested form — tamp • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Formulate or switch an object into a cubble list-column form — tamp" />
-<meta property="og:description" content="Create a cubble object or switch an existing cubble object into the list-column form" />
+<meta property="og:title" content="Formulate or switch an object into a cubble in the nested form — tamp" />
+<meta property="og:description" content="Create a cubble object or switch an existing cubble object into the nested form" />
 
 
 
@@ -115,13 +115,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Formulate or switch an object into a cubble list-column form</h1>
+    <h1>Formulate or switch an object into a cubble in the nested form</h1>
     
     <div class="hidden name"><code>tamp.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a cubble object or switch an existing cubble object into the list-column form</p>
+    <p>Create a cubble object or switch an existing cubble object into the nested form</p>
     </div>
 
     <pre class="usage"><span class='fu'>tamp</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span><span class='op'>)</span></pre>
@@ -146,7 +146,7 @@
 <li><p>For an object that is not <code>cubble_df</code>, <code>tamp()</code> will initialise a cubble object upon
 providing a <code>group</code> variable.</p></li>
 <li><p>For an existing <code>cubble</code> in the long form, <code>tamp()</code>
-switches the object back to the list-column form. This form is easier to computing
+switches the object back to the nested form. This form is easier to computing
 group-specific variables.</p></li>
 </ul>
 
@@ -163,19 +163,19 @@ group-specific variables.</p></li>
 
 <span class='co'># create a cubble object from a tibble</span>
 <span class='va'>climate_flat</span> <span class='op'>%&gt;%</span> <span class='fu'>tamp</span><span class='op'>(</span><span class='va'>station</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [2]</span>
 #&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
 #&gt;   station       lat  long elevation name                ts                
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
 #&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.        23 kalumburu           <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.       422 halls creek airport <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span></div><div class='input'>
-<span class='co'># switch to list-column form from the long form</span>
+<span class='co'># switch to the nested form from the long form</span>
 <span class='va'>climate_small</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='zoom.html'>zoom</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>date</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>2020</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>tamp</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: list-column</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [55]</span>
 #&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
 #&gt;    station       lat  long elevation name                ts                
