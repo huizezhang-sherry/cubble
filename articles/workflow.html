@@ -96,11 +96,11 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">oz_global</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span>  <span class="op">%&gt;%</span> <span class="fu">global</span><span class="op">(</span><span class="va">station</span><span class="op">)</span>
 <span class="va">oz_global</span></code></pre></div>
-<p><code><a href="../reference/zoom.html">zoom()</a></code> switches a cubble object into the long form where all the group-specific variables are suppressed into the <code>meta</code> attributes. This form is time-centric and is useful to compute time-wise variables.</p>
+<p><code>zoom()</code> switches a cubble object into the long form where all the group-specific variables are suppressed into the <code>meta</code> attributes. This form is time-centric and is useful to compute time-wise variables.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">oz_zoom</span> <span class="op">&lt;-</span> <span class="va">oz_global</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">oz_zoom</span> <span class="op">&lt;-</span> <span class="va">oz_global</span> <span class="op">%&gt;%</span> <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span>
 <span class="va">oz_zoom</span></code></pre></div>
-<p>The long form and the nested form can be switched between each other by using <code>global()</code> on a long form cubble and <code><a href="../reference/zoom.html">zoom()</a></code> on a list-column cubble. Since a cubble has a grouping variable as an attribute, there’s no need to specify the grouping variable again.</p>
+<p>The long form and the nested form can be switched between each other by using <code>global()</code> on a long form cubble and <code>zoom()</code> on a list-column cubble. Since a cubble has a grouping variable as an attribute, there’s no need to specify the grouping variable again.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">back</span> <span class="op">&lt;-</span> <span class="va">oz_zoom</span> <span class="op">%&gt;%</span> <span class="fu">global</span><span class="op">(</span><span class="op">)</span>
 <span class="va">back</span></code></pre></div>
@@ -118,7 +118,7 @@
 <p>In the first example, we want to only keep the stations that have <code>tmax</code> recorded in 2020. This requires first narrow down the records to those in 2020, determine if <code>tmax</code> is missing for each station, and then retain those stations that have <code>tmax</code> recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has <code>tmax</code> recorded is a result of each station, rather than of each time point, hence we need to switch to the nested form with <code>global()</code>. To calculate whether <code>tmax</code> is recorded, we mutate a column <code>tmax_missing</code> that takes <code>TRUE</code> if all the <code>tmax</code> in the nested list column <code>ts</code> are <code>NA</code> and <code>FALSE</code> otherwise. To get the stations that we want, we need another filter on <code>tmax_missing</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out</span> <span class="op">&lt;-</span> <span class="va">climate_small</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">global</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>tmax_missing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span><span class="op">)</span><span class="op">)</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -144,11 +144,11 @@
 <p>Sometimes, we would like to have station-wise and time-wise variables in the same form (i.e. when plotting glyph maps). This can also be seen as a joining task, on the long form, with the dataset to join being the metadata. <code><a href="../reference/migrate.html">migrate()</a></code> is a verb introduced as the shortcut for <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> with a cubble’s metadata and below is the comparison of the two syntaxes.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">lat</span>, <span class="va">long</span><span class="op">)</span>
 
 <span class="va">out</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="fu"><a href="../reference/form.html">meta</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">station</span>, <span class="va">lat</span>, <span class="va">long</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
@@ -163,7 +163,7 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">climate_tsibble</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">%&gt;%</span> <span class="fu">tsibble</span><span class="fu">::</span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/as-tsibble.html">as_tsibble</a></span><span class="op">(</span>index <span class="op">=</span> <span class="va">date</span>, key <span class="op">=</span> <span class="va">station</span><span class="op">)</span>
 <span class="va">oz_global2</span> <span class="op">&lt;-</span> <span class="va">climate_tsibble</span> <span class="op">%&gt;%</span> <span class="fu">global</span><span class="op">(</span><span class="va">station</span><span class="op">)</span>
-<span class="va">oz_zoom2</span> <span class="op">&lt;-</span> <span class="va">oz_global2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">oz_zoom2</span> <span class="op">&lt;-</span> <span class="va">oz_global2</span> <span class="op">%&gt;%</span> <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">oz_global2</span>
 <span class="va">oz_zoom2</span></code></pre></div>
@@ -174,7 +174,7 @@
 <p>With a tsibble structure, we can make a monthly summary of our variables. Here is an example on calculating the monthly total precipitation and average max/min temperature in 2020. As before, we start with the long form to filter out the records that are not in 2020 and add a <code>ym</code> variable as the yearmonth representation of the date. <code>index_by</code> adds another grouping on the <code>ym</code> variable for computing the corresponding monthly summary.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">time_wise2</span> <span class="op">&lt;-</span> <span class="va">climate_small</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ym <span class="op">=</span> <span class="fu">tsibble</span><span class="fu">::</span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/year-month.html">yearmonth</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://tsibble.tidyverts.org/reference/index-by.html">index_by</a></span><span class="op">(</span><span class="va">ym</span><span class="op">)</span> <span class="op">%&gt;%</span> 

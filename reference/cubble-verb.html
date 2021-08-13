@@ -148,7 +148,7 @@ group-wise variables into the long form. <code>migrate()</code> is a shortcut fo
 variables from cubble's metadata. For transfering other group-wise variables, use <code>left_join</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='zoom.html'>zoom</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>migrate</span><span class='op'>(</span><span class='va'>lat</span>, <span class='va'>long</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>migrate</span><span class='op'>(</span><span class='va'>lat</span>, <span class='va'>long</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
 #&gt; <span style='color: #949494;'># Group:  station [55]</span>
 #&gt; <span style='color: #949494;'># Meta:   lat [dbl], long [dbl], elevation [dbl], name [fct]</span>

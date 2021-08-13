@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Functions to get attributes from a cubble object — form • cubble</title>
+<title>Switch a cubble object into a long form — stretch • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Functions to get attributes from a cubble object — form" />
-<meta property="og:description" content="Functions to get attributes from a cubble object" />
+<meta property="og:title" content="Switch a cubble object into a long form — stretch" />
+<meta property="og:description" content="Switch a cubble object into a long form" />
 
 
 
@@ -115,65 +115,57 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Functions to get attributes from a cubble object</h1>
+    <h1>Switch a cubble object into a long form</h1>
     
-    <div class="hidden name"><code>attributes.Rd</code></div>
+    <div class="hidden name"><code>stretch.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Functions to get attributes from a cubble object</p>
+    <p>Switch a cubble object into a long form</p>
     </div>
 
-    <pre class="usage"><span class='fu'>form</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
-
-<span class='fu'>meta</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
-
-<span class='fu'>group_vars</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
-
-<span class='fu'>groups</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>stretch</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>an cubble object</p></td>
+      <td><p>a cubble object</p></td>
+    </tr>
+    <tr>
+      <th>key</th>
+      <td><p>the spatio identifier. Key can be automatically detected for a cubble object</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Apart from inheriting attributes <code>names</code>, <code>row.names</code>, and <code>class</code> from the underlying tibble,
-a cubble object will also have additional attributes: <code>groups</code>, <code>meta</code> and <code>form</code>.</p>
-<p><code>groups()</code>, <code>meta()</code>, and <code>form()</code> provide a more  convenient way to extract
-these attributes without <code>%@%</code> from a cubble.
-<code>group_vars()</code> extracts the variable name of the group, which can often be useful.</p>
-<p>If a cubble object is also a tsibble, then tsibble attributes (<code>key</code>, <code>index</code>, <code>index2</code>, <code>interval</code>)
-are also preserved and can be accessed via the relevant functions in the tsibble package.</p>
+    <p><code>stretch()</code> switch a cubble object into the long form where the combination of group identifier
+and timestamp defines a row. The long form cubble is always of class <code>cubble_df</code> and <code>grouped_df</code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other cubble verbs include <code><a href='tamp.html'>tamp</a></code> and <code><a href='migrate.html'>migrate</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># extract attributes of a cubble object</span>
-<span class='fu'>form</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "nested"</div><div class='input'><span class='fu'>meta</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       station      lat     long elevation                name
-#&gt; 1 ASN00001019 -14.2964 126.6453      23.0           kalumburu
-#&gt; 2 ASN00002012 -18.2292 127.6636     422.0 halls creek airport
-#&gt; 3 ASN00003003 -17.9475 122.2353       7.4      broome airport
-#&gt; 4 ASN00006011 -24.8878 113.6700       4.0   carnarvon airport
-#&gt; 5 ASN00009021 -31.9275 115.9764      15.4       perth airport</div><div class='input'><span class='fu'>groups</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 × 2</span>
-#&gt;   station           .rows
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;list&lt;int&gt;&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>2</span> ASN00002012         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>3</span> ASN00003003         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>4</span> ASN00006011         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>5</span> ASN00009021         <span style='color: #949494;'>[1]</span></div><div class='input'><span class='fu'>group_vars</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "station"</div><div class='input'>
-<span class='co'># print out the attribute names of cubble with a tsibble underlying class</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/attributes.html'>attributes</a></span><span class='op'>(</span><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt;  [1] "names"     "row.names" "key"       "index"     "index2"    "interval" 
-#&gt;  [7] "groups"    "meta"      "form"      "class"    </div></pre>
+    <pre class="examples"><div class='input'><span class='va'>climate_flat</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='tamp.html'>tamp</a></span><span class='op'>(</span><span class='va'>station</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>stretch</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
+#&gt; <span style='color: #949494;'># Group:  station [2]</span>
+#&gt; <span style='color: #949494;'># Meta:   lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+#&gt;    station     date        prcp  tmax  tmin
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 2020-01-01    46  38.6  25.1
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00001019 2020-01-02     0  38.8  28.1
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00001019 2020-01-03   266  37.9  23.6
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00001019 2020-01-04     0  34.3  26.2
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00001019 2020-01-05    46  35.4  26.7
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00001019 2020-01-06   760  27.5  24.8
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00001019 2020-01-07  <span style='text-decoration: underline;'>1</span>168  31.6  23.2
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00001019 2020-01-08  <span style='text-decoration: underline;'>1</span>178  32.7  24  
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00001019 2020-01-09    48  34.2  25.1
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00001019 2020-01-10     0  35.4  26.7
+#&gt; <span style='color: #949494;'># … with 722 more rows</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

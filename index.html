@@ -104,11 +104,11 @@
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            </span>
 <span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;</span>
 <span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;</span></code></pre></div>
-<p>Use <code><a href="reference/zoom.html">zoom()</a></code> to switch to the long form and filter to January records:</p>
+<p>Use <code>zoom()</code> to switch to the long form and filter to January records:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
   <span class="fu">global</span><span class="op">(</span><span class="va">station</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/month.html">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
 <span class="co">#&gt; # Group:  station [2]</span>
@@ -130,7 +130,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
   <span class="fu">global</span><span class="op">(</span><span class="va">station</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/zoom.html">zoom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">zoom</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/month.html">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">global</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>zero_rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">==</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
