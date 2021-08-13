@@ -165,7 +165,7 @@ group-specific variables.</p></li>
 <span class='va'>climate_flat</span> <span class='op'>%&gt;%</span> <span class='fu'>tamp</span><span class='op'>(</span><span class='va'>station</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [2]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+#&gt; <span style='color: #949494;'># Meta:   date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;   station       lat  long elevation name                ts                
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
 #&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.        23 kalumburu           <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
@@ -175,9 +175,9 @@ group-specific variables.</p></li>
   <span class='fu'><a href='zoom.html'>zoom</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>date</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>2020</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>tamp</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [55]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+#&gt; <span style='color: #949494;'># Meta:   date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;    station       lat  long elevation name                ts                
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumburu           <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>

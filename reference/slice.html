@@ -168,10 +168,9 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='co'># slice the first 50 stations from the top/ bottom</span>
 <span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_head</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [50]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
-#&gt; #   [list]</span>
+#&gt; <span style='color: #949494;'># Meta:   date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;    station       lat  long elevation name                ts                  
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>              
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumburu           <span style='color: #949494;'>&lt;tbl_ts [2,147 × 4]&gt;</span>
@@ -185,10 +184,9 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 #&gt; <span style='color: #BCBCBC;'> 9</span> ASN00010286 -<span style='color: #BB0000;'>31.6</span>  117.     217.  cunderdin airfield  <span style='color: #949494;'>&lt;tbl_ts [2,190 × 4]&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>10</span> ASN00010917 -<span style='color: #BB0000;'>32.7</span>  117.     275   wandering           <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4]&gt;</span>
 #&gt; <span style='color: #949494;'># … with 40 more rows</span></div><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_tail</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [50]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
-#&gt; #   [list]</span>
+#&gt; <span style='color: #949494;'># Meta:   date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;    station       lat  long elevation name                        ts             
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                       <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>         
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00009193 -<span style='color: #BB0000;'>32.0</span>  116.      43.1 rottnest island             <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
@@ -204,10 +202,9 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 #&gt; <span style='color: #949494;'># … with 40 more rows</span></div><div class='input'>
 <span class='co'># slice based on the max/ min of a variable</span>
 <span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_max</a></span><span class='op'>(</span><span class='va'>elevation</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [10]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
-#&gt; #   [list]</span>
+#&gt; <span style='color: #949494;'># Meta:   date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;    station       lat  long elevation name                        ts             
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                       <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>         
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00096033 -<span style='color: #BB0000;'>41.9</span>  147.     <span style='text-decoration: underline;'>1</span>057  liawenee                    <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
@@ -220,10 +217,9 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 #&gt; <span style='color: #BCBCBC;'> 8</span> ASN00030124 -<span style='color: #BB0000;'>18.3</span>  144.      302. georgetown airport          <span style='color: #949494;'>&lt;tbl_ts [2,192</span>…
 #&gt; <span style='color: #BCBCBC;'> 9</span> ASN00044021 -<span style='color: #BB0000;'>26.4</span>  146.      302. charleville aero            <span style='color: #949494;'>&lt;tbl_ts [2,183</span>…
 #&gt; <span style='color: #BCBCBC;'>10</span> ASN00065070 -<span style='color: #BB0000;'>32.2</span>  149.      284  dubbo airport aws           <span style='color: #949494;'>&lt;tbl_ts [2,187</span>…</div><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_min</a></span><span class='op'>(</span><span class='va'>lat</span>, n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [10]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
-#&gt; #   [list]</span>
+#&gt; <span style='color: #949494;'># Meta:   date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;    station       lat  long elevation name                    ts                 
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                   <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>             
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00094008 -<span style='color: #BB0000;'>42.8</span>  148.       4   hobart airport          <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…
@@ -238,10 +234,9 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 #&gt; <span style='color: #BCBCBC;'>10</span> ASN00074258 -<span style='color: #BB0000;'>35.6</span>  145.      94   deniliquin airport aws  <span style='color: #949494;'>&lt;tbl_ts [2,192 × 4</span>…</div><div class='input'>
 <span class='co'># random sample</span>
 <span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice_sample</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [10]</span>
-#&gt; <span style='color: #949494;'># Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct], ts
-#&gt; #   [list]</span>
+#&gt; <span style='color: #949494;'># Meta:   date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;    station       lat  long elevation name                          ts           
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>                         <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>       
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00068151 -<span style='color: #BB0000;'>35.1</span>  151.      85   jervis bay point perpendicula <span style='color: #949494;'>&lt;tbl_ts [2,1</span>…
