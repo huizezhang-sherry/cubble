@@ -3,12 +3,12 @@
 #' Create a cubble object or switch an existing cubble object into the list-column form
 #'
 #' @details
-#' * For an object that is not `cubble_df`, `global()` will initialise a cubble object upon
+#' * For an object that is not `cubble_df`, `tamp()` will initialise a cubble object upon
 #' providing a `group` variable.
 #'
-#' * For an existing `cubble` in the long form, `global()`
-#' switch the object back to the list-column form. This form is easier to computing
-#' group-specific variables.s
+#' * For an existing `cubble` in the long form, `tamp()`
+#' switches the object back to the list-column form. This form is easier to computing
+#' group-specific variables.
 #'
 #' @param data the data to be converted into a cubble object
 #' @param key the spatio identifier. Key can be automatically detected for a cubble object
@@ -17,22 +17,22 @@
 #' library(dplyr)
 #'
 #' # create a cubble object from a tibble
-#' climate_flat %>% global(station)
+#' climate_flat %>% tamp(station)
 #'
 #' # switch to list-column form from the long form
 #' climate_small %>%
 #'   zoom() %>%
 #'   filter(year(date) == 2020) %>%
-#'   global()
+#'   tamp()
 #' @export
 #' @seealso Other cubble verbs include \code{\link{zoom}} and \code{\link{migrate}}
-global <- function(data, key) {
-  UseMethod("global")
+tamp <- function(data, key) {
+  UseMethod("tamp")
 }
 
 #' @importFrom tsibble index
 #' @export
-global.cubble_df <- function(data, key) {
+tamp.cubble_df <- function(data, key) {
   test_cubble(data)
 
   # will only keep the first grouping variable if more than one
@@ -57,7 +57,7 @@ global.cubble_df <- function(data, key) {
       tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
       dplyr::rowwise()
   } else{
-    abort("Currently `global.cubble_df` is only for switching form long form to list-column form")
+    abort("Currently `tamp.cubble_df` is only for switching form long form to list-column form")
   }
 
   if ("tbl_ts" %in% class(data)){
@@ -68,7 +68,7 @@ global.cubble_df <- function(data, key) {
 }
 
 #' @export
-global.tbl_df <- function(data, key) {
+tamp.tbl_df <- function(data, key) {
   key <- enquo(key)
 
   if (quo_is_missing(key)){

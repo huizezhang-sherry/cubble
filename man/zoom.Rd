@@ -19,9 +19,9 @@ Switch a cubble object into a long form
 and timestamp defines a row. The long form cubble is always of class \code{cubble_df} and \code{grouped_df}.
 }
 \examples{
-climate_flat \%>\% global(station) \%>\% zoom()
+climate_flat \%>\% tamp(station) \%>\% zoom()
 
 }
 \seealso{
-Other cubble verbs include \code{\link{global}} and \code{\link{migrate}}
+Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
 }

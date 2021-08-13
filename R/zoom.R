@@ -6,10 +6,10 @@
 #' and timestamp defines a row. The long form cubble is always of class `cubble_df` and `grouped_df`.
 #'
 #' @examples
-#' climate_flat %>% global(station) %>% zoom()
+#' climate_flat %>% tamp(station) %>% zoom()
 #'
 #' @export
-#' @seealso Other cubble verbs include \code{\link{global}} and \code{\link{migrate}}
+#' @seealso Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
 zoom <- function(data, key) {
   test_cubble(data)
   UseMethod("zoom")

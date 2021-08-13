@@ -89,7 +89,7 @@ save(climate, file = here::here("inst/extdata/climate.rda"), compress = "xz")
 ############################################################
 climate_large <- climate %>%
   left_join(station, by = c("station" = "id")) %>%
-  global(station) %>%
+  tamp(station) %>%
   mutate(tmax_missing = all(is.na(ts$tmax)),
          tmin_missing = all(is.na(ts$tmin)),
          tmin_missing_first = is.na(ts$tmin[1])) %>%
@@ -109,7 +109,7 @@ climate_small <- oz_climate %>%
     name = as.factor(str_to_lower(str_remove(name, ", AS")))) %>%
   filter(between(year(date), 2015, 2020)) %>%
   as_tsibble(index = date, key = station) %>%
-  global(station) %>%
+  tamp(station) %>%
   mutate(tmax_missing = all(is.na(ts$tmax)),
          tmin_missing = all(is.na(ts$tmin)),
          tmin_missing_first = is.na(ts$tmin[1])) %>%

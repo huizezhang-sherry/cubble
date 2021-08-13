@@ -12,7 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message = FALSE, 
-  warning = FALSE
+  warning = FALSE,
+  eval = FALSE
 )
 ```
 
@@ -27,7 +28,7 @@ library(dplyr)
 
 A cubble object uses a list-column form and a long form, powered by the `rowwise_df` and `grouped_df`, to allow flexible group-wise and time-wise computation for spatial-temporal data.
 
-To create a cubble object in the list-column form, use `global()` with a supply of the grouping variable. This would add `cubble_df` and `rowwise_df` to the underlying data structure the object is built upon. On top of the attributes inherent from tibble (`name` and `row.names`) and rowwise_df (`groups`), a cubble has two additional attributes: `meta` and `form`. `meta` stores the group-wise information so that the object can be switched between the list-column and long form without the lost of information while `form` specifies whether the data object is a list-column or long form.
+To create a cubble object in the list-column form, use `tamp()` with a supply of the grouping variable. This would add `cubble_df` and `rowwise_df` to the underlying data structure the object is built upon. On top of the attributes inherent from tibble (`name` and `row.names`) and rowwise_df (`groups`), a cubble has two additional attributes: `meta` and `form`. `meta` stores the group-wise information so that the object can be switched between the list-column and long form without the lost of information while `form` specifies whether the data object is a list-column or long form.
 
 In the list-column form, each distinct key value constitutes a row and all the time-specific measures are nested into a column named `ts`. This form is convenient for calculating group-wise measures.
 
