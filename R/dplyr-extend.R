@@ -14,15 +14,15 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   form <- determine_form(data)
   if (form == "nested"){
     key <- group_vars(data)
-    meta_data <- out[, find_non_varying_var(out, !!key)]
+    leaves_data <- out[, find_non_varying_var(out, !!key)]
   } else if (form == "long"){
-    meta_data = meta(data)
+    leaves_data = leaves(data, stem = "spatial")
   } else{
     abort("{form} meeds to be either long or nested")
   }
 
 
-  cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out))
+  cubble_df(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -30,17 +30,17 @@ dplyr_row_slice.cubble_df <- function(data, i, ...) {
 
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
-  meta_data <- meta(data)
+  leaves_data <- leaves(data, stem = "spatial")
 
   # update meta data
-  meta_col <- group_vars[map_lgl(group_vars, ~has_name(meta_data, .x))]
-  row <- meta_data[[meta_col]] %in% unique(out[[meta_col]])
-  meta_data <- meta_data[row,]
+  meta_col <- group_vars[map_lgl(group_vars, ~has_name(leaves_data, .x))]
+  row <- leaves_data[[meta_col]] %in% unique(out[[meta_col]])
+  leaves_data <- leaves_data[row,]
 
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = group_vars(data)[1])
   }
-  cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out) )
+  cubble_df(out, group = group_vars, leaves = leaves_data, form = determine_form(out) )
 }
 
 #' @export
@@ -51,23 +51,23 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 
   if (form == "nested"){
     key <- group_vars(template)
-    meta_data <- data[, find_non_varying_var(data, !!key)]
+    leaves_data <- data[, find_non_varying_var(data, !!key)]
   } else if (form == "long"){
-    meta_data = meta(template)
+    leaves_data <- leaves(data, stem = "spatial")
   } else{
     abort("{form} meeds to be either long or nested")
   }
 
-  cubble_df(data, group = group_vars, meta_data = meta_data, form = determine_form(template))
+  cubble_df(data, group = group_vars, leaves = leaves_data, form = determine_form(template))
 }
 
 #' @export
 summarise.cubble_df <- function(data, ...){
   group_vars <- group_vars(data)
-  meta_data <- meta(data)
+  leaves_data <- leaves(data, stem = "spatial")
   out <- NextMethod("summarise")
 
-  cubble_df(out, group = group_vars, meta_data = meta_data, form = determine_form(out))
+  cubble_df(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -99,7 +99,7 @@ group_by.cubble_df <- function(data, ...){
   new_group_var <- enquos(..., .named = TRUE)
   group_var <- union(group_vars(data), names(new_group_var))
 
-  cubble_df(data, group = group_var, meta_data = meta(data), form = determine_form(data))
+  cubble_df(data, group = group_var, leaves = leaves(data, stem = "spatial"), form = determine_form(data))
 }
 
 #' @export
@@ -118,5 +118,5 @@ ungroup.cubble_df <- function(data, ...){
 
   updated_group_var <- setdiff(group_vars(data), ungroup_var)
 
-  cubble_df(data, group = updated_group_var, meta_data = meta(data), form = determine_form(data))
+  cubble_df(data, group = updated_group_var,leaves = leaves(data, stem = "spatial"), form = determine_form(data))
 }

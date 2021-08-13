@@ -30,7 +30,7 @@ tamp <- function(data, key) {
   UseMethod("tamp")
 }
 
-#' @importFrom tsibble index
+#' @importFrom tsibble index as_tsibble
 #' @export
 tamp.cubble_df <- function(data, key) {
   test_cubble(data)
@@ -46,14 +46,14 @@ tamp.cubble_df <- function(data, key) {
   # compute metadata again if change to a different key
   nest_var <- find_nest_var(data, !!key)
   if (as_name(key) %in% group_vars(data)){
-    meta_data <- meta(data)
+    leaves_data <- leaves(data, stem = "spatial")
   } else{
-    meta_data <- tibble::as_tibble(data[, find_non_varying_var(data, !!key)])
+    leaves_data <- tibble::as_tibble(data[, find_non_varying_var(data, !!key)])
   }
 
   if (form(data) == "long"){
     out <- tibble::as_tibble(data) %>%
-      left_join(meta_data) %>%
+      left_join(leaves_data) %>%
       tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
       dplyr::rowwise()
   } else{
@@ -64,7 +64,7 @@ tamp.cubble_df <- function(data, key) {
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
-  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "nested")
+  cubble_df(out, group = as_name(key), leaves = leaves_data, form = "nested")
 }
 
 #' @export
@@ -80,6 +80,10 @@ tamp.tbl_df <- function(data, key) {
   out <- data %>%
     tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
     dplyr::rowwise()
-  meta_data <- tibble::as_tibble(out[nest_var$non_varying_var])
-  cubble_df(out, group = as_name(key), meta_data = meta_data, form = "nested")
+
+
+  leaves_data <- tibble::new_tibble(out[nest_var$non_varying_var], nrow = nrow(out),
+                                    groups = as_name(key), stem = "spatial", class = "leaves")
+
+  cubble_df(out, group = as_name(key), leaves = leaves_data, form = "nested")
 }

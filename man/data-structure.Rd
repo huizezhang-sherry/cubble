@@ -6,9 +6,9 @@
 \alias{is_cubble}
 \title{Extract cubble attributes}
 \usage{
-cubble_df(data, group, meta_data, form)
+cubble_df(data, group, leaves, form)
 
-new_cubble_df(data, group, meta_data, form)
+new_cubble_df(data, group, leaves, form)
 
 is_cubble(data)
 }
@@ -17,7 +17,7 @@ is_cubble(data)
 
 \item{group}{the spatio identifier}
 
-\item{meta_data}{metadata to include in the attributes}
+\item{leaves}{metadata to include in the attributes}
 
 \item{form}{whether the long or wide form}
 }

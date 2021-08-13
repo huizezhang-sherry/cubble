@@ -2,14 +2,14 @@
 % Please edit documentation in R/cubble-attr.R
 \name{form}
 \alias{form}
-\alias{meta}
+\alias{leaves}
 \alias{group_vars}
 \alias{groups}
 \title{Functions to get attributes from a cubble object}
 \usage{
 form(data)
 
-meta(data)
+leaves(data, stem)
 
 group_vars(data)
 
@@ -17,6 +17,8 @@ groups(data)
 }
 \arguments{
 \item{data}{an cubble object}
+
+\item{stem}{either "time" or "spatial".}
 }
 \description{
 Functions to get attributes from a cubble object
@@ -35,7 +37,8 @@ are also preserved and can be accessed via the relevant functions in the tsibble
 \examples{
 # extract attributes of a cubble object
 form(climate_small)
-meta(climate_small) \%>\% head(5)
+climate_small \%>\% leaves(stem = "time") \%>\% head(5)
+climate_small \%>\% stretch() \%>\% leaves(stem = "spatial") \%>\% head(5)
 groups(climate_small) \%>\% head(5)
 group_vars(climate_small)
 
