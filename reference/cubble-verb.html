@@ -149,22 +149,7 @@ variables from cubble's metadata. For transfering other group-wise variables, us
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>migrate</span><span class='op'>(</span><span class='va'>lat</span>, <span class='va'>long</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
-#&gt; <span style='color: #949494;'># Group:  station [55]</span>
-#&gt; <span style='color: #949494;'># Meta:   lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
-#&gt;    station     date        prcp  tmax  tmin   lat  long
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 2015-01-01   164  31.5  25   -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00001019 2015-01-02   124  31.3  25   -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00001019 2015-01-03    50  29.2  24.7 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00001019 2015-01-04   204  32.1  24.3 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00001019 2015-01-05   412  31.4  24.6 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00001019 2015-01-06   200  28.7  25.1 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00001019 2015-01-07   822  30.2  24.5 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00001019 2015-01-08    22  31    26.6 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00001019 2015-01-09    62  32.7  26.2 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'>10</span> ASN00001019 2015-01-10   274  32.9  22.6 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #949494;'># … with 120,311 more rows</span></div></pre>
+</div><div class='output co'>#&gt; <span class='error'>Error in find_non_varying_var(data, !!key): could not find function "find_non_varying_var"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
