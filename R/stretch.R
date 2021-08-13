@@ -32,8 +32,7 @@ stretch.cubble_df <- function(data, key){
     key <- quo_get_expr(key)
   }
 
-  leaves_data <- tibble::as_tibble(data[, find_non_varying_var(data, !!key)])
-
+  leaves_data <- leaves(data, stem = "spatial")
 
   list_col <- data %>% dplyr::pull(!!col)
 

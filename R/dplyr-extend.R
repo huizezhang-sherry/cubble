@@ -9,12 +9,12 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }
 
-  # update meta data:
+  # update leaves
   # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
   form <- determine_form(data)
   if (form == "nested"){
     key <- group_vars(data)
-    leaves_data <- out[, find_non_varying_var(out, !!key)]
+    leaves_data <- as_leaves(out[, find_invariant(out, !!key)$invariant], groups = key, stem = "spatial")
   } else if (form == "long"){
     leaves_data = leaves(data, stem = "spatial")
   } else{
@@ -26,13 +26,13 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
 }
 
 #' @export
-dplyr_row_slice.cubble_df <- function(data, i, ...) {
+dplyr_row_slice.cubble_df <- function(data, i, ...){
 
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
   leaves_data <- leaves(data, stem = "spatial")
 
-  # update meta data
+  # update leaves
   meta_col <- group_vars[map_lgl(group_vars, ~has_name(leaves_data, .x))]
   row <- leaves_data[[meta_col]] %in% unique(out[[meta_col]])
   leaves_data <- leaves_data[row,]
@@ -49,14 +49,13 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   group_vars <- group_vars(template)
   form <- determine_form(template)
 
-  if (form == "nested"){
-    key <- group_vars(template)
-    leaves_data <- data[, find_non_varying_var(data, !!key)]
-  } else if (form == "long"){
-    leaves_data <- leaves(data, stem = "spatial")
-  } else{
-    abort("{form} meeds to be either long or nested")
-  }
+  key <- group_vars(template)
+  data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
+  old_leaves <- leaves(template, stem = "spatial") %>% names()
+  new_leaves <- setdiff(old_leaves, data_var)
+  leaves_data <- as_leaves(leaves(template, stem = "spatial") %>%
+                             select(key, new_leaves), groups = key, stem = "spatial")
+
 
   cubble_df(data, group = group_vars, leaves = leaves_data, form = determine_form(template))
 }

@@ -81,9 +81,7 @@ tamp.tbl_df <- function(data, key) {
     tidyr::nest(ts = c(!!!all_vars$variant)) %>%
     dplyr::rowwise()
 
-
-  leaves_data <- tibble::new_tibble(out[all_vars$invariant], nrow = nrow(out),
-                                    groups = as_name(key), stem = "spatial", class = "leaves")
+  leaves_data <- as_leaves(out[all_vars$invariant], groups = as_name(key), stem = "spatial")
 
   cubble_df(out, group = as_name(key), leaves = leaves_data, form = "nested")
 }

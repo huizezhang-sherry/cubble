@@ -70,7 +70,7 @@ tbl_sum.cubble_df <- function(data) {
 
   } else if (form(data) == "long"){
     dt <- leaves(data, stem = "spatial")
-    data_col <- names(data)[names(data) != group_vars(data)]
+    data_col <- names(dt)[names(dt) != group_vars(data)]
     leaves_names <- dt[,data_col] %>% names()
   }
   type_sum <- map_chr(dt, pillar::type_sum)

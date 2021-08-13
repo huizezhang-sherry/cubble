@@ -43,32 +43,27 @@ determine_form <- function(data){
   }
 }
 
+as_leaves <- function(data, groups, stem){
+  tibble::new_tibble(data, nrow = nrow(data),
+                     groups = groups, stem = stem, class = "leaves")
+}
+
+
 #' @export
 #' @rdname attributes
 leaves <- function(data, stem){
   test_cubble(data)
 
   if (stem == "time" & form(data) == "nested"){
-    leaves_data <- data %>% stretch() %>% as_tibble()
-    tibble::new_tibble(leaves_data, nrow = nrow(leaves_data), groups = group_vars(data), stem = "time", class = "leaves")
-  } else if (stem == "spatial" & form(data) == "long"){
-    nested_form <- data %>% tamp()
-    listcol <-  nested_form %>% listcol_name()
-    leaves_data <- nested_form %>% as_tibble() %>% select(-listcol)
-    tibble::new_tibble(leaves_data, nrow = nrow(leaves_data), groups = group_vars(data), stem = "spatial", class = "leaves")
+    leaves_data <- data %>% mutate(ts = list(map(.data$ts, as_tibble))) %>% tidyr::unnest(ts)
+    as_leaves(leaves_data, groups = group_vars(data), stem = "time")
+  } else if (stem == "spatial"){
+    data %@% leaves
   } else{
     abort("Use `leaves` to see the time stem when data is in the nested form, or
           Use `leaves` to see the spatial stem when data is in the long form")
   }
 }
-
-listcol_name <- function(data){
-  test_nested(data)
-
-  var_type <- map_chr(data, class)
-  names(var_type[var_type == "list"])
-}
-
 
 #' @export
 #' @rdname attributes
