@@ -61,8 +61,18 @@ tbl_sum.cubble_df <- function(data) {
   group <- group_vars(data)
   group_n <- map_dbl(group, ~length(unique(groups(data)[[.x]])))
   group_msg <- glue::glue_collapse(glue::glue("{group} [{group_n}]"), sep = ", ")
-  meta_names <- meta(data) %>% names()
-  type_sum <- map_chr(meta(data), pillar::type_sum)
+
+
+  if (form(data) == "nested"){
+    dt <- data %>% zoom() %>% tibble::as_tibble() %>% select(!group_vars(data))
+    meta_names <-  dt %>% names()
+    meta_names <- meta_names[meta_names != group_vars(data)]
+
+  } else if (form(data) == "long"){
+    dt <- meta(data)
+    meta_names <- dt %>% names()
+  }
+  type_sum <- map_chr(dt, pillar::type_sum)
   meta_msg <- glue::glue_collapse(glue::glue("{meta_names} [{type_sum}]"), sep = ", ")
 
 
