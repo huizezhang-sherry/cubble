@@ -44,17 +44,17 @@ tamp.cubble_df <- function(data, key) {
   }
 
   # compute metadata again if change to a different key
-  nest_var <- find_nest_var(data, !!key)
+  all_vars <- find_invariant(data, !!key)
   if (as_name(key) %in% group_vars(data)){
     leaves_data <- leaves(data, stem = "spatial")
   } else{
-    leaves_data <- tibble::as_tibble(data[, find_non_varying_var(data, !!key)])
+    leaves_data <- tibble::as_tibble(data[, all_vars$invariant])
   }
 
   if (form(data) == "long"){
     out <- tibble::as_tibble(data) %>%
       left_join(leaves_data) %>%
-      tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
+      tidyr::nest(ts = c(!!!all_vars$variant)) %>%
       dplyr::rowwise()
   } else{
     abort("Currently `tamp.cubble_df` is only for switching form long form to nested form")
@@ -75,14 +75,14 @@ tamp.tbl_df <- function(data, key) {
     abort("Please specify the key variable for grouping")
 
   }
-  nest_var <- find_nest_var(data, !!key)
+  all_vars <- find_invariant(data, !!key)
 
   out <- data %>%
-    tidyr::nest(ts = c(!!!nest_var$nest_var)) %>%
+    tidyr::nest(ts = c(!!!all_vars$variant)) %>%
     dplyr::rowwise()
 
 
-  leaves_data <- tibble::new_tibble(out[nest_var$non_varying_var], nrow = nrow(out),
+  leaves_data <- tibble::new_tibble(out[all_vars$invariant], nrow = nrow(out),
                                     groups = as_name(key), stem = "spatial", class = "leaves")
 
   cubble_df(out, group = as_name(key), leaves = leaves_data, form = "nested")
