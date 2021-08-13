@@ -69,7 +69,7 @@ tbl_sum.cubble_df <- function(data) {
     meta_names <- meta_names[meta_names != group_vars(data)]
 
   } else if (form(data) == "long"){
-    dt <- meta(data)
+    dt <- meta(data) %>% select(!group_vars(data))
     meta_names <- dt %>% names()
   }
   type_sum <- map_chr(dt, pillar::type_sum)
