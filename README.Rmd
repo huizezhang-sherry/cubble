@@ -47,12 +47,12 @@ climate_flat %>%
   tamp(station) 
 ```
 
-Use `zoom()` to switch to the long form and filter to January records:
+Use `stretch()` to switch to the long form and filter to January records:
 
 ```{r}
 climate_flat %>% 
   tamp(station) %>% 
-  zoom() %>% 
+  stretch() %>% 
   filter(lubridate::month(date) == 1)
 ```
 
@@ -61,7 +61,7 @@ Switch back to the list-column form with `tamp()` and add a count on the number 
 ```{r}
 climate_flat %>% 
   tamp(station) %>% 
-  zoom() %>% 
+  stretch() %>% 
   filter(lubridate::month(date) == 1) %>% 
   tamp() %>% 
   mutate(zero_rain = sum(ts$prcp == 0, na.rm = TRUE))

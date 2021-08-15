@@ -28,33 +28,34 @@ remotes::install_github("huizezhang-sherry/cubble")
 
 ## Example
 
-Using `global()` to create a cubble in the list-column form by supply
-the variable that identifies each site:
+Using `tamp()` to create a cubble in the list-column form by supply the
+variable that identifies each site:
 
 ``` r
 library(cubble)
 library(dplyr)
 climate_flat %>% 
-  global(station) 
-#> # Cubble: station-wise: list-column
+  tamp(station) 
+#> # Cubble: station-wise: nested form
 #> # Group:  station [2]
-#> # Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]
+#> # Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct], ts [named list]
 #>   station       lat  long elevation name                ts                
 #>   <fct>       <dbl> <dbl>     <dbl> <fct>               <list>            
 #> 1 ASN00001019 -14.3  127.        23 kalumburu           <tibble [366 × 4]>
 #> 2 ASN00002012 -18.2  128.       422 halls creek airport <tibble [366 × 4]>
 ```
 
-Use `zoom()` to switch to the long form and filter to January records:
+Use `stretch()` to switch to the long form and filter to January
+records:
 
 ``` r
 climate_flat %>% 
-  global(station) %>% 
-  zoom() %>% 
+  tamp(station) %>% 
+  stretch() %>% 
   filter(lubridate::month(date) == 1)
 #> # Cubble: time-wise: long form
 #> # Group:  station [2]
-#> # Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]
+#> # Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct]
 #>    station     date        prcp  tmax  tmin
 #>    <fct>       <date>     <dbl> <dbl> <dbl>
 #>  1 ASN00001019 2020-01-01    46  38.6  25.1
@@ -70,19 +71,19 @@ climate_flat %>%
 #> # … with 52 more rows
 ```
 
-Switch back to the list-column form with `global()` and add a count on
-the number of day with no rain for each station:
+Switch back to the list-column form with `tamp()` and add a count on the
+number of day with no rain for each station:
 
 ``` r
 climate_flat %>% 
-  global(station) %>% 
-  zoom() %>% 
+  tamp(station) %>% 
+  stretch() %>% 
   filter(lubridate::month(date) == 1) %>% 
-  global() %>% 
+  tamp() %>% 
   mutate(zero_rain = sum(ts$prcp == 0, na.rm = TRUE))
-#> # Cubble: station-wise: list-column
+#> # Cubble: station-wise: nested form
 #> # Group:  station [2]
-#> # Meta:   station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct],
+#> # Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct], ts [named list],
 #> #   zero_rain [int]
 #>   station       lat  long elevation name               ts              zero_rain
 #>   <fct>       <dbl> <dbl>     <dbl> <fct>              <list>              <int>

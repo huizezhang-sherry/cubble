@@ -5,18 +5,27 @@ template:
 reference:
 - title: "Create and change mode of a cubble"
 - contents:
-  - global
-  - zoom
+  - tamp
+  - stretch
   - migrate
-- title: "S3 implementation on cubble"
+- title: "Extract attributes from a cubble"
 - contents:
   - form
-  - meta
+  - leaves
   - group_vars
   - groups
-  - cubble_df
-  - new_cubble_df
-  - is_cubble()
+- title: "S3 on cubble"
+- contents:
+  - cubble
+  - new_cubble
+  - is_cubble
+  - tbl_sum
+- title: "S3 on the leaves attribute"
+- contents:
+  - new_leaves
+  - is_leaves
+  - invariant
+  - variant
 - title: "Missing summary"
 - contents:
   - starts_with("add")
