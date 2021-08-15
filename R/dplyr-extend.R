@@ -22,7 +22,7 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   }
 
 
-  cubble_df(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
+  new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -40,7 +40,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = group_vars(data)[1])
   }
-  cubble_df(out, group = group_vars, leaves = leaves_data, form = determine_form(out) )
+  new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out) )
 }
 
 #' @export
@@ -57,7 +57,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
                              select(key, new_leaves), groups = key, stem = "spatial")
 
 
-  cubble_df(data, group = group_vars, leaves = leaves_data, form = determine_form(template))
+  new_cubble(data, group = group_vars, leaves = leaves_data, form = determine_form(template))
 }
 
 #' @export
@@ -66,7 +66,7 @@ summarise.cubble_df <- function(data, ...){
   leaves_data <- leaves(data, stem = "spatial")
   out <- NextMethod("summarise")
 
-  cubble_df(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
+  new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -98,7 +98,7 @@ group_by.cubble_df <- function(data, ...){
   new_group_var <- enquos(..., .named = TRUE)
   group_var <- union(group_vars(data), names(new_group_var))
 
-  cubble_df(data, group = group_var, leaves = leaves(data, stem = "spatial"), form = determine_form(data))
+  new_cubble(data, group = group_var, leaves = leaves(data, stem = "spatial"), form = determine_form(data))
 }
 
 #' @export
@@ -117,5 +117,5 @@ ungroup.cubble_df <- function(data, ...){
 
   updated_group_var <- setdiff(group_vars(data), ungroup_var)
 
-  cubble_df(data, group = updated_group_var,leaves = leaves(data, stem = "spatial"), form = determine_form(data))
+  new_cubble(data, group = updated_group_var,leaves = leaves(data, stem = "spatial"), form = determine_form(data))
 }

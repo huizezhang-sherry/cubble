@@ -48,5 +48,5 @@ stretch.cubble_df <- function(data, key){
       tidyr::unnest(!!col)
   }
 
-  cubble_df(out, group = as_name(key), leaves = leaves_data, form = "long")
+  new_cubble(out, group = as_name(key), leaves = leaves_data, form = "long")
 }

@@ -37,7 +37,7 @@ add_missing_prct <- function(data, ...){
   names(calls) <- glue::glue("{names(vars)}_missing")
   out <- data %>% mutate(missing = list(map(calls, ~eval(.x)))) %>% tidyr::unnest_wider(missing)
 
-  cubble_df(out, group = group_vars(data), leaves = leaves(data, stem = "spatial"), form = determine_form(data))
+  new_cubble(out, group = group_vars(data), leaves = leaves(data, stem = "spatial"), form = determine_form(data))
 }
 
 #' @rdname missing
@@ -62,6 +62,6 @@ add_missing_dscrb <- function(data, cutoff = 0.99){
   dscrb <- purrr::map_dfr(calls, ~eval_tidy(.x, data = data))
   out <- tibble::as_tibble(data) %>% dplyr::bind_cols(dscrb)
 
-  cubble_df(out, group = group_vars(data), leaves = leaves(data, stem = "spatial"), form = determine_form(data))
+  new_cubble(out, group = group_vars(data), leaves = leaves(data, stem = "spatial"), form = determine_form(data))
 
 }

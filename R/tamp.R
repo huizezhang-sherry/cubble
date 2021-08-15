@@ -64,7 +64,7 @@ tamp.cubble_df <- function(data, key) {
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
-  cubble_df(out, group = as_name(key), leaves = leaves_data, form = "nested")
+  new_cubble(out, group = as_name(key), leaves = leaves_data, form = "nested")
 }
 
 #' @export
@@ -83,5 +83,5 @@ tamp.tbl_df <- function(data, key) {
 
   leaves_data <- as_leaves(out[all_vars$invariant], groups = as_name(key), stem = "spatial")
 
-  cubble_df(out, group = as_name(key), leaves = leaves_data, form = "nested")
+  new_cubble(out, group = as_name(key), leaves = leaves_data, form = "nested")
 }

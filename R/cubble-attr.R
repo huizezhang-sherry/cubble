@@ -55,7 +55,7 @@ leaves <- function(data, stem){
   test_cubble(data)
 
   if (stem == "time" & form(data) == "nested"){
-    leaves_data <- data %>% mutate(ts = list(map(.data$ts, as_tibble))) %>% tidyr::unnest(ts)
+    leaves_data <- data %>% mutate(ts = list(map(.data$ts, as_tibble))) %>% tidyr::unnest(.data$ts)
     as_leaves(leaves_data, groups = group_vars(data), stem = "time")
   } else if (stem == "spatial"){
     data %@% leaves

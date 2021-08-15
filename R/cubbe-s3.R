@@ -5,14 +5,16 @@
 #' @param form whether the long or wide form
 #' @rdname data-structure
 #' @export
-cubble_df <- function(data, group, leaves,  form) {
-  new_cubble_df(data, group, leaves, form = form)
+cubble <- function(data, group, leaves,  form) {
+
+
+  new_cubble(data, group, leaves, form = form)
 
 }
 
 #' @rdname data-structure
 #' @export
-new_cubble_df <- function(data, group, leaves, form) {
+new_cubble <- function(data, group, leaves, form) {
   if (form == "nested") {
     # this part will be simplified once we can create cubble from a subclass of rowwise_df
     nrow <- nrow(data)
