@@ -6,20 +6,22 @@
 \alias{is_cubble}
 \title{Extract cubble attributes}
 \usage{
-cubble(data, group, leaves, form)
+cubble(..., group, leaves, form)
 
 new_cubble(data, group, leaves, form)
 
 is_cubble(data)
 }
 \arguments{
-\item{data}{the object to be created or tested as cubble}
+\item{...}{a list object to create new cubble}
 
 \item{group}{the spatio identifier}
 
 \item{leaves}{metadata to include in the attributes}
 
 \item{form}{whether the long or wide form}
+
+\item{data}{the object to be created or tested as cubble}
 }
 \description{
 Extract cubble attributes

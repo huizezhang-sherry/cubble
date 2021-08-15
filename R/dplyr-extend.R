@@ -14,9 +14,9 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   form <- determine_form(data)
   if (form == "nested"){
     key <- group_vars(data)
-    leaves_data <- as_leaves(out[, find_invariant(out, !!key)$invariant], groups = key, stem = "spatial")
+    leaves_data <- new_leaves(out[, find_invariant(out, !!key)$invariant], group = !!key)
   } else if (form == "long"){
-    leaves_data = leaves(data, stem = "spatial")
+    leaves_data = leaves(data)
   } else{
     abort("{form} meeds to be either long or nested")
   }
@@ -30,12 +30,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
-  leaves_data <- leaves(data, stem = "spatial")
-
-  # update leaves
-  meta_col <- group_vars[map_lgl(group_vars, ~has_name(leaves_data, .x))]
-  row <- leaves_data[[meta_col]] %in% unique(out[[meta_col]])
-  leaves_data <- leaves_data[row,]
+  leaves_data <- new_leaves(data, !!group_vars)
 
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = group_vars(data)[1])
@@ -51,10 +46,9 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 
   key <- group_vars(template)
   data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
-  old_leaves <- leaves(template, stem = "spatial") %>% names()
+  old_leaves <- leaves(template) %>% names()
   new_leaves <- setdiff(old_leaves, data_var)
-  leaves_data <- as_leaves(leaves(template, stem = "spatial") %>%
-                             select(key, new_leaves), groups = key, stem = "spatial")
+  leaves_data <- leaves(template) %>% select(key, new_leaves)
 
 
   new_cubble(data, group = group_vars, leaves = leaves_data, form = determine_form(template))
@@ -63,7 +57,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 #' @export
 summarise.cubble_df <- function(data, ...){
   group_vars <- group_vars(data)
-  leaves_data <- leaves(data, stem = "spatial")
+  leaves_data <- leaves(data)
   out <- NextMethod("summarise")
 
   new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
@@ -98,7 +92,7 @@ group_by.cubble_df <- function(data, ...){
   new_group_var <- enquos(..., .named = TRUE)
   group_var <- union(group_vars(data), names(new_group_var))
 
-  new_cubble(data, group = group_var, leaves = leaves(data, stem = "spatial"), form = determine_form(data))
+  new_cubble(data, group = group_var, leaves = leaves(data), form = determine_form(data))
 }
 
 #' @export
@@ -117,5 +111,5 @@ ungroup.cubble_df <- function(data, ...){
 
   updated_group_var <- setdiff(group_vars(data), ungroup_var)
 
-  new_cubble(data, group = updated_group_var,leaves = leaves(data, stem = "spatial"), form = determine_form(data))
+  new_cubble(data, group = updated_group_var,leaves = leaves(data), form = determine_form(data))
 }

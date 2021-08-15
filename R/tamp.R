@@ -46,9 +46,9 @@ tamp.cubble_df <- function(data, key) {
   # compute metadata again if change to a different key
   all_vars <- find_invariant(data, !!key)
   if (as_name(key) %in% group_vars(data)){
-    leaves_data <- leaves(data, stem = "spatial")
+    leaves_data <- leaves(data)
   } else{
-    leaves_data <- tibble::as_tibble(data[, all_vars$invariant])
+    leaves_data <- new_leaves(data, !!key)
   }
 
   if (form(data) == "long"){
@@ -81,7 +81,7 @@ tamp.tbl_df <- function(data, key) {
     tidyr::nest(ts = c(!!!all_vars$variant)) %>%
     dplyr::rowwise()
 
-  leaves_data <- as_leaves(out[all_vars$invariant], groups = as_name(key), stem = "spatial")
+  leaves_data <- new_leaves(data, !!key)
 
   new_cubble(out, group = as_name(key), leaves = leaves_data, form = "nested")
 }

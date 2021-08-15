@@ -22,12 +22,12 @@ migrate <- function(data, ...){
     abort("data needs to be in long form, convert using `stretch()`")
   }
 
-  in_leaves <- map_lgl(names(dots), ~.x %in% names(leaves(data, stem = "spatial")))
+  in_leaves <- map_lgl(names(dots), ~.x %in% names(leaves(data)))
   if (!all(in_leaves)){
     inform(glue::glue("`{names(dots)[!in_leaves]}` does not present in the spatial stem of the data, hence not migrated. "))
   }
 
-  to_join <- leaves(data, stem = "spatial") %>% select(group_vars(data), names(dots)[in_leaves])
+  to_join <- leaves(data) %>% select(group_vars(data), names(dots)[in_leaves])
   data %>% left_join(to_join)
 
 }

@@ -1,20 +1,24 @@
 #' Extract cubble attributes
+#' @param ... a list object to create new cubble
 #' @param data the object to be created or tested as cubble
 #' @param group the spatio identifier
 #' @param leaves metadata to include in the attributes
 #' @param form whether the long or wide form
 #' @rdname data-structure
 #' @export
-cubble <- function(data, group, leaves,  form) {
-
-
-  new_cubble(data, group, leaves, form = form)
+cubble <- function(..., group, leaves, form) {
+  #browser()
+  # data <- tibble::tibble(!!!list2(...))
+  # group <- enquo(group)
+  #leaves <- as_leaves(leaves)
+  new_cubble(data, !!group, form = form)
 
 }
 
 #' @rdname data-structure
 #' @export
 new_cubble <- function(data, group, leaves, form) {
+
   if (form == "nested") {
     # this part will be simplified once we can create cubble from a subclass of rowwise_df
     nrow <- nrow(data)
@@ -22,7 +26,7 @@ new_cubble <- function(data, group, leaves, form) {
     group_data <- tibble::new_tibble(vec_data(group_data), nrow = nrow)
     group_data$.rows <- new_list_of(as.list(seq_len(nrow)), ptype = integer())
   } else if (form == "long") {
-    nrow <- nrow(leaves)
+    nrow <- nrow(data)
     group_data <- dplyr:::compute_groups(data, group)
   }
 
@@ -36,6 +40,7 @@ new_cubble <- function(data, group, leaves, form) {
   }
 
   attr <- list(x = data,
+               nrow = nrow,
                groups = group_data,
                leaves = leaves,
                form = form,
@@ -66,18 +71,16 @@ tbl_sum.cubble_df <- function(data) {
 
 
   if (form(data) == "nested"){
-    dt <- data %>% leaves(stem = "time")
-    leaves_names <-  dt %>% names()
-    leaves_names <- leaves_names[leaves_names != group_vars(data)]
+    variant <- leaves(data) %>% variant()
+    var_names <- names(variant)
+    var_type <- variant
 
   } else if (form(data) == "long"){
-    dt <- leaves(data, stem = "spatial")
-    data_col <- names(dt)[names(dt) != group_vars(data)]
-    leaves_names <- dt[,data_col] %>% names()
+    invariant <- leaves(data) %>% invariant()
+    var_names <- names(invariant)
+    var_type <- invariant
   }
-  type_sum <- map_chr(dt, pillar::type_sum)
-  type_sum <- type_sum[names(type_sum) != group_vars(data)]
-  leaves_msg <- glue::glue_collapse(glue::glue("{leaves_names} [{type_sum}]"), sep = ", ")
+  leaves_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
 
 
   if(form(data) == "nested"){
@@ -105,10 +108,3 @@ is_cubble <- function(data){
   inherits(data, "cubble_df")
 }
 
-
-tbl_sum.leaves <- function(data){
-  group <- groups(data)
-  c("Stem" = "spatial",
-    "Group" = group,
-    NextMethod())
-}

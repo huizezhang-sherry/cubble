@@ -9,7 +9,7 @@
 \usage{
 form(data)
 
-leaves(data, stem)
+leaves(data)
 
 group_vars(data)
 
@@ -17,8 +17,6 @@ groups(data)
 }
 \arguments{
 \item{data}{an cubble object}
-
-\item{stem}{either "time" or "spatial".}
 }
 \description{
 Functions to get attributes from a cubble object
@@ -37,8 +35,7 @@ are also preserved and can be accessed via the relevant functions in the tsibble
 \examples{
 # extract attributes of a cubble object
 form(climate_small)
-climate_small \%>\% leaves(stem = "time") \%>\% head(5)
-climate_small \%>\% stretch() \%>\% leaves(stem = "spatial") \%>\% head(5)
+leaves(climate_small) \%>\% head(5)
 groups(climate_small) \%>\% head(5)
 group_vars(climate_small)
 

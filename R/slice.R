@@ -11,7 +11,7 @@ slice_factory <- function(f, ...){
     data <- tibble::as_tibble(data)
     out <- NextMethod(f)
 
-    new_cubble(out, group = group_vars, leaves = out, form = determine_form(out))
+    new_cubble(out, group = group_vars, leaves = new_leaves(out, !!group_vars), form = determine_form(out))
   }
 }
 
