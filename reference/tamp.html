@@ -165,7 +165,7 @@ group-specific variables.</p></li>
 <span class='va'>climate_flat</span> <span class='op'>%&gt;%</span> <span class='fu'>tamp</span><span class='op'>(</span><span class='va'>station</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [2]</span>
-#&gt; <span style='color: #949494;'># Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct], ts [named list]</span>
+#&gt; <span style='color: #949494;'># Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 #&gt;   station       lat  long elevation name                ts                
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
 #&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.        23 kalumburu           <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
@@ -177,19 +177,19 @@ group-specific variables.</p></li>
   <span class='fu'>tamp</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: station-wise: nested form</span>
 #&gt; <span style='color: #949494;'># Group:  station [55]</span>
-#&gt; <span style='color: #949494;'># Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct], ts [named list]</span>
-#&gt;    station       lat  long elevation name                ts                
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
-#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumburu           <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.     422   halls creek airport <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00003003 -<span style='color: #BB0000;'>17.9</span>  122.       7.4 broome airport      <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarvon airport   <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.      15.4 perth airport       <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00009193 -<span style='color: #BB0000;'>32.0</span>  116.      43.1 rottnest island     <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00009518 -<span style='color: #BB0000;'>34.4</span>  115.      13   cape leeuwin        <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00009789 -<span style='color: #BB0000;'>33.8</span>  122.      25   esperance           <span style='color: #949494;'>&lt;tbl_ts [361 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00010286 -<span style='color: #BB0000;'>31.6</span>  117.     217.  cunderdin airfield  <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>10</span> ASN00010917 -<span style='color: #BB0000;'>32.7</span>  117.     275   wandering           <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #949494;'># Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
+#&gt;    station     ts                
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00002012 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00003003 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00006011 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00009021 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00009193 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00009518 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00009789 <span style='color: #949494;'>&lt;tbl_ts [361 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00010286 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00010917 <span style='color: #949494;'>&lt;tbl_ts [366 × 4]&gt;</span>
 #&gt; <span style='color: #949494;'># … with 45 more rows</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
