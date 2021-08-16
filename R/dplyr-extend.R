@@ -30,7 +30,10 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
-  leaves_data <- new_leaves(data, !!group_vars)
+
+  out[[group_vars]] <- as.factor(as.character(out[[group_vars]]))
+  idx <- which(leaves(data)[[group_vars]] == levels(out[[group_vars]]))
+  leaves_data <- vec_slice(leaves(data), idx)
 
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = group_vars(data)[1])
