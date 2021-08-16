@@ -43,8 +43,7 @@ stretch.cubble_df <- function(data, key){
       tidyr::unnest(!!col) %>%
       tsibble::as_tsibble(key = !!key)
   } else{
-    out <- data %>%
-      dplyr::select(!!key, !!col) %>%
+    out <- data[vec_c(as_name(key), as_name(col))] %>%
       tidyr::unnest(!!col)
   }
 
