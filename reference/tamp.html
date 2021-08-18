@@ -175,9 +175,8 @@ group-specific variables.</p></li>
   <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>date</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>2020</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>tamp</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='error'>Error: Problem with `mutate()` column `ts`.</span>
-#&gt; <span class='error'><span style='color: #0000BB;'>ℹ</span> `ts = map(ts, tibble::as_tibble)`.</span>
-#&gt; <span class='error'><span style='color: #BB0000;'>✖</span> cannot coerce class ‘"call"’ to a data.frame</span></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='error'>Error: Input columns in `y` must be unique.</span>
+#&gt; <span class='error'><span style='color: #BB0000;'>✖</span> Problem with `station`.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
