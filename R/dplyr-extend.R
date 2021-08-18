@@ -14,7 +14,10 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   form <- determine_form(data)
   if (form == "nested"){
     key <- group_vars(data)
-    leaves_data <- new_leaves(out[, find_invariant(out, !!key)$invariant], group = !!key)
+    leaves_data <- out %>%
+      mutate(ts = map(ts, tibble::as_tibble)) %>%
+      tidyr::unnest(ts) %>%
+      new_leaves(!!key)
   } else if (form == "long"){
     leaves_data = leaves(data)
   } else{
@@ -31,9 +34,11 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   out <- vec_slice(data, i)
   group_vars <- group_vars(data)
 
-  out[[group_vars]] <- as.factor(as.character(out[[group_vars]]))
-  idx <- which(leaves(data)[[group_vars]] == levels(out[[group_vars]]))
-  leaves_data <- vec_slice(leaves(data), idx)
+  key <- group_vars(data)
+  leaves_data <- as_tibble(out) %>%
+    mutate(ts = map(ts, tibble::as_tibble)) %>%
+    tidyr::unnest(ts) %>%
+    new_leaves(!!key)
 
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = group_vars(data)[1])
@@ -50,8 +55,8 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   key <- group_vars(template)
   data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
   old_leaves <- leaves(template) %>% names()
-  new_leaves <- setdiff(old_leaves, data_var)
-  leaves_data <- leaves(template) %>% select(key, new_leaves)
+  new_leaves <- data_var[data_var %in% old_leaves]
+  leaves_data <- leaves(template)[c(key, new_leaves)]
 
 
   new_cubble(data, group = group_vars, leaves = leaves_data, form = determine_form(template))
