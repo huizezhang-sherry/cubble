@@ -14,8 +14,7 @@ find_invariant <- function(data, key) {
 
   out <- map(list_col, function(data){
     var_length <- map_dbl(colnames(data), ~ nrow(unique(data[.x])))
-    all_na <- map_lgl(map(data, is.na), all)
-    c(as_name(key), colnames(data)[var_length == 1 & !all_na])
+    c(as_name(key), colnames(data)[var_length == 1])
   })
 
   invariant <- Reduce(intersect, out)
