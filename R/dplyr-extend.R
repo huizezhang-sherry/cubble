@@ -15,8 +15,8 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   if (form == "nested"){
     key <- group_vars(data)
     leaves_data <- out %>%
-      mutate(ts = map(ts, tibble::as_tibble)) %>%
-      tidyr::unnest(ts) %>%
+      mutate(ts = map(.data$ts, tibble::as_tibble)) %>%
+      tidyr::unnest(.data$ts) %>%
       new_leaves(!!key)
   } else if (form == "long"){
     leaves_data <-  leaves(data)
@@ -38,8 +38,8 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   if (form == "nested"){
     key <- group_vars(data)
     leaves_data <- as_tibble(out) %>%
-      mutate(ts = map(ts, tibble::as_tibble)) %>%
-      tidyr::unnest(ts) %>%
+      mutate(ts = map(.data$ts, tibble::as_tibble)) %>%
+      tidyr::unnest(.data$ts) %>%
       new_leaves(!!key)
   } else if (form == "long"){
     leaves_data <- leaves(data)

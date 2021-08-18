@@ -11,7 +11,7 @@ cubble <- function(..., group, leaves, form) {
   # data <- tibble::tibble(!!!list2(...))
   # group <- enquo(group)
   #leaves <- as_leaves(leaves)
-  new_cubble(data, !!group, form = form)
+  #new_cubble(data, !!group, form = form)
 
 }
 

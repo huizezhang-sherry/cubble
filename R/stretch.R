@@ -32,7 +32,7 @@ stretch.cubble_df <- function(data, key){
     key <- quo_get_expr(key)
   }
 
-  leaves_data <- leaves(data)
+  leaves_data <- new_leaves(data, !!key)
 
   list_col <- data %>% dplyr::pull(!!col)
 

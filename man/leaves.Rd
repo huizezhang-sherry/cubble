@@ -22,11 +22,4 @@ variant(data)
 }
 \description{
 Create a leaf object
-
-#' @export
-tbl_sum.leaves <- function(data){
-group <- groups(data)
-c("Stem" = "spatial",
-NextMethod())
-}
 }
