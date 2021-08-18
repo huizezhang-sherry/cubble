@@ -19,12 +19,15 @@ new_leaves <- function(data, group){
                      class = "leaves")
 }
 
-#' #' @export
-#' tbl_sum.leaves <- function(data){
-#'   group <- groups(data)
-#'   c("Stem" = "spatial",
-#'     NextMethod())
-#' }
+#' @export
+tbl_sum.leaves <- function(data){
+  group <- groups(data)
+  var_names <- names(variant(data))
+  var_type <- variant(data)
+  c("Leaves" = "invariant",
+    "variant" = glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", "),
+    NextMethod())
+}
 
 #' @export
 #' @rdname leaves
