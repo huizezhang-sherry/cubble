@@ -38,7 +38,7 @@ remotes::install_github("huizezhang-sherry/cubble")
 ```
 ## Example
 
-Using `tamp()` to create a cubble in the list-column form by supply the variable that identifies each site: 
+Using `tamp()` to create a cubble in the nested form by supply the variable that identifies each site: 
 
 ```{r}
 library(cubble)
