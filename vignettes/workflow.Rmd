@@ -12,8 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message = FALSE, 
-  warning = FALSE,
-  eval = FALSE
+  warning = FALSE
 )
 ```
 
@@ -26,29 +25,30 @@ library(dplyr)
 
 # Create a cubble
 
-A cubble object uses a nested form and a long form, powered by the `rowwise_df` and `grouped_df`, to allow flexible group-wise and time-wise computation for spatial-temporal data.
-
-To create a cubble object in the nested form, use `tamp()` with a supply of the grouping variable. This would add `cubble_df` and `rowwise_df` to the underlying data structure the object is built upon. On top of the attributes inherent from tibble (`name` and `row.names`) and rowwise_df (`groups`), a cubble has two additional attributes: `meta` and `form`. `meta` stores the group-wise information so that the object can be switched between the list-column and long form without the lost of information while `form` specifies whether the data object is a list-column or long form.
-
-In the nested form, each distinct key value constitutes a row and all the time-specific measures are nested into a column named `ts`. This form is convenient for calculating group-wise measures.
+In a nested form created by `tamp()`, the cubble has all the time-invariant variables presented and time-variant variables nested into a column called `ts`. This structure has an underlying  row-wise structure where each row constitutes a group. 
 
 ```{r}
-oz_global <- climate_flat  %>% global(station)
-oz_global
+climate_nested <- climate_flat %>% tamp(station)
+climate_nested
 ```
 
-`zoom()` switches a cubble object into the long form where all the group-specific variables are suppressed into the `meta` attributes. This form is time-centric and is useful to compute time-wise variables.
+On top of the attributes inherent from `tibble` (`name` and `row.names`) and `rowwise_df` (`groups`), a cubble has two additional attributes: `form` and `leaves`. `form` specifies whether the data object is a nested or long form - a nested form is more suitable for computing time-invariant measures for each group while long form is more for time-variant computation.  `leaves` stores the time-invariant information so that a cubble can be switched between the nested and long form. 
 
 ```{r}
-oz_zoom <- oz_global %>% zoom()
-oz_zoom
+attributes(climate_nested)
 ```
 
-The long form and the nested form can be switched between each other by using `global()` on a long form cubble and `zoom()` on a list-column cubble. Since a cubble has a grouping variable as an attribute, there's no need to specify the grouping variable again.
+`stretch()` switches a cubble object into the long form where only time-variant variables are shown and  time-invariant variables are not directly shown but can be accessed through the `leaves` attributes. This avoids all the time-invariant variables being repeated for each group at each timestamp and focus on the time-wise computation. 
 
 ```{r}
-back <- oz_zoom %>% global()
-back
+climate_long <- climate_nested %>% stretch()
+climate_long
+```
+
+`tamp` and `stretch` can be repeatedly used to switch between the two form and below shows switching back to the nested form from long form by `tamp()`: 
+
+```{r}
+climate_long %>% tamp()
 ```
 
 # Manipulation
@@ -59,18 +59,17 @@ Below are three examples on how to manipulate a cubble object with dplyr verbs:
 
 ### Example 1 
 
-In the first example, we want to only keep the stations that have `tmax` recorded in 2020. This requires first narrow down the records to those in 2020, determine if `tmax` is missing for each station, and then retain those stations that have `tmax` recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has `tmax` recorded is a result of each station, rather than of each time point, hence we need to switch to the nested form with `global()`. To calculate whether `tmax` is recorded, we mutate a column `tmax_missing` that takes `TRUE` if all the `tmax` in the nested list column `ts` are `NA` and `FALSE` otherwise. To get the stations that we want, we need another filter on `tmax_missing`.
+In the first example, we want to only keep the stations that have `tmax` recorded in 2020. This requires first narrow down the records to those in 2020, determine if `tmax` is missing for each station, and then retain those stations that have `tmax` recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has `tmax` recorded is a result of each station, rather than of each time point, hence we need to switch to the nested form with `tamp()`. To calculate whether `tmax` is recorded, we mutate a column `tmax_missing` that takes `TRUE` if all the `tmax` in the nested list column `ts` are `NA` and `FALSE` otherwise. To get the stations that we want, we need another filter on `tmax_missing`.
 
 
 ```{r}
-out <- climate_small %>%
-  zoom() %>% 
+climate_long %>%
   filter(year(date) == 2020) %>% 
-  global() %>% 
+  tamp() %>% 
   mutate(tmax_missing = ifelse(all(is.na(ts$tmax)), TRUE, FALSE)) %>% 
   filter(!tmax_missing)
 
-out
+
 ```
 
 ### Example 2
@@ -92,12 +91,12 @@ Sometimes, we would like to have station-wise and time-wise variables in the sam
 
 ```{r}
 out %>% 
-  zoom() %>% 
+  stretch() %>% 
   migrate(lat, long)
 
 out %>% 
-  zoom() %>% 
-  left_join(meta(out) %>% select(station, lat, long))
+  stretch() %>% 
+  left_join(leaves(out) %>% select(station, lat, long))
 ```
 
 ## Time series as a tsibble object
@@ -109,12 +108,12 @@ Cubble also support a tsibble data structure for time series computation.
 A cubble can also be created from an underlying tsibble object. The resulting nested form shows a `tbl_ts` type for each nested cell in the `ts` column and a tsibble heading in the long form.
 
 ```{r}
-climate_tsibble <- climate_flat %>% tsibble::as_tsibble(index = date, key = station)
-oz_global2 <- climate_tsibble %>% global(station)
-oz_zoom2 <- oz_global2 %>% zoom()
-
-oz_global2
-oz_zoom2
+# climate_tsibble <- climate_flat %>% tsibble::as_tsibble(index = date, key = station)
+# oz_global2 <- climate_tsibble %>% global(station)
+# oz_zoom2 <- oz_global2 %>% zoom()
+# 
+# oz_global2
+# oz_zoom2
 ```
 
 ### Manipulation
@@ -123,7 +122,7 @@ With a tsibble structure, we can make a monthly summary of our variables. Here i
 
 ```{r}
 time_wise2 <- climate_small %>% 
-  zoom() %>% 
+  stretch() %>% 
   filter(lubridate::year(date) == 2020) %>% 
   mutate(ym = tsibble::yearmonth(date)) %>% 
   index_by(ym) %>% 
