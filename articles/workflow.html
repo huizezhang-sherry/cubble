@@ -118,6 +118,8 @@
 <span class="co">#&gt; 2 ASN00002012         [1]</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $leaves</span>
+<span class="co">#&gt; # Leaves:   invariant</span>
+<span class="co">#&gt; # variant:  date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt; # A tibble: 2 × 5</span>
 <span class="co">#&gt;   station       lat  long elevation name               </span>
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;              </span>
@@ -154,7 +156,6 @@
 <code class="sourceCode R"><span class="va">climate_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: station-wise: nested form</span>
 <span class="co">#&gt; # Group:  station [2]</span>
-<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   station       lat  long elevation name                ts                </span>
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            </span>
 <span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;</span>
@@ -293,8 +294,7 @@
 <span class="va">time_wise2</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
 <span class="co">#&gt; # Group:  station [55], ym [12]</span>
-<span class="co">#&gt; # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct],</span>
-<span class="co">#&gt; #   tmax_missing [lgl], tmin_missing [lgl], tmin_missing_first [lgl]</span>
+<span class="co">#&gt; # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
 <span class="co">#&gt;    station           ym  prcp  tmax  tmin</span>
 <span class="co">#&gt;    &lt;fct&gt;          &lt;mth&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt;  1 ASN00001019 2020 Jan  5284  34.9  25.5</span>
