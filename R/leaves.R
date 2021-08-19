@@ -1,6 +1,26 @@
-#' Create a leaf object
-#' @param data the object to be created or tested as cubble
+#' Create a leaves object
+#'
+#' A leaves object records whether a variable in the cubble varies across time or not and
+#' make it possible for a cubble to switch between the nested and long form.
+#' This set of functions create and manipulate the leaves object.
+#'
+#' @details
+#' * `new_leaves()` creates a leaves object by supplying a flat data and the grouping variable
+#' * `is_leaves()` tests whether the object is a leaves object
+#' * `invariant()` and `variant()` extracts the time-variant and invariant variables from a leaves object
+#' * `tbl_sum()` provides a customised printing header for leaves
+#'
+#' Notice that users may not need to these functions to directly manipulate the leaves.
+#' To extract the leaves object from a cubble, use `leaves()`
+#'
+#' @param data a flat data without any nesting structure
 #' @param group the spatio identifier
+#'
+#' @examples
+#' new_leaves(climate_flat, station)
+#' new_leaves(climate_flat, station) %>% is_leaves()
+#' new_leaves(climate_flat, station) %>% invariant()
+#' new_leaves(climate_flat, station) %>% variant()
 #' @rdname leaves
 #' @export
 new_leaves <- function(data, group){

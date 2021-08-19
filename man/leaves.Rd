@@ -5,7 +5,7 @@
 \alias{is_leaves}
 \alias{invariant}
 \alias{variant}
-\title{Create a leaf object}
+\title{Create a leaves object}
 \usage{
 new_leaves(data, group)
 
@@ -16,10 +16,29 @@ invariant(data)
 variant(data)
 }
 \arguments{
-\item{data}{the object to be created or tested as cubble}
+\item{data}{a flat data without any nesting structure}
 
 \item{group}{the spatio identifier}
 }
 \description{
-Create a leaf object
+A leaves object records whether a variable in the cubble varies across time or not and
+make it possible for a cubble to switch between the nested and long form.
+This set of functions create and manipulate the leaves object.
+}
+\details{
+\itemize{
+\item \code{new_leaves()} creates a leaves object by supplying a flat data and the grouping variable
+\item \code{is_leaves()} tests whether the object is a leaves object
+\item \code{invariant()} and \code{variant()} extracts the time-variant and invariant variables from a leaves object
+\item \code{tbl_sum()} provides a customised printing header for leaves
+}
+
+Notice that users may not need to these functions to directly manipulate the leaves.
+To extract the leaves object from a cubble, use \code{leaves()}
+}
+\examples{
+new_leaves(climate_flat, station)
+new_leaves(climate_flat, station) \%>\% is_leaves()
+new_leaves(climate_flat, station) \%>\% invariant()
+new_leaves(climate_flat, station) \%>\% variant()
 }
