@@ -1,21 +1,59 @@
-#' Extract cubble attributes
+#' Constructor for the cubble class
+#'
 #' @param ... a list object to create new cubble
 #' @param data the object to be created or tested as cubble
 #' @param group the spatio identifier
 #' @param leaves metadata to include in the attributes
 #' @param form whether the long or wide form
-#' @rdname data-structure
+#' @rdname cubble-class
+#' @examples
+#' # create a nested tibble
+#' dt <- tibble(
+#'   station = c("A", "B"),
+#'   long = c(110, 120),
+#'   lat = c(-10, -20),
+#'   ts = list(
+#'     tibble(
+#'       date = c(
+#'         as.Date("2021-07-01"),
+#'         as.Date("2021-08-01")
+#'       ),
+#'       prcp = c(0, 0),
+#'       tmax = c(20, 125),
+#'       tmin = c(15, 18)
+#'     ),
+#'     tibble(
+#'       date = c(
+#'         as.Date("2021-07-01"),
+#'         as.Date("2021-08-01")
+#'       ),
+#'       prcp = c(0, 100),
+#'       tmax = c(10, 15),
+#'       tmin = c(5, 8)
+#'     )
+#'   )
+#' )
+#'
+#' # create a cubble from `dt`
+#' cubble(dt,
+#'        group = station,
+#'        leaves = tibble(
+#'          station = c("A", "B"),
+#'          long = c(110, 120),
+#'          lat = c(-10, -20)
+#'        ),
+#'        form = "long"
+#' )
 #' @export
 cubble <- function(..., group, leaves, form) {
-  #browser()
-  # data <- tibble::tibble(!!!list2(...))
-  # group <- enquo(group)
-  #leaves <- as_leaves(leaves)
-  #new_cubble(data, !!group, form = form)
+  data <- tibble::tibble(!!!list2(...))
+  group <- enquo(group)
+  leaves <- new_leaves(leaves, !!group)
+  new_cubble(data, as_name(group), leaves = leaves, form = form)
 
 }
 
-#' @rdname data-structure
+#' @rdname cubble-class
 #' @export
 new_cubble <- function(data, group, leaves, form) {
 
@@ -61,7 +99,7 @@ new_cubble <- function(data, group, leaves, form) {
 
 }
 
-
+#' @rdname cubble-class
 #' @importFrom  tibble tbl_sum
 #' @export
 tbl_sum.cubble_df <- function(data) {
@@ -102,7 +140,7 @@ tbl_sum.cubble_df <- function(data) {
   )
 }
 
-#' @rdname data-structure
+#' @rdname cubble-class
 #' @export
 is_cubble <- function(data){
   inherits(data, "cubble_df")
