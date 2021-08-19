@@ -16,9 +16,16 @@ library(cubble)
 library(dplyr)
 ```
 
-On top of the attributes inherent from class, a cubble has its own attributes `leaves` and `form`. `leaves` records whether a variable is time-invariant or not while `form` specifies whether the data object is in the nested or long form. 
+A cubble has its own attributes `leaves` and `form`: 
 
-Here we print out the attributes for a nested cubble: 
+* `leaves` contains the list of variables that are time-invariant to the "spot"; 
+* `form` specifies whether the data object is in the nested or long form. 
+
+## Nested cubble
+
+A nested cubble is built on top of a `rowwise_df`, which comes with the `groups` attributes, as well as the usual `names`, `row.names`, and `class`. Note that the `class` attribute contains the history class that a `rowwise_df` is built upon: `tbl_df`, `tbl` and `data.frame`. 
+
+This is an example of the attributes for a nested cubble: 
 
 ```{r}
 nested <- climate_flat %>% 
@@ -27,26 +34,44 @@ nested
 attributes(nested)
 ```
 
-A nested cubble is built from a rowwise tibble where the `rowwise_df` class uses a `group` attributes to ensure each row is in its own `group` attributes. With a rowwise structure, there is no need to use `map` when manipulating the list-column. Compare the two syntaxes below for computing the number of raining day:
+In this example, `station` is the variable that identifies the "spot" and two stations are recorded: `ASN00001019` and `ASN00002012`. 
+
+The `rowwise_df` class uses a `group` attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the total precipitation can be done by: 
 
 ```{r}
-climate_flat %>% 
-  tidyr::nest(c(date, prcp, tmax, tmin)) %>% 
-  mutate(rain = purrr::map_dbl(data, ~sum(.x$prcp != 0, na.rm= TRUE)))
-
 climate_flat %>%
   tamp(station) %>%  # cubble names the list-column as `ts` rather than `data`
   mutate(rain = sum(ts$prcp != 0, na.rm = TRUE))
 ```
 
-The `leaves` attribute records the time-invariant variables and this ensures a cubble can be switch back to the nested form from the long form. `leaves` has further two attributes `invariant` and `variant` to record whether a variable varies with time or not.
+which matches the basic mutate style of calculation, so it is easier to remember than the purrr style syntax: 
+
+```{r}
+climate_flat %>% 
+  tidyr::nest(c(date, prcp, tmax, tmin)) %>% 
+  mutate(rain = purrr::map_dbl(data, ~sum(.x$prcp != 0, na.rm= TRUE)))
+```
+
+The `leaves` attribute records the time-invariant variables to ensure a cubble can be switch between the nested and long form. The `leaves` attribute itself has two attributes `invariant` and `variant`, which contains both types of variables as seen below: 
 
 ```{r}
 leaves(nested)
-leaves(nested) %>% attributes()
+leaves(nested) %>% invariant()
+leaves(nested) %>% variant()
 ```
 
-A long form cubble is built, instead from a grouped tibble. This means rather than a `rowwise_df`, the long form has the class `grouped_df` and the `.rows` columns in the `groups` attribute changes to the time length recorded in each group.
+In this dataset, variables that are invariant to time include `lat`, `long`, `elevation` and `name` while those vary across time include `date`, `prcp`, `tmax`, and `tmin`. Notice that although time-variant variables are not directly shown in the nested form, they can be read from the third line of the cubble header:
+
+```{r}
+nested
+```
+
+
+## Long cubble
+
+A long form cubble is built from a `grouped_df`, instead of `rowwise_df`. `grouped_df` ensures each "spot" is in the same group when the 
+
+<!-- `grouped_df` also has a `groups` attribute and there are 366 rows for each station since the data contains daily records in 2020 (there are 366 days in 2020!).  -->
 
 ```{r}
 long <- nested %>% stretch()
