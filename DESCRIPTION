@@ -35,7 +35,9 @@ Suggests:
     ggmap,
     ggplot2,
     forcats,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    rmapshaper,
+    ozmaps
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
