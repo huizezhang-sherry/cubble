@@ -85,8 +85,18 @@
 
     
     
-<p>On top of the attributes inherent from class, a cubble has its own attributes <code>leaves</code> and <code>form</code>. <code>leaves</code> records whether a variable is time-invariant or not while <code>form</code> specifies whether the data object is in the nested or long form.</p>
-<p>Here we print out the attributes for a nested cubble:</p>
+<p>A cubble has its own attributes <code>leaves</code> and <code>form</code>:</p>
+<ul>
+<li>
+<code>leaves</code> contains the list of variables that are time-invariant to the “spot”;</li>
+<li>
+<code>form</code> specifies whether the data object is in the nested or long form.</li>
+</ul>
+<div id="nested-cubble" class="section level2">
+<h2 class="hasAnchor">
+<a href="#nested-cubble" class="anchor"></a>Nested cubble</h2>
+<p>A nested cubble is built on top of a <code>rowwise_df</code>, which comes with the <code>groups</code> attributes, as well as the usual <code>names</code>, <code>row.names</code>, and <code>class</code>. Note that the <code>class</code> attribute contains the history class that a <code>rowwise_df</code> is built upon: <code>tbl_df</code>, <code>tbl</code> and <code>data.frame</code>.</p>
+<p>This is an example of the attributes for a nested cubble:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span>
@@ -124,20 +134,10 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $class</span>
 <span class="co">#&gt; [1] "cubble_df"  "rowwise_df" "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
-<p>A nested cubble is built from a rowwise tibble where the <code>rowwise_df</code> class uses a <code>group</code> attributes to ensure each row is in its own <code>group</code> attributes. With a rowwise structure, there is no need to use <code>map</code> when manipulating the list-column. Compare the two syntaxes below for computing the number of raining day:</p>
+<p>In this example, <code>station</code> is the variable that identifies the “spot” and two stations are recorded: <code>ASN00001019</code> and <code>ASN00002012</code>.</p>
+<p>The <code>rowwise_df</code> class uses a <code>group</code> attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the total precipitation can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
-  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">nest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">prcp</span>, <span class="va">tmax</span>, <span class="va">tmin</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm<span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Warning: All elements of `...` must be named.</span>
-<span class="co">#&gt; Did you want `data = c(date, prcp, tmax, tmin)`?</span>
-<span class="co">#&gt; # A tibble: 2 × 7</span>
-<span class="co">#&gt;   station       lat  long elevation name                data                rain</span>
-<span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;             &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;    80</span>
-<span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;    69</span>
-
-<span class="va">climate_flat</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># cubble names the list-column as `ts` rather than `data`</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: station-wise: nested form</span>
@@ -147,36 +147,49 @@
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;             &lt;int&gt;</span>
 <span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;    80</span>
 <span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;    69</span></code></pre></div>
-<p>The <code>leaves</code> attribute records the time-invariant variables and this ensures a cubble can be switch back to the nested form from the long form. <code>leaves</code> has further two attributes <code>invariant</code> and <code>variant</code> to record whether a variable varies with time or not.</p>
+<p>which matches the basic mutate style of calculation, so it is easier to remember than the purrr style syntax:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
+  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">nest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">prcp</span>, <span class="va">tmax</span>, <span class="va">tmin</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm<span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Warning: All elements of `...` must be named.</span>
+<span class="co">#&gt; Did you want `data = c(date, prcp, tmax, tmin)`?</span>
+<span class="co">#&gt; # A tibble: 2 × 7</span>
+<span class="co">#&gt;   station       lat  long elevation name                data                rain</span>
+<span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;             &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;    80</span>
+<span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;    69</span></code></pre></div>
+<p>The <code>leaves</code> attribute records the time-invariant variables to ensure a cubble can be switch between the nested and long form. The <code>leaves</code> attribute itself has two attributes <code>invariant</code> and <code>variant</code>, which contains both types of variables as seen below:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span>
 <span class="co">#&gt; # Leaves: 2 x 5</span>
 <span class="co">#&gt;   station       lat  long elevation name               </span>
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;              </span>
 <span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu          </span>
 <span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport</span>
-<span class="fu"><a href="../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/attributes.html">attributes</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $names</span>
-<span class="co">#&gt; [1] "station"   "lat"       "long"      "elevation" "name"     </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $row.names</span>
-<span class="co">#&gt; [1] 1 2</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $group</span>
-<span class="co">#&gt; [1] "station"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $invariant</span>
+<span class="fu"><a href="../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/new_leaves.html">invariant</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;   station       lat      long elevation      name </span>
-<span class="co">#&gt;     "fct"     "dbl"     "dbl"     "dbl"     "fct" </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $variant</span>
+<span class="co">#&gt;     "fct"     "dbl"     "dbl"     "dbl"     "fct"</span>
+<span class="fu"><a href="../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/new_leaves.html">variant</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;   date   prcp   tmax   tmin </span>
-<span class="co">#&gt; "date"  "dbl"  "dbl"  "dbl" </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $class</span>
-<span class="co">#&gt; [1] "leaves"     "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
-<p>A long form cubble is built, instead from a grouped tibble. This means rather than a <code>rowwise_df</code>, the long form has the class <code>grouped_df</code> and the <code>.rows</code> columns in the <code>groups</code> attribute changes to the time length recorded in each group.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<span class="co">#&gt; "date"  "dbl"  "dbl"  "dbl"</span></code></pre></div>
+<p>In this dataset, variables that are invariant to time include <code>lat</code>, <code>long</code>, <code>elevation</code> and <code>name</code> while those vary across time include <code>date</code>, <code>prcp</code>, <code>tmax</code>, and <code>tmin</code>. Notice that although time-variant variables are not directly shown in the nested form, they can be read from the third line of the cubble header:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nested</span>
+<span class="co">#&gt; # Cubble: station-wise: nested form</span>
+<span class="co">#&gt; # Group:  station [2]</span>
+<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
+<span class="co">#&gt;   station       lat  long elevation name                ts                </span>
+<span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            </span>
+<span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;</span>
+<span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;</span></code></pre></div>
+</div>
+<div id="long-cubble" class="section level2">
+<h2 class="hasAnchor">
+<a href="#long-cubble" class="anchor"></a>Long cubble</h2>
+<p>A long form cubble is built from a <code>grouped_df</code>, instead of <code>rowwise_df</code>. <code>grouped_df</code> ensures each “spot” is in the same group when the</p>
+<!-- `grouped_df` also has a `groups` attribute and there are 366 rows for each station since the data contains daily records in 2020 (there are 366 days in 2020!).  -->
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">long</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
@@ -261,11 +274,14 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $class</span>
 <span class="co">#&gt; [1] "cubble_df"  "grouped_df" "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
