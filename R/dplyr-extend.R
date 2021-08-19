@@ -60,7 +60,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   group_vars <- group_vars(template)
   form <- determine_form(template)
 
-  key <- group_vars(template)
+  key <- group_vars(template)[1]
   data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
   old_leaves <- leaves(template) %>% names()
   new_leaves <- data_var[data_var %in% old_leaves]

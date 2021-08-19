@@ -27,7 +27,7 @@ migrate <- function(data, ...){
     inform(glue::glue("`{names(dots)[!in_leaves]}` does not present in the spatial stem of the data, hence not migrated. "))
   }
 
-  to_join <- leaves(data) %>% select(group_vars(data), names(dots)[in_leaves])
+  to_join <- leaves(data) %>% select(group_vars(data)[1], names(dots)[in_leaves])
   data %>% left_join(to_join)
 
 }
