@@ -28,7 +28,7 @@ remotes::install_github("huizezhang-sherry/cubble")
 
 ## Example
 
-Using `tamp()` to create a cubble in the list-column form by supply the
+Using `tamp()` to create a cubble in the nested form by supply the
 variable that identifies each site:
 
 ``` r
@@ -38,7 +38,7 @@ climate_flat %>%
   tamp(station) 
 #> # Cubble: station-wise: nested form
 #> # Group:  station [2]
-#> # Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct], ts [named list]
+#> # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
 #>   station       lat  long elevation name                ts                
 #>   <fct>       <dbl> <dbl>     <dbl> <fct>               <list>            
 #> 1 ASN00001019 -14.3  127.        23 kalumburu           <tibble [366 × 4]>
@@ -55,7 +55,7 @@ climate_flat %>%
   filter(lubridate::month(date) == 1)
 #> # Cubble: time-wise: long form
 #> # Group:  station [2]
-#> # Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct]
+#> # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]
 #>    station     date        prcp  tmax  tmin
 #>    <fct>       <date>     <dbl> <dbl> <dbl>
 #>  1 ASN00001019 2020-01-01    46  38.6  25.1
@@ -83,8 +83,6 @@ climate_flat %>%
   mutate(zero_rain = sum(ts$prcp == 0, na.rm = TRUE))
 #> # Cubble: station-wise: nested form
 #> # Group:  station [2]
-#> # Leaves: lat [dbl], long [dbl], elevation [dbl], name [fct], ts [named list],
-#> #   zero_rain [int]
 #>   station       lat  long elevation name               ts              zero_rain
 #>   <fct>       <dbl> <dbl>     <dbl> <fct>              <list>              <int>
 #> 1 ASN00001019 -14.3  127.        23 kalumburu          <tibble [31 × …        12
