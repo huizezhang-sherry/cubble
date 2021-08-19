@@ -20,4 +20,6 @@ everytime to create a map.
 library(rmapshaper)
 state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 plot_map(state_map)
+plot_map(state_map) +
+   geom_point(data = climate_small, aes(x = long, y = lat))
 }

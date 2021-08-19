@@ -10,12 +10,13 @@
 #' library(rmapshaper)
 #' state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 #' plot_map(state_map)
+#' plot_map(state_map) +
+#'    geom_point(data = climate_small, aes(x = long, y = lat))
 #' @export
 plot_map <- function(map_data, ...){
-
   if ("geometry" %in% names(map_data)){
-    ggplot2::ggplot() +
-      ggplot2::geom_sf(data = map_data, ggplot2::aes(geometry = .data$geometry), ...) +
+    ggplot()  +
+      ggplot2::geom_sf(data = map_data, ggplot2::aes(geometry = geometry), ...) +
       ggplot2::coord_sf() +
       ggplot2::theme_void()
   } else{
