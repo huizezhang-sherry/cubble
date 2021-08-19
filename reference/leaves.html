@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a leaf object — new_leaves • cubble</title>
+<title>Create a leaves object — new_leaves • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Create a leaf object — new_leaves" />
-<meta property="og:description" content="Create a leaf object" />
+<meta property="og:title" content="Create a leaves object — new_leaves" />
+<meta property="og:description" content="A leaves object records whether a variable in the cubble varies across time or not and
+make it possible for a cubble to switch between the nested and long form.
+This set of functions create and manipulate the leaves object." />
 
 
 
@@ -118,13 +120,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a leaf object</h1>
+    <h1>Create a leaves object</h1>
     
     <div class="hidden name"><code>leaves.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a leaf object</p>
+    <p>A leaves object records whether a variable in the cubble varies across time or not and
+make it possible for a cubble to switch between the nested and long form.
+This set of functions create and manipulate the leaves object.</p>
     </div>
 
     <pre class="usage"><span class='fu'>new_leaves</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>group</span><span class='op'>)</span>
@@ -140,7 +144,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>the object to be created or tested as cubble</p></td>
+      <td><p>a flat data without any nesting structure</p></td>
     </tr>
     <tr>
       <th>group</th>
@@ -148,7 +152,31 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    
+<ul>
+<li><p><code>new_leaves()</code> creates a leaves object by supplying a flat data and the grouping variable</p></li>
+<li><p><code>is_leaves()</code> tests whether the object is a leaves object</p></li>
+<li><p><code>invariant()</code> and <code>variant()</code> extracts the time-variant and invariant variables from a leaves object</p></li>
+<li><p><code><a href='https://pillar.r-lib.org/reference/tbl_sum.html'>tbl_sum()</a></code> provides a customised printing header for leaves</p></li>
+</ul>
+
+<p>Notice that users may not need to these functions to directly manipulate the leaves.
+To extract the leaves object from a cubble, use <code><a href='form.html'>leaves()</a></code></p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>new_leaves</span><span class='op'>(</span><span class='va'>climate_flat</span>, <span class='va'>station</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Leaves: 2 x 5</span>
+#&gt;   station       lat  long elevation name               
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>              
+#&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.        23 kalumburu          
+#&gt; <span style='color: #BCBCBC;'>2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.       422 halls creek airport</div><div class='input'><span class='fu'>new_leaves</span><span class='op'>(</span><span class='va'>climate_flat</span>, <span class='va'>station</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>is_leaves</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>new_leaves</span><span class='op'>(</span><span class='va'>climate_flat</span>, <span class='va'>station</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>invariant</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   station       lat      long elevation      name 
+#&gt;     "fct"     "dbl"     "dbl"     "dbl"     "fct" </div><div class='input'><span class='fu'>new_leaves</span><span class='op'>(</span><span class='va'>climate_flat</span>, <span class='va'>station</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>variant</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   date   prcp   tmax   tmin 
+#&gt; "date"  "dbl"  "dbl"  "dbl" </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
