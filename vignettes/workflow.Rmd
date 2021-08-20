@@ -22,8 +22,6 @@ library(tsibble)
 library(lubridate)
 library(dplyr)
 library(ggplot2)
-library(rmapshaper)
-library(patchwork)
 library(GGally)
 ```
 
