@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Australia climate data (large) — climate_large • cubble</title>
+<title>Australia climate data (dirty) — oz_climate • cubble</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Australia climate data (large) — climate_large" />
-<meta property="og:description" content="One year worth (2020) of climate data recorded  in 478 stations across Australia.
-The data is computed from National Oceanic and Atmospheric Administration (NOAA) using the rnoaa package." />
+<meta property="og:title" content="Australia climate data (dirty) — oz_climate" />
+<meta property="og:description" content="Australia climate data (dirty)" />
 
 
 
@@ -119,36 +118,34 @@ The data is computed from National Oceanic and Atmospheric Administration (NOAA)
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Australia climate data (large)</h1>
+    <h1>Australia climate data (dirty)</h1>
     
-    <div class="hidden name"><code>climate_large.Rd</code></div>
+    <div class="hidden name"><code>oz_climate.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>One year worth (2020) of climate data recorded  in 478 stations across Australia.
-The data is computed from National Oceanic and Atmospheric Administration (NOAA) using the <code>rnoaa</code> package.</p>
+    <p>Australia climate data (dirty)</p>
     </div>
 
-    <pre class="usage"><span class='va'>climate_large</span></pre>
+    <pre class="usage"><span class='va'>oz_climate</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A cubble object with 5 spatio-related variables and 11 time-related variables, nested in the <code>ts</code> column</p><dl>
+    <p>A tibble object with 2,069,634 rows and 9 columns</p><dl>
 <dt>station</dt><dd><p>station id</p></dd>
 <dt>lat</dt><dd><p>latitude of the station</p></dd>
 <dt>long</dt><dd><p>longitude of the station</p></dd>
 <dt>elev</dt><dd><p>elevation of the station</p></dd>
-<dt>name</dt><dd><p>station name</p></dd>
-<dt>wmo_id</dt><dd><p>the world meterological organisation station number, if has one</p></dd>
-<dt>ts</dt><dd><p>a list-column that nests all the time-wise measures:
-date, prcp, tmax, tmin, dapr, datn, datx, dwpr, mdpr, mdtn, mdtx, tavg</p></dd>
+<dt>prcp</dt><dd><p>precipitation</p></dd>
+<dt>tmax</dt><dd><p>maximum temperature</p></dd>
+<dt>tmin</dt><dd><p>minimum temperature</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>station</p></div>
+    <div class='dont-index'><p>climate_small</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

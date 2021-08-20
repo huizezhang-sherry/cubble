@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>workflow • cubble</title>
+<title>2. Data manipulation with cubble • cubble</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="workflow">
+<script src="../pkgdown.js"></script><meta property="og:title" content="2. Data manipulation with cubble">
 <meta property="og:description" content="cubble">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -57,7 +57,7 @@
       <a href="../articles/attributes.html">1. Cubble attributes</a>
     </li>
     <li>
-      <a href="../articles/workflow.html">workflow</a>
+      <a href="../articles/workflow.html">2. Data manipulation with cubble</a>
     </li>
   </ul>
 </li>
@@ -75,7 +75,7 @@
       </header><script src="workflow_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>workflow</h1>
+      <h1 data-toc-skip>2. Data manipulation with cubble</h1>
             
       
       
@@ -85,62 +85,66 @@
 
     
     
+<p>For spatio-temporal data, one may want to plot the time series on the map to observe the spatial relationship among sites close to each other. A glyph map allows you to inset the time series, as a glyph, into the map to detect any global or local pattern. Below is an example of the monthly maximum temperature collected from 61 stations in Australia in 2020.</p>
+<p><img src="workflow_files/figure-html/unnamed-chunk-2-1.png" width="960" style="display: block; margin: auto;"></p>
+<p>The raw data (<code>oz_climate</code>) records daily precipitation and (maximum and minimum) temperature for 93 stations in a tibble format but it is messy:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">cubble</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tsibble.tidyverts.org">tsibble</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
-<div id="create-a-cubble" class="section level1">
+<code class="sourceCode R"><span class="va">oz_climate</span>
+<span class="co">#&gt; # A tibble: 2,069,634 × 9</span>
+<span class="co">#&gt;    station     date         lat  long elevation name           prcp  tmax  tmin</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 ASN00001019 1998-09-16 -14.3  127.        23 KALUMBURU, AS    NA    36    NA</span>
+<span class="co">#&gt;  2 ASN00001019 1998-09-17 -14.3  127.        23 KALUMBURU, AS    NA    NA    22</span>
+<span class="co">#&gt;  3 ASN00001019 1998-09-18 -14.3  127.        23 KALUMBURU, AS    NA    35    NA</span>
+<span class="co">#&gt;  4 ASN00001019 1998-09-19 -14.3  127.        23 KALUMBURU, AS     0    36    22</span>
+<span class="co">#&gt;  5 ASN00001019 1998-09-20 -14.3  127.        23 KALUMBURU, AS     0    35    22</span>
+<span class="co">#&gt;  6 ASN00001019 1998-09-21 -14.3  127.        23 KALUMBURU, AS     0    36    22</span>
+<span class="co">#&gt;  7 ASN00001019 1998-09-22 -14.3  127.        23 KALUMBURU, AS     0    36    23</span>
+<span class="co">#&gt;  8 ASN00001019 1998-09-23 -14.3  127.        23 KALUMBURU, AS     0    37    25</span>
+<span class="co">#&gt;  9 ASN00001019 1998-09-24 -14.3  127.        23 KALUMBURU, AS    NA    37    23</span>
+<span class="co">#&gt; 10 ASN00001019 1998-09-25 -14.3  127.        23 KALUMBURU, AS     0    36    22</span>
+<span class="co">#&gt; # … with 2,069,624 more rows</span></code></pre></div>
+<p>recordings for each station starts from different years, some even date back to 1860-08-01. There are also missingness for some variables in some stations and sometimes a station could have a variable that is not recorded at all. To be able to produce the glyph map above, several cleaning tasks need to done:</p>
+<ul>
+<li>filter out only the 2020 records</li>
+<li>pick the stations that records the maximum temperature</li>
+<li>summarise the daily maximum temperature into monthly measure</li>
+</ul>
+<p>All these steps can be done easily with a cubble.</p>
+<div id="mutate-and-filter" class="section level1">
 <h1 class="hasAnchor">
-<a href="#create-a-cubble" class="anchor"></a>Create a cubble</h1>
-<p>In a nested form created by <code><a href="../reference/tamp.html">tamp()</a></code>, the cubble has all the time-invariant variables presented and time-variant variables nested into a column called <code>ts</code>. This structure has an underlying row-wise structure where each row constitutes a group.</p>
+<a href="#mutate-and-filter" class="anchor"></a>Mutate and filter</h1>
+<p>First let’s turn our data into a cubble using <code><a href="../reference/tamp.html">tamp()</a></code> by supplying the spatial identifier:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span>
-<span class="va">climate_nested</span>
+<code class="sourceCode R"><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">oz_climate</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span>
+<span class="va">nested</span>
 <span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
+<span class="co">#&gt; # Group:  station [93]</span>
 <span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
-<span class="co">#&gt;   station       lat  long elevation name                ts                </span>
-<span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            </span>
-<span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;</span>
-<span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;</span></code></pre></div>
-<p>On top of the attributes inherent from <code>tibble</code> (<code>name</code> and <code>row.names</code>) and <code>rowwise_df</code> (<code>groups</code>), a cubble has two additional attributes: <code>form</code> and <code>leaves</code>. <code>form</code> specifies whether the data object is a nested or long form - a nested form is more suitable for computing time-invariant measures for each group while long form is more for time-variant computation. <code>leaves</code> stores the time-invariant information so that a cubble can be switched between the nested and long form.</p>
+<span class="co">#&gt;    station       lat  long elevation name                     ts                </span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                    &lt;list&gt;            </span>
+<span class="co">#&gt;  1 ASN00001019 -14.3  127.      23   KALUMBURU, AS            &lt;tibble [8,149 × …</span>
+<span class="co">#&gt;  2 ASN00002012 -18.2  128.     422   HALLS CREEK AIRPORT, AS  &lt;tibble [28,184 ×…</span>
+<span class="co">#&gt;  3 ASN00003003 -17.9  122.       7.4 BROOME AIRPORT, AS       &lt;tibble [29,793 ×…</span>
+<span class="co">#&gt;  4 ASN00004032 -20.4  119.       6.4 PORT HEDLAND AIRPORT, AS &lt;tibble [28,707 ×…</span>
+<span class="co">#&gt;  5 ASN00005007 -22.2  114.       5   LEARMONTH AIRPORT, AS    &lt;tibble [23,895 ×…</span>
+<span class="co">#&gt;  6 ASN00006011 -24.9  114.       4   CARNARVON AIRPORT, AS    &lt;tibble [27,814 ×…</span>
+<span class="co">#&gt;  7 ASN00007176 -23.4  120.     524   NEWMAN AERO, AS          &lt;tibble [16,361 ×…</span>
+<span class="co">#&gt;  8 ASN00008050 -28.8  115.       3   GERALDTON TOWN, AS       &lt;tibble [35,268 ×…</span>
+<span class="co">#&gt;  9 ASN00008051 -28.8  115.      33   GERALDTON AIRPORT, AS    &lt;tibble [28,663 ×…</span>
+<span class="co">#&gt; 10 ASN00009021 -31.9  116.      15.4 PERTH AIRPORT, AS        &lt;tibble [28,068 ×…</span>
+<span class="co">#&gt; # … with 83 more rows</span></code></pre></div>
+<p>Filtering 2020 records is an operation on the time dimension since it requires ot decide whether the year component of the date is 2020. A cubble processes all the time dimension operations using the long form, so we first use <code><a href="../reference/stretch.html">stretch()</a></code> to switch <code>nested</code> to the long form and then filter on the year:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/attributes.html">attributes</a></span><span class="op">(</span><span class="va">climate_nested</span><span class="op">)</span>
-<span class="co">#&gt; $names</span>
-<span class="co">#&gt; [1] "station"   "lat"       "long"      "elevation" "name"      "ts"       </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $row.names</span>
-<span class="co">#&gt; [1] 1 2</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $groups</span>
-<span class="co">#&gt; # A tibble: 2 × 2</span>
-<span class="co">#&gt;   station           .rows</span>
-<span class="co">#&gt;   &lt;fct&gt;       &lt;list&lt;int&gt;&gt;</span>
-<span class="co">#&gt; 1 ASN00001019         [1]</span>
-<span class="co">#&gt; 2 ASN00002012         [1]</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $leaves</span>
-<span class="co">#&gt; # Leaves: 2 x 5</span>
-<span class="co">#&gt;   station       lat  long elevation name               </span>
-<span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;              </span>
-<span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu          </span>
-<span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $form</span>
-<span class="co">#&gt; [1] "nested"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $class</span>
-<span class="co">#&gt; [1] "cubble_df"  "rowwise_df" "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
-<p><code><a href="../reference/stretch.html">stretch()</a></code> switches a cubble object into the long form where only time-variant variables are shown and time-invariant variables are not directly shown but can be accessed through the <code>leaves</code> attributes. This avoids all the time-invariant variables being repeated for each group at each timestamp and focus on the time-wise computation.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_long</span> <span class="op">&lt;-</span> <span class="va">climate_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">climate_long</span>
+<code class="sourceCode R"><span class="va">long2020</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span>
+<span class="va">long2020</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
-<span class="co">#&gt; # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
+<span class="co">#&gt; # Group:  station [86]</span>
+<span class="co">#&gt; # Leaves: station [chr], lat [dbl], long [dbl], elevation [dbl], name [chr]</span>
 <span class="co">#&gt;    station     date        prcp  tmax  tmin</span>
-<span class="co">#&gt;    &lt;fct&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt;  1 ASN00001019 2020-01-01    46  38.6  25.1</span>
 <span class="co">#&gt;  2 ASN00001019 2020-01-02     0  38.8  28.1</span>
 <span class="co">#&gt;  3 ASN00001019 2020-01-03   266  37.9  23.6</span>
@@ -151,197 +155,183 @@
 <span class="co">#&gt;  8 ASN00001019 2020-01-08  1178  32.7  24  </span>
 <span class="co">#&gt;  9 ASN00001019 2020-01-09    48  34.2  25.1</span>
 <span class="co">#&gt; 10 ASN00001019 2020-01-10     0  35.4  26.7</span>
-<span class="co">#&gt; # … with 722 more rows</span></code></pre></div>
-<p><code>tamp</code> and <code>stretch</code> can be repeatedly used to switch between the two form and below shows switching back to the nested form from long form by <code><a href="../reference/tamp.html">tamp()</a></code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
-<span class="co">#&gt;   station       lat  long elevation name                ts                </span>
-<span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            </span>
-<span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;</span>
-<span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;</span></code></pre></div>
-</div>
-<div id="manipulation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#manipulation" class="anchor"></a>Manipulation</h1>
-<div id="work-with-dplyr-verbs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#work-with-dplyr-verbs" class="anchor"></a>Work with dplyr verbs</h2>
-<p>Below are three examples on how to manipulate a cubble object with dplyr verbs:</p>
-<div id="example-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-1" class="anchor"></a>Example 1</h3>
-<p>In the first example, we want to only keep the stations that have <code>tmax</code> recorded in 2020. This requires first narrow down the records to those in 2020, determine if <code>tmax</code> is missing for each station, and then retain those stations that have <code>tmax</code> recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has <code>tmax</code> recorded is a result of each station, rather than of each time point, hence we need to switch to the nested form with <code><a href="../reference/tamp.html">tamp()</a></code>. To calculate whether <code>tmax</code> is recorded, we mutate a column <code>tmax_missing</code> that takes <code>TRUE</code> if all the <code>tmax</code> in the nested list column <code>ts</code> are <code>NA</code> and <code>FALSE</code> otherwise. To get the stations that we want, we need another filter on <code>tmax_missing</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_long</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="co">#&gt; # … with 31,340 more rows</span></code></pre></div>
+<p>The cubble heading tells us that out of stations records climate data in 2020. For these stations that do record in 2020, we want to find those that have maximum temperature and to do this, we create a logical variable <code>tmax_missing</code> to know if <code>tmax</code> is ever recorded in 2020 for each station. This is a station-wise variable and a nested cubble is used to process station-wise operations. To switch back into the nested form, use <code><a href="../reference/tamp.html">tamp()</a></code> again and to create the <code>tmax_missing</code>, we test if all the <code>tmax</code>, being nested inside <code>ts</code> is <code>NA</code>. If all the <code>tmax</code> is <code>NA</code>, the station will get <code>TRUE</code> and <code>FALSE</code> otherwise.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nested2020</span> <span class="op">&lt;-</span> <span class="va">long2020</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>tmax_missing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span><span class="op">)</span><span class="op">)</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>tmax_missing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span><span class="op">)</span><span class="op">)</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
+<span class="va">nested2020</span>
+<span class="co">#&gt; # Cubble: station-wise: nested form</span>
+<span class="co">#&gt; # Group:  station [86]</span>
+<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
+<span class="co">#&gt;    station       lat  long elevation name                     ts    tmax_missing</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                    &lt;lis&gt; &lt;lgl&gt;       </span>
+<span class="co">#&gt;  1 ASN00001019 -14.3  127.      23   KALUMBURU, AS            &lt;tib… FALSE       </span>
+<span class="co">#&gt;  2 ASN00002012 -18.2  128.     422   HALLS CREEK AIRPORT, AS  &lt;tib… FALSE       </span>
+<span class="co">#&gt;  3 ASN00003003 -17.9  122.       7.4 BROOME AIRPORT, AS       &lt;tib… FALSE       </span>
+<span class="co">#&gt;  4 ASN00004032 -20.4  119.       6.4 PORT HEDLAND AIRPORT, AS &lt;tib… TRUE        </span>
+<span class="co">#&gt;  5 ASN00005007 -22.2  114.       5   LEARMONTH AIRPORT, AS    &lt;tib… TRUE        </span>
+<span class="co">#&gt;  6 ASN00006011 -24.9  114.       4   CARNARVON AIRPORT, AS    &lt;tib… FALSE       </span>
+<span class="co">#&gt;  7 ASN00007176 -23.4  120.     524   NEWMAN AERO, AS          &lt;tib… TRUE        </span>
+<span class="co">#&gt;  8 ASN00008050 -28.8  115.       3   GERALDTON TOWN, AS       &lt;tib… TRUE        </span>
+<span class="co">#&gt;  9 ASN00008051 -28.8  115.      33   GERALDTON AIRPORT, AS    &lt;tib… FALSE       </span>
+<span class="co">#&gt; 10 ASN00009021 -31.9  116.      15.4 PERTH AIRPORT, AS        &lt;tib… FALSE       </span>
+<span class="co">#&gt; # … with 76 more rows</span></code></pre></div>
+<p>We remove stations don’t have <code>tmax</code> recorded by filtering on the <code>tmax_missing</code>. The filter here is also a station-wise operation and can be processed with the nested form, so we don’t need to switch back using <code>stretch(()</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">climate_clean</span> <span class="op">&lt;-</span> <span class="va">nested2020</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">tmax_missing</span><span class="op">)</span>
+<span class="va">climate_clean</span>
 <span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
+<span class="co">#&gt; # Group:  station [61]</span>
 <span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
-<span class="co">#&gt;   station       lat  long elevation name                ts                 tmax_missing</span>
-<span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;             &lt;lgl&gt;       </span>
-<span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt; FALSE       </span>
-<span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt; FALSE</span></code></pre></div>
+<span class="co">#&gt;    station       lat  long elevation name                    ts     tmax_missing</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                   &lt;list&gt; &lt;lgl&gt;       </span>
+<span class="co">#&gt;  1 ASN00001019 -14.3  127.      23   KALUMBURU, AS           &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  2 ASN00002012 -18.2  128.     422   HALLS CREEK AIRPORT, AS &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  3 ASN00003003 -17.9  122.       7.4 BROOME AIRPORT, AS      &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  4 ASN00006011 -24.9  114.       4   CARNARVON AIRPORT, AS   &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  5 ASN00008051 -28.8  115.      33   GERALDTON AIRPORT, AS   &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  6 ASN00009021 -31.9  116.      15.4 PERTH AIRPORT, AS       &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  7 ASN00009193 -32.0  116.      43.1 ROTTNEST ISLAND, AS     &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  8 ASN00009518 -34.4  115.      13   CAPE LEEUWIN, AS        &lt;tibb… FALSE       </span>
+<span class="co">#&gt;  9 ASN00009741 -34.9  118.      68   ALBANY AIRPORT, AS      &lt;tibb… FALSE       </span>
+<span class="co">#&gt; 10 ASN00009789 -33.8  122.      25   ESPERANCE, AS           &lt;tibb… FALSE       </span>
+<span class="co">#&gt; # … with 51 more rows</span></code></pre></div>
+<p>This set of operations gives us 61 stations to work with and below is a map of the location of these weather station.</p>
+<p><img src="workflow_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
-<div id="example-2" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-2" class="anchor"></a>Example 2</h3>
-<p>Now we want to select the stations that have been registered with world meteorological organisation (WMO) and the dataset <code>station</code> has a column <code>wmo_id</code> that records this information. To do this task, we first need to join the <code>station</code> dataset with our climate dataset and then filter out those stations that don’t have the WMO id. Since the join is by station rather than by time, we start with the nested form and write the exact same syntax of join and filter as with tidyverse.</p>
+<div id="summarise" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summarise" class="anchor"></a>Summarise</h1>
+<p>Daily measures are usually too sparse to be plotted and aggregation is a common treatment for this. Next, we will aggregate the daily maximum temperature into monthly measure and since this is a time-wise operation involving <code>date</code>, we need to switch to the long cubble:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">climate_long</span> <span class="op">&lt;-</span> <span class="va">climate_clean</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> 
+<span class="va">climate_long</span>
+<span class="co">#&gt; # Cubble: time-wise: long form</span>
+<span class="co">#&gt; # Group:  station [61]</span>
+<span class="co">#&gt; # Leaves: station [chr], lat [dbl], long [dbl], elevation [dbl], name [chr],</span>
+<span class="co">#&gt; #   tmax_missing [lgl]</span>
+<span class="co">#&gt;    station     date        prcp  tmax  tmin</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 ASN00001019 2020-01-01    46  38.6  25.1</span>
+<span class="co">#&gt;  2 ASN00001019 2020-01-02     0  38.8  28.1</span>
+<span class="co">#&gt;  3 ASN00001019 2020-01-03   266  37.9  23.6</span>
+<span class="co">#&gt;  4 ASN00001019 2020-01-04     0  34.3  26.2</span>
+<span class="co">#&gt;  5 ASN00001019 2020-01-05    46  35.4  26.7</span>
+<span class="co">#&gt;  6 ASN00001019 2020-01-06   760  27.5  24.8</span>
+<span class="co">#&gt;  7 ASN00001019 2020-01-07  1168  31.6  23.2</span>
+<span class="co">#&gt;  8 ASN00001019 2020-01-08  1178  32.7  24  </span>
+<span class="co">#&gt;  9 ASN00001019 2020-01-09    48  34.2  25.1</span>
+<span class="co">#&gt; 10 ASN00001019 2020-01-10     0  35.4  26.7</span>
+<span class="co">#&gt; # … with 22,250 more rows</span></code></pre></div>
+<p>We create a <code>ym</code> variable from <code><a href="https://tsibble.tidyverts.org/reference/year-month.html">tsibble::yearmonth()</a></code> and add an additional grouping on <code>ym</code> with <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>. This allows us create a summary for each station in each month in the next step:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># join wmo_id for each station</span>
-<span class="va">to_join</span> <span class="op">&lt;-</span> <span class="va">station</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">wmo_id</span><span class="op">)</span>
-<span class="va">out</span> <span class="op">&lt;-</span> <span class="va">climate_small</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">to_join</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"station"</span> <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">wmo_id</span><span class="op">)</span><span class="op">)</span>
-<span class="va">out</span>
-<span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [51]</span>
-<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
-<span class="co">#&gt;    station       lat  long elevation name                ts               wmo_id</span>
-<span class="co">#&gt;    &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 ASN00001019 -14.3  127.      23   kalumburu           &lt;tbl_ts [2,147 …  94100</span>
-<span class="co">#&gt;  2 ASN00002012 -18.2  128.     422   halls creek airport &lt;tbl_ts [2,191 …  94212</span>
-<span class="co">#&gt;  3 ASN00003003 -17.9  122.       7.4 broome airport      &lt;tbl_ts [2,192 …  94203</span>
-<span class="co">#&gt;  4 ASN00006011 -24.9  114.       4   carnarvon airport   &lt;tbl_ts [2,192 …  94300</span>
-<span class="co">#&gt;  5 ASN00009021 -31.9  116.      15.4 perth airport       &lt;tbl_ts [2,192 …  94610</span>
-<span class="co">#&gt;  6 ASN00009193 -32.0  116.      43.1 rottnest island     &lt;tbl_ts [2,192 …  94602</span>
-<span class="co">#&gt;  7 ASN00009518 -34.4  115.      13   cape leeuwin        &lt;tbl_ts [2,184 …  94601</span>
-<span class="co">#&gt;  8 ASN00009789 -33.8  122.      25   esperance           &lt;tbl_ts [2,187 …  94638</span>
-<span class="co">#&gt;  9 ASN00010286 -31.6  117.     217.  cunderdin airfield  &lt;tbl_ts [2,190 …  95625</span>
-<span class="co">#&gt; 10 ASN00010917 -32.7  117.     275   wandering           &lt;tbl_ts [2,192 …  95640</span>
-<span class="co">#&gt; # … with 41 more rows</span></code></pre></div>
-</div>
-<div id="example-3" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-3" class="anchor"></a>Example 3</h3>
-<p>Sometimes, we would like to have station-wise and time-wise variables in the same form (i.e. when plotting glyph maps). This can also be seen as a joining task, on the long form, with the dataset to join being the metadata. <code><a href="../reference/migrate.html">migrate()</a></code> is a verb introduced as the shortcut for <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> with a cubble’s metadata and below is the comparison of the two syntaxes.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">lat</span>, <span class="va">long</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Group:  station [4120]</span>
-<span class="co">#&gt; # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct],</span>
-<span class="co">#&gt; #   wmo_id [dbl]</span>
-<span class="co">#&gt;    station     date        prcp  tmax  tmin   lat  long</span>
-<span class="co">#&gt;    &lt;fct&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 ASN00001019 2015-01-01   164  31.5  25   -14.3  127.</span>
-<span class="co">#&gt;  2 ASN00001019 2015-01-02   124  31.3  25   -14.3  127.</span>
-<span class="co">#&gt;  3 ASN00001019 2015-01-03    50  29.2  24.7 -14.3  127.</span>
-<span class="co">#&gt;  4 ASN00001019 2015-01-04   204  32.1  24.3 -14.3  127.</span>
-<span class="co">#&gt;  5 ASN00001019 2015-01-05   412  31.4  24.6 -14.3  127.</span>
-<span class="co">#&gt;  6 ASN00001019 2015-01-06   200  28.7  25.1 -14.3  127.</span>
-<span class="co">#&gt;  7 ASN00001019 2015-01-07   822  30.2  24.5 -14.3  127.</span>
-<span class="co">#&gt;  8 ASN00001019 2015-01-08    22  31    26.6 -14.3  127.</span>
-<span class="co">#&gt;  9 ASN00001019 2015-01-09    62  32.7  26.2 -14.3  127.</span>
-<span class="co">#&gt; 10 ASN00001019 2015-01-10   274  32.9  22.6 -14.3  127.</span>
-<span class="co">#&gt; # … with 111,562 more rows</span>
-
-<span class="va">out</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="fu"><a href="../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">station</span>, <span class="va">lat</span>, <span class="va">long</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Group:  station [4120]</span>
-<span class="co">#&gt; # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct],</span>
-<span class="co">#&gt; #   wmo_id [dbl]</span>
-<span class="co">#&gt;    station     date        prcp  tmax  tmin   lat  long</span>
-<span class="co">#&gt;    &lt;fct&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 ASN00001019 2015-01-01   164  31.5  25   -14.3  127.</span>
-<span class="co">#&gt;  2 ASN00001019 2015-01-02   124  31.3  25   -14.3  127.</span>
-<span class="co">#&gt;  3 ASN00001019 2015-01-03    50  29.2  24.7 -14.3  127.</span>
-<span class="co">#&gt;  4 ASN00001019 2015-01-04   204  32.1  24.3 -14.3  127.</span>
-<span class="co">#&gt;  5 ASN00001019 2015-01-05   412  31.4  24.6 -14.3  127.</span>
-<span class="co">#&gt;  6 ASN00001019 2015-01-06   200  28.7  25.1 -14.3  127.</span>
-<span class="co">#&gt;  7 ASN00001019 2015-01-07   822  30.2  24.5 -14.3  127.</span>
-<span class="co">#&gt;  8 ASN00001019 2015-01-08    22  31    26.6 -14.3  127.</span>
-<span class="co">#&gt;  9 ASN00001019 2015-01-09    62  32.7  26.2 -14.3  127.</span>
-<span class="co">#&gt; 10 ASN00001019 2015-01-10   274  32.9  22.6 -14.3  127.</span>
-<span class="co">#&gt; # … with 111,562 more rows</span></code></pre></div>
-</div>
-</div>
-<div id="time-series-as-a-tsibble-object" class="section level2">
-<h2 class="hasAnchor">
-<a href="#time-series-as-a-tsibble-object" class="anchor"></a>Time series as a tsibble object</h2>
-<p>Cubble also support a tsibble data structure for time series computation.</p>
-<div id="creation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#creation" class="anchor"></a>Creation</h3>
-<p>A cubble can also be created from an underlying tsibble object. The resulting nested form shows a <code>tbl_ts</code> type for each nested cell in the <code>ts</code> column and a tsibble heading in the long form.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># climate_tsibble &lt;- climate_flat %&gt;% tsibble::as_tsibble(index = date, key = station)</span>
-<span class="co"># oz_global2 &lt;- climate_tsibble %&gt;% global(station)</span>
-<span class="co"># oz_zoom2 &lt;- oz_global2 %&gt;% zoom()</span>
-<span class="co"># </span>
-<span class="co"># oz_global2</span>
-<span class="co"># oz_zoom2</span></code></pre></div>
-</div>
-<div id="manipulation-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#manipulation-1" class="anchor"></a>Manipulation</h3>
-<p>With a tsibble structure, we can make a monthly summary of our variables. Here is an example on calculating the monthly total precipitation and average max/min temperature in 2020. As before, we start with the long form to filter out the records that are not in 2020 and add a <code>ym</code> variable as the yearmonth representation of the date. <code>index_by</code> adds another grouping on the <code>ym</code> variable for computing the corresponding monthly summary.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">time_wise2</span> <span class="op">&lt;-</span> <span class="va">climate_small</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">climate_grouped</span> <span class="op">&lt;-</span> <span class="va">climate_long</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ym <span class="op">=</span> <span class="fu">tsibble</span><span class="fu">::</span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/year-month.html">yearmonth</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tsibble.tidyverts.org/reference/index-by.html">index_by</a></span><span class="op">(</span><span class="va">ym</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">prcp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="va">tmax</span><span class="op">:</span><span class="va">tmin</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">time_wise2</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">ym</span><span class="op">)</span>
+<span class="va">climate_grouped</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Group:  station [55], ym [12]</span>
-<span class="co">#&gt; # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
-<span class="co">#&gt;    station           ym  prcp  tmax  tmin</span>
-<span class="co">#&gt;    &lt;fct&gt;          &lt;mth&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 ASN00001019 2020 Jan  5284  34.9  25.5</span>
-<span class="co">#&gt;  2 ASN00001019 2020 Feb  2602  35.3  25.4</span>
-<span class="co">#&gt;  3 ASN00001019 2020 Mar  1254  36.1  23.5</span>
-<span class="co">#&gt;  4 ASN00001019 2020 Apr   210  36.1  22  </span>
-<span class="co">#&gt;  5 ASN00001019 2020 May    56  33.5  17.4</span>
-<span class="co">#&gt;  6 ASN00001019 2020 Jun     0  33.8  13.8</span>
-<span class="co">#&gt;  7 ASN00001019 2020 Jul     0  33.3  11.6</span>
-<span class="co">#&gt;  8 ASN00001019 2020 Aug     0  35.9  15.6</span>
-<span class="co">#&gt;  9 ASN00001019 2020 Sep   124  36.8  20.9</span>
-<span class="co">#&gt; 10 ASN00001019 2020 Oct   390  38.0  24.0</span>
-<span class="co">#&gt; # … with 650 more rows</span></code></pre></div>
+<span class="co">#&gt; # Group:  station [61], ym [12]</span>
+<span class="co">#&gt; # Leaves: station [chr], lat [dbl], long [dbl], elevation [dbl], name [chr],</span>
+<span class="co">#&gt; #   tmax_missing [lgl]</span>
+<span class="co">#&gt;    station     date        prcp  tmax  tmin       ym</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;mth&gt;</span>
+<span class="co">#&gt;  1 ASN00001019 2020-01-01    46  38.6  25.1 2020 Jan</span>
+<span class="co">#&gt;  2 ASN00001019 2020-01-02     0  38.8  28.1 2020 Jan</span>
+<span class="co">#&gt;  3 ASN00001019 2020-01-03   266  37.9  23.6 2020 Jan</span>
+<span class="co">#&gt;  4 ASN00001019 2020-01-04     0  34.3  26.2 2020 Jan</span>
+<span class="co">#&gt;  5 ASN00001019 2020-01-05    46  35.4  26.7 2020 Jan</span>
+<span class="co">#&gt;  6 ASN00001019 2020-01-06   760  27.5  24.8 2020 Jan</span>
+<span class="co">#&gt;  7 ASN00001019 2020-01-07  1168  31.6  23.2 2020 Jan</span>
+<span class="co">#&gt;  8 ASN00001019 2020-01-08  1178  32.7  24   2020 Jan</span>
+<span class="co">#&gt;  9 ASN00001019 2020-01-09    48  34.2  25.1 2020 Jan</span>
+<span class="co">#&gt; 10 ASN00001019 2020-01-10     0  35.4  26.7 2020 Jan</span>
+<span class="co">#&gt; # … with 22,250 more rows</span></code></pre></div>
+<p>The last step to do is to summarise the maximum temperature by mean:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">climate_summarised</span> <span class="op">&lt;-</span> <span class="va">climate_grouped</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="va">climate_summarised</span>
+<span class="co">#&gt; # Cubble: time-wise: long form</span>
+<span class="co">#&gt; # Group:  station [61], ym [12]</span>
+<span class="co">#&gt; # Leaves: station [chr], lat [dbl], long [dbl], elevation [dbl], name [chr],</span>
+<span class="co">#&gt; #   tmax_missing [lgl]</span>
+<span class="co">#&gt;    station           ym  tmax</span>
+<span class="co">#&gt;    &lt;chr&gt;          &lt;mth&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 ASN00001019 2020 Jan  34.9</span>
+<span class="co">#&gt;  2 ASN00001019 2020 Feb  35.3</span>
+<span class="co">#&gt;  3 ASN00001019 2020 Mar  36.1</span>
+<span class="co">#&gt;  4 ASN00001019 2020 Apr  36.1</span>
+<span class="co">#&gt;  5 ASN00001019 2020 May  33.5</span>
+<span class="co">#&gt;  6 ASN00001019 2020 Jun  33.8</span>
+<span class="co">#&gt;  7 ASN00001019 2020 Jul  33.3</span>
+<span class="co">#&gt;  8 ASN00001019 2020 Aug  35.9</span>
+<span class="co">#&gt;  9 ASN00001019 2020 Sep  36.8</span>
+<span class="co">#&gt; 10 ASN00001019 2020 Oct  38.0</span>
+<span class="co">#&gt; # … with 722 more rows</span></code></pre></div>
+<p>This gives all we need to make the time series glyph, let’s see how they look like in a grid view:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">climate_summarised</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>station <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ym</span>, y <span class="op">=</span> <span class="va">tmax</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html">fct_reorder</a></span><span class="op">(</span><span class="va">station</span>, <span class="op">-</span><span class="va">tmax</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">tsibble</span><span class="fu">::</span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/tsibble-scales.html">scale_x_yearmonth</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"month"</span><span class="op">)</span></code></pre></div>
+<p><img src="workflow_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
+<p>Note that if your data comes from a <code>tsibble</code> object, you can also use the <code>index_by()</code> to add the grouping on <code>ym</code>. The syntax should looks like:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># assuming climate_tsibble is a cubble created from a tsibble</span>
+<span class="va">climate_tsibble</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ym <span class="op">=</span> <span class="fu">tsibble</span><span class="fu">::</span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/year-month.html">yearmonth</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">index_by</span><span class="op">(</span><span class="va">ym</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
-</div>
-<div id="sampling-and-add-missing-summary" class="section level2">
-<h2 class="hasAnchor">
-<a href="#sampling-and-add-missing-summary" class="anchor"></a>Sampling and add missing summary</h2>
-<p>[add documentation on slicing]</p>
-<p>Missing summary gives a better view of the data quality recorded in each station.</p>
-<ul>
-<li>
-<code><a href="../reference/add_missing_prct.html">add_missing_prct()</a></code> binds <code>{VAR}_missing</code> columns to calculate the percentage of missing for each station.</li>
-<li>
-<code><a href="../reference/add_missing_prct.html">add_missing_dscrb()</a></code> categories the percentage missing calculated into three categories: almost no missing, some missing, and almost all missing. The two cutoff values can be specified for switching between categories. This categorisation is to be further used for the viz [more on this].</li>
-</ul>
+<div id="join" class="section level1">
+<h1 class="hasAnchor">
+<a href="#join" class="anchor"></a>Join</h1>
+<p>A glyph map requires a set of major coordinate (<code>x_major</code> and <code>y_major</code>) and minor coordinate (<code>x_minor</code> and <code>y_minor</code>) to locate the glyph in the map. In our case, the major axes are <code>long</code> and <code>lat</code> and minor axes are <code>date</code> and <code>tmax</code>. One last step before making the glyph map is to collect these variables in one table and this can be done with <code><a href="../reference/migrate.html">migrate()</a></code>, which moves the time-invariant variables in the nested cubble into the long cubble:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_small</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_missing_prct.html">add_missing_prct</a></span><span class="op">(</span><span class="va">prcp</span><span class="op">:</span> <span class="va">tmax</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_missing_prct.html">add_missing_dscrb</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [55]</span>
-<span class="co">#&gt;    station       lat  long elevation name     ts       prcp_missing tmax_missing</span>
-<span class="co">#&gt;    &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;    &lt;list&gt;          &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 ASN00001019 -14.3  127.      23   kalumbu… &lt;tbl_ts…      0.0387       0.00419</span>
-<span class="co">#&gt;  2 ASN00002012 -18.2  128.     422   halls c… &lt;tbl_ts…      0.0799       0.0183 </span>
-<span class="co">#&gt;  3 ASN00003003 -17.9  122.       7.4 broome … &lt;tbl_ts…      0.00456      0.00228</span>
-<span class="co">#&gt;  4 ASN00006011 -24.9  114.       4   carnarv… &lt;tbl_ts…      0.0598       0.0114 </span>
-<span class="co">#&gt;  5 ASN00009021 -31.9  116.      15.4 perth a… &lt;tbl_ts…      0            0      </span>
-<span class="co">#&gt;  6 ASN00009193 -32.0  116.      43.1 rottnes… &lt;tbl_ts…      0.0119       0.00502</span>
-<span class="co">#&gt;  7 ASN00009518 -34.4  115.      13   cape le… &lt;tbl_ts…      0.0105       0.00229</span>
-<span class="co">#&gt;  8 ASN00009789 -33.8  122.      25   esperan… &lt;tbl_ts…      0.157        0.00869</span>
-<span class="co">#&gt;  9 ASN00010286 -31.6  117.     217.  cunderd… &lt;tbl_ts…      0.0151       0.00183</span>
-<span class="co">#&gt; 10 ASN00010917 -32.7  117.     275   wanderi… &lt;tbl_ts…      0.00456      0      </span>
-<span class="co">#&gt; # … with 45 more rows, and 2 more variables: prcp_dscrb &lt;chr&gt;, tmax_dscrb &lt;chr&gt;</span></code></pre></div>
+<code class="sourceCode R"><span class="va">climate_migrated</span> <span class="op">&lt;-</span> <span class="va">climate_summarised</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">lat</span>, <span class="va">long</span><span class="op">)</span>
+<span class="va">climate_migrated</span>
+<span class="co">#&gt; # Cubble: time-wise: long form</span>
+<span class="co">#&gt; # Group:  station [61], ym [12]</span>
+<span class="co">#&gt; # Leaves: station [chr], lat [dbl], long [dbl], elevation [dbl], name [chr],</span>
+<span class="co">#&gt; #   tmax_missing [lgl]</span>
+<span class="co">#&gt;    station           ym  tmax   lat  long</span>
+<span class="co">#&gt;    &lt;chr&gt;          &lt;mth&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 ASN00001019 2020 Jan  34.9 -14.3  127.</span>
+<span class="co">#&gt;  2 ASN00001019 2020 Feb  35.3 -14.3  127.</span>
+<span class="co">#&gt;  3 ASN00001019 2020 Mar  36.1 -14.3  127.</span>
+<span class="co">#&gt;  4 ASN00001019 2020 Apr  36.1 -14.3  127.</span>
+<span class="co">#&gt;  5 ASN00001019 2020 May  33.5 -14.3  127.</span>
+<span class="co">#&gt;  6 ASN00001019 2020 Jun  33.8 -14.3  127.</span>
+<span class="co">#&gt;  7 ASN00001019 2020 Jul  33.3 -14.3  127.</span>
+<span class="co">#&gt;  8 ASN00001019 2020 Aug  35.9 -14.3  127.</span>
+<span class="co">#&gt;  9 ASN00001019 2020 Sep  36.8 -14.3  127.</span>
+<span class="co">#&gt; 10 ASN00001019 2020 Oct  38.0 -14.3  127.</span>
+<span class="co">#&gt; # … with 722 more rows</span></code></pre></div>
 </div>
+<div id="glyph-map" class="section level1">
+<h1 class="hasAnchor">
+<a href="#glyph-map" class="anchor"></a>Glyph map</h1>
+<p>Now let’s use <code>glyphs</code> from <code>GGally</code> to create the glyph data and here you go, the glyph map you see in the beginning of this vignette!</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">state_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">abs_ste</a></span>, keep <span class="op">=</span> <span class="fl">5e-3</span><span class="op">)</span>
+<span class="va">gly_dt</span> <span class="op">&lt;-</span> <span class="fu">GGally</span><span class="fu">::</span><span class="fu"><a href="https://ggobi.github.io/ggally/reference/glyphs.html">glyphs</a></span><span class="op">(</span><span class="va">climate_migrated</span>, 
+                 x_major <span class="op">=</span> <span class="st">"long"</span>, y_major <span class="op">=</span> <span class="st">"lat"</span>, 
+                 x_minor <span class="op">=</span> <span class="st">"ym"</span>, y_minor <span class="op">=</span> <span class="st">"tmax"</span>, 
+                 height <span class="op">=</span> <span class="fl">1</span>, width <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span>, color <span class="op">=</span> <span class="st">"grey80"</span>, alpha <span class="op">=</span> <span class="fl">0.4</span>, linetype <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">gly_dt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">gx</span>, <span class="va">gy</span>, group <span class="op">=</span> <span class="va">gid</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="workflow_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>In the code above, the map underlayed is from <code><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">ozmaps::abs_ste</a></code> and <code><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">rmapshaper::ms_simplify()</a></code> simplifies the map by keeping only a proportion of points along the coastline to avoid unnecessary details. <code><a href="../reference/plot_map.html">plot_map()</a></code> is a function in <code>cubble</code> that wraps around <code>ggplot() + geom_sf(data, ...)</code> to save some typing.</p>
 </div>
   </div>
 
