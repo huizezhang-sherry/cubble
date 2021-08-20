@@ -27,16 +27,9 @@ library(patchwork)
 library(GGally)
 ```
 
-[why you want to make a plot like this]
+For spatio-temporal data, one may want to plot the time series on the map to observe the spatial relationship among sites close to each other. A glyph map allows you to inset the time series, as a glyph, into the map to detect any global or local pattern. Below is an example of the monthly maximum temperature collected from 61 stations in Australia in 2020.
 
-```{r}
-
-```
-
-
-Below are several examples on how to manipulate a cubble object with dplyr verbs:
-
-```{r fig.height=7, fig.width=10, echo = FALSE}
+```{r fig.height=7, fig.width=10, echo = FALSE,  fig.align='center'}
 state_map <- ms_simplify(ozmaps::abs_ste, keep = 5e-3)
 
 time_wise2 <- climate_small %>% 
@@ -52,116 +45,144 @@ gly_dt <- glyphs(time_wise2, x_major = "long", y_major = "lat",
                  x_minor = "ym", y_minor = "tmax", 
                  height = 1, width = 2)
 
-plot_map(state_map) + 
+plot_map(state_map, color = "grey80", alpha = 0.4, linetype = 3) + 
   #add_ref_lines(gly_dt, color = "grey90") +
   #add_ref_boxes(gly_dt, color = "grey90") +
   ggplot2::geom_path(data = gly_dt, ggplot2::aes(gx, gy, group = gid))
 ```
 
-Three tasks to do:
+The raw data (`oz_climate`) records daily precipitation and (maximum and minimum) temperature for  `r unique(oz_climate$station) %>% length()` stations in a tibble format but it is messy: 
 
-  - filter out some stations don't have `tmax` recorded
-  - summarise the data into monthly record
+```{r}
+oz_climate
+```
 
-### Mutate and filter
+recordings for each station starts from different years, some even date back to `r range(oz_climate$date)[1]`. There are also missingness for some variables in some stations and sometimes a station could have a variable that is not recorded at all. To be able to produce the glyph map above, several cleaning tasks need to done: 
 
-In the first example, we want to only keep the stations that have `tmax` recorded in 2020. This requires first narrow down the records to those in 2020, determine if `tmax` is missing for each station, and then retain those stations that have `tmax` recorded. The year filtering is an operation on the time axis, so we start with the long form. Whether each station has `tmax` recorded is a result of each station, rather than of each time point, hence we need to switch to the nested form with `tamp()`. To calculate whether `tmax` is recorded, we mutate a column `tmax_missing` that takes `TRUE` if all the `tmax` in the nested list column `ts` are `NA` and `FALSE` otherwise. To get the stations that we want, we need another filter on `tmax_missing`.
+  - filter out only the 2020 records
+  - pick the stations that records the maximum temperature
+  - summarise the daily maximum temperature into monthly measure
+
+All these steps can be done easily with a cubble. 
+
+# Mutate and filter
+
+First let's turn our data into a cubble using `tamp()` by supplying the spatial identifier:
+
+```{r}
+nested <- oz_climate %>% tamp(station)
+nested
+```
+
+Filtering 2020 records is an operation on the time dimension since it requires ot decide whether the year component of the date is 2020. A cubble processes all the time dimension operations using the long form, so we first use `stretch()` to switch `nested` to the long form and then filter on the year:
+
+```{r}
+long2020 <- nested %>% 
+  stretch() %>% 
+  filter(year(date) == 2020)
+long2020
+```
+
+The cubble heading tells us that `r nrow(groups(long2020))` out of `r nrow(groups(nested))` stations records climate data in 2020. For these stations that do record in 2020, we want to find those that have maximum temperature and to do this, we create a logical variable `tmax_missing` to know if `tmax` is ever recorded in 2020 for each station. This is a station-wise variable and a nested cubble is used to process station-wise operations. To switch back into the nested form, use `tamp()` again and to create the `tmax_missing`, we test if all the `tmax`, being nested inside `ts` is `NA`. If all the `tmax` is `NA`, the station will get `TRUE` and `FALSE` otherwise. 
+
+```{r}
+nested2020 <- long2020 %>% 
+  tamp() %>% 
+  mutate(tmax_missing = ifelse(all(is.na(ts$tmax)), TRUE, FALSE))
+nested2020
+```
+
+We remove stations don't have `tmax` recorded by filtering on the `tmax_missing`. The filter here is also a station-wise operation and can be processed with the nested form, so we don't need to switch back using `stretch(()`: 
+
+```{r}
+climate_clean <- nested2020 %>% 
+  filter(!tmax_missing)
+climate_clean
+```
+
+This set of operations gives us `r climate_clean %>% nrow()` stations to work with and below is a map of the location of these weather station.
 
 ```{r echo = FALSE}
-climate_2020 <- oz_climate %>% 
-  filter(year(date) == 2020) %>% 
-  tamp(station) %>% 
-  mutate(tmax_missing = ifelse(all(is.na(ts$tmax)), TRUE, FALSE)) 
-
-p1 <- plot_map(map_data = state_map) + 
-  geom_point(data = climate_2020, aes(x = long, y = lat, color = tmax_missing)) 
-
-p2 <- plot_map(map_data = state_map) + 
-  geom_point(data = climate_2020 %>% filter(!tmax_missing), aes(x = long, y = lat, color = tmax_missing)) 
-
-(p1 | p2) &
+plot_map(map_data = state_map) + 
+  geom_point(data = climate_clean, aes(x = long, y = lat)) + 
   theme(legend.position = "bottom")
 ```
 
+# Summarise
+
+Daily measures are usually too sparse to be plotted and aggregation is a common treatment for this. Next, we will aggregate the daily maximum temperature into monthly measure and since this is a time-wise operation involving `date`, we need to switch to the long cubble:
+
 ```{r}
-oz_climate %>%
-  filter(year(date) == 2020) %>% 
-  tamp(station) %>% 
-  mutate(tmax_missing = ifelse(all(is.na(ts$tmax)), TRUE, FALSE)) %>% 
-  filter(!tmax_missing)
+climate_long <- climate_clean %>% 
+  stretch() 
+climate_long
 ```
 
-### Summarise
-
-With a tsibble structure, we can make a monthly summary of our variables. Here is an example on calculating the monthly total precipitation and average max/min temperature in 2020. As before, we start with the long form to filter out the records that are not in 2020 and add a `ym` variable as the yearmonth representation of the date. `index_by` adds another grouping on the `ym` variable for computing the corresponding monthly summary.
+We create a `ym` variable from `tsibble::yearmonth()` and add an additional grouping on `ym` with `group_by()`. This allows us create a summary for each station in each month in the next step: 
 
 ```{r}
-time_wise2 <- climate_small %>% 
+climate_grouped <- climate_long %>% 
+  mutate(ym = tsibble::yearmonth(date)) %>% 
+  group_by(ym)
+climate_grouped
+```
+
+The last step to do is to summarise the maximum temperature by mean: 
+
+```{r}
+climate_summarised <- climate_grouped %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE))
+climate_summarised
+```
+
+This gives all we need to make the time series glyph, let's see how they look like in a grid view: 
+
+```{r fig.height=7, fig.width=10}
+climate_summarised %>% 
+  mutate(station = as.factor(station)) %>% 
+  ggplot(aes(x = ym, y = tmax)) + 
+  geom_line() +
+  facet_wrap(vars(forcats::fct_reorder(station, -tmax))) +
+  tsibble::scale_x_yearmonth(date_labels = "%b") + 
+  xlab("month")
+```
+
+Note that if your data comes from a `tsibble` object, you can also use the `index_by()` to add the grouping on `ym`. The syntax should looks like:
+
+```{r eval = FALSE}
+# assuming climate_tsibble is a cubble created from a tsibble
+climate_tsibble %>% 
   stretch() %>% 
-  filter(lubridate::year(date) == 2020) %>% 
   mutate(ym = tsibble::yearmonth(date)) %>% 
   index_by(ym) %>% 
-  summarise(prcp = sum(prcp, na.rm = TRUE),
-            across(tmax:tmin, ~mean(.x, na.rm = TRUE)))
-
-time_wise2
+  summarise(tmax = mean(tmax, na.rm = TRUE))
 ```
 
+# Join
 
-### Join
-
-Now we want to select the stations that have been registered with world meteorological organisation (WMO) and the dataset `station` has a column `wmo_id` that records this information. To do this task, we first need to join the `station` dataset with our climate dataset and then filter out those stations that don't have the WMO id. Since the join is by station rather than by time, we start with the nested form and write the exact same syntax of join and filter as with tidyverse. 
-
-```{r echo = FALSE}
-to_join <- station %>% select(id, wmo_id)
-out <- climate_small %>% 
-  left_join(to_join, by = c("station" = "id")) %>% 
-  filter(!is.na(wmo_id))
-
-migrated <- out %>% 
-  stretch() %>% 
-  migrate(lat, long) %>% 
-  mutate(date = as.numeric(date))
-
-
-```
+A glyph map requires a  set of major coordinate (`x_major` and `y_major`) and minor coordinate (`x_minor` and `y_minor`) to locate the glyph in the map. In our case, the major axes are `long` and `lat` and minor axes are `date` and `tmax`. One last step before making the glyph map is to collect these variables in one table and this can be done with `migrate()`, which moves the time-invariant variables in the nested cubble into the long cubble: 
 
 ```{r}
-# join wmo_id for each station
-to_join <- station %>% select(id, wmo_id)
-out <- climate_small %>% 
-  left_join(to_join, by = c("station" = "id")) %>% 
-  filter(!is.na(wmo_id))
-out
-```
-
-Sometimes, we would like to have station-wise and time-wise variables in the same form (i.e. when plotting glyph maps). This can also be seen as a joining task, on the long form, with the dataset to join being the metadata. `migrate()` is a verb introduced as the shortcut for `left_join()` with a cubble's metadata and below is the comparison of the two syntaxes.
-
-```{r}
-out %>% 
-  stretch() %>% 
+climate_migrated <- climate_summarised %>% 
   migrate(lat, long)
-
-out %>% 
-  stretch() %>% 
-  left_join(leaves(out) %>% select(station, lat, long))
+climate_migrated
 ```
 
 
-<!-- ### Sampling and add missing summary -->
+# Glyph map
 
-<!-- [add documentation on slicing] -->
+Now let's use `glyphs` from `GGally` to create the glyph data and here you go, the glyph map you see in the beginning of this vignette!
 
-<!-- Missing summary gives a better view of the data quality recorded in each station.  -->
+```{r fig.height=7, fig.width=7, fig.align='center'}
+state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 5e-3)
+gly_dt <- GGally::glyphs(climate_migrated, 
+                 x_major = "long", y_major = "lat", 
+                 x_minor = "ym", y_minor = "tmax", 
+                 height = 1, width = 2)
 
-<!--   - `add_missing_prct()` binds `{VAR}_missing` columns to calculate the percentage of missing for  each station. -->
-<!--   - `add_missing_dscrb()` categories the percentage missing calculated into three categories:  almost no missing, some missing, and almost all missing. The two cutoff values can be specified for switching between categories. This categorisation is to be further used for the viz [more on this]. -->
-
-<!-- ```{r} -->
-<!-- climate_small %>%  -->
-<!--   add_missing_prct(prcp: tmax) %>%  -->
-<!--   add_missing_dscrb() -->
-<!-- ``` -->
+plot_map(state_map, color = "grey80", alpha = 0.4, linetype = 3) + 
+  geom_path(data = gly_dt, aes(gx, gy, group = gid))
+```
 
 
-
+In the code above, the map underlayed is from `ozmaps::abs_ste` and `rmapshaper::ms_simplify()`  simplifies the map by keeping only a proportion of points along the coastline to avoid unnecessary details. `plot_map()` is a function in `cubble` that wraps around `ggplot() + geom_sf(data, ...)` to save some typing. 
