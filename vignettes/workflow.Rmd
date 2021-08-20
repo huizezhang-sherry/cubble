@@ -30,24 +30,25 @@ library(GGally)
 For spatio-temporal data, one may want to plot the time series on the map to observe the spatial relationship among sites close to each other. A glyph map allows you to inset the time series, as a glyph, into the map to detect any global or local pattern. Below is an example of the monthly maximum temperature collected from 61 stations in Australia in 2020.
 
 ```{r fig.height=7, fig.width=10, echo = FALSE,  fig.align='center'}
-state_map <- ms_simplify(ozmaps::abs_ste, keep = 5e-3)
+state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 5e-3)
 
-time_wise2 <- climate_small %>% 
+out <- oz_climate %>% 
+  filter(year(date) == 2020) %>% 
+  tamp(station) %>% 
+  mutate(tmax_missing = ifelse(all(is.na(ts$tmax)), TRUE, FALSE)) %>% 
+  filter(!tmax_missing) %>% 
   stretch() %>% 
-  filter(lubridate::year(date) == 2020) %>% 
   mutate(ym = tsibble::yearmonth(date)) %>% 
-  index_by(ym) %>% 
-  summarise(prcp = sum(prcp, na.rm = TRUE),
-            across(tmax:tmin, ~mean(.x, na.rm = TRUE))) %>% 
+  group_by(ym) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
   migrate(lat, long)
 
-gly_dt <- glyphs(time_wise2, x_major = "long", y_major = "lat", 
+gly_dt <- glyphs(out, 
+                 x_major = "long", y_major = "lat", 
                  x_minor = "ym", y_minor = "tmax", 
                  height = 1, width = 2)
 
-plot_map(state_map, color = "grey80", alpha = 0.4, linetype = 3) + 
-  #add_ref_lines(gly_dt, color = "grey90") +
-  #add_ref_boxes(gly_dt, color = "grey90") +
+plot_map(state_map) + 
   ggplot2::geom_path(data = gly_dt, ggplot2::aes(gx, gy, group = gid))
 ```
 
@@ -180,9 +181,9 @@ gly_dt <- GGally::glyphs(climate_migrated,
                  x_minor = "ym", y_minor = "tmax", 
                  height = 1, width = 2)
 
-plot_map(state_map, color = "grey80", alpha = 0.4, linetype = 3) + 
+plot_map(state_map) + 
   geom_path(data = gly_dt, aes(gx, gy, group = gid))
 ```
 
 
-In the code above, the map underlayed is from `ozmaps::abs_ste` and `rmapshaper::ms_simplify()`  simplifies the map by keeping only a proportion of points along the coastline to avoid unnecessary details. `plot_map()` is a function in `cubble` that wraps around `ggplot() + geom_sf(data, ...)` to save some typing. 
+In the code above, the map underlayed is from `ozmaps::abs_ste` and `rmapshaper::ms_simplify()`  simplifies the map by keeping only a proportion of points along the coastline to avoid unnecessary details. `plot_map()` is a function in `cubble` that wraps around `ggplot() + geom_sf(data, ...)` with some default aesthetic: `color = "grey80", alpha = 0.4, linetype = 3,` to save some typing. 

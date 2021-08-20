@@ -12,12 +12,12 @@ plot_map(map_data, ...)
 \item{...}{other arguments to be passed into \code{geom_sf()}}
 }
 \description{
-A quick initiate of a ggplot2 object for map without typing
-\code{data \%>\% ggplot2::ggplot() + ggplot2::geom_sf(ggplot2::aes(geometry = geometry))}
-everytime to create a map.
+A quick initiate of a ggplot2 object for map with some default aesthetic setting
+to save some typing for create a map.
 }
 \examples{
 library(rmapshaper)
+library(ggplot2)
 state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 plot_map(state_map)
 plot_map(state_map) +

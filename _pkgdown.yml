@@ -40,7 +40,8 @@ reference:
 - title: "Map"
 - contents:
   - bbox
+  - plot_map
 - title: "In-built data"
 - contents:
-  - starts_with("climate")
+  - contains("climate")
   - station
