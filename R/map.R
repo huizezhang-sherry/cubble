@@ -15,8 +15,8 @@
 #' @export
 plot_map <- function(map_data, ...){
   if ("geometry" %in% names(map_data)){
-    ggplot()  +
-      ggplot2::geom_sf(data = map_data, ggplot2::aes(geometry = geometry), ...) +
+    ggplot2::ggplot()  +
+      ggplot2::geom_sf(data = map_data, ggplot2::aes(geometry = .data$geometry), ...) +
       ggplot2::coord_sf() +
       ggplot2::theme_void()
   } else{

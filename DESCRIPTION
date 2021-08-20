@@ -37,7 +37,8 @@ Suggests:
     forcats,
     testthat (>= 3.0.0),
     rmapshaper,
-    ozmaps
+    ozmaps,
+    GGally
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

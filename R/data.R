@@ -61,3 +61,18 @@
 #' @seealso climate_flat
 "climate_small"
 
+
+#' Australia climate data (dirty)
+#'
+#' @format A tibble object with 2,069,634 rows and 9 columns
+#' \describe{
+#'   \item{station}{station id}
+#'   \item{lat}{latitude of the station}
+#'   \item{long}{longitude of the station}
+#'   \item{elev}{elevation of the station}
+#'   \item{prcp}{precipitation}
+#'   \item{tmax}{maximum temperature}
+#'   \item{tmin}{minimum temperature}
+#' }
+#' @seealso climate_small
+"oz_climate"

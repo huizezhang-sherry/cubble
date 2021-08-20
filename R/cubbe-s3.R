@@ -8,6 +8,7 @@
 #' @rdname cubble-class
 #' @examples
 #' # create a nested tibble
+#' library(tibble)
 #' dt <- tibble(
 #'   station = c("A", "B"),
 #'   long = c(110, 120),
