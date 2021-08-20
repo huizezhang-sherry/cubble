@@ -95,8 +95,7 @@
 <div id="nested-cubble" class="section level2">
 <h2 class="hasAnchor">
 <a href="#nested-cubble" class="anchor"></a>Nested cubble</h2>
-<p>A nested cubble is built on top of a <code>rowwise_df</code>, which comes with the <code>groups</code> attributes, as well as the usual <code>names</code>, <code>row.names</code>, and <code>class</code>. Note that the <code>class</code> attribute contains the history class that a <code>rowwise_df</code> is built upon: <code>tbl_df</code>, <code>tbl</code> and <code>data.frame</code>.</p>
-<p>This is an example of the attributes for a nested cubble:</p>
+<p>A nested cubble is built on top of a <code>rowwise_df</code>, which comes with the <code>groups</code> attributes, as well as the usual <code>names</code>, <code>row.names</code>, and <code>class</code>. Note that the <code>class</code> attribute contains the history class that a <code>rowwise_df</code> is built upon: <code>tbl_df</code>, <code>tbl</code> and <code>data.frame</code>. This is an example of the attributes for a nested cubble:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span>
@@ -134,7 +133,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $class</span>
 <span class="co">#&gt; [1] "cubble_df"  "rowwise_df" "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
-<p>In this example, <code>station</code> is the variable that identifies the “spot” and two stations are recorded: <code>ASN00001019</code> and <code>ASN00002012</code>.</p>
+<p>In this example, two stations recorded are <code>ASN00001019</code> and <code>ASN00002012</code>.</p>
 <p>The <code>rowwise_df</code> class uses a <code>group</code> attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the total precipitation can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span>
@@ -187,8 +186,7 @@
 <div id="long-cubble" class="section level2">
 <h2 class="hasAnchor">
 <a href="#long-cubble" class="anchor"></a>Long cubble</h2>
-<p>A long form cubble is built from a <code>grouped_df</code>, instead of <code>rowwise_df</code>. <code>grouped_df</code> ensures each “spot” is in the same group when the</p>
-<!-- `grouped_df` also has a `groups` attribute and there are 366 rows for each station since the data contains daily records in 2020 (there are 366 days in 2020!).  -->
+<p>A long form cubble is built from a <code>grouped_df</code>, instead of <code>rowwise_df</code>. <code>grouped_df</code> ensures records of all the timestamps from a “spot” is in the same group. Below prints the attributes of a long cubble:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">long</span>
