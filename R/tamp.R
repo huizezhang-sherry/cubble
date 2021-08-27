@@ -88,15 +88,15 @@ tamp.tbl_df <- function(data, key) {
 
 
 #' @export
-tamp.rowwise_df <- function(data, group){
-  group <- enquo(group)
+tamp.rowwise_df <- function(data, key){
+  key <- enquo(key)
 
-  if (any(duplicated(data[[as_name(group)]]))){
-    abort("Make sure each row identifies a group!")
+  if (any(duplicated(data[[as_name(key)]]))){
+    abort("Make sure each row identifies a key!")
   }
 
   type <- map_chr(data, class)
-  leaves <- as_tibble(data) %>% unnest() %>% new_leaves(!!group)
+  leaves <- as_tibble(data) %>% tidyr::unnest() %>% new_leaves(!!key)
 
   list_col <- names(type)[type %in% "list"]
 
@@ -106,13 +106,13 @@ tamp.rowwise_df <- function(data, group){
     abort("Cubble currently can only deal with one list column")
   } else{
     nested_names <- Reduce(union, map(data[[as_name(list_col)]], names))
-    if (any(nested_names == as_name(group))){
+    if (any(nested_names == as_name(key))){
       data <- data %>%
-        mutate(!!list_col := list(!!ensym(list_col) %>% select(-!!group)))
+        mutate(!!list_col := list(!!ensym(list_col) %>% select(-!!key)))
     }
   }
 
-  new_cubble(data, group = as_name(group), leaves = leaves, form = "nested")
+  new_cubble(data, key = as_name(key), leaves = leaves, form = "nested")
 }
 
 
