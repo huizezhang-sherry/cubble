@@ -108,11 +108,14 @@
 <span class="co">#&gt; 1 ASN00001019 -14.3  127.        23 kalumburu           &lt;tibble [366 × 4]&gt;</span>
 <span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport &lt;tibble [366 × 4]&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attributes.html">attributes</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span>
-<span class="co">#&gt; $names</span>
-<span class="co">#&gt; [1] "station"   "lat"       "long"      "elevation" "name"      "ts"       </span>
+<span class="co">#&gt; $class</span>
+<span class="co">#&gt; [1] "cubble_df"  "rowwise_df" "tbl_df"     "tbl"        "data.frame"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $row.names</span>
 <span class="co">#&gt; [1] 1 2</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $names</span>
+<span class="co">#&gt; [1] "station"   "lat"       "long"      "elevation" "name"      "ts"       </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $groups</span>
 <span class="co">#&gt; # A tibble: 2 × 2</span>
@@ -129,10 +132,7 @@
 <span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $form</span>
-<span class="co">#&gt; [1] "nested"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $class</span>
-<span class="co">#&gt; [1] "cubble_df"  "rowwise_df" "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
+<span class="co">#&gt; [1] "nested"</span></code></pre></div>
 <p>In this example, two stations recorded are <code>ASN00001019</code> and <code>ASN00002012</code>.</p>
 <p>The <code>rowwise_df</code> class uses a <code>group</code> attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the total precipitation can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -207,8 +207,8 @@
 <span class="co">#&gt; 10 ASN00001019 2020-01-10     0  35.4  26.7</span>
 <span class="co">#&gt; # … with 722 more rows</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attributes.html">attributes</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span>
-<span class="co">#&gt; $names</span>
-<span class="co">#&gt; [1] "station" "date"    "prcp"    "tmax"    "tmin"   </span>
+<span class="co">#&gt; $class</span>
+<span class="co">#&gt; [1] "cubble_df"  "grouped_df" "tbl_df"     "tbl"        "data.frame"</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $row.names</span>
 <span class="co">#&gt;   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18</span>
@@ -253,6 +253,9 @@
 <span class="co">#&gt; [703] 703 704 705 706 707 708 709 710 711 712 713 714 715 716 717 718 719 720</span>
 <span class="co">#&gt; [721] 721 722 723 724 725 726 727 728 729 730 731 732</span>
 <span class="co">#&gt; </span>
+<span class="co">#&gt; $names</span>
+<span class="co">#&gt; [1] "station" "date"    "prcp"    "tmax"    "tmin"   </span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; $groups</span>
 <span class="co">#&gt; # A tibble: 2 × 2</span>
 <span class="co">#&gt;   station           .rows</span>
@@ -268,10 +271,7 @@
 <span class="co">#&gt; 2 ASN00002012 -18.2  128.       422 halls creek airport</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $form</span>
-<span class="co">#&gt; [1] "long"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $class</span>
-<span class="co">#&gt; [1] "cubble_df"  "grouped_df" "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
+<span class="co">#&gt; [1] "long"</span></code></pre></div>
 </div>
   </div>
 
