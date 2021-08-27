@@ -85,3 +85,34 @@ tamp.tbl_df <- function(data, key) {
 
   new_cubble(out, group = as_name(key), leaves = leaves_data, form = "nested")
 }
+
+
+#' @export
+tamp.rowwise_df <- function(data, group){
+  group <- enquo(group)
+
+  if (any(duplicated(data[[as_name(group)]]))){
+    abort("Make sure each row identifies a group!")
+  }
+
+  type <- map_chr(data, class)
+  leaves <- as_tibble(data) %>% unnest() %>% new_leaves(!!group)
+
+  list_col <- names(type)[type %in% "list"]
+
+  if (length(list_col) == 0){
+    abort("Can't identify the list-column, prepare the data as a rowwise_df with a list column")
+  } else if (length (list_col) > 1){
+    abort("Cubble currently can only deal with one list column")
+  } else{
+    nested_names <- Reduce(union, map(data[[as_name(list_col)]], names))
+    if (any(nested_names == as_name(group))){
+      data <- data %>%
+        mutate(!!list_col := list(!!ensym(list_col) %>% select(-!!group)))
+    }
+  }
+
+  new_cubble(data, group = as_name(group), leaves = leaves, form = "nested")
+}
+
+
