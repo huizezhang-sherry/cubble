@@ -1,0 +1,148 @@
+---
+title: "Comparing records in Automated and traditional weather stations"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  warning = FALSE,
+  message = FALSE,
+  fig.height = 5,
+  fig.width = 10
+)
+library(cubble)
+library(rnoaa)
+library(tidyverse)
+library(rmapshaper)
+library(lubridate)
+library(sf)
+```
+
+query all the stations in Australia that records `PRCP`, `TMAX`, and `TMIN`
+
+```{r}
+all_stations <- ghcnd_stations() %>%
+  filter(str_detect(id, "ASN"),
+         first_year < 2020,
+         last_year > 2019) %>%
+  mutate(wmo_id = as.numeric(wmo_id)) %>%
+  filter(!is.na(wmo_id))
+
+good <- all_stations %>%
+  group_by(id) %>%
+  summarise(good = ifelse(all(c("PRCP", "TMAX", "TMIN") %in% element), 
+                          TRUE, FALSE)) %>%
+  filter(good)
+
+station_selected <- all_stations %>%
+  select(-c(state, gsn_flag:last_year), wmo_id) %>%
+  filter(id %in% good$id) %>%
+  distinct() %>%
+  rename(lat = latitude,
+         long = longitude,
+         elev = elevation) %>%
+  mutate(name = str_to_title(name))
+```
+
+Extract different types of sites
+
+```{r}
+# aviation sits: Aero, Aerodrome, and Airport
+station_aviation <- station_selected %>%
+  filter(str_detect(name, "Aero")|  str_detect(name, "Airport") )
+
+# Cpae and lighthouse
+station_site <- station_selected %>%
+  filter(str_detect(name, "Cape")|  str_detect(name, "Lighthouse") )
+```
+
+```{r}
+# automatic weather station
+station_aws <- station_selected %>% filter(str_detect(name, "Aws"))
+nsw <- absmapsdata::state2016 %>% filter(state_code_2016 == 1)
+
+# extract nsw aws 
+station_aws_nsw <- station_aws %>%
+  st_as_sf(coords = c("long", "lat"), crs = st_crs(nsw)) %>%
+  st_filter(nsw, join = st_within()) %>%
+  mutate(long = st_coordinates(.)[,1],
+         lat = st_coordinates(.)[,2]) %>%
+  as_tibble()
+
+# label whether an nsw station is aws or not
+station_nsw <- station_selected %>%
+  st_as_sf(coords = c("long", "lat"), crs = st_crs(nsw)) %>%
+  st_filter(nsw, join = st_within()) %>%
+  mutate(longitude = st_coordinates(.)[,1],
+         latitude = st_coordinates(.)[,2]) %>%
+  as_tibble() %>%
+  select(-geometry) %>%
+  mutate(aws = ifelse(id %in% station_aws_nsw$id, TRUE, FALSE))
+
+state_map <- ms_simplify(nsw, keep = 2e-3)
+plot_map(state_map) +
+   geom_point(data = station_nsw, 
+              aes(x = longitude, y = latitude, color = aws)) + 
+  ggtitle("New Sourth Wales") + 
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) 
+```
+
+If you look carefully, some automated weather stations are very close to those traditional ones. So we want to find those close pairs and see how similar their records are. This can provide insights to calibrate new weather stations. We set the threshold to be 10 km.
+
+```{r}
+query_nearby <- function(data){
+
+  non_aws <- station_nsw %>% filter(!aws)
+  range <- all_stations %>% filter(id %in% non_aws$id)
+
+  meteo_nearby_stations(lat_lon_df = data,
+                        station_data = range,
+                        limit = 1)[[1]] %>%
+    select(id, distance) %>%
+    rename(matched_id = id)
+}
+
+close <- station_nsw %>%
+  filter(aws) %>%
+  nest(id, longitude, latitude) %>%
+  rowwise() %>%
+  mutate(query_nearby(data)) %>%
+  unnest(data) %>%
+  filter(distance < 10) %>%
+  select(id, matched_id) %>%
+  mutate(group = row_number()) %>%
+  pivot_longer(c(id, matched_id), names_to = "stations", values_to = "id") %>%
+  select(-stations) %>%
+  left_join(station_nsw)
+```
+
+query the climate data, Jan 2020 and turn to cubble
+
+```{r}
+climate_close <- close %>%
+  rowwise() %>%
+  mutate(ts = list(meteo_pull_monitors(id,
+                                       date_min = "2020-01-01",
+                                       date_max = "2020-01-31",
+                                       var = c("PRCP", "TMAX", "TMIN"))))
+
+climate_cubble <- climate_close %>% tamp(id)
+climate_cubble
+```
+
+plot the maximum temperature with each pair in a facet. Apart from some missing values, certainly some calibration work needs to be done for group 9 and 13 since there's a constant difference in recording between the pair.
+
+```{r}
+climate_cubble %>%
+  stretch() %>%
+  migrate(group, aws) %>%
+  ggplot(aes(x = date, y = tmax, group = id, color = aws)) +
+  geom_line() +
+  facet_wrap(vars(group)) +
+  scale_color_brewer(palette = "Dark2")
+
+```
+

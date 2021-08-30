@@ -1,14 +1,19 @@
-## code to prepare `climate` dataset goes here
 library(rnoaa)
 library(tidyverse)
 library(lubridate)
 library(progress)
+library(sf)
 
-# extract all the australian stations
-all_stations <- ghcnd_stations() %>%
-  filter(str_detect(id, "ASN")) %>%
-  filter(last_year >= 2020, first_year <= 2000) %>%
-  mutate(wmo_id = as.numeric(wmo_id))
+
+
+set.seed(123)
+station_sample <- station_selected %>%
+  filter(row_number() %in% sample(1:nrow(station_selected), size = 50))
+library(rmapshaper)
+library(ggplot2)
+state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+plot_map(state_map) +
+  geom_point(data = close, aes(x = long, y = lat, color = aws))
 
 # create station metadata
 station_meta <- all_stations %>%
