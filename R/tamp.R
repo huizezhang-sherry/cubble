@@ -112,7 +112,5 @@ tamp.rowwise_df <- function(data, key){
     }
   }
 
-  new_cubble(data, key = as_name(key), leaves = leaves, form = "nested")
+  new_cubble(data, group = as_name(key), leaves = leaves, form = "nested")
 }
-
-
