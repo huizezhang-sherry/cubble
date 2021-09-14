@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cubble: A Vector Spatio-Temporal Data Structure for Data Analysis — cubble-package • cubble</title>
+<title>Autoplot for viewing the nearby points sampled — slice_nearby • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="cubble: A Vector Spatio-Temporal Data Structure for Data Analysis — cubble-package" />
-<meta property="og:description" content="A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables." />
+<meta property="og:title" content="Autoplot for viewing the nearby points sampled — slice_nearby" />
+<meta property="og:description" content="Autoplot for viewing the nearby points sampled" />
 
 
 
@@ -124,29 +124,54 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>cubble: A Vector Spatio-Temporal Data Structure for Data Analysis</h1>
+    <h1>Autoplot for viewing the nearby points sampled</h1>
     
-    <div class="hidden name"><code>cubble-package.Rd</code></div>
+    <div class="hidden name"><code>nearby.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables.</p>
+    <p>Autoplot for viewing the nearby points sampled</p>
     </div>
 
+    <pre class="usage"><span class='fu'>slice_nearby</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span>, buffer <span class='op'>=</span> <span class='fl'>1</span>, n <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+
+<span class='fu'>view_nearby</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>origin</span>, map <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>a data object output from <code>slice_nearby()</code></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>conditions to filter for the selected data</p></td>
+    </tr>
+    <tr>
+      <th>buffer</th>
+      <td><p>the buffer added to the bounding box for slicing</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>the number of nearby points to sample</p></td>
+    </tr>
+    <tr>
+      <th>origin</th>
+      <td><p>the original dataset supplied to <code>slice_nearby()</code></p></td>
+    </tr>
+    <tr>
+      <th>map</th>
+      <td><p>a map object as the background, default to the Australia country map</p></td>
+    </tr>
+    </table>
 
 
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p><strong>Maintainer</strong>: H. Sherry Zhang <a href='mailto:huize.zhang@monash.edu'>huize.zhang@monash.edu</a> (<a href='https://orcid.org/0000-0002-7122-1463'>ORCID</a>)</p>
-<p>Authors:</p><ul>
-<li><p>Dianne Cook <a href='mailto:dicook@monash.edu'>dicook@monash.edu</a> (<a href='https://orcid.org/0000-0002-3813-7155'>ORCID</a>)</p></li>
-<li><p>Ursula Laa <a href='mailto:ursula.laa@boku.ac.at'>ursula.laa@boku.ac.at</a> (<a href='https://orcid.org/0000-0002-0249-6439'>ORCID</a>)</p></li>
-<li><p>Nicolas Langrené <a href='mailto:nicolas.langrene@csiro.au'>nicolas.langrene@csiro.au</a> (<a href='https://orcid.org/0000-0001-7601-4618'>ORCID</a>)</p></li>
-<li><p>Patricia Menéndez <a href='mailto:patricia.menendez@monash.edu'>patricia.menendez@monash.edu</a> (<a href='https://orcid.org/0000-0003-0701-6315'>ORCID</a>)</p></li>
-</ul>
-
-
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>slice_nearby</span><span class='op'>(</span><span class='va'>climate_large</span>, <span class='va'>name</span> <span class='op'>==</span> <span class='st'>"Melbourne Airport"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+   <span class='fu'>view_nearby</span><span class='op'>(</span>origin <span class='op'>=</span> <span class='va'>climate_large</span>,
+               map <span class='op'>=</span> <span class='fu'>ozmaps</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/ozmaps/man/abs-data.html'>abs_ste</a></span> <span class='op'>%&gt;%</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>NAME</span> <span class='op'>==</span> <span class='st'>"Victoria"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>The bounding box gives 18 candidates</span></div><div class='img'><img src='nearby-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

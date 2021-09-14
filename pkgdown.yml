@@ -2,7 +2,9 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  articles/aws: aws.html
+  articles/upstream: upstream.html
+  articles/workflow: workflow.html
   attributes: attributes.html
-  workflow: workflow.html
-last_built: 2021-08-27T07:36Z
+last_built: 2021-09-14T09:20Z
 
