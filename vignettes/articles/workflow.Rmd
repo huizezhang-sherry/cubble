@@ -12,7 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message = FALSE, 
-  warning = FALSE
+  warning = FALSE, 
+  eval = FALSE
 )
 ```
 
@@ -50,13 +51,13 @@ plot_map(state_map) +
   ggplot2::geom_path(data = gly_dt, ggplot2::aes(gx, gy, group = gid))
 ```
 
-The raw data (`oz_climate`) records daily precipitation and (maximum and minimum) temperature for  `r unique(oz_climate$station) %>% length()` stations in a tibble format but it is messy: 
+The raw data (`oz_climate`) records daily precipitation and (maximum and minimum) temperature for FIXME `unique(oz_climate$station) %>% length()` stations in a tibble format but it is messy: 
 
 ```{r}
 oz_climate
 ```
 
-recordings for each station starts from different years, some even date back to `r range(oz_climate$date)[1]`. There are also missingness for some variables in some stations and sometimes a station could have a variable that is not recorded at all. To be able to produce the glyph map above, several cleaning tasks need to done: 
+recordings for each station starts from different years, some even date back to FIXME` range(oz_climate$date)[1]`. There are also missingness for some variables in some stations and sometimes a station could have a variable that is not recorded at all. To be able to produce the glyph map above, several cleaning tasks need to done: 
 
   - filter out only the 2020 records
   - pick the stations that records the maximum temperature
@@ -82,7 +83,7 @@ long2020 <- nested %>%
 long2020
 ```
 
-The cubble heading tells us that `r nrow(groups(long2020))` out of `r nrow(groups(nested))` stations records climate data in 2020. For these stations that do record in 2020, we want to find those that have maximum temperature and to do this, we create a logical variable `tmax_missing` to know if `tmax` is ever recorded in 2020 for each station. This is a station-wise variable and a nested cubble is used to process station-wise operations. To switch back into the nested form, use `tamp()` again and to create the `tmax_missing`, we test if all the `tmax`, being nested inside `ts` is `NA`. If all the `tmax` is `NA`, the station will get `TRUE` and `FALSE` otherwise. 
+The cubble heading tells us that FIXME` nrow(groups(long2020))` out of FIXME` nrow(groups(nested))` stations records climate data in 2020. For these stations that do record in 2020, we want to find those that have maximum temperature and to do this, we create a logical variable `tmax_missing` to know if `tmax` is ever recorded in 2020 for each station. This is a station-wise variable and a nested cubble is used to process station-wise operations. To switch back into the nested form, use `tamp()` again and to create the `tmax_missing`, we test if all the `tmax`, being nested inside `ts` is `NA`. If all the `tmax` is `NA`, the station will get `TRUE` and `FALSE` otherwise. 
 
 ```{r}
 nested2020 <- long2020 %>% 
@@ -99,7 +100,7 @@ climate_clean <- nested2020 %>%
 climate_clean
 ```
 
-This set of operations gives us `r climate_clean %>% nrow()` stations to work with and below is a map of the location of these weather station.
+This set of operations gives us FIXME` climate_clean %>% nrow()` stations to work with and below is a map of the location of these weather station.
 
 ```{r echo = FALSE}
 plot_map(map_data = state_map) + 

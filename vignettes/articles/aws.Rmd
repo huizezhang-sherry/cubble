@@ -68,7 +68,7 @@ nsw <- absmapsdata::state2016 %>% filter(state_code_2016 == 1)
 # extract nsw aws 
 station_aws_nsw <- station_aws %>%
   st_as_sf(coords = c("long", "lat"), crs = st_crs(nsw)) %>%
-  st_filter(nsw, join = st_within()) %>%
+  st_filter(nsw, .predicate = st_within) %>%
   mutate(long = st_coordinates(.)[,1],
          lat = st_coordinates(.)[,2]) %>%
   as_tibble()
@@ -76,7 +76,7 @@ station_aws_nsw <- station_aws %>%
 # label whether an nsw station is aws or not
 station_nsw <- station_selected %>%
   st_as_sf(coords = c("long", "lat"), crs = st_crs(nsw)) %>%
-  st_filter(nsw, join = st_within()) %>%
+  st_filter(nsw, .predicate = st_within) %>%
   mutate(longitude = st_coordinates(.)[,1],
          latitude = st_coordinates(.)[,2]) %>%
   as_tibble() %>%
