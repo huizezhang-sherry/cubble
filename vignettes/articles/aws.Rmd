@@ -63,7 +63,7 @@ station_site <- station_selected %>%
 ```{r}
 # automatic weather station
 station_aws <- station_selected %>% filter(str_detect(name, "Aws"))
-nsw <- absmapsdata::state2016 %>% filter(state_code_2016 == 1)
+nsw <- ozmaps::abs_ste %>% filter(NAME == "New Sourth Wales")
 
 # extract nsw aws 
 station_aws_nsw <- station_aws %>%

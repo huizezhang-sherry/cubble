@@ -17,7 +17,6 @@ library(rnoaa)
 library(tidyverse)
 library(patchwork)
 library(ggrepel)
-library(absmapsdata)
 library(sf)
 ```
 

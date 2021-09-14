@@ -44,7 +44,6 @@ Suggests:
     ggrepel,
     geofacet,
 VignetteBuilder: knitr
-Remotes: wfmackey/absmapsdata
 Depends: 
     R (>= 3.5.0)
 Config/testthat/edition: 3
