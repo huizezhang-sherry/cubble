@@ -24,6 +24,7 @@ Imports:
     plotly,
     purrr,
     rlang,
+    stringr,
     tibble,
     tidyr,
     tidyselect,
@@ -40,8 +41,10 @@ Suggests:
     ozmaps,
     GGally,
     rnoaa,
-    ggrepel
+    ggrepel,
+    geofacet,
+    absmapsdata
 VignetteBuilder: knitr
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
 Config/testthat/edition: 3

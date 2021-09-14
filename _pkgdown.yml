@@ -41,6 +41,9 @@ reference:
 - contents:
   - bbox
   - plot_map
+- title: "Generating grid for using geofacet"
+- contents:
+  - gen_grid
 - title: "In-built data"
 - contents:
   - contains("climate")
