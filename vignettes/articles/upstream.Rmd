@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
 
 library(cubble)
 library(rnoaa)
-library(tidyverse)
+library(dplyr)
+library(stringr)
 library(patchwork)
 library(ggrepel)
 library(sf)
