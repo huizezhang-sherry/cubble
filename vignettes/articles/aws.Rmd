@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
   fig.height = 5,
-  fig.width = 10
+  fig.width = 10, 
+  eval = FALSE
 )
 library(cubble)
 library(rnoaa)
