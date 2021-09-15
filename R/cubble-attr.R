@@ -15,8 +15,8 @@
 #' # extract attributes of a cubble object
 #' form(climate_small)
 #' leaves(climate_small) %>% head(5)
-#' groups(climate_small) %>% head(5)
-#' group_vars(climate_small)
+#' key_data(climate_small) %>% head(5)
+#' key_vars(climate_small)
 #'
 #' # print out the attribute names of cubble with a tsibble underlying class
 #' names(attributes(climate_small %>% stretch()))
@@ -50,14 +50,34 @@ leaves <- function(data){
 
 #' @export
 #' @rdname attributes
-group_vars <- function(data){
-  groups <- groups(data)
+key_vars <- function(data){
+  groups <- key_data(data)
   names <- names2(groups)
   names[names != ".rows"]
 }
 
 #' @export
 #' @rdname attributes
-groups <- function(data){
-  data %@% groups
+key_data <- function(data){
+  data %@% key
+}
+
+#' @export
+#' @rdname attributes
+coord_x <- function(data){
+  coords <- data %@% coords
+  coords[1]
+}
+
+#' @export
+#' @rdname attributes
+coord_y <- function(data){
+  coords <- data %@% coords
+  coords[2]
+}
+
+#' @export
+#' @rdname attributes
+index <- function(data){
+  data %@% index
 }

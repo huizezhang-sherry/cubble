@@ -3,17 +3,20 @@
 \name{form}
 \alias{form}
 \alias{leaves}
-\alias{group_vars}
-\alias{groups}
+\alias{key_vars}
+\alias{key_data}
+\alias{coord_x}
 \title{Functions to get attributes from a cubble object}
 \usage{
 form(data)
 
 leaves(data)
 
-group_vars(data)
+key_vars(data)
 
-groups(data)
+key_data(data)
+
+coord_x(data)
 }
 \arguments{
 \item{data}{an cubble object}

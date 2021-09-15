@@ -9,7 +9,7 @@
 \usage{
 cubble(..., group, leaves, form)
 
-new_cubble(data, group, leaves, form)
+new_cubble(data, key, index, coords, leaves, form)
 
 \method{tbl_sum}{cubble_df}(data)
 
