@@ -68,7 +68,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 
 
   new_cubble(data,
-             key = key, index = index(data), coords = coords(data),
+             key = key, index = index(template), coords = coords(template),
              leaves = leaves_data, form = determine_form(template))
 }
 
@@ -126,7 +126,7 @@ ungroup.cubble_df <- function(data, ...){
     abort(glue::glue("the ungroup variable: {problem} is not found in the data"))
   }
 
-  if (group_vars(data)[1] %in% ungroup_var){
+  if (key_vars(data)[1] %in% ungroup_var){
     abort("Can't ungroup the spatio identifier!")
   }
 

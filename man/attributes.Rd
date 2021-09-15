@@ -5,7 +5,10 @@
 \alias{leaves}
 \alias{key_vars}
 \alias{key_data}
+\alias{coords}
 \alias{coord_x}
+\alias{coord_y}
+\alias{index}
 \title{Functions to get attributes from a cubble object}
 \usage{
 form(data)
@@ -16,7 +19,13 @@ key_vars(data)
 
 key_data(data)
 
+coords(data)
+
 coord_x(data)
+
+coord_y(data)
+
+index(data)
 }
 \arguments{
 \item{data}{an cubble object}
@@ -39,8 +48,8 @@ are also preserved and can be accessed via the relevant functions in the tsibble
 # extract attributes of a cubble object
 form(climate_small)
 leaves(climate_small) \%>\% head(5)
-groups(climate_small) \%>\% head(5)
-group_vars(climate_small)
+key_data(climate_small) \%>\% head(5)
+key_vars(climate_small)
 
 # print out the attribute names of cubble with a tsibble underlying class
 names(attributes(climate_small \%>\% stretch()))

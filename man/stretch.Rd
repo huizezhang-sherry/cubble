@@ -19,7 +19,9 @@ Switch a cubble object into a long form
 and timestamp defines a row. The long form cubble is always of class \code{cubble_df} and \code{grouped_df}.
 }
 \examples{
-climate_flat \%>\% tamp(station) \%>\% stretch()
+climate_flat \%>\%
+  as_cubble(key = station, index = date, coords = c(long, lat)) \%>\%
+  stretch()
 
 }
 \seealso{

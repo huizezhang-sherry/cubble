@@ -14,7 +14,7 @@
 #' To extract the leaves object from a cubble, use `leaves()`
 #'
 #' @param data a flat data without any nesting structure
-#' @param group the spatio identifier
+#' @param key the spatial identifier
 #'
 #' @examples
 #' new_leaves(climate_flat, station)
@@ -24,7 +24,6 @@
 #' @rdname leaves
 #' @export
 new_leaves <- function(data, key){
-
   data <- as_tibble(data)
   data <- data[map_lgl(as_tibble(data), ~all(class(.x) != "list") )]
   key <- enquo(key)
@@ -34,14 +33,14 @@ new_leaves <- function(data, key){
   leaves_data <- unique(data[names(invariant)])
 
   tibble::new_tibble(leaves_data, nrow = nrow(leaves_data),
-                     group = as_name(group),
+                     key = as_name(key),
                      invariant = invariant, variant = variant,
                      class = "leaves")
 }
 
 #' @export
 tbl_sum.leaves <- function(data){
-  key <- key_var(data)
+  key <- key_vars(data)
   var_names <- names(variant(data))
   var_type <- variant(data)
   c("Leaves" = glue::glue("{nrow(data)} x {ncol(data)}"))

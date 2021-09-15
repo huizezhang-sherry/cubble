@@ -28,7 +28,7 @@ library(lubridate)
 library(dplyr)
 
 # create a cubble object from a tibble
-climate_flat \%>\% tamp(station)
+climate_flat \%>\% as_cubble(key = station, index = date, coords = c(long, lat))
 
 # switch to the nested form from the long form
 climate_small \%>\%

@@ -2,9 +2,9 @@
 #'
 #' @param ... a list object to create new cubble
 #' @param data the object to be created or tested as cubble
-#' @param group the spatio identifier
-#' @param leaves metadata to include in the attributes
-#' @param form whether the long or wide form
+#' @param key the spatial identifier
+#' @param index the time identifier
+#' @param coords the coordinates that characterise the spatial dimension
 #' @rdname cubble-class
 #' @examples
 #' # create a nested tibble
@@ -36,34 +36,32 @@
 #' )
 #'
 #' # create a cubble from `dt`
-#' cubble(dt,
-#'        group = station,
-#'        leaves = tibble(
-#'          station = c("A", "B"),
-#'          long = c(110, 120),
-#'          lat = c(-10, -20)
-#'        ),
-#'        form = "long"
-#' )
+#' # cubble(dt,
+#' #        group = station,
+#' #        leaves = tibble(
+#' #          station = c("A", "B"),
+#' #          long = c(110, 120),
+#' #          lat = c(-10, -20)
+#' #        ),
+#' #        form = "long"
+#' # )
 #' @export
-cubble <- function(..., key, index, coords, leaves, form) {
+cubble <- function(..., key, index, coords) {
   data <- tibble::tibble(!!!list2(...))
   key <- enquo(key)
   leaves <- new_leaves(leaves, !!key)
   new_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
-             leaves = leaves, form = form)
+             leaves = leaves, form = "nested")
 
 }
 
-#' @rdname cubble-class
-#' @export
 new_cubble <- function(data, key, index, coords, leaves, form) {
 
   key_data <- group_data(dplyr::grouped_df(data, vars = key))
 
   attr <- list(x = data,
-               key = key_data,
+               groups = key_data,
                index = index,
                coords = coords,
                leaves = leaves,

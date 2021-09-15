@@ -5,13 +5,13 @@ slice_factory <- function(f, ...){
       # think about slicing on the long form
       abort("slicing should be performed in the nested form on the grouping variable")
     }
-
+    key <- key_vars(data)
     data <- tibble::as_tibble(data)
     out <- NextMethod(f)
 
     new_cubble(out,
-               key = key_vars(data), index = index(data), coords = coords(data),
-               leaves = new_leaves(out, !!key_vars), form = determine_form(out))
+               key = key , index = index(data), coords = coords(data),
+               leaves = new_leaves(out, !!key), form = determine_form(out))
   }
 }
 
@@ -86,7 +86,7 @@ slice_nearby <- function(data, ..., buffer = 1, n = 5){
   long_min <-  min(target$long) - buffer
   long_max <-  max(target$long) + buffer
 
-  target_var <- groups(target) %>% dplyr::pull(!!key_vars(data))
+  target_var <- key_data(target) %>% dplyr::pull(!!key_vars(data))
 
   cand <-
     data %>% filter(

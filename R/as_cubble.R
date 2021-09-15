@@ -1,9 +1,10 @@
+#' @rdname cubble-class
 #' @export
 as_cubble <- function(data, key, index, coords) {
   UseMethod("as_cubble")
 }
 
-
+#' @rdname cubble-class
 #' @export
 as_cubble.tbl_df <- function(data, key, index, coords) {
 
@@ -38,7 +39,7 @@ as_cubble.tbl_df <- function(data, key, index, coords) {
              leaves = leaves_data, form = "nested")
 }
 
-
+#' @rdname cubble-class
 #' @export
 as_cubble.rowwise_df <- function(data, key, index, coords) {
   key <- enquo(key)

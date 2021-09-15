@@ -44,14 +44,14 @@ Using `tamp()` to create a cubble in the nested form by supply the variable that
 library(cubble)
 library(dplyr)
 climate_flat %>% 
-  tamp(station) 
+  as_cubble(key = station, index = date, coords = c(long, lat))
 ```
 
 Use `stretch()` to switch to the long form and filter to January records:
 
 ```{r}
 climate_flat %>% 
-  tamp(station) %>% 
+  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1)
 ```
@@ -60,7 +60,7 @@ Switch back to the list-column form with `tamp()` and add a count on the number 
 
 ```{r}
 climate_flat %>% 
-  tamp(station) %>% 
+  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1) %>% 
   tamp() %>% 

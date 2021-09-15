@@ -7,7 +7,7 @@
 \alias{variant}
 \title{Create a leaves object}
 \usage{
-new_leaves(data, group)
+new_leaves(data, key)
 
 is_leaves(data)
 
@@ -18,7 +18,7 @@ variant(data)
 \arguments{
 \item{data}{a flat data without any nesting structure}
 
-\item{group}{the spatio identifier}
+\item{key}{the spatial identifier}
 }
 \description{
 A leaves object records whether a variable in the cubble varies across time or not and

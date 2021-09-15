@@ -45,27 +45,26 @@ determine_form <- function(data){
 #' @rdname attributes
 leaves <- function(data){
   test_cubble(data)
-  data %@% leaves
+  data %@% "leaves"
 }
 
 #' @export
 #' @rdname attributes
 key_vars <- function(data){
-  groups <- key_data(data)
-  names <- names2(groups)
+  names <- names2(key_data(data))
   names[names != ".rows"]
 }
 
 #' @export
 #' @rdname attributes
 key_data <- function(data){
-  data %@% key
+  data %@% "groups"
 }
 
 #' @export
 #' @rdname attributes
 coords <- function(data){
-  data %@% coords
+  data %@% "coords"
 }
 
 #' @export
@@ -83,5 +82,5 @@ coord_y <- function(data){
 #' @export
 #' @rdname attributes
 index <- function(data){
-  data %@% index
+  data %@% "index"
 }

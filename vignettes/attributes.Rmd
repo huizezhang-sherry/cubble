@@ -27,7 +27,7 @@ A nested cubble is built on top of a `rowwise_df`, which comes with the `groups`
 
 ```{r}
 nested <- climate_flat %>% 
-  tamp(station)
+  as_cubble(key = station, index = date, coords = c(long, lat))
 nested
 attributes(nested)
 ```
@@ -38,7 +38,7 @@ The `rowwise_df` class uses a `group` attributes to ensure each row is in its ow
 
 ```{r}
 climate_flat %>%
-  tamp(station) %>%  # cubble names the list-column as `ts` rather than `data`
+  as_cubble(key = station, index = date, coords = c(long, lat)) %>%  # cubble names the list-column as `ts` rather than `data`
   mutate(rain = sum(ts$prcp != 0, na.rm = TRUE))
 ```
 

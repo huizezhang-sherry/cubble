@@ -10,14 +10,18 @@ reference:
   - migrate
 - title: "Extract attributes from a cubble"
 - contents:
-  - form
+  - key_data
+  - key_vars
+  - index
+  - coords
+  - coord_x
+  - coord_y
   - leaves
-  - group_vars
-  - groups
+  - form
 - title: "S3 on cubble"
 - contents:
   - cubble
-  - new_cubble
+  - as_cubble
   - is_cubble
   - tbl_sum
 - title: "S3 on the leaves attribute"

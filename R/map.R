@@ -17,7 +17,7 @@ plot_map <- function(map_data, ...){
   if ("geometry" %in% names(map_data)){
     ggplot2::ggplot()  +
       ggplot2::geom_sf(data = map_data,
-                       ggplot2::aes(geometry = geometry),
+                       ggplot2::aes(geometry = .data$geometry),
                        color = "grey80", alpha = 0.4, linetype = 3, ...) +
       ggplot2::coord_sf() +
       ggplot2::theme_void()

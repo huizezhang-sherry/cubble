@@ -6,7 +6,9 @@
 #' and timestamp defines a row. The long form cubble is always of class `cubble_df` and `grouped_df`.
 #'
 #' @examples
-#' climate_flat %>% tamp(station) %>% stretch()
+#' climate_flat %>%
+#'   as_cubble(key = station, index = date, coords = c(long, lat)) %>%
+#'   stretch()
 #'
 #' @export
 #' @seealso Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
@@ -48,6 +50,6 @@ stretch.cubble_df <- function(data, key){
   }
 
   new_cubble(out,
-             key = key, index = index(data), coords = coords(data),
+             key = as_name(key), index = index(data), coords = coords(data),
              leaves = leaves_data, form = "long")
 }

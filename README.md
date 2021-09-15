@@ -35,9 +35,9 @@ variable that identifies each site:
 library(cubble)
 library(dplyr)
 climate_flat %>% 
-  tamp(station) 
+  as_cubble(key = station, index = date, coords = c(long, lat))
 #> # Cubble: station-wise: nested form
-#> # Group:  station [2]
+#> # Key:    station [2]
 #> # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
 #>   station       lat  long elevation name                ts                
 #>   <fct>       <dbl> <dbl>     <dbl> <fct>               <list>            
@@ -50,11 +50,11 @@ records:
 
 ``` r
 climate_flat %>% 
-  tamp(station) %>% 
+  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1)
 #> # Cubble: time-wise: long form
-#> # Group:  station [2]
+#> # Key:    station [2]
 #> # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]
 #>    station     date        prcp  tmax  tmin
 #>    <fct>       <date>     <dbl> <dbl> <dbl>
@@ -76,15 +76,16 @@ number of day with no rain for each station:
 
 ``` r
 climate_flat %>% 
-  tamp(station) %>% 
+  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1) %>% 
   tamp() %>% 
   mutate(zero_rain = sum(ts$prcp == 0, na.rm = TRUE))
 #> # Cubble: station-wise: nested form
-#> # Group:  station [2]
-#>   station       lat  long elevation name               ts              zero_rain
-#>   <fct>       <dbl> <dbl>     <dbl> <fct>              <list>              <int>
-#> 1 ASN00001019 -14.3  127.        23 kalumburu          <tibble [31 × …        12
-#> 2 ASN00002012 -18.2  128.       422 halls creek airpo… <tibble [31 × …        13
+#> # Key:    station [2]
+#> # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
+#>   station       lat  long elevation name                ts                zero_rain
+#>   <fct>       <dbl> <dbl>     <dbl> <fct>               <list>                <int>
+#> 1 ASN00001019 -14.3  127.        23 kalumburu           <tibble [31 × 4]>        12
+#> 2 ASN00002012 -18.2  128.       422 halls creek airport <tibble [31 × 4]>        13
 ```
