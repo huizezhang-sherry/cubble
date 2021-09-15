@@ -135,3 +135,10 @@ rename.cubble_df <- function(data, ...){
   out <- data %>% as_tibble() %>% rename(...)
   dplyr_reconstruct(out, data)
 }
+
+#' @export
+unnest.cubble_df <- function(data, ...){
+  out <- data %>% as_tibble() %>% unnest(...)
+  dplyr_reconstruct(out, data)
+}
+

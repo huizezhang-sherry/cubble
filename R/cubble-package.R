@@ -1,7 +1,7 @@
 #' @import rlang vctrs
 #' @importFrom dplyr filter group_by ungroup summarise n_distinct mutate select left_join arrange across ends_with rename
 #' @importFrom tibble as_tibble new_tibble
-#' @importFrom tidyr nest
+#' @importFrom tidyr nest unnest
 #' @importFrom rlang .data
 #' @aliases cubble-package
 #' @keywords internal
