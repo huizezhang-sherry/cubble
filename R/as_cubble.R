@@ -1,17 +1,30 @@
 #' @export
-as_cubble <- function(data, key){
+as_cubble <- function(data, key, index, coords) {
   UseMethod("as_cubble")
 }
 
 
 #' @export
-as_cubble.tbl_df <- function(data, key) {
+as_cubble.tbl_df <- function(data, key, index, coords) {
+
   key <- enquo(key)
+  index <- enquo(index)
+  coords <- enquo(coords)
 
-  if (quo_is_missing(key)){
-    abort("Please specify the key variable for grouping")
+  test_missing(quo = key, var = "key")
+  test_missing(quo = index, var = "index")
+  test_missing(quo = coords, var = "coords")
 
-  }
+  # check presents in the data
+  # checks for key
+  # checks for index
+  # checks for coords
+  coords <- names(data)[eval_select(coords, data)]
+  # - check lat between -90 to 90
+  # - check long between -180 to 180?
+  # - give it an attribution on the range? 0 to 360 or -180 to 180
+
+  # compute leaves
   all_vars <- find_invariant(data, !!key)
 
   out <- data %>%
@@ -20,18 +33,32 @@ as_cubble.tbl_df <- function(data, key) {
 
   leaves_data <- new_leaves(data, !!key)
 
-  new_cubble(out, group = as_name(key), leaves = leaves_data, form = "nested")
+  new_cubble(out, key = as_name(key), index = as_name(index),
+             coords = coords, leaves = leaves_data, form = "nested")
 }
 
 
 #' @export
-as_cubble.rowwise_df <- function(data, key){
+as_cubble.rowwise_df <- function(data, key, index, coords) {
   key <- enquo(key)
+  index <- enquo(index)
+  coords <- enquo(coords)
+
+  test_missing(quo = key, var = "key")
+  test_missing(quo = index, var = "index")
+  test_missing(quo = coords, var = "coords")
+
+  # check presents in the data
+  # checks for key
+  # checks for index
+  # checks for coords
+  coords <- names(data)[eval_select(coords, data)]
 
   if (any(duplicated(data[[as_name(key)]]))){
     abort("Make sure each row identifies a key!")
   }
 
+  # compute leaves
   type <- map_chr(data, class)
   leaves <- as_tibble(data) %>% tidyr::unnest() %>% new_leaves(!!key)
 
@@ -49,5 +76,6 @@ as_cubble.rowwise_df <- function(data, key){
     }
   }
 
-  new_cubble(data, group = as_name(key), leaves = leaves, form = "nested")
+  new_cubble(data, key = as_name(key), index = as_name(index),
+             coords = coords, leaves = leaves, form = "nested")
 }
