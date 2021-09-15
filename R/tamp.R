@@ -64,6 +64,8 @@ tamp.cubble_df <- function(data, key) {
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
-  new_cubble(out, key = as_name(key), leaves = leaves_data, form = "nested")
+  new_cubble(out,
+             key = as_name(key), index = index(data), coords = coords(data),
+             leaves = leaves_data, form = "nested")
 }
 

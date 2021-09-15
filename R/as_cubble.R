@@ -33,8 +33,9 @@ as_cubble.tbl_df <- function(data, key, index, coords) {
 
   leaves_data <- new_leaves(data, !!key)
 
-  new_cubble(out, key = as_name(key), index = as_name(index),
-             coords = coords, leaves = leaves_data, form = "nested")
+  new_cubble(out,
+             key = as_name(key), index = as_name(index), coords = coords,
+             leaves = leaves_data, form = "nested")
 }
 
 
@@ -76,6 +77,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords) {
     }
   }
 
-  new_cubble(data, key = as_name(key), index = as_name(index),
-             coords = coords, leaves = leaves, form = "nested")
+  new_cubble(data,
+             key = as_name(key), index = as_name(index), coords = coords,
+             leaves = leaves, form = "nested")
 }

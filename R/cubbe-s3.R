@@ -50,8 +50,9 @@ cubble <- function(..., key, index, coords, leaves, form) {
   data <- tibble::tibble(!!!list2(...))
   key <- enquo(key)
   leaves <- new_leaves(leaves, !!key)
-  new_cubble(data, key = as_name(key), index = as_name(index),
-             coords = coords, leaves = leaves, form = form)
+  new_cubble(data,
+             key = as_name(key), index = as_name(index), coords = coords,
+             leaves = leaves, form = form)
 
 }
 

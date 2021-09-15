@@ -23,7 +23,9 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
     abort("{form} meeds to be either long or nested")
   }
 
-  new_cubble(out, key = key, leaves = leaves_data, form = determine_form(out))
+  new_cubble(out,
+             key = key, index = index(data), coords = coords(data),
+             leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -48,7 +50,9 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = key_vars(data)[1])
   }
-  new_cubble(out, key = key, leaves = leaves_data, form = determine_form(out) )
+  new_cubble(out,
+             key = key, index = index(data), coords = coords(data),
+             leaves = leaves_data, form = determine_form(out) )
 }
 
 #' @export
@@ -63,7 +67,9 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   leaves_data <- leaves(template)[c(key, new_leaves)]
 
 
-  new_cubble(data, key = key, leaves = leaves_data, form = determine_form(template))
+  new_cubble(data,
+             key = key, index = index(data), coords = coords(data),
+             leaves = leaves_data, form = determine_form(template))
 }
 
 #' @export
@@ -72,7 +78,9 @@ summarise.cubble_df <- function(data, ...){
   leaves_data <- leaves(data)
   out <- NextMethod("summarise")
 
-  new_cubble(out, key = key, leaves = leaves_data, form = determine_form(out))
+  new_cubble(out,
+             key = key, index = index(data), coords = coords(data),
+             leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -104,7 +112,9 @@ group_by.cubble_df <- function(data, ...){
   new_group_var <- enquos(..., .named = TRUE)
   key <- union(key_vars(data), names(new_group_var))
 
-  new_cubble(data, key = key, leaves = leaves(data), form = determine_form(data))
+  new_cubble(data,
+             key = key, index = index(data), coords = coords(data),
+             leaves = leaves(data), form = determine_form(data))
 }
 
 #' @export
@@ -123,7 +133,9 @@ ungroup.cubble_df <- function(data, ...){
 
   updated_group_var <- setdiff(key_vars(data), ungroup_var)
 
-  new_cubble(data, key = updated_group_var,leaves = leaves(data), form = determine_form(data))
+  new_cubble(data,
+             key = updated_group_var, index = index(data), coords = coords(data),
+             leaves = leaves(data), form = determine_form(data))
 }
 
 #' @export
