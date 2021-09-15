@@ -64,16 +64,20 @@ key_data <- function(data){
 
 #' @export
 #' @rdname attributes
+coords <- function(data){
+  data %@% coords
+}
+
+#' @export
+#' @rdname attributes
 coord_x <- function(data){
-  coords <- data %@% coords
-  coords[1]
+  coords(data)[1]
 }
 
 #' @export
 #' @rdname attributes
 coord_y <- function(data){
-  coords <- data %@% coords
-  coords[2]
+  coords(data)[2]
 }
 
 #' @export
