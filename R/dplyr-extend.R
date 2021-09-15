@@ -129,3 +129,9 @@ ungroup.cubble_df <- function(data, ...){
 
   new_cubble(data, group = updated_group_var,leaves = leaves(data), form = determine_form(data))
 }
+
+#' @export
+rename.cubble_df <- function(data, ...){
+  out <- data %>% as_tibble() %>% rename(...)
+  dplyr_reconstruct(out, data)
+}

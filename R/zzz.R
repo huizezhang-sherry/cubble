@@ -16,4 +16,6 @@
   s3_register("dplyr::slice_max", "cubble_df")
   s3_register("dplyr::slice_sample", "cubble_df")
 
+  s3_register("dplyr::rename", "cubble_df")
+
 }
