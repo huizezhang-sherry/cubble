@@ -15,3 +15,9 @@ test_nested <- function(data){
   test_cubble(data)
   if (form(data) != "nested") abort("data is not in the nested form")
 }
+
+test_missing <- function(quo, var){
+  if (quo_is_missing(quo)){
+    abort(glue::glue("Variable {var} is missing for creating a cubble"))
+  }
+}
