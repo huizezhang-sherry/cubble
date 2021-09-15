@@ -23,12 +23,12 @@
 #' new_leaves(climate_flat, station) %>% variant()
 #' @rdname leaves
 #' @export
-new_leaves <- function(data, group){
+new_leaves <- function(data, key){
 
   data <- as_tibble(data)
   data <- data[map_lgl(as_tibble(data), ~all(class(.x) != "list") )]
-  group <- enquo(group)
-  all_vars <- find_invariant(data, !!group)
+  key <- enquo(key)
+  all_vars <- find_invariant(data, !!key)
   invariant <- data %>% select(all_vars$invariant) %>% map_chr(pillar::type_sum)
   variant <- data %>% select(all_vars$variant) %>% map_chr(pillar::type_sum)
   leaves_data <- unique(data[names(invariant)])
@@ -41,7 +41,7 @@ new_leaves <- function(data, group){
 
 #' @export
 tbl_sum.leaves <- function(data){
-  group <- groups(data)
+  key <- key_var(data)
   var_names <- names(variant(data))
   var_type <- variant(data)
   c("Leaves" = glue::glue("{nrow(data)} x {ncol(data)}"))

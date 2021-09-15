@@ -1,10 +1,10 @@
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
-  group_vars <- group_vars(data)
+  key <- key_vars(data)
 
   if ("tbl_ts" %in% class(data)){
-    out <- dplyr_col_modify(tsibble::as_tsibble(tibble::as_tibble(data), key = !!group_vars), cols)
+    out <- dplyr_col_modify(tsibble::as_tsibble(tibble::as_tibble(data), key = !!key), cols)
   } else{
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }
@@ -13,7 +13,6 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
   form <- determine_form(data)
   if (form == "nested"){
-    key <- group_vars(data)
     leaves_data <- out %>%
       mutate(ts = map(.data$ts, tibble::as_tibble)) %>%
       tidyr::unnest(.data$ts) %>%
@@ -24,19 +23,17 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
     abort("{form} meeds to be either long or nested")
   }
 
-
-  new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
+  new_cubble(out, key = key, leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
 dplyr_row_slice.cubble_df <- function(data, i, ...){
 
   out <- vec_slice(data, i)
-  group_vars <- group_vars(data)
+  key <- key_vars(data)
 
   form <- determine_form(data)
   if (form == "nested"){
-    key <- group_vars(data)
     leaves_data <- as_tibble(out) %>%
       mutate(ts = map(.data$ts, tibble::as_tibble)) %>%
       tidyr::unnest(.data$ts) %>%
@@ -49,34 +46,33 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 
 
   if ("tbl_ts" %in% class(data)){
-    out <- tsibble::build_tsibble(out, key = group_vars(data)[1])
+    out <- tsibble::build_tsibble(out, key = key_vars(data)[1])
   }
-  new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out) )
+  new_cubble(out, key = key, leaves = leaves_data, form = determine_form(out) )
 }
 
 #' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
 
-  group_vars <- group_vars(template)
   form <- determine_form(template)
+  key <- key_vars(template)[1]
 
-  key <- group_vars(template)[1]
   data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
   old_leaves <- leaves(template) %>% names()
   new_leaves <- data_var[data_var %in% old_leaves]
   leaves_data <- leaves(template)[c(key, new_leaves)]
 
 
-  new_cubble(data, group = group_vars, leaves = leaves_data, form = determine_form(template))
+  new_cubble(data, key = key, leaves = leaves_data, form = determine_form(template))
 }
 
 #' @export
 summarise.cubble_df <- function(data, ...){
-  group_vars <- group_vars(data)
+  key <- key_vars(data)
   leaves_data <- leaves(data)
   out <- NextMethod("summarise")
 
-  new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
+  new_cubble(out, key = key, leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -86,7 +82,7 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
     abort("data1 needs to be a cubble object")
   }
 
-  if (form(data1) == "long" && any(by == group_vars(data1))){
+  if (form(data1) == "long" && any(by == key_vars(data1))){
     inform("Joining variable(s) being invariant to the group variable ...")
   }
 
@@ -106,9 +102,9 @@ select.cubble_df <- function(data, ...){
 #' @export
 group_by.cubble_df <- function(data, ...){
   new_group_var <- enquos(..., .named = TRUE)
-  group_var <- union(group_vars(data), names(new_group_var))
+  key <- union(key_vars(data), names(new_group_var))
 
-  new_cubble(data, group = group_var, leaves = leaves(data), form = determine_form(data))
+  new_cubble(data, key = key, leaves = leaves(data), form = determine_form(data))
 }
 
 #' @export
@@ -125,9 +121,9 @@ ungroup.cubble_df <- function(data, ...){
   }
 
 
-  updated_group_var <- setdiff(group_vars(data), ungroup_var)
+  updated_group_var <- setdiff(key_vars(data), ungroup_var)
 
-  new_cubble(data, group = updated_group_var,leaves = leaves(data), form = determine_form(data))
+  new_cubble(data, key = updated_group_var,leaves = leaves(data), form = determine_form(data))
 }
 
 #' @export

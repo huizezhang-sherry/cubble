@@ -6,7 +6,6 @@
 index_by.cubble_df <- function(data, ...) {
   leaves_data <- leaves(data)
   out <- index_by(NextMethod(data),  ...)
-  group_vars <- group_vars(out)
-  new_cubble(out, group = group_vars, leaves = leaves_data, form = determine_form(out))
+  new_cubble(out, key = key_vars(out), leaves = leaves_data, form = determine_form(out))
 }
 

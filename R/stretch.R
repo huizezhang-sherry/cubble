@@ -27,7 +27,7 @@ stretch.cubble_df <- function(data, key){
   key <- enquo(key)
 
   if (quo_is_missing(key)){
-    key <- quo(!!group_vars(data))
+    key <- quo(!!key_vars(data))
   } else{
     key <- quo_get_expr(key)
   }

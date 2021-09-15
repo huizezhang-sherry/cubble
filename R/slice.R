@@ -6,12 +6,10 @@ slice_factory <- function(f, ...){
       abort("slicing should be performed in the nested form on the grouping variable")
     }
 
-    group_vars <- group_vars(data)
-
     data <- tibble::as_tibble(data)
     out <- NextMethod(f)
 
-    new_cubble(out, group = group_vars, leaves = new_leaves(out, !!group_vars), form = determine_form(out))
+    new_cubble(out, key = key_vars(data), leaves = new_leaves(out, !!key_vars), form = determine_form(out))
   }
 }
 
@@ -86,14 +84,13 @@ slice_nearby <- function(data, ..., buffer = 1, n = 5){
   long_min <-  min(target$long) - buffer
   long_max <-  max(target$long) + buffer
 
-  gvar <- group_vars(data)
-  target_var <- groups(target) %>% dplyr::pull(!!group_vars(data))
+  target_var <- groups(target) %>% dplyr::pull(!!key_vars(data))
 
   cand <-
     data %>% filter(
       dplyr::between(.data$lat, lat_min, lat_max),
       dplyr::between(.data$long, long_min, long_max),
-      !(!!sym(gvar) %in% target_var)
+      !(!!sym(key_vars(data)) %in% target_var)
     )
 
   inform(glue::glue("The bounding box gives {nrow(cand)} candidates"))

@@ -18,7 +18,7 @@
 add_missing_prct <- function(data, ...){
 
   test_cubble(data)
-  group <- group_vars(data)
+  key <- key_vars(data)
 
   exprs <- expr(...)
   vars <- tidyselect::eval_select(exprs, data %>% stretch())
@@ -38,7 +38,7 @@ add_missing_prct <- function(data, ...){
   names(calls) <- glue::glue("{names(vars)}_missing")
   out <- data %>% mutate(missing = list(map(calls, ~eval(.x)))) %>% tidyr::unnest_wider(missing)
 
-  new_cubble(out, group = group, leaves = new_leaves(data, !!group), form = determine_form(data))
+  new_cubble(out, key = key , leaves = new_leaves(data, !!key), form = determine_form(data))
 }
 
 #' @rdname missing
@@ -47,7 +47,7 @@ add_missing_prct <- function(data, ...){
 add_missing_dscrb <- function(data, cutoff = 0.99){
   test_cubble(data)
 
-  group <- group_vars(data)
+  key <- key_vars(data)
   all_names <- names(data)
   vars <- syms(all_names[grep("missing", all_names)])
 
@@ -65,6 +65,6 @@ add_missing_dscrb <- function(data, cutoff = 0.99){
   out <- tibble::as_tibble(data) %>% dplyr::bind_cols(dscrb)
 
 
-  new_cubble(out, group = group, leaves = new_leaves(data,!!group), form = determine_form(data))
+  new_cubble(out, key = key, leaves = new_leaves(data,!!key), form = determine_form(data))
 
 }

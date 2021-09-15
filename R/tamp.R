@@ -38,14 +38,14 @@ tamp.cubble_df <- function(data, key) {
   # will only keep the first grouping variable if more than one
   key <- enquo(key)
   if (quo_is_missing(key)){
-    grp <- group_vars(data)
-    if (length(grp) > 1) grp <- grp[1]
-    key <- quo(!!sym(grp))
+    key <- key_vars(data)
+    if (length(key) > 1) key <- key[1]
+    key <- quo(!!sym(key))
   }
 
   # compute metadata again if change to a different key
   all_vars <- find_invariant(data, !!key)
-  if (as_name(key) %in% group_vars(data)){
+  if (as_name(key) %in% key_vars(data)){
     leaves_data <- leaves(data)
   } else{
     leaves_data <- new_leaves(data, !!key)
@@ -64,6 +64,6 @@ tamp.cubble_df <- function(data, key) {
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
-  new_cubble(out, group = as_name(key), leaves = leaves_data, form = "nested")
+  new_cubble(out, key = as_name(key), leaves = leaves_data, form = "nested")
 }
 

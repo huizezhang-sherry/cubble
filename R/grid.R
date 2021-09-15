@@ -45,7 +45,7 @@
 gen_grid <- function(data, var = NULL, nrow = NULL, ncol = NULL) {
 
   var <- enquo(var)
-  if (quo_is_null(var)) var <- sym(group_vars(data))
+  if (quo_is_null(var)) var <- sym(key_vars(data))
 
   latlong <- data %>%
     as_tibble() %>%

@@ -46,36 +46,39 @@
 #'        form = "long"
 #' )
 #' @export
-cubble <- function(..., group, leaves, form) {
+cubble <- function(..., key, index, coords, leaves, form) {
   data <- tibble::tibble(!!!list2(...))
-  group <- enquo(group)
-  leaves <- new_leaves(leaves, !!group)
-  new_cubble(data, as_name(group), leaves = leaves, form = form)
+  key <- enquo(key)
+  leaves <- new_leaves(leaves, !!key)
+  new_cubble(data, key = as_name(key), index = as_name(index),
+             coords = coords, leaves = leaves, form = form)
 
 }
 
 #' @rdname cubble-class
 #' @export
-new_cubble <- function(data, group, leaves, form) {
+new_cubble <- function(data, key, index, coords, leaves, form) {
 
-  group_data <- group_data(dplyr::grouped_df(data, group))
+  key_data <- group_data(dplyr::grouped_df(data, vars = key))
 
   attr <- list(x = data,
-               groups = group_data,
+               key = key_data,
+               index = index,
+               coords = coords,
                leaves = leaves,
                form = form,
                class = "cubble_df")
   tsibble_attr <- NULL
 
-  if ("tbl_ts" %in% class(data)){
-
-    # `key` attribute is not included since it is already there
-    tsibble_attr_name <- c("index", "index2", "interval")
-    tsibble_attr <- list(data %@% "index",
-                         data %@% "index2",
-                         data %@% "interval")
-  }
-  attr <- c(attr, tsibble_attr)
+  # if ("tbl_ts" %in% class(data)){
+  #
+  #   # `key` attribute is not included since it is already there
+  #   tsibble_attr_name <- c("index", "index2", "interval")
+  #   tsibble_attr <- list(data %@% "index",
+  #                        data %@% "index2",
+  #                        data %@% "interval")
+  # }
+  # attr <- c(attr, tsibble_attr)
 
   if (form == "nested"){
     names(attr)[1] <- "data"
@@ -91,9 +94,9 @@ new_cubble <- function(data, group, leaves, form) {
 #' @importFrom  tibble tbl_sum
 #' @export
 tbl_sum.cubble_df <- function(data) {
-  group <- group_vars(data)
-  group_n <- map_dbl(group, ~length(unique(groups(data)[[.x]])))
-  group_msg <- glue::glue_collapse(glue::glue("{group} [{group_n}]"), sep = ", ")
+  key <- key_vars(data)
+  key_n <- map_dbl(key, ~length(unique(key_data(data)[[.x]])))
+  key_msg <- glue::glue_collapse(glue::glue("{key} [{key_n}]"), sep = ", ")
 
 
   if (form(data) == "nested"){
@@ -110,7 +113,7 @@ tbl_sum.cubble_df <- function(data) {
 
 
   if(form(data) == "nested"){
-    item <- group_vars(data)[1]
+    item <- key_vars(data)[1]
     msg <- glue::glue("{item}-wise: nested form")
   } else if(form(data) == "long"){
     msg <- glue::glue("time-wise: long form")
@@ -122,7 +125,7 @@ tbl_sum.cubble_df <- function(data) {
 
   c(
     "Cubble" = msg,
-    "Group" = group_msg,
+    "Key" = key_msg,
     "Leaves" = leaves_msg
 
   )
