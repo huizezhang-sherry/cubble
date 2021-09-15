@@ -58,32 +58,13 @@ cubble <- function(..., group, leaves, form) {
 #' @export
 new_cubble <- function(data, group, leaves, form) {
 
-  if (form == "nested") {
-    # this part will be simplified once we can create cubble from a subclass of rowwise_df
-    nrow <- nrow(data)
-    group_data <- tibble::as_tibble(data)[group]
-    group_data <- tibble::new_tibble(vec_data(group_data), nrow = nrow)
-    group_data$.rows <- new_list_of(as.list(seq_len(nrow)), ptype = integer())
-  } else if (form == "long") {
-    nrow <- nrow(data)
-    group_data <- dplyr:::compute_groups(data, group)
-  }
-
-  cls <- class(data)[!class(data) %in% c("cubble_df", "grouped_df", "rowwise_df")]
-  if (form == "nested"){
-    class <- c("cubble_df", "rowwise_df", cls)
-  } else if (form == "long"){
-    class <- c("cubble_df", "grouped_df", cls)
-  } else{
-    abort("{form} meeds to be either long or nested")
-  }
+  group_data <- group_data(dplyr::grouped_df(data, group))
 
   attr <- list(x = data,
-               nrow = nrow,
                groups = group_data,
                leaves = leaves,
                form = form,
-               class = class)
+               class = "cubble_df")
   tsibble_attr <- NULL
 
   if ("tbl_ts" %in% class(data)){
@@ -96,8 +77,14 @@ new_cubble <- function(data, group, leaves, form) {
   }
   attr <- c(attr, tsibble_attr)
 
-  rlang::exec("new_tibble", !!!attr)
+  if (form == "nested"){
+    names(attr)[1] <- "data"
+    out <- rlang::exec("new_rowwise_df", !!!attr)
+  } else if (form == "long"){
+    out <- rlang::exec("new_grouped_df", !!!attr)
+  }
 
+  out
 }
 
 #' @rdname cubble-class
