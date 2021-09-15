@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructor for the cubble class — cubble • cubble</title>
+<title>Constructor for the cubble class — as_cubble • cubble</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Constructor for the cubble class — cubble" />
+<meta property="og:title" content="Constructor for the cubble class — as_cubble" />
 <meta property="og:description" content="Constructor for the cubble class" />
 
 
@@ -133,9 +133,15 @@
     <p>Constructor for the cubble class</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cubble</span><span class='op'>(</span><span class='va'>...</span>, <span class='va'>group</span>, <span class='va'>leaves</span>, <span class='va'>form</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>as_cubble</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span><span class='op'>)</span>
 
-<span class='fu'>new_cubble</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>group</span>, <span class='va'>leaves</span>, <span class='va'>form</span><span class='op'>)</span>
+<span class='co'># S3 method for tbl_df</span>
+<span class='fu'>as_cubble</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span><span class='op'>)</span>
+
+<span class='co'># S3 method for rowwise_df</span>
+<span class='fu'>as_cubble</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span><span class='op'>)</span>
+
+<span class='fu'>cubble</span><span class='op'>(</span><span class='va'>...</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span><span class='op'>)</span>
 
 <span class='co'># S3 method for cubble_df</span>
 <span class='fu'><a href='https://pillar.r-lib.org/reference/tbl_sum.html'>tbl_sum</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
@@ -146,24 +152,24 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>a list object to create new cubble</p></td>
-    </tr>
-    <tr>
-      <th>group</th>
-      <td><p>the spatio identifier</p></td>
-    </tr>
-    <tr>
-      <th>leaves</th>
-      <td><p>metadata to include in the attributes</p></td>
-    </tr>
-    <tr>
-      <th>form</th>
-      <td><p>whether the long or wide form</p></td>
-    </tr>
-    <tr>
       <th>data</th>
       <td><p>the object to be created or tested as cubble</p></td>
+    </tr>
+    <tr>
+      <th>key</th>
+      <td><p>the spatial identifier</p></td>
+    </tr>
+    <tr>
+      <th>index</th>
+      <td><p>the time identifier</p></td>
+    </tr>
+    <tr>
+      <th>coords</th>
+      <td><p>the coordinates that characterise the spatial dimension</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>a list object to create new cubble</p></td>
     </tr>
     </table>
 
@@ -198,22 +204,16 @@
 <span class='op'>)</span>
 
 <span class='co'># create a cubble from `dt`</span>
-<span class='fu'>cubble</span><span class='op'>(</span><span class='va'>dt</span>,
-       group <span class='op'>=</span> <span class='va'>station</span>,
-       leaves <span class='op'>=</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
-         station <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span><span class='op'>)</span>,
-         long <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>110</span>, <span class='fl'>120</span><span class='op'>)</span>,
-         lat <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>20</span><span class='op'>)</span>
-       <span class='op'>)</span>,
-       form <span class='op'>=</span> <span class='st'>"long"</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
-#&gt; <span style='color: #949494;'># Group:  station [2]</span>
-#&gt; <span style='color: #949494;'># Leaves: station [chr], long [dbl], lat [dbl]</span>
-#&gt;   station  long   lat ts              
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>          
-#&gt; <span style='color: #BCBCBC;'>1</span> A         110   -<span style='color: #BB0000;'>10</span> <span style='color: #949494;'>&lt;tibble [2 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>2</span> B         120   -<span style='color: #BB0000;'>20</span> <span style='color: #949494;'>&lt;tibble [2 × 4]&gt;</span></div></pre>
+<span class='co'># cubble(dt,</span>
+<span class='co'>#        group = station,</span>
+<span class='co'>#        leaves = tibble(</span>
+<span class='co'>#          station = c("A", "B"),</span>
+<span class='co'>#          long = c(110, 120),</span>
+<span class='co'>#          lat = c(-10, -20)</span>
+<span class='co'>#        ),</span>
+<span class='co'>#        form = "long"</span>
+<span class='co'># )</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

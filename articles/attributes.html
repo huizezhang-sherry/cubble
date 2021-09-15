@@ -104,10 +104,10 @@
 <p>A nested cubble is built on top of a <code>rowwise_df</code>, which comes with the <code>groups</code> attributes, as well as the usual <code>names</code>, <code>row.names</code>, and <code>class</code>. Note that the <code>class</code> attribute contains the history class that a <code>rowwise_df</code> is built upon: <code>tbl_df</code>, <code>tbl</code> and <code>data.frame</code>. This is an example of the attributes for a nested cubble:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">station</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 <span class="va">nested</span>
 <span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
+<span class="co">#&gt; # Key:    station [2]</span>
 <span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   station       lat  long elevation name                ts                </span>
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            </span>
@@ -130,6 +130,12 @@
 <span class="co">#&gt; 1 ASN00001019         [1]</span>
 <span class="co">#&gt; 2 ASN00002012         [1]</span>
 <span class="co">#&gt; </span>
+<span class="co">#&gt; $index</span>
+<span class="co">#&gt; [1] "date"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $coords</span>
+<span class="co">#&gt; [1] "long" "lat" </span>
+<span class="co">#&gt; </span>
 <span class="co">#&gt; $leaves</span>
 <span class="co">#&gt; # Leaves: 2 x 5</span>
 <span class="co">#&gt;   station       lat  long elevation name               </span>
@@ -143,10 +149,10 @@
 <p>The <code>rowwise_df</code> class uses a <code>group</code> attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the total precipitation can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="va">station</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># cubble names the list-column as `ts` rather than `data`</span>
+  <span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">station</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># cubble names the list-column as `ts` rather than `data`</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
+<span class="co">#&gt; # Key:    station [2]</span>
 <span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   station       lat  long elevation name                ts                  rain</span>
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;             &lt;int&gt;</span>
@@ -182,7 +188,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nested</span>
 <span class="co">#&gt; # Cubble: station-wise: nested form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
+<span class="co">#&gt; # Key:    station [2]</span>
 <span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   station       lat  long elevation name                ts                </span>
 <span class="co">#&gt;   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;               &lt;list&gt;            </span>
@@ -197,7 +203,7 @@
 <code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">long</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Group:  station [2]</span>
+<span class="co">#&gt; # Key:    station [2]</span>
 <span class="co">#&gt; # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
 <span class="co">#&gt;    station     date        prcp  tmax  tmin</span>
 <span class="co">#&gt;    &lt;fct&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
@@ -268,6 +274,12 @@
 <span class="co">#&gt;   &lt;fct&gt;       &lt;list&lt;int&gt;&gt;</span>
 <span class="co">#&gt; 1 ASN00001019       [366]</span>
 <span class="co">#&gt; 2 ASN00002012       [366]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $index</span>
+<span class="co">#&gt; [1] "date"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $coords</span>
+<span class="co">#&gt; [1] "long" "lat" </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $leaves</span>
 <span class="co">#&gt; # Leaves: 2 x 5</span>
