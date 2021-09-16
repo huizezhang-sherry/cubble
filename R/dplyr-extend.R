@@ -139,9 +139,9 @@ ungroup.cubble_df <- function(data, ...){
 }
 
 #' @export
-rename.cubble_df <- function(data, ...){
-  out <- data %>% as_tibble() %>% rename(...)
-  dplyr_reconstruct(out, data)
+rename.cubble_df <- function(.data, ...){
+  out <- .data %>% as_tibble() %>% rename(...)
+  dplyr_reconstruct(out, .data)
 }
 
 #' @export
