@@ -33,7 +33,17 @@ new_leaves <- function(data, key){
   leaves_data <- unique(data[names(invariant)])
 
   tibble::new_tibble(leaves_data, nrow = nrow(leaves_data),
-                     key = as_name(key),
+                     #key = as_name(key),
+                     invariant = invariant, variant = variant,
+                     class = "leaves")
+}
+
+as_leaves <- function(data, variant){
+
+  invariant <- names(data) %>% map_chr(pillar::type_sum)
+
+  tibble::new_tibble(data, nrow = nrow(data),
+                     #key = as_name(key),
                      invariant = invariant, variant = variant,
                      class = "leaves")
 }

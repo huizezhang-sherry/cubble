@@ -25,14 +25,28 @@ as_cubble.tbl_df <- function(data, key, index, coords) {
   # - check long between -180 to 180?
   # - give it an attribution on the range? 0 to 360 or -180 to 180
 
-  # compute leaves
-  all_vars <- find_invariant(data, !!key)
+  # check if date is already nested in the list-column
+  col_type <- map(data, class)
+  listcol_var <- names(col_type)[col_type == "list"]
 
-  out <- data %>%
-    tidyr::nest(ts = c(!!!all_vars$variant)) %>%
-    dplyr::rowwise()
+  if (length(listcol_var) == 0){
+    all_vars <- find_invariant(data, !!key)
 
-  leaves_data <- new_leaves(data, !!key)
+    out <- data %>%
+      tidyr::nest(ts = c(!!!all_vars$variant)) %>%
+      dplyr::rowwise()
+
+    leaves_data <- new_leaves(data, !!key)
+  } else{
+    listcol_var <- listcol_var[1]
+    invariant_var <- names(col_type)[col_type != "list"]
+    chopped <- data %>% tidyr:::unchop(listcol_var)
+    already <- as_name(index) %in% names(chopped$ts)
+
+    out <- data
+    variant <- chopped$ts %>% map_chr(pillar::type_sum)
+    leaves_data <- as_leaves(data[,invariant_var], variant)
+  }
 
   new_cubble(out,
              key = as_name(key), index = as_name(index), coords = coords,
