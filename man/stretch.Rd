@@ -4,12 +4,14 @@
 \alias{stretch}
 \title{Switch a cubble object into a long form}
 \usage{
-stretch(data, key)
+stretch(data, cols, ...)
 }
 \arguments{
 \item{data}{a cubble object}
 
-\item{key}{the spatio identifier. Key can be automatically detected for a cubble object}
+\item{cols}{the list column to be stretched}
+
+\item{...}{variables to be stretched into a single column}
 }
 \description{
 Switch a cubble object into a long form
@@ -22,6 +24,8 @@ and timestamp defines a row. The long form cubble is always of class \code{cubbl
 climate_flat \%>\%
   as_cubble(key = station, index = date, coords = c(long, lat)) \%>\%
   stretch()
+
+# another example for stretching two cubbles
 
 }
 \seealso{

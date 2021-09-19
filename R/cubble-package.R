@@ -4,6 +4,7 @@
 #' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr nest unnest
 #' @importFrom rlang .data
+#' @importFrom purrr map_dfr map2_dfr
 #' @aliases cubble-package
 #' @keywords internal
 "_PACKAGE"
