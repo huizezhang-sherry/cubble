@@ -133,7 +133,7 @@
     <p>Switch a cubble object into a long form</p>
     </div>
 
-    <pre class="usage"><span class='fu'>stretch</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>stretch</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cols</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,8 +143,12 @@
       <td><p>a cubble object</p></td>
     </tr>
     <tr>
-      <th>key</th>
-      <td><p>the spatio identifier. Key can be automatically detected for a cubble object</p></td>
+      <th>cols</th>
+      <td><p>the list column to be stretched</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>variables to be stretched into a single column</p></td>
     </tr>
     </table>
 
@@ -176,6 +180,8 @@ and timestamp defines a row. The long form cubble is always of class <code>cubbl
 #&gt; <span style='color: #BCBCBC;'> 9</span> ASN00001019 2020-01-09    48  34.2  25.1
 #&gt; <span style='color: #BCBCBC;'>10</span> ASN00001019 2020-01-10     0  35.4  26.7
 #&gt; <span style='color: #949494;'># … with 722 more rows</span></div><div class='input'>
+<span class='co'># another example for stretching two cubbles</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

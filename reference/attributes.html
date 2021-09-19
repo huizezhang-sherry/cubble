@@ -172,14 +172,14 @@ are also preserved and can be accessed via the relevant functions in the tsibble
     <pre class="examples"><div class='input'><span class='co'># extract attributes of a cubble object</span>
 <span class='fu'>form</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "nested"</div><div class='input'><span class='fu'>leaves</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Leaves: 5 x 6</span>
-#&gt;   station     station       lat  long elevation name               
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>              
-#&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019 ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumburu          
-#&gt; <span style='color: #BCBCBC;'>2</span> ASN00002012 ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.     422   halls creek airport
-#&gt; <span style='color: #BCBCBC;'>3</span> ASN00003003 ASN00003003 -<span style='color: #BB0000;'>17.9</span>  122.       7.4 broome airport     
-#&gt; <span style='color: #BCBCBC;'>4</span> ASN00006011 ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarvon airport  
-#&gt; <span style='color: #BCBCBC;'>5</span> ASN00009021 ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.      15.4 perth airport      </div><div class='input'><span class='fu'>key_data</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Leaves: 5 x 5</span>
+#&gt;   station       lat  long elevation name               
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>              
+#&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumburu          
+#&gt; <span style='color: #BCBCBC;'>2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.     422   halls creek airport
+#&gt; <span style='color: #BCBCBC;'>3</span> ASN00003003 -<span style='color: #BB0000;'>17.9</span>  122.       7.4 broome airport     
+#&gt; <span style='color: #BCBCBC;'>4</span> ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarvon airport  
+#&gt; <span style='color: #BCBCBC;'>5</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.      15.4 perth airport      </div><div class='input'><span class='fu'>key_data</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 × 2</span>
 #&gt;   station           .rows
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;list&lt;int&gt;&gt;</span>
