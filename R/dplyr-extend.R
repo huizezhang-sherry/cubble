@@ -64,7 +64,8 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
   old_leaves <- leaves(template) %>% names()
   new_leaves <- data_var[data_var %in% old_leaves]
-  leaves_data <- leaves(template)[c(key, new_leaves)]
+  cols <- unique(c(key, new_leaves))
+  leaves_data <- leaves(template)[cols]
 
 
   new_cubble(data,
@@ -100,7 +101,7 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
   if (is_cubble(data2)){
     key <- c(key_vars(data1), key_vars(data2))
     index <- index(data1)
-    coords <- coords(data)
+    coords <- list(coords(data1), coords(data2))
     leaves <- list(leaves(data1), leaves(data2))
     form <- determine_form(out)
 
