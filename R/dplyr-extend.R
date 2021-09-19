@@ -95,8 +95,23 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
   }
 
   out <- NextMethod("left_join")
-  dplyr_reconstruct(out, data1)
 
+
+  if (is_cubble(data2)){
+    key <- c(key_vars(data1), key_vars(data2))
+    index <- index(data1)
+    coords <- coords(data)
+    leaves <- list(leaves(data1), leaves(data2))
+    form <- determine_form(out)
+
+    out <- new_cubble(out,
+               key = key, index = index, coords = coords,
+               leaves = leaves, form = form)
+  } else{
+    out <- dplyr_reconstruct(out, data1)
+  }
+
+  out
 }
 
 #' @export
