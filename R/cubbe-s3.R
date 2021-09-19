@@ -99,12 +99,21 @@ tbl_sum.cubble_df <- function(data) {
 
 
   if (form(data) == "nested"){
-    variant <- leaves(data) %>% variant()
+    if (vec_is_list(leaves(data))) {
+      variant <- Reduce(c, map(leaves(data), ~variant(.x)))
+    } else {
+      variant <- variant(leaves(data))
+    }
+
     var_names <- names(variant)
     var_type <- variant
 
   } else if (form(data) == "long"){
-    invariant <- leaves(data) %>% invariant()
+    if (vec_is_list(leaves(data))) {
+      invariant <- Reduce(c, map(leaves(data), ~invariant(.x)))
+    } else {
+      invariant <- invariant(leaves(data))
+    }
     var_names <- names(invariant)
     var_type <- invariant
   }
