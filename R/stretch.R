@@ -12,44 +12,68 @@
 #'
 #' @export
 #' @seealso Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
-stretch <- function(data, key) {
+stretch <- function(data, cols, ...) {
   test_cubble(data)
   UseMethod("stretch")
 }
 
 #' @export
-stretch.cubble_df <- function(data, key){
+stretch.cubble_df <- function(data, cols, ...){
 
-  col <- sym(names(data)[map_chr(data, class) == "list"])
+  dots <- list2(...)
+  col_tojoin1 <- map(dots, ~names(.x))
+  col_tojoin2 <- map(dots, ~.x)
 
-  if (!is_list(eval_tidy(col, data))) {
+  cols <- syms(tidyselect::vars_select(names(data), !!enquo(cols)))
+
+  test_list <- map_lgl(cols, ~eval_tidy(.x,  data) %>% is_list())
+
+  if (!all(test_list)) {
     abort("The column to stretch need to be a list-column")
   }
 
-  key <- enquo(key)
+  key <- syms(key_vars(data))
+  key_names <-  map_chr(key, as_name)
+  first_key <- key_names[1]
 
-  if (quo_is_missing(key)){
-    key <- quo(!!key_vars(data))
-  } else{
-    key <- quo_get_expr(key)
-  }
+  leaves_data <- leaves(data)
 
-  leaves_data <- new_leaves(data, !!key)
-
-  list_col <- data %>% dplyr::pull(!!col)
+  list_col <- map_dfr(cols, ~data %>% pull(.x))
 
   if ("tbl_ts" %in% class(list_col[[1]])){
     data$ts <- map(data$ts, tibble::as_tibble)
-    out <- data[vec_c(as_name(key), as_name(col))]
-    out <- out %>%
-      tidyr::unnest(!!col) %>%
-      tsibble::as_tsibble(key = !!key)
-  } else{
-    out <- data[vec_c(as_name(key), as_name(col))] %>%
-      tidyr::unnest(!!col)
+  }
+
+  out <- map2_dfr(cols, key,
+                  ~unnest_with_rename(data = data,
+                                      .x, .y,
+                                      first_key = first_key,
+                                      col_tojoin1, col_tojoin2))
+
+
+  if ("tbl_ts" %in% class(list_col[[1]])) {
+    out <- out %>% tsibble::as_tsibble(key = !!key)
   }
 
   new_cubble(out,
-             key = as_name(key), index = index(data), coords = coords(data),
+             key = first_key, index = index(data), coords = coords(data),
              leaves = leaves_data, form = "long")
+}
+
+
+# helper
+unnest_with_rename <- function(data, cols, key, first_key, col_tojoin1, col_tojoin2){
+  dt <- data %>% as_tibble() %>% select(key, cols)
+
+  cur_key <- as_name(key)
+  if (cur_key != first_key){
+
+    dt <- dt %>% rename(!!sym(first_key) := cur_key) %>% unnest(cols)
+    dt <- map2_dfr(col_tojoin1, col_tojoin2, ~dt %>% rename(!!sym(.x) := !!sym(.y)))
+  } else {
+    dt <- dt %>% unnest(cols)
+  }
+
+  dt
+
 }
