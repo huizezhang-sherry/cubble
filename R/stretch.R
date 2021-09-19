@@ -1,6 +1,7 @@
 #' Switch a cubble object into a long form
 #' @param data a cubble object
-#' @param key the spatio identifier. Key can be automatically detected for a cubble object
+#' @param cols the list column to be stretched
+#' @param ... variables to be stretched into a single column
 #' @details
 #' `stretch()` switch a cubble object into the long form where the combination of group identifier
 #' and timestamp defines a row. The long form cubble is always of class `cubble_df` and `grouped_df`.
@@ -9,6 +10,8 @@
 #' climate_flat %>%
 #'   as_cubble(key = station, index = date, coords = c(long, lat)) %>%
 #'   stretch()
+#'
+#' # another example for stretching two cubbles
 #'
 #' @export
 #' @seealso Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
@@ -26,6 +29,14 @@ stretch.cubble_df <- function(data, cols, ...){
 
   cols <- syms(tidyselect::vars_select(names(data), !!enquo(cols)))
 
+  if (is_empty(cols)){
+    cols <- get_listcol(data)
+    if (length(cols) > 1){
+      abort("Please specify the list column to stretch. ")
+    }
+    cols <- list(sym(cols))
+  }
+
   test_list <- map_lgl(cols, ~eval_tidy(.x,  data) %>% is_list())
 
   if (!all(test_list)) {
@@ -38,7 +49,7 @@ stretch.cubble_df <- function(data, cols, ...){
 
   leaves_data <- leaves(data)
 
-  list_col <- map_dfr(cols, ~data %>% pull(.x))
+  list_col <- data[,cols[[1]]][[1]]
 
   if ("tbl_ts" %in% class(list_col[[1]])){
     data$ts <- map(data$ts, tibble::as_tibble)
@@ -52,7 +63,7 @@ stretch.cubble_df <- function(data, cols, ...){
 
 
   if ("tbl_ts" %in% class(list_col[[1]])) {
-    out <- out %>% tsibble::as_tsibble(key = !!key)
+    out <- out %>% tsibble::as_tsibble(key = !!key[[1]])
   }
 
   new_cubble(out,
@@ -63,13 +74,16 @@ stretch.cubble_df <- function(data, cols, ...){
 
 # helper
 unnest_with_rename <- function(data, cols, key, first_key, col_tojoin1, col_tojoin2){
+
   dt <- data %>% as_tibble() %>% select(key, cols)
 
   cur_key <- as_name(key)
   if (cur_key != first_key){
 
     dt <- dt %>% rename(!!sym(first_key) := cur_key) %>% unnest(cols)
-    dt <- map2_dfr(col_tojoin1, col_tojoin2, ~dt %>% rename(!!sym(.x) := !!sym(.y)))
+    if (!is_null(col_tojoin1) & !is_null(col_tojoin2)) {
+      dt <- map2_dfr(col_tojoin1, col_tojoin2, ~dt %>% rename(!!sym(.x) := !!sym(.y)))
+    }
   } else {
     dt <- dt %>% unnest(cols)
   }

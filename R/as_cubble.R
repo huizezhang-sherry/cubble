@@ -1,4 +1,5 @@
 #' @rdname cubble-class
+#' @importFrom tidyr unchop
 #' @export
 as_cubble <- function(data, key, index, coords) {
   UseMethod("as_cubble")
@@ -40,7 +41,7 @@ as_cubble.tbl_df <- function(data, key, index, coords) {
   } else{
     listcol_var <- listcol_var[1]
     invariant_var <- names(col_type)[col_type != "list"]
-    chopped <- data %>% tidyr:::unchop(listcol_var)
+    chopped <- data %>% tidyr::unchop(listcol_var)
     already <- as_name(index) %in% names(chopped$ts)
 
     out <- data
@@ -75,15 +76,13 @@ as_cubble.rowwise_df <- function(data, key, index, coords) {
   }
 
   # compute leaves
-  type <- map_chr(data, class)
   leaves <- as_tibble(data) %>% tidyr::unnest() %>% new_leaves(!!key)
-
-  list_col <- names(type)[type %in% "list"]
+  list_col <- get_listcol(data)
 
   if (length(list_col) == 0){
     abort("Can't identify the list-column, prepare the data as a rowwise_df with a list column")
-  } else if (length (list_col) > 1){
-    abort("Cubble currently can only deal with one list column")
+  } else if (length (list_col) > 2){
+    abort("Cubble currently can only deal with at most two list columns")
   } else{
     nested_names <- Reduce(union, map(data[[as_name(list_col)]], names))
     if (any(nested_names == as_name(key))){

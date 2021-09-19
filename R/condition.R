@@ -21,3 +21,8 @@ test_missing <- function(quo, var){
     abort(glue::glue("Variable {var} is missing for creating a cubble"))
   }
 }
+
+get_listcol <- function(data){
+  col_type <- map_chr(data, class)
+  names(data)[col_type == "list"]
+}
