@@ -71,9 +71,9 @@ as_cubble.rowwise_df <- function(data, key, index, coords) {
   # checks for coords
   coords <- names(data)[eval_select(coords, data)]
 
-  if (any(duplicated(data[[as_name(key)]]))){
-    abort("Make sure each row identifies a key!")
-  }
+  # if (any(duplicated(data[[as_name(key)]]))){
+  #   abort("Make sure each row identifies a key!")
+  # }
 
   # compute leaves
   leaves <- as_tibble(data) %>% tidyr::unnest() %>% new_leaves(!!key)

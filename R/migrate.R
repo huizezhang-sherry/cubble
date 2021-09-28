@@ -10,7 +10,7 @@
 #' @param data a long form tibble object
 #' @param ... variables in metadata to included into the long form
 #' @examples
-#' climate_small %>% stretch() %>% migrate(lat, long)
+#' dt <- climate_small %>% stretch() %>% migrate(lat, long)
 #' @export
 #' @rdname cubble-verb
 migrate <- function(data, ...){

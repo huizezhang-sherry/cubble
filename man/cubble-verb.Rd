@@ -22,5 +22,5 @@ group-wise variables into the long form. \code{migrate()} is a shortcut for tran
 variables from cubble's metadata. For transfering other group-wise variables, use \code{left_join}.
 }
 \examples{
-climate_small \%>\% stretch() \%>\% migrate(lat, long)
+dt <- climate_small \%>\% stretch() \%>\% migrate(lat, long)
 }

@@ -50,7 +50,6 @@ as_leaves <- function(data, variant){
 
 #' @export
 tbl_sum.leaves <- function(data){
-  key <- key_vars(data)
   var_names <- names(variant(data))
   var_type <- variant(data)
   c("Leaves" = glue::glue("{nrow(data)} x {ncol(data)}"))

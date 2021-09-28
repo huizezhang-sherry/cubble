@@ -58,6 +58,7 @@ key_vars <- function(data){
 #' @export
 #' @rdname attributes
 key_data <- function(data){
+  test_cubble(data)
   data %@% "groups"
 }
 
