@@ -25,7 +25,11 @@ library(cubble)
 library(ggplot2)
 library(geofacet)
 library(dplyr)
-short <- climate_small \%>\% dplyr::slice_tail(n = 15)
+
+short <- climate_small \%>\%
+  dplyr::slice_tail(n = 15) \%>\%
+  # a temporary fix for unnest tsibble
+  mutate(ts = list(as_tibble(ts)))
 
 # generate the grid
 grid1 <- short \%>\% gen_grid(var = name)

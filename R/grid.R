@@ -13,7 +13,11 @@
 #' library(ggplot2)
 #' library(geofacet)
 #' library(dplyr)
-#' short <- climate_small %>% dplyr::slice_tail(n = 15)
+#'
+#' short <- climate_small %>%
+#'   dplyr::slice_tail(n = 15) %>%
+#'   # a temporary fix for unnest tsibble
+#'   mutate(ts = list(as_tibble(ts)))
 #'
 #' # generate the grid
 #' grid1 <- short %>% gen_grid(var = name)
@@ -52,7 +56,9 @@ gen_grid <- function(data, var = NULL, nrow = NULL, ncol = NULL) {
     select(!!var, .data$lat, .data$long) %>%
     dplyr::distinct()
 
-  n_enlarge <- nrow(data) * 3
+  dt <- data %>% switch_key(!!var)
+  group_n <- nrow(dt %@% "groups")
+  n_enlarge <- group_n * 3
   if (is.null(nrow) & is.null(ncol)){
     nrow <- ceiling(sqrt(n_enlarge))
     ncol <-  (n_enlarge %/% nrow)
