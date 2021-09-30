@@ -171,7 +171,6 @@ rename.cubble_df <- function(.data, ...){
   dplyr_reconstruct(out, .data)
 }
 
-#' @export
 unnest_cubble <- function(data, ..., tsibble_key = NULL){
 
   if ("tbl_ts" %in% class(data$ts[[1]])){
