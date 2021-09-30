@@ -17,6 +17,5 @@
   s3_register("dplyr::slice_sample", "cubble_df")
 
   s3_register("dplyr::rename", "cubble_df")
-  s3_register("tidyr::unnest", "cubble_df")
 
 }

@@ -56,8 +56,7 @@ cubble <- function(..., key, index, coords) {
 
 }
 
-new_cubble <- function(data, key, index, coords, leaves, form) {
-
+new_cubble <- function(data, key, index, coords, leaves, form, tsibble_attr = NULL) {
   key_data <- group_data(dplyr::grouped_df(data, vars = key))
 
   attr <- list(x = data,
@@ -67,17 +66,19 @@ new_cubble <- function(data, key, index, coords, leaves, form) {
                leaves = leaves,
                form = form,
                class = "cubble_df")
-  tsibble_attr <- NULL
+  #tsibble_attr <- NULL
 
-  # if ("tbl_ts" %in% class(data)){
-  #
-  #   # `key` attribute is not included since it is already there
-  #   tsibble_attr_name <- c("index", "index2", "interval")
-  #   tsibble_attr <- list(data %@% "index",
-  #                        data %@% "index2",
-  #                        data %@% "interval")
-  # }
-  # attr <- c(attr, tsibble_attr)
+  if ("tbl_ts" %in% class(data)){
+
+    # `key` attribute is not included since it is already there
+    # tsibble_attr <- list(data %@% "index",
+    #                      data %@% "index2",
+    #                      data %@% "interval")
+    # attr$class <- c(attr$class, "tbl_ts")
+    attr$class <- c(attr$class, "tbl_ts")
+    attr <- c(attr, tsibble_attr)
+  }
+
 
   if (form == "nested"){
     names(attr)[1] <- "data"

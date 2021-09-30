@@ -20,10 +20,10 @@
 #' climate_flat %>% as_cubble(key = station, index = date, coords = c(long, lat))
 #'
 #' # switch to the nested form from the long form
-#' climate_small %>%
-#'   stretch() %>%
-#'   filter(year(date) == 2020) %>%
-#'   tamp()
+#' # climate_small %>%
+#' #   stretch() %>%
+#' #   filter(year(date) == 2020) %>%
+#' #   tamp()
 #' @export
 #' @seealso Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}
 tamp <- function(data, key) {

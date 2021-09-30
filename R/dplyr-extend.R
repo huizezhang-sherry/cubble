@@ -1,6 +1,7 @@
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
+
   key <- key_vars(data)
 
   if ("tbl_ts" %in% class(data)){
@@ -9,13 +10,22 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }
 
+  # if ("tbl_ts" %in% class(out$ts[[1]])){
+  #   class(out) <- c(class(out), "tbl_ts")
+  #   dt <- out$ts[[1]]
+  #   tsibble_attr <- list(index = dt %@% "index",
+  #                        index2 = dt %@% "index2",
+  #                        interval = dt %@% "interval",
+  #                        key = dt %@% "key")
+  #
+  # }
   # update leaves
   # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
   form <- determine_form(data)
   if (form == "nested"){
     leaves_data <- out %>%
       mutate(ts = map(.data$ts, tibble::as_tibble)) %>%
-      tidyr::unnest(.data$ts) %>%
+      unnest_cubble(.data$ts) %>%
       new_leaves(!!key)
   } else if (form == "long"){
     leaves_data <-  leaves(data)
@@ -25,7 +35,8 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             leaves = leaves_data, form = determine_form(out))
+             leaves = leaves_data, form = determine_form(out),
+             tsibble_attr = tsibble_attr)
 }
 
 #' @export
@@ -52,7 +63,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   }
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             leaves = leaves_data, form = determine_form(out) )
+             leaves = leaves_data, form = determine_form(out))
 }
 
 #' @export
@@ -161,8 +172,25 @@ rename.cubble_df <- function(.data, ...){
 }
 
 #' @export
-unnest.cubble_df <- function(data, ...){
-  out <- data %>% as_tibble() %>% unnest(...)
+unnest_cubble <- function(data, ..., tsibble_key = NULL){
+
+  if ("tbl_ts" %in% class(data$ts[[1]])){
+
+    tsibble_index <- index(data$ts[[1]])
+    tsibble_key <- enquo(tsibble_key)
+    if (quo_is_null(tsibble_key)) tsibble_key <- sym(key_vars(data))
+    data <- data %>%
+      mutate(ts = list(as_tibble(ts))) %>%
+      as_tibble()
+
+    unnested <- data %>% unnest(...)
+
+    out <- unnested %>% as_tsibble(index = tsibble_index, key = !!tsibble_key)
+
+  } else{
+    out <- data %>% as_tibble() %>% unnest(...)
+  }
+
   dplyr_reconstruct(out, data)
 }
 
