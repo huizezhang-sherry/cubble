@@ -24,12 +24,14 @@ Imports:
     plotly,
     purrr,
     rlang,
+    s2,
     stringr,
     tibble,
     tidyr,
     tidyselect,
     tsibble,
-    vctrs
+    vctrs,
+    weatherdata
 Suggests: 
     rmarkdown,
     knitr,
