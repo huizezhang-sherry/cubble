@@ -9,8 +9,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
   fig.height = 5,
-  fig.width = 10, 
-  eval = FALSE
+  fig.width = 10
 )
 library(cubble)
 library(rnoaa)
@@ -18,90 +17,49 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(ggplot2)
-library(rmapshaper)
-library(lubridate)
-library(sf)
 ```
 
-query all the stations in Australia that records `PRCP`, `TMAX`, and `TMIN`
+An interesting thing about the Australian GHCND weather station data is that some station names are suffixed with "AWS", standing for *Automated Weather Stations*. This draws our interest to investigate how these automated stations differ from the traditional ones. An initial plot of all the automated stations shows that most of them are located in New South Wales, so these stations will be our interest to investigate.
 
 ```{r}
-all_stations <- ghcnd_stations() %>%
-  filter(str_detect(id, "ASN"),
-         first_year < 2020,
-         last_year > 2019) %>%
-  mutate(wmo_id = as.numeric(wmo_id)) %>%
-  filter(!is.na(wmo_id))
+nsw_map <- ozmaps::abs_ste %>% filter(NAME == "New South Wales")  
 
-good <- all_stations %>%
-  group_by(id) %>%
-  summarise(good = ifelse(all(c("PRCP", "TMAX", "TMIN") %in% element), 
-                          TRUE, FALSE)) %>%
-  filter(good)
-
-station_selected <- all_stations %>%
-  select(-c(state, gsn_flag:last_year), wmo_id) %>%
-  filter(id %in% good$id) %>%
-  distinct() %>%
-  rename(lat = latitude,
-         long = longitude,
-         elev = elevation) %>%
-  mutate(name = str_to_title(name))
-```
-
-Extract different types of sites
-
-```{r}
-# aviation sits: Aero, Aerodrome, and Airport
-station_aviation <- station_selected %>%
-  filter(str_detect(name, "Aero")|  str_detect(name, "Airport") )
-
-# Cpae and lighthouse
-station_site <- station_selected %>%
-  filter(str_detect(name, "Cape")|  str_detect(name, "Lighthouse") )
-```
-
-```{r}
-# automatic weather station
-station_aws <- station_selected %>% filter(str_detect(name, "Aws"))
-nsw <- ozmaps::abs_ste %>% filter(NAME == "New Sourth Wales")
-
-# extract nsw aws 
-station_aws_nsw <- station_aws %>%
-  st_as_sf(coords = c("long", "lat"), crs = st_crs(nsw)) %>%
-  st_filter(nsw, .predicate = st_within) %>%
-  mutate(long = st_coordinates(.)[,1],
-         lat = st_coordinates(.)[,2]) %>%
-  as_tibble()
-
-# label whether an nsw station is aws or not
-station_nsw <- station_selected %>%
-  st_as_sf(coords = c("long", "lat"), crs = st_crs(nsw)) %>%
-  st_filter(nsw, .predicate = st_within) %>%
-  mutate(longitude = st_coordinates(.)[,1],
-         latitude = st_coordinates(.)[,2]) %>%
-  as_tibble() %>%
-  select(-geometry) %>%
-  mutate(aws = ifelse(id %in% station_aws_nsw$id, TRUE, FALSE))
-
-state_map <- ms_simplify(nsw, keep = 2e-3)
-plot_map(state_map) +
-   geom_point(data = station_nsw, 
-              aes(x = longitude, y = latitude, color = aws)) + 
+nsw <- ghcnd_stations() %>% 
+  filter(str_detect(id, "AS")) %>% 
+  rename(lat = latitude, long = longitude, elev = elevation) %>% 
+  filter(between(lat, -45, -10), between(long, 110, 155)) %>% 
+  filter(element == "TMAX", last_year >= 2020) %>% 
+  select(-state, -gsn_flag) %>% 
+  filter(s2::s2_lnglat(long, lat) %>% s2::s2_within(nsw_map)) %>% 
+  mutate(automated = str_detect(name, "AWS"))
+ 
+plot_map(nsw_map) +
+  geom_point(data = nsw, 
+             aes(x = long, y = lat, color = automated)) + 
+  scale_color_brewer(palette = "Dark2") + 
   ggtitle("New Sourth Wales") + 
   theme_minimal() + 
   theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) 
+        panel.grid.minor = element_blank()) +
+   coord_sf(xlim = c(141, 154))
 ```
 
-If you look carefully, some automated weather stations are very close to those traditional ones. So we want to find those close pairs and see how similar their records are. This can provide insights to calibrate new weather stations. We set the threshold to be 10 km.
+The color in the map shows whether a station is an automated one or not and we can observe that some automated weather stations are actually close to the traditional ones. This provides a basis to investigate whether numbers recorded by nearby automated and traditional stations match with each other.
+
+The chunk below finds the closest traditional station, if any, that is within 10 kilometer of an automated one.
 
 ```{r}
 query_nearby <- function(data){
 
-  non_aws <- station_nsw %>% filter(!aws)
-  range <- all_stations %>% filter(id %in% non_aws$id)
-
+  # meteo_nearby_stations() requires lat_long_df to have column 
+  # latitue and longitude
+  data <- data %>% 
+    rename(latitude = lat, longitude = long)
+  
+  range <- nsw %>% 
+    filter(!automated) %>% 
+    rename(latitude = lat, longitude = long)
+  
   meteo_nearby_stations(lat_lon_df = data,
                         station_data = range,
                         limit = 1)[[1]] %>%
@@ -109,9 +67,9 @@ query_nearby <- function(data){
     rename(matched_id = id)
 }
 
-close <- station_nsw %>%
-  filter(aws) %>%
-  nest(id, longitude, latitude) %>%
+station_matched <- nsw %>%
+  filter(automated) %>%
+  nest(id, long, lat) %>%
   rowwise() %>%
   mutate(query_nearby(data)) %>%
   unnest(data) %>%
@@ -120,33 +78,48 @@ close <- station_nsw %>%
   mutate(group = row_number()) %>%
   pivot_longer(c(id, matched_id), names_to = "stations", values_to = "id") %>%
   select(-stations) %>%
-  left_join(station_nsw)
+  left_join(nsw) %>% 
+  filter(group != 15)
+
+plot_map(nsw_map) +
+  geom_point(data = station_matched, 
+             aes(x = long, y = lat, color = automated)) + 
+  ggrepel::geom_label_repel(data = station_matched %>% filter(automated),
+                            aes(x = long, y = lat, label = group)) + 
+  scale_color_brewer(palette = "Dark2") + 
+  ggtitle("New Sourth Wales") + 
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + 
+  coord_sf(xlim = c(141, 154))
 ```
 
-query the climate data, Jan 2020 and turn to cubble
+We then query the maximum temperature for these stations in January 2020 and make it into a cubble.
 
 ```{r}
-climate_close <- close %>%
+climate <- station_matched %>%
+  select(-c(element:last_year)) %>% 
   rowwise() %>%
   mutate(ts = list(meteo_pull_monitors(id,
                                        date_min = "2020-01-01",
                                        date_max = "2020-01-31",
-                                       var = c("PRCP", "TMAX", "TMIN"))))
+                                       var = "TMAX") %>% 
+                     select(-id)))
 
-climate_cubble <- climate_close %>% tamp(id)
+climate_cubble <- climate %>% 
+  as_cubble(key = id, index = date, coords = c(long, lat))
 climate_cubble
 ```
 
-plot the maximum temperature with each pair in a facet. Apart from some missing values, certainly some calibration work needs to be done for group 9 and 13 since there's a constant difference in recording between the pair.
+Plotting the maximum temperature of each pair shows that in general, recordings from nearby stations match pretty well, except some missing values, i.e. in Pair 6, 11, and 13. Noticeably, there is a constant gap between the automated and traditional recording in Pair 9 and 13 and this would indicate further calibration of the themometer. 
 
 ```{r}
 climate_cubble %>%
   stretch() %>%
-  migrate(group, aws) %>%
-  ggplot(aes(x = date, y = tmax, group = id, color = aws)) +
+  migrate(group, automated) %>%
+  ggplot(aes(x = date, y = tmax, group = id, color = automated)) +
   geom_line() +
   facet_wrap(vars(group)) +
   scale_color_brewer(palette = "Dark2")
-
 ```
 

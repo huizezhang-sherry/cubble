@@ -18,7 +18,7 @@ library(dplyr)
 
 A cubble has its own attributes `leaves` and `form`: 
 
-* `leaves` contains the list of variables that are time-invariant to the "spot"; 
+* `leaves` contains the list of variables that are time-invariant to the site; 
 * `form` specifies whether the data object is in the nested or long form. 
 
 ## Nested cubble
@@ -27,18 +27,18 @@ A nested cubble is built on top of a `rowwise_df`, which comes with the `groups`
 
 ```{r}
 nested <- climate_flat %>% 
-  as_cubble(key = station, index = date, coords = c(long, lat))
+  as_cubble(key = id, index = date, coords = c(long, lat))
 nested
 attributes(nested)
 ```
 
 In this example, two stations recorded are `ASN00001019` and `ASN00002012`. 
 
-The `rowwise_df` class uses a `group` attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the total precipitation can be done by: 
+The `rowwise_df` class uses a `group` attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by: 
 
 ```{r}
 climate_flat %>%
-  as_cubble(key = station, index = date, coords = c(long, lat)) %>%  # cubble names the list-column as `ts` rather than `data`
+  as_cubble(key = id, index = date, coords = c(long, lat)) %>%  # cubble names the list-column as `ts` rather than `data`
   mutate(rain = sum(ts$prcp != 0, na.rm = TRUE))
 ```
 
