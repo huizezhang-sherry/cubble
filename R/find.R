@@ -4,7 +4,7 @@ find_invariant <- function(data, key) {
 
   # temporarily only one key
   #key <- enexpr(key)
-  data <- tibble::as_tibble(data)
+  #data <- tibble::as_tibble(data)
   # remove the list-column, useful in a nested form
   data[map(data, class) == "list"] <- NULL
 
