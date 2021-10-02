@@ -1,25 +1,24 @@
-#' Functions to get attributes from a cubble object
+#' Functions to extract cubble attributes
 #'
 #' @details
 #' Apart from inheriting attributes `names`, `row.names`, and `class` from the underlying tibble,
-#' a cubble object will also have additional attributes: `groups`, `meta` and `form`.
-#'
-#' `groups()`, `meta()`, and `form()` provide a more  convenient way to extract
-#' these attributes without `%@%` from a cubble.
-#' `group_vars()` extracts the variable name of the group, which can often be useful.
+#' a cubble has its site identifier: `key`, temporal identifier, `index`, and
+#' spatial coordinate reference: `coords`.
 #'
 #' If a cubble object is also a tsibble, then tsibble attributes (`key`, `index`, `index2`, `interval`)
-#' are also preserved and can be accessed via the relevant functions in the tsibble package.
+#' are also preserved and can be accessed via the relevant functions in the tsibble package. (NOT FULLY IMPLEMENTED)
 #'
 #' @examples
 #' # extract attributes of a cubble object
-#' form(climate_small)
-#' leaves(climate_small) %>% head(5)
-#' key_data(climate_small) %>% head(5)
-#' key_vars(climate_small)
+#' form(aus_climate)
+#' leaves(aus_climate) %>% head(5)
+#' key_data(aus_climate) %>% head(5)
+#' key_vars(aus_climate)
+#' index(aus_climate)
+#' coords(aus_climate)
+#' coord_x(aus_climate)
+#' coord_y(aus_climate)
 #'
-#' # print out the attribute names of cubble with a tsibble underlying class
-#' names(attributes(climate_small %>% stretch()))
 #' @param data an cubble object
 #'
 #' @export

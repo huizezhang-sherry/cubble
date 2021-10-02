@@ -26,7 +26,7 @@ view_nearby(data, origin, map = NULL)
 Autoplot for viewing the nearby points sampled
 }
 \examples{
-slice_nearby(climate_large, name == "Melbourne Airport") \%>\%
-   view_nearby(origin = climate_large,
+slice_nearby(aus_climate, name == "melbourne airport") \%>\%
+   view_nearby(origin = aus_climate,
                map = ozmaps::abs_ste \%>\% dplyr::filter(NAME == "Victoria"))
 }

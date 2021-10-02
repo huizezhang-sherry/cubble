@@ -8,16 +8,15 @@ knitr::opts_chunk$set(
   comment = "#>", 
   cache = TRUE, 
   warning = FALSE,
-  message = FALSE,
-  eval = FALSE
+  message = FALSE
 )
 
 library(cubble)
 library(rnoaa)
 library(dplyr)
+library(tidyr)
 library(stringr)
 library(patchwork)
-library(ggrepel)
 library(sf)
 ```
 
@@ -37,44 +36,32 @@ all_stations <- ghcnd_stations() %>%
          first_year < 2020,
          last_year > 2019) %>%
   mutate(wmo_id = as.numeric(wmo_id)) %>%
-  filter(!is.na(wmo_id))
+  filter(!is.na(wmo_id), element %in% c("PRCP", "TMAX", "TMIN")) %>%
+  nest(element: last_year) %>%
+  rowwise() %>%
+  filter(nrow(data) == 3) %>%
+  unnest(data)
 
 nearby_stations <-  meteo_nearby_stations(lat_lon_df = lat_lon_df,
                                           station_data = all_stations, 
                                           limit = 5)
 
 stations <- bind_rows(nearby_stations$melbourne %>% mutate(city = "melbourne"),
-                      nearby_stations$sydney %>% mutate(city = "sydney"))
+                      nearby_stations$sydney %>% mutate(city = "sydney")) %>% 
+  rename(lat = latitude, long = longitude)
 
 stations
 ```
 
-With these 10 stations, we want to make sure they all have precipitation (`PRCP`), maximum temperature (`TMAX`), and minimum temperature (`TMIN`) recorded. `ncdc_datatypes()` allows us to query the variables recorded for each station. We use `rowwise()` to formulate the tibble as a row-wise data frame and append a list column, `var`, that shows the variables recorded for each station. The three variables `PRCP`, `TMAX`, and `TMIN` are then detected to filter for the stations:
-
-```{r}
-station_selected <- stations %>% 
-  rowwise() %>% 
-  mutate(var = list(ncdc_datatypes(datasetid = "GHCND", 
-                                   stationid = paste0("GHCND:", id))$data)) %>% 
-  mutate(prcp = any(str_detect(var$id, "PRCP")),
-         tmax = any(str_detect(var$id, "TMAX")),
-         tmin = any(str_detect(var$id, "TMIN"))) %>% 
-  filter(prcp, tmax, tmin) %>% 
-  select(-c(var:tmin))
-
-station_selected
-```
-
-After the filter, we can see that one of the Sydney stations, `SYDNEY HARBOUR`, is removed. A further investigation shows that it doesn't record precipitation.  
-
 Lastly, we can grab the climate data with `meteo_pull_monitors()` and again, with the row-wise data frame structure, we can append all the climate information into a list-column without expanding the time dimension. To make it quick-and-dirty, we only query the results in January 2020.
 
 ```{r}
-sydmel_climate <- station_selected %>% 
+sydmel_climate <- stations %>% 
   mutate(ts = list(meteo_pull_monitors(id, 
                                        date_min = "2020-01-01", 
                                        date_max = "2020-01-31",
-                                       var = c("PRCP", "TMAX", "TMIN"))))
+                                       var = c("PRCP", "TMAX", "TMIN")) %>% 
+                     select(-id)))
 
 sydmel_climate
 ```
@@ -82,32 +69,36 @@ sydmel_climate
 If you have followed along, the output you have should be a row-wise data frame with all the climate time series data nested into a column called `ts`. This data can be directly turned into a cubble with `tamp` with a supply of the grouping variable, `id`:
 
 ```{r}
-sydmel_climate %>% tamp(id)
+sydmel_climate %>% 
+  as_cubble(key = id, index = date, coords = c(long, lat))
 ```
 
 Here you go! Let's look at these stations on the map:
 
 ```{r fig.width=10, fig.height=5, echo = FALSE}
-out <- sydmel_climate %>% tamp(id)
-state_map <- sa42016 %>% dplyr::filter(gcc_name_2016 %in% c("Greater Melbourne", "Greater Sydney")) 
+state_map <- absmapsdata::sa42016 %>% 
+  filter(gcc_name_2016 %in% c("Greater Melbourne", "Greater Sydney")) 
+
+out <- sydmel_climate %>% 
+  as_cubble(key = id, index = date, coords = c(long, lat))
 
 p1 <-  plot_map(state_map %>% filter(gcc_name_2016 == "Greater Sydney")) +
-  geom_label_repel(data = out %>% filter(city == "sydney"), 
-                   aes(x = longitude, y = latitude, label = name), 
+  ggrepel::geom_label_repel(data = out %>% filter(city == "sydney"), 
+                   aes(x = long, y = lat, label = name), 
                    max.iter = 1e7, min.segment.length = 0.01, box.padding = 0.5) + 
   geom_point(data = out %>% filter(city == "sydney"), 
-             aes(x = longitude, y = latitude)) + 
+             aes(x = long, y = lat)) + 
   theme_minimal() + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + 
   ggtitle("Sydney")
 
 p2 <- plot_map(state_map %>% filter(gcc_name_2016 == "Greater Melbourne")) +
-  geom_label_repel(data = out %>% filter(city == "melbourne"), 
-                   aes(x = longitude, y = latitude, label = name), 
+  ggrepel::geom_label_repel(data = out %>% filter(city == "melbourne"), 
+                   aes(x = long, y = lat, label = name), 
                    max.iter = 1e7, min.segment.length = 0.1) + 
   geom_point(data = out %>% filter(city == "melbourne"), 
-             aes(x = longitude, y = latitude)) + 
+             aes(x = long, y = lat)) + 
   theme_minimal() + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + 
@@ -115,4 +106,3 @@ p2 <- plot_map(state_map %>% filter(gcc_name_2016 == "Greater Melbourne")) +
 
 p1 | p2
 ```
-

@@ -4,10 +4,10 @@
 #' @examples
 #' library(dplyr)
 #' # row number is not properly added since each row is a separate group
-#' climate_small %>% mutate(.id = row_number())
+#' aus_climate %>% mutate(.id = row_number())
 #'
 #' # proper id after removing the grouping structure
-#' climate_small %>% strip_rowwise() %>% mutate(.id = row_number())
+#' aus_climate %>% strip_rowwise() %>% mutate(.id = row_number())
 #'
 #' @export
 strip_rowwise <- function(data){
@@ -25,16 +25,13 @@ strip_rowwise <- function(data){
 #' @param back whether it is a switch back to the individual level
 #'
 #' @examples
-#' library(dplyr)
 #' library(ggplot2)
-#' library(weatherdata)
+#' library(dplyr)
 #' # create a data with hierarchical structure:
 #' # id (station) is nested in country, country is nested in continent
-#' long <- world_sample %>%
-#'   filter(country != "Algeria") %>%
+#' long <- world_climate %>%
 #'   stretch() %>%
 #'   migrate(country, continent) %>%
-#'   mutate(tmax = tmax/10) %>%
 #'   filter(lubridate::year(date) == 2020)
 #'
 #' # switch the key from id to country to aggregate on country
@@ -69,8 +66,6 @@ switch_key <- function(data, new_key, back = FALSE){
 #' @param data a cubble
 #' @param ... argument passed to \code{rename}: NEW = OLD
 #'
-#' @examples
-#' climate_small %>% rename_key(id = station)
 #' @export
 rename_key <- function(data, ...){
   test_cubble(data)

@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' climate_flat %>%
-#'   as_cubble(key = station, index = date, coords = c(long, lat)) %>%
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
 #'   stretch()
 #'
 #' # another example for stretching two cubbles

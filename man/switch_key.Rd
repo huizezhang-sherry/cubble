@@ -17,16 +17,13 @@ switch_key(data, new_key, back = FALSE)
 Switch to a different key of a cubble
 }
 \examples{
-library(dplyr)
 library(ggplot2)
-library(weatherdata)
+library(dplyr)
 # create a data with hierarchical structure:
 # id (station) is nested in country, country is nested in continent
-long <- world_sample \%>\%
-  filter(country != "Algeria") \%>\%
+long <- world_climate \%>\%
   stretch() \%>\%
   migrate(country, continent) \%>\%
-  mutate(tmax = tmax/10) \%>\%
   filter(lubridate::year(date) == 2020)
 
 # switch the key from id to country to aggregate on country

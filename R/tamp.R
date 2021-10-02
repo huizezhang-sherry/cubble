@@ -13,17 +13,10 @@
 #' @param data the data to be converted into a cubble object
 #' @param key the spatio identifier. Key can be automatically detected for a cubble object
 #' @examples
-#' library(lubridate)
-#' library(dplyr)
-#'
-#' # create a cubble object from a tibble
-#' climate_flat %>% as_cubble(key = station, index = date, coords = c(long, lat))
-#'
 #' # switch to the nested form from the long form
-#' # climate_small %>%
-#' #   stretch() %>%
-#' #   filter(year(date) == 2020) %>%
-#' #   tamp()
+#' aus_climate %>%
+#'   stretch() %>%
+#'   tamp()
 #' @export
 #' @seealso Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}
 tamp <- function(data, key) {
