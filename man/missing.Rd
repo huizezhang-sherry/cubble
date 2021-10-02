@@ -24,10 +24,10 @@ Compute missing summary
 \itemize{
 \item \code{add_missing_prct()} computes the percentage of missing for the selected variables
 \item \code{add_missing_dscrb()} gives a descriptive label (no missing, partly missing, and almost all missing)
-for those variables that have missing percentage computed
+for those variables with missing percentage computed
 }
 }
 \examples{
-climate_small \%>\% add_missing_prct(prcp:tmin)
-climate_small \%>\% add_missing_prct(prcp:tmin) \%>\% add_missing_dscrb()
+climate_missing \%>\% add_missing_prct(prcp:tmin)
+climate_missing \%>\% add_missing_prct(prcp:tmin) \%>\% add_missing_dscrb()
 }

@@ -3,8 +3,6 @@ find_invariant <- function(data, key) {
   data <- tibble::as_tibble(data)
 
   # temporarily only one key
-  #key <- enexpr(key)
-  #data <- tibble::as_tibble(data)
   # remove the list-column, useful in a nested form
   data[map(data, class) == "list"] <- NULL
 

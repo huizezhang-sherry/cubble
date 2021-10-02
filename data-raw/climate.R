@@ -48,3 +48,10 @@ climate_flat <- aus_climate %>%
   ungroup()
 
 usethis::use_data(climate_flat, overwrite = TRUE)
+
+############################################################
+set.seed(123)
+climate_missing <- aus_climate_cubble %>%
+  slice_sample(n = 50)
+
+usethis::use_data(climate_missing, overwrite = TRUE)
