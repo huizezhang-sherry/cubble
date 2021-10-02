@@ -21,6 +21,9 @@ reference:
   - tamp
   - stretch
   - migrate
+  - strip_rowwise
+  - switch_key
+  - rename_key
   - contains("index")
   - contains("slice")
 - title: "Visualising spatial-temporal data"

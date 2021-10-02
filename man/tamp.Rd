@@ -24,17 +24,11 @@ group-specific variables.
 }
 }
 \examples{
-library(lubridate)
-library(dplyr)
-
-# create a cubble object from a tibble
-climate_flat \%>\% as_cubble(key = station, index = date, coords = c(long, lat))
-
 # switch to the nested form from the long form
-# climate_small \%>\%
-#   stretch() \%>\%
-#   filter(year(date) == 2020) \%>\%
-#   tamp()
+aus_climate \%>\%
+  stretch() \%>\%
+  filter(lubridate::year(date) == 2020) \%>\%
+  tamp()
 }
 \seealso{
 Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}

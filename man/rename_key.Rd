@@ -15,5 +15,5 @@ rename_key(data, ...)
 Rename the key variable
 }
 \examples{
-climate_small \%>\% rename_key(id = station)
+aus_climate \%>\% rename_key(station = id)
 }

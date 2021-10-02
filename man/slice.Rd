@@ -29,15 +29,14 @@ single plot. The slicing family in cubble wraps around the \code{\link[dplyr:sli
 allow slicing from top and bottom, based on a variable, or in random.
 }
 \examples{
-library(dplyr)
 # slice the first 50 stations from the top/ bottom
-climate_small \%>\% slice_head(n = 50)
-climate_small \%>\% slice_tail(n = 50)
+aus_climate \%>\% slice_head(n = 50)
+aus_climate \%>\% slice_tail(n = 50)
 
 # slice based on the max/ min of a variable
-climate_small \%>\% slice_max(elevation, n = 10)
-climate_small \%>\% slice_min(lat, n = 10)
+aus_climate \%>\% slice_max(elev, n = 10)
+aus_climate \%>\% slice_min(lat, n = 10)
 
 # random sample
-climate_small \%>\% slice_sample(n = 10)
+aus_climate \%>\% slice_sample(n = 10)
 }
