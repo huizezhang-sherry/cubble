@@ -2,7 +2,7 @@
 % Please edit documentation in R/grid.R
 \name{gen_grid}
 \alias{gen_grid}
-\title{Generate geofacet grid based on long and lat}
+\title{Automatic generation of geofacet grid}
 \usage{
 gen_grid(data, var = NULL, nrow = NULL, ncol = NULL)
 }
@@ -21,38 +21,34 @@ based on longitude and latitude.
 }
 \examples{
 library(lubridate)
-library(cubble)
 library(ggplot2)
 library(geofacet)
 library(dplyr)
 
-short <- climate_small \%>\%
-  dplyr::slice_tail(n = 15) \%>\%
-  # a temporary fix for unnest tsibble
-  mutate(ts = list(as_tibble(ts)))
+# filter out 15 stations in Victoria
+short <- aus_climate \%>\% filter(stringr::str_detect(id, "ASN0008")) \%>\% slice_tail(n = 15)
 
+####################
+# how those stations look like in Victoria map
+state_map <-rmapshaper:: ms_simplify(ozmaps::abs_ste \%>\%
+                           filter(NAME == "Victoria"),
+                         keep = 2e-3)
+plot_map(state_map) +
+  geom_point(data = short, aes(x = long, y = lat)) +
+  ggrepel::geom_label_repel(data = short, aes(x = long, y = lat, label = name))
+
+####################
 # generate the grid
 grid1 <- short \%>\% gen_grid(var = name)
 
-make_plot <- function(grid_supplied){
-  short \%>\%
-    stretch() \%>\%
-    migrate(name) \%>\%
-    dplyr::filter(year(date) == 2020, month(date) == 1) \%>\%
-    ggplot(aes(x = date, y= tmax, group = name)) +
-    geom_line() +
-    facet_geo(vars(name), grid = grid_supplied)
- }
-
-# make the plot with grid1
-make_plot(grid1)
-
-# manually modify the position of hobart airport in the grid
-grid2 <- grid1 \%>\%
-  mutate(row = ifelse(name == "hobart airport", 8, row),
-         col = ifelse(name == "hobart airport", 3, col))
-
-# make the same plot based on grid2
-make_plot(grid2)
-
+# looks like there's a sudden tmax drop around Feb 2020 around melbourne
+# (melbourne airport, wallan, essendon, avalon, and moorabbin airport) while
+# the drop is less obvious in eastern victoria.
+short \%>\%
+  stretch() \%>\%
+  migrate(name) \%>\%
+  dplyr::filter(year(date) == 2020, month(date) == 2) \%>\%
+  ggplot(aes(x = date, y = tmax, group = name)) +
+  geom_line() +
+  facet_geo(vars(name), grid = grid1)
 }

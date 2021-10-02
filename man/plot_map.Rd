@@ -2,7 +2,7 @@
 % Please edit documentation in R/map.R
 \name{plot_map}
 \alias{plot_map}
-\title{A quick plot of maps}
+\title{A quick plot of map}
 \usage{
 plot_map(map_data, ...)
 }
@@ -18,8 +18,13 @@ to save some typing for create a map.
 \examples{
 library(rmapshaper)
 library(ggplot2)
-state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-plot_map(state_map)
-plot_map(state_map) +
-   geom_point(data = climate_small, aes(x = long, y = lat))
+library(dplyr)
+
+vic_map <- ozmaps::abs_ste \%>\% filter(NAME == "Victoria")
+plot_map(vic_map)
+
+# Victoria stations
+victoria <- aus_climate \%>\% filter(stringr::str_detect(id, "ASN0008"))
+plot_map(vic_map) +
+   geom_point(data = victoria, aes(x = long, y = lat))
 }

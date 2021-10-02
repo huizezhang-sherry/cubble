@@ -8,7 +8,8 @@
 [![R-CMD-check](https://github.com/huizezhang-sherry/cubble/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions)
 <!-- badges: end -->
 
-Cubble is a vector spatio-temporal data structure for data analysis.
+Cubble is a vector spatio-temporal data structure for data analysis and
+visualisation.
 
 ## Installation
 
@@ -28,11 +29,16 @@ remotes::install_github("huizezhang-sherry/cubble")
 
 ## Example
 
-Using `tamp()` to create a cubble in the nested form by supply the
-variable that identifies each site:
+Using `as_cubble()` to create a cubble in the nested form by supplying
+the site identifier `key`, temporal identifier `index`, and the spatial
+coordinates that defines the site `coords`.
 
 ``` r
 library(cubble)
+#> Warning: replacing previous import 'lifecycle::last_warnings' by
+#> 'rlang::last_warnings' when loading 'pillar'
+#> Warning: replacing previous import 'lifecycle::last_warnings' by
+#> 'rlang::last_warnings' when loading 'tibble'
 library(dplyr)
 climate_flat %>% 
   as_cubble(key = station, index = date, coords = c(long, lat))
@@ -45,8 +51,9 @@ climate_flat %>%
 #> 2 ASN00002012 -18.2  128.       422 halls creek airport <tibble [366 × 4]>
 ```
 
-Use `stretch()` to switch to the long form and filter to January
-records:
+Use `stretch()` to switch from the nested form to the long form. Long
+form is convenient for time-wise computation, for exmaple, we can filter
+to January records:
 
 ``` r
 climate_flat %>% 
@@ -71,8 +78,9 @@ climate_flat %>%
 #> # … with 52 more rows
 ```
 
-Switch back to the list-column form with `tamp()` and add a count on the
-number of day with no rain for each station:
+Switch back to the list-column form with `tamp()`. List-column form is
+suitable for site-wise manipulation, for example, we can add the count
+of no-raining days for each station:
 
 ``` r
 climate_flat %>% 

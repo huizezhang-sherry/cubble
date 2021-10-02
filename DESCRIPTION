@@ -44,6 +44,8 @@ Suggests:
     rnoaa,
     ggrepel,
     geofacet,
+    rnaturalearth,
+    sf
 Remotes:
     tidyverse/dplyr
 VignetteBuilder: knitr

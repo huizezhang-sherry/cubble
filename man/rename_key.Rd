@@ -14,6 +14,3 @@ rename_key(data, ...)
 \description{
 Rename the key variable
 }
-\examples{
-climate_small \%>\% rename_key(id = station)
-}
