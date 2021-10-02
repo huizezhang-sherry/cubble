@@ -22,6 +22,7 @@ into the long form before creating the visualisation.
 \examples{
 library(ggplot2)
 library(GGally)
+library(dplyr)
 dt <- aus_climate \%>\%
   stretch() \%>\%
   migrate(lat, long) \%>\%

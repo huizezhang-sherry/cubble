@@ -26,6 +26,7 @@ strip_rowwise <- function(data){
 #'
 #' @examples
 #' library(ggplot2)
+#' library(dplyr)
 #' # create a data with hierarchical structure:
 #' # id (station) is nested in country, country is nested in continent
 #' long <- world_climate %>%
@@ -65,8 +66,6 @@ switch_key <- function(data, new_key, back = FALSE){
 #' @param data a cubble
 #' @param ... argument passed to \code{rename}: NEW = OLD
 #'
-#' @examples
-#' aus_climate %>% rename_key(station = id)
 #' @export
 rename_key <- function(data, ...){
   test_cubble(data)

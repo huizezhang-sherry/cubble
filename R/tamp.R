@@ -16,7 +16,6 @@
 #' # switch to the nested form from the long form
 #' aus_climate %>%
 #'   stretch() %>%
-#'   filter(lubridate::year(date) == 2020) %>%
 #'   tamp()
 #' @export
 #' @seealso Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}

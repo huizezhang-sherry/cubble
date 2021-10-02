@@ -36,9 +36,3 @@ This set of functions create and manipulate the leaves object.
 Notice that users may not need to these functions to directly manipulate the leaves.
 To extract the leaves object from a cubble, use \code{leaves()}
 }
-\examples{
-new_leaves(aus_climate, id)
-new_leaves(aus_climate, id) \%>\% is_leaves()
-invariant(leaves(aus_climate))
-variant(leaves(aus_climate))
-}

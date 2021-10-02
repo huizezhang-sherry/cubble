@@ -7,7 +7,7 @@
 \format{
 A cubble object with 5 station-related variables and 3 time-related variables (PRCP, TMAX, and TMIN), nested in the \code{ts} column
 \describe{
-\item{station}{station id}
+\item{id}{station id}
 \item{lat}{latitude of the station}
 \item{long}{longitude of the station}
 \item{elev}{elevation of the station}

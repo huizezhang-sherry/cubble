@@ -9,12 +9,13 @@
 #' @examples
 #' library(rmapshaper)
 #' library(ggplot2)
+#' library(dplyr)
 #'
-#' vic_map <- ozmaps::abs_ste %>% dplyr::filter(NAME == "Victoria")
+#' vic_map <- ozmaps::abs_ste %>% filter(NAME == "Victoria")
 #' plot_map(vic_map)
 #'
 #' # Victoria stations
-#' victoria <- aus_climate %>% filter(str_detect(id, "ASN0008"))
+#' victoria <- aus_climate %>% filter(stringr::str_detect(id, "ASN0008"))
 #' plot_map(vic_map) +
 #'    geom_point(data = victoria, aes(x = long, y = lat))
 #' @export
@@ -29,5 +30,8 @@ plot_map <- function(map_data, ...){
   } else{
     abort("`map_data` needs to have a column called `geometry`")
   }
+
+# -------------------------------------------------------------------------
+
 
 }

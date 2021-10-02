@@ -1,5 +1,5 @@
 test_that("classes are set up when creating a cubble from tibble", {
-  out <- climate_flat %>% as_cubble(key = station, index = date, coords = c(long, lat))
+  out <- climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
   expect_equal("cubble_df" %in% class(out), TRUE)
   expect_equal("rowwise_df" %in% class(out), TRUE)
 })

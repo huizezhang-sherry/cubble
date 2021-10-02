@@ -25,6 +25,7 @@ slice_factory <- function(f, ...){
 #' @param ... other arguments passed to the [dplyr::slice()]
 #' @examples
 #' # slice the first 50 stations from the top/ bottom
+#' library(dplyr)
 #' aus_climate %>% slice_head(n = 50)
 #' aus_climate %>% slice_tail(n = 50)
 #'
@@ -118,8 +119,8 @@ slice_nearby <- function(data, ..., buffer = 1, n = 5){
 #' @param map a map object as the background, default to the Australia country map
 #' @param origin the original dataset supplied to \code{slice_nearby()}
 #' @examples
-#' slice_nearby(climate_large, name == "Melbourne Airport") %>%
-#'    view_nearby(origin = climate_large,
+#' slice_nearby(aus_climate, name == "melbourne airport") %>%
+#'    view_nearby(origin = aus_climate,
 #'                map = ozmaps::abs_ste %>% dplyr::filter(NAME == "Victoria"))
 #' @export
 #' @rdname nearby

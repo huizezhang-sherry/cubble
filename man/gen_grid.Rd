@@ -23,13 +23,14 @@ based on longitude and latitude.
 library(lubridate)
 library(ggplot2)
 library(geofacet)
+library(dplyr)
 
 # filter out 15 stations in Victoria
-small <- victoria \%>\% slice_tail(n = 15)
+short <- aus_climate \%>\% filter(stringr::str_detect(id, "ASN0008")) \%>\% slice_tail(n = 15)
 
 ####################
 # how those stations look like in Victoria map
-state_map <- ms_simplify(ozmaps::abs_ste \%>\%
+state_map <-rmapshaper:: ms_simplify(ozmaps::abs_ste \%>\%
                            filter(NAME == "Victoria"),
                          keep = 2e-3)
 plot_map(state_map) +

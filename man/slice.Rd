@@ -30,6 +30,7 @@ allow slicing from top and bottom, based on a variable, or in random.
 }
 \examples{
 # slice the first 50 stations from the top/ bottom
+library(dplyr)
 aus_climate \%>\% slice_head(n = 50)
 aus_climate \%>\% slice_tail(n = 50)
 

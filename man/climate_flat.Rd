@@ -7,7 +7,7 @@
 \format{
 A tibble object with 732 rows and 9 columns
 \describe{
-\item{station}{station id}
+\item{id}{station id}
 \item{lat}{latitude of the station}
 \item{long}{longitude of the station}
 \item{elev}{elevation of the station}
@@ -22,8 +22,5 @@ climate_flat
 \description{
 A minimal 2020 climate dataset recorded in 2 stations in a tibble format. This data is used to
 show how to create a cubble object from tibble.
-}
-\seealso{
-climate_small
 }
 \keyword{datasets}

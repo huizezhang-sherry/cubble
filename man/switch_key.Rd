@@ -18,6 +18,7 @@ Switch to a different key of a cubble
 }
 \examples{
 library(ggplot2)
+library(dplyr)
 # create a data with hierarchical structure:
 # id (station) is nested in country, country is nested in continent
 long <- world_climate \%>\%

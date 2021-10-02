@@ -27,7 +27,6 @@ group-specific variables.
 # switch to the nested form from the long form
 aus_climate \%>\%
   stretch() \%>\%
-  filter(lubridate::year(date) == 2020) \%>\%
   tamp()
 }
 \seealso{

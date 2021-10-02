@@ -1,6 +1,6 @@
 test_that("switch a cubble in the nested form into a long form (no tsibble)", {
   out <- climate_flat %>%
-    as_cubble(key = station, index = date, coords = c(long, lat)) %>%
+    as_cubble(key = id, index = date, coords = c(long, lat)) %>%
     stretch()
   expect_equal("cubble_df" %in% class(out), TRUE)
   expect_equal("grouped_df" %in% class(out), TRUE)

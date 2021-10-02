@@ -7,7 +7,7 @@
 \format{
 A tibble object with 177 rows and 9 columns
 \describe{
-\item{station}{station id}
+\item{id}{station id}
 \item{lat}{latitude of the station}
 \item{long}{longitude of the station}
 \item{elev}{elevation of the station}
@@ -26,11 +26,9 @@ The dataset contains weather data from WMO and GSN stations in
 the United States, Australia, Austria, Spain, France, and China.
 }
 \examples{
+library(ggplot2)
 map <- sf::st_as_sf(rnaturalearth::ne_countries(scale = "medium", returnclass = "sf"))
 plot_map(map) +
   geom_point(data = world_climate, aes(x = long, y = lat))
-}
-\seealso{
-climate_small
 }
 \keyword{datasets}

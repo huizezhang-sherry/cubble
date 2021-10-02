@@ -5,7 +5,7 @@
 #'
 #' @format A cubble object with 5 station-related variables and 3 time-related variables (PRCP, TMAX, and TMIN), nested in the `ts` column
 #' \describe{
-#'   \item{station}{station id}
+#'   \item{id}{station id}
 #'   \item{lat}{latitude of the station}
 #'   \item{long}{longitude of the station}
 #'   \item{elev}{elevation of the station}
@@ -27,7 +27,7 @@
 #' show how to create a cubble object from tibble.
 #' @format A tibble object with 732 rows and 9 columns
 #' \describe{
-#'   \item{station}{station id}
+#'   \item{id}{station id}
 #'   \item{lat}{latitude of the station}
 #'   \item{long}{longitude of the station}
 #'   \item{elev}{elevation of the station}
@@ -35,7 +35,6 @@
 #'   \item{tmax}{maximum temperature}
 #'   \item{tmin}{minimum temperature}
 #' }
-#' @seealso climate_small
 "climate_flat"
 
 #' Worldwide climate data
@@ -45,7 +44,7 @@
 #'
 #' @format A tibble object with 177 rows and 9 columns
 #' \describe{
-#'   \item{station}{station id}
+#'   \item{id}{station id}
 #'   \item{lat}{latitude of the station}
 #'   \item{long}{longitude of the station}
 #'   \item{elev}{elevation of the station}
@@ -56,8 +55,22 @@
 #'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 #' }
 #' @examples
+#' library(ggplot2)
 #' map <- sf::st_as_sf(rnaturalearth::ne_countries(scale = "medium", returnclass = "sf"))
 #' plot_map(map) +
 #'   geom_point(data = world_climate, aes(x = long, y = lat))
-#' @seealso climate_small
 "world_climate"
+
+#' Climate data with missing value
+#'
+#' @format a cubble object with 50 rows and 7 columns
+#' \describe{
+#'   \item{station}{station id}
+#'   \item{lat}{latitude of the station}
+#'   \item{long}{longitude of the station}
+#'   \item{elev}{elevation of the station}
+#'   \item{name}{station name}
+#'   \item{wmo_id}{the world meterological organisation (WMO) station number}
+#'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
+#' }
+"climate_missing"

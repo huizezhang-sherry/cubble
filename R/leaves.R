@@ -16,11 +16,6 @@
 #' @param data a flat data without any nesting structure
 #' @param key the spatial identifier
 #'
-#' @examples
-#' new_leaves(aus_climate, id)
-#' new_leaves(aus_climate, id) %>% is_leaves()
-#' invariant(leaves(aus_climate))
-#' variant(leaves(aus_climate))
 #' @rdname leaves
 new_leaves <- function(data, key){
   data <- as_tibble(data)
