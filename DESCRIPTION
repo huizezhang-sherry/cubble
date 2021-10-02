@@ -30,8 +30,7 @@ Imports:
     tidyr,
     tidyselect,
     tsibble,
-    vctrs,
-    weatherdata
+    vctrs
 Suggests: 
     rmarkdown,
     knitr,
