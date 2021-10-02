@@ -24,10 +24,11 @@ aus_climate_raw <- aus_stations %>%
   mutate(ts = list(meteo_pull_monitors(monitors = id, var = c("PRCP", "TMAX", "TMIN"),
                                        date_min = "2016-01-01",
                                        date_max = "2020-12-31") %>%
-                     select(-id)))
+                     select(-id))) %>%
+  rename(lat = latitude, long = longitude, elev = elevation)
 
 aus_climate_cubble <- aus_climate_raw %>%
-  cubble::as_cubble(index = date, key = id, coords = c(longitude, latitude))
+  cubble::as_cubble(index = date, key = id, coords = c(long, lat))
 
 # subset stations that don't have missing and records in 2020
 aus_climate <- aus_climate_cubble %>%
@@ -36,8 +37,7 @@ aus_climate <- aus_climate_cubble %>%
   tamp() %>%
   add_missing_prct(prcp:tmin) %>%
   filter(prcp_missing == 0, tmax_missing == 0, tmin_missing == 0) %>%
-  select(-contains("missing")) %>%
-  rename(lat = latitude, long = longitude, elev = elevation)
+  select(-contains("missing"))
 
 usethis::use_data(aus_climate, overwrite = TRUE)
 

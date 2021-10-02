@@ -36,42 +36,6 @@ is_cubble(data)
 Constructor for the cubble class
 }
 \examples{
-# create a nested tibble
-library(tibble)
-dt <- tibble(
-  station = c("A", "B"),
-  long = c(110, 120),
-  lat = c(-10, -20),
-  ts = list(
-    tibble(
-      date = c(
-        as.Date("2021-07-01"),
-        as.Date("2021-08-01")
-      ),
-      prcp = c(0, 0),
-      tmax = c(20, 125),
-      tmin = c(15, 18)
-    ),
-    tibble(
-      date = c(
-        as.Date("2021-07-01"),
-        as.Date("2021-08-01")
-      ),
-      prcp = c(0, 100),
-      tmax = c(10, 15),
-      tmin = c(5, 8)
-    )
-  )
-)
-
-# create a cubble from `dt`
-# cubble(dt,
-#        group = station,
-#        leaves = tibble(
-#          station = c("A", "B"),
-#          long = c(110, 120),
-#          lat = c(-10, -20)
-#        ),
-#        form = "long"
-# )
+climate_flat \%>\%
+  as_cubble(key = id, index = date, coords = c(long, lat))
 }

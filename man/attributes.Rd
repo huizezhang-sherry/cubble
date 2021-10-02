@@ -9,7 +9,7 @@
 \alias{coord_x}
 \alias{coord_y}
 \alias{index}
-\title{Functions to get attributes from a cubble object}
+\title{Functions to extract cubble attributes}
 \usage{
 form(data)
 
@@ -31,26 +31,25 @@ index(data)
 \item{data}{an cubble object}
 }
 \description{
-Functions to get attributes from a cubble object
+Functions to extract cubble attributes
 }
 \details{
 Apart from inheriting attributes \code{names}, \code{row.names}, and \code{class} from the underlying tibble,
-a cubble object will also have additional attributes: \code{groups}, \code{meta} and \code{form}.
-
-\code{groups()}, \code{meta()}, and \code{form()} provide a more  convenient way to extract
-these attributes without \verb{\%@\%} from a cubble.
-\code{group_vars()} extracts the variable name of the group, which can often be useful.
+a cubble has its site identifier: \code{key}, temporal identifier, \code{index}, and
+spatial coordinate reference: \code{coords}.
 
 If a cubble object is also a tsibble, then tsibble attributes (\code{key}, \code{index}, \code{index2}, \code{interval})
-are also preserved and can be accessed via the relevant functions in the tsibble package.
+are also preserved and can be accessed via the relevant functions in the tsibble package. (NOT FULLY IMPLEMENTED)
 }
 \examples{
 # extract attributes of a cubble object
-form(climate_small)
-leaves(climate_small) \%>\% head(5)
-key_data(climate_small) \%>\% head(5)
-key_vars(climate_small)
+form(aus_climate)
+leaves(aus_climate) \%>\% head(5)
+key_data(aus_climate) \%>\% head(5)
+key_vars(aus_climate)
+index(aus_climate)
+coords(aus_climate)
+coord_x(aus_climate)
+coord_y(aus_climate)
 
-# print out the attribute names of cubble with a tsibble underlying class
-names(attributes(climate_small \%>\% stretch()))
 }
