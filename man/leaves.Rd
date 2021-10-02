@@ -5,7 +5,7 @@
 \alias{is_leaves}
 \alias{invariant}
 \alias{variant}
-\title{Create a leaves object}
+\title{Create and manipulate leaves attributes}
 \usage{
 new_leaves(data, key)
 
@@ -37,8 +37,8 @@ Notice that users may not need to these functions to directly manipulate the lea
 To extract the leaves object from a cubble, use \code{leaves()}
 }
 \examples{
-new_leaves(climate_flat, station)
-new_leaves(climate_flat, station) \%>\% is_leaves()
-new_leaves(climate_flat, station) \%>\% invariant()
-new_leaves(climate_flat, station) \%>\% variant()
+new_leaves(aus_climate, id)
+new_leaves(aus_climate, id) \%>\% is_leaves()
+invariant(leaves(aus_climate))
+variant(leaves(aus_climate))
 }

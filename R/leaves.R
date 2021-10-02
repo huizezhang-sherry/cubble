@@ -1,4 +1,4 @@
-#' Create a leaves object
+#' Create and manipulate leaves attributes
 #'
 #' A leaves object records whether a variable in the cubble varies across time or not and
 #' make it possible for a cubble to switch between the nested and long form.
@@ -17,12 +17,11 @@
 #' @param key the spatial identifier
 #'
 #' @examples
-#' new_leaves(climate_flat, station)
-#' new_leaves(climate_flat, station) %>% is_leaves()
-#' new_leaves(climate_flat, station) %>% invariant()
-#' new_leaves(climate_flat, station) %>% variant()
+#' new_leaves(aus_climate, id)
+#' new_leaves(aus_climate, id) %>% is_leaves()
+#' invariant(leaves(aus_climate))
+#' variant(leaves(aus_climate))
 #' @rdname leaves
-#' @export
 new_leaves <- function(data, key){
   data <- as_tibble(data)
   data <- data[map_lgl(as_tibble(data), ~all(class(.x) != "list") )]

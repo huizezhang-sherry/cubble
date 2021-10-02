@@ -3,52 +3,30 @@ template:
     bootswatch: cosmo
 
 reference:
-- title: "Create and change mode of a cubble"
-- contents:
-  - tamp
-  - stretch
-  - migrate
-- title: "Extract attributes from a cubble"
-- contents:
-  - key_data
-  - key_vars
-  - index
-  - coords
-  - coord_x
-  - coord_y
-  - leaves
-  - form
-- title: "S3 on cubble"
+- title: "S3 method on cubble"
 - contents:
   - cubble
   - as_cubble
   - is_cubble
   - tbl_sum
-- title: "S3 on the leaves attribute"
+- title: "Extract cubble attributes"
 - contents:
+  - key_data
   - new_leaves
-  - is_leaves
-  - invariant
-  - variant
-- title: "Missing summary"
+- title: "Data quality check"
 - contents:
   - starts_with("add")
-- title: "Data quality"
-- contents:
-  - starts_with("quality")
-  - glyph_pixel
 - title: "Data manipulation"
 - contents:
+  - tamp
+  - stretch
+  - migrate
   - contains("index")
   - contains("slice")
-- title: "Map"
-- contents:
-  - bbox
-  - plot_map
-- title: "Generating grid for using geofacet"
+- title: "Visualising spatial-temporal data"
 - contents:
   - gen_grid
+  - plot_map
 - title: "In-built data"
 - contents:
   - contains("climate")
-  - station

@@ -1,17 +1,22 @@
-#' A quick plot of maps
+#' A quick plot of map
 #'
 #' A quick initiate of a ggplot2 object for map with some default aesthetic setting
 #' to save some typing for create a map.
 #'
 #' @param map_data the dataset contains the map to be plotted
 #' @param ... other arguments to be passed into `geom_sf()`
+#'
 #' @examples
 #' library(rmapshaper)
 #' library(ggplot2)
-#' state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-#' plot_map(state_map)
-#' plot_map(state_map) +
-#'    geom_point(data = climate_small, aes(x = long, y = lat))
+#'
+#' vic_map <- ozmaps::abs_ste %>% dplyr::filter(NAME == "Victoria")
+#' plot_map(vic_map)
+#'
+#' # Victoria stations
+#' victoria <- aus_climate %>% filter(str_detect(id, "ASN0008"))
+#' plot_map(vic_map) +
+#'    geom_point(data = victoria, aes(x = long, y = lat))
 #' @export
 plot_map <- function(map_data, ...){
   if ("geometry" %in% names(map_data)){

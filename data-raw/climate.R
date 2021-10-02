@@ -55,3 +55,4 @@ climate_missing <- aus_climate_cubble %>%
   slice_sample(n = 50)
 
 usethis::use_data(climate_missing, overwrite = TRUE)
+
