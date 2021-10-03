@@ -23,7 +23,7 @@ Imports:
     pillar,
     plotly,
     purrr,
-    rlang (>= 0.4.11.9001),
+    rlang,
     s2,
     stringr,
     tibble,
