@@ -40,7 +40,7 @@
     out <- vctrs::vec_data(out)
     # check column includes key, index, and coords
 
-    out <- out[,j]
+    out <- out[,unlist(j)]
   }
 
  dplyr_reconstruct(out, data)
