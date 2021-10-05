@@ -72,11 +72,15 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   form <- determine_form(template)
   key <- key_vars(template)[1]
 
-  data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
-  old_leaves <- leaves(template) %>% names()
-  new_leaves <- data_var[data_var %in% old_leaves]
-  cols <- unique(c(key, new_leaves))
-  leaves_data <- leaves(template)[cols]
+  if (form == "long"){
+    leaves_data <-  leaves(template)
+  } else{
+    data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
+    old_leaves <- leaves(template) %>% names()
+    new_leaves <- data_var[data_var %in% old_leaves]
+    cols <- unique(c(key, new_leaves))
+    leaves_data <- leaves(template)[cols]
+  }
 
 
   new_cubble(data,
