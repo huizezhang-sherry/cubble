@@ -21,11 +21,11 @@
 #'   geom_point(data = aus_climate, aes(x = long, y = lat))
 "aus_climate"
 
-#' Australia climate data (minimal)
+#' Australia climate data (tibble)
 #'
-#' A minimal 2020 climate dataset recorded in 2 stations in a tibble format. This data is used to
+#' A minimal 2020 climate dataset recorded in 5 stations in a tibble format. This data is used to
 #' show how to create a cubble object from tibble.
-#' @format A tibble object with 732 rows and 9 columns
+#' @format A tibble object with 1830 rows and 10 columns
 #' \describe{
 #'   \item{id}{station id}
 #'   \item{lat}{latitude of the station}

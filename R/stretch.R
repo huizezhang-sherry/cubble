@@ -49,7 +49,7 @@ stretch.cubble_df <- function(data, cols, ...){
 
   leaves_data <- leaves(data)
 
-  list_col <- data[,cols[[1]]][[1]]
+  list_col <- as_tibble(data)[,cols[[1]]][[1]]
 
   if ("tbl_ts" %in% class(list_col[[1]])){
     data$ts <- map(data$ts, tibble::as_tibble)
