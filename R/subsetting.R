@@ -53,8 +53,8 @@
   out <- data
   out %@% "names" <- value
 
-  key_idx <- which(names(data) == key_vars(data))
-  new_key <- names(out)[key_idx]
+  key_idx <- which(names(data) == key_vars(data))[1]
+  new_key <- sym(names(out)[key_idx])
   long_idx <- which(names(data) == coord_x(data))
   new_long <- names(out)[long_idx]
   lat_idx <- which(names(data) == coord_y(data))
@@ -63,7 +63,7 @@
   leaves_data <- new_leaves(out, !!new_key)
 
   new_cubble(out,
-             key = new_key, index = index(data), coords = c(new_long, new_lat),
+             key = as_name(new_key), index = index(data), coords = c(new_long, new_lat),
              leaves = leaves_data, form = determine_form(out))
 
 }
