@@ -23,7 +23,7 @@ Imports:
     pillar,
     plotly,
     purrr,
-    rlang,
+    rlang (>= 0.4.11.9001),
     s2,
     stringr,
     tibble,
@@ -48,6 +48,7 @@ Suggests:
     sf
 Remotes:
     tidyverse/dplyr
+    r-lib/rlang
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
