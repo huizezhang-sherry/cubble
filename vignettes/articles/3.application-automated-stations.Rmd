@@ -1,5 +1,5 @@
 ---
-title: "Comparing records in Automated and traditional weather stations"
+title: "3. Application: Comparing records in automated and traditional weather stations"
 ---
 
 ```{r, include = FALSE}

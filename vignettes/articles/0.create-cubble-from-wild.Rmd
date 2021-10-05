@@ -18,6 +18,7 @@ library(tidyr)
 library(stringr)
 library(patchwork)
 library(sf)
+library(ggplot2)
 ```
 
 This article shows you how to create a cubble from data in the wild through the example of query climate data from National Oceanic and Atmospheric Administration (NOAA) using the `rnoaa` package.
