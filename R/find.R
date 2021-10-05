@@ -1,14 +1,15 @@
 find_invariant <- function(data, key) {
-  key <- enquo(key)
+  key <- as_name(enquo(key))
   data <- tibble::as_tibble(data)
 
   # temporarily only one key
   # remove the list-column, useful in a nested form
   data[map(data, class) == "list"] <- NULL
 
-  list_col <- data %>%
-    tidyr::nest(data = -(!!key)) %>%
-    dplyr::pull(data)
+  key_col <- data[,key]
+  nested_col <- data[,which(names(data) != key)]
+  list_col <- vec_split(nested_col, key_col)$val
+
 
   out <- map(list_col, function(data){
     var_length <- map_dbl(colnames(data), ~ nrow(unique(data[.x])))
