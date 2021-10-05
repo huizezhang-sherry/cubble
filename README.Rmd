@@ -44,14 +44,14 @@ Using `as_cubble()` to create a cubble in the nested form by supplying the site 
 library(cubble)
 library(dplyr)
 climate_flat %>% 
-  as_cubble(key = station, index = date, coords = c(long, lat))
+  as_cubble(key = id, index = date, coords = c(long, lat))
 ```
 
 Use `stretch()` to switch from the nested form to the long form. Long form is convenient for time-wise computation, for exmaple, we can filter to January records:
 
 ```{r}
 climate_flat %>% 
-  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
+  as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1)
 ```
@@ -60,7 +60,7 @@ Switch back to the list-column form with `tamp()`. List-column form is suitable 
 
 ```{r}
 climate_flat %>% 
-  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
+  as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1) %>% 
   tamp() %>% 

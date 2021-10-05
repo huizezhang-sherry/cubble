@@ -35,20 +35,19 @@ coordinates that defines the site `coords`.
 
 ``` r
 library(cubble)
-#> Warning: replacing previous import 'lifecycle::last_warnings' by
-#> 'rlang::last_warnings' when loading 'pillar'
-#> Warning: replacing previous import 'lifecycle::last_warnings' by
-#> 'rlang::last_warnings' when loading 'tibble'
 library(dplyr)
 climate_flat %>% 
-  as_cubble(key = station, index = date, coords = c(long, lat))
-#> # Cubble: station-wise: nested form
-#> # Key:    station [2]
+  as_cubble(key = id, index = date, coords = c(long, lat))
+#> # Cubble: id-wise: nested form
+#> # Key:    id [5]
 #> # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
-#>   station       lat  long elevation name                ts                
-#>   <fct>       <dbl> <dbl>     <dbl> <fct>               <list>            
-#> 1 ASN00001019 -14.3  127.        23 kalumburu           <tibble [366 × 4]>
-#> 2 ASN00002012 -18.2  128.       422 halls creek airport <tibble [366 × 4]>
+#>   id            lat  long  elev name           wmo_id ts                
+#>   <chr>       <dbl> <dbl> <dbl> <chr>           <dbl> <list>            
+#> 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 <tibble [366 × 4]>
+#> 2 ASN00010311 -31.9  117. 179   york            94623 <tibble [366 × 4]>
+#> 3 ASN00010614 -32.9  117. 338   narrogin        94627 <tibble [366 × 4]>
+#> 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120 <tibble [366 × 4]>
+#> 5 ASN00015131 -17.6  134. 220   elliott         94236 <tibble [366 × 4]>
 ```
 
 Use `stretch()` to switch from the nested form to the long form. Long
@@ -57,25 +56,25 @@ to January records:
 
 ``` r
 climate_flat %>% 
-  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
+  as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1)
 #> # Cubble: time-wise: long form
-#> # Key:    station [2]
-#> # Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]
-#>    station     date        prcp  tmax  tmin
-#>    <fct>       <date>     <dbl> <dbl> <dbl>
-#>  1 ASN00001019 2020-01-01    46  38.6  25.1
-#>  2 ASN00001019 2020-01-02     0  38.8  28.1
-#>  3 ASN00001019 2020-01-03   266  37.9  23.6
-#>  4 ASN00001019 2020-01-04     0  34.3  26.2
-#>  5 ASN00001019 2020-01-05    46  35.4  26.7
-#>  6 ASN00001019 2020-01-06   760  27.5  24.8
-#>  7 ASN00001019 2020-01-07  1168  31.6  23.2
-#>  8 ASN00001019 2020-01-08  1178  32.7  24  
-#>  9 ASN00001019 2020-01-09    48  34.2  25.1
-#> 10 ASN00001019 2020-01-10     0  35.4  26.7
-#> # … with 52 more rows
+#> # Key:    id [5]
+#> # Leaves: id [chr], lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]
+#>    id          date        prcp  tmax  tmin
+#>    <chr>       <date>     <dbl> <dbl> <dbl>
+#>  1 ASN00009021 2020-01-01     0   319   153
+#>  2 ASN00009021 2020-01-02     0   249   164
+#>  3 ASN00009021 2020-01-03     6   232   130
+#>  4 ASN00009021 2020-01-04     0   284   124
+#>  5 ASN00009021 2020-01-05     0   353   116
+#>  6 ASN00009021 2020-01-06     0   348   131
+#>  7 ASN00009021 2020-01-07     0   328   151
+#>  8 ASN00009021 2020-01-08     0   304   174
+#>  9 ASN00009021 2020-01-09     0   287   173
+#> 10 ASN00009021 2020-01-10     0   326   158
+#> # … with 145 more rows
 ```
 
 Switch back to the list-column form with `tamp()`. List-column form is
@@ -84,16 +83,19 @@ of no-raining days for each station:
 
 ``` r
 climate_flat %>% 
-  as_cubble(key = station, index = date, coords = c(long, lat)) %>% 
+  as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1) %>% 
   tamp() %>% 
   mutate(zero_rain = sum(ts$prcp == 0, na.rm = TRUE))
-#> # Cubble: station-wise: nested form
-#> # Key:    station [2]
+#> # Cubble: id-wise: nested form
+#> # Key:    id [5]
 #> # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
-#>   station       lat  long elevation name                ts                zero_rain
-#>   <fct>       <dbl> <dbl>     <dbl> <fct>               <list>                <int>
-#> 1 ASN00001019 -14.3  127.        23 kalumburu           <tibble [31 × 4]>        12
-#> 2 ASN00002012 -18.2  128.       422 halls creek airport <tibble [31 × 4]>        13
+#>   id            lat  long  elev name           wmo_id ts                zero_rain
+#>   <chr>       <dbl> <dbl> <dbl> <chr>           <dbl> <list>                <int>
+#> 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 <tibble [31 × 4]>        29
+#> 2 ASN00010311 -31.9  117. 179   york            94623 <tibble [31 × 4]>        31
+#> 3 ASN00010614 -32.9  117. 338   narrogin        94627 <tibble [31 × 4]>        30
+#> 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120 <tibble [31 × 4]>        12
+#> 5 ASN00015131 -17.6  134. 220   elliott         94236 <tibble [31 × 4]>        14
 ```
