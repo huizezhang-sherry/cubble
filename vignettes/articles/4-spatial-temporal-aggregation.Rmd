@@ -1,0 +1,155 @@
+---
+title: "4.spatial-temporal-aggregation"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE,
+  cache = TRUE # currently mutate(ll = s2_lnglat(long, lat)) is a bit slow
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(cubble)
+library(s2)
+library(ggplot2)
+library(patchwork)
+```
+
+This vignette shows an example of spatial and temporal aggregation on the Victoria weather station data.
+
+In the package `weatherdata` includes all the active (in 2020) Australian stations that record precipitation, maximum and minimum temperature. 
+
+```{r}
+aus_stations <- weatherdata::climate_full %>% 
+  mutate(ll = s2_lnglat(long, lat)) %>% 
+   stretch(ts) %>% 
+  mutate(wk = lubridate::week(date)) %>% 
+  group_by(wk) %>% 
+  summarise(prcp = sum(prcp, na.rm = TRUE), 
+            tmax = mean(tmax, na.rm = TRUE),
+            tmin = mean(tmin, na.rm = TRUE)) %>% 
+  tamp()
+```
+
+With package `s2`, we can compute the distance matrix between stations. We use k-means for a basic clustering to aggregate the stations in the spatial dimension based on the distance matrix. After several trials, 30 clusters work well for all the stations in Australia.
+
+```{r}
+dist_raw <- scale(s2_distance_matrix(aus_stations$ll, aus_stations$ll))
+
+k <- kmeans(dist_raw, centers = 20)
+
+station_clustered <- aus_stations %>% 
+  strip_rowwise() %>% 
+  mutate(cluster= k$cluster)
+  # left_join(tibble(id = aus_stations$id,
+  #                  cluster = k$cluster))
+# left_join should update leaves
+```
+
+After this, there are several functionalities and plots that we hope to make: 
+
+  - extract the aggregated centroid (potentially alpha hull to know the coverage of each cluster) of the cluster
+  - aggregate the series within the cluster (potentially further aggregation is needed on the original series itself)
+  - look at how does the aggregated series look like on the map (with glyph map)
+  - look at whether the series within each cluster is homogeneous, so that the aggregated series don't miss the feature of each individual.
+
+```{r}
+spatial_cluster <- station_clustered %>% 
+  group_by(cluster) %>% 
+  remove_key(id) %>% 
+  mutate(chull = list(chull(val$long, val$lat))) %>% 
+  mutate(ll_cluster = s2_make_polygon(c(val$long[chull]), c(val$lat[chull]), oriented = FALSE),
+         centroid = s2::s2_centroid(ll_cluster),
+         long = s2_x(centroid),
+         lat = s2_y(centroid)) 
+spatial_cluster
+```
+
+```{r}
+temporal_ind <- spatial_cluster %>% 
+  stretch(ts)
+
+temporal_ind
+```
+
+```{r}
+temporal_cluster <- spatial_cluster %>% 
+  stretch(ts) %>% 
+  group_by(wk) %>% 
+  summarise(prcp = sum(prcp, na.rm = TRUE), 
+            tmax = mean(tmax, na.rm = TRUE),
+            tmin = mean(tmin, na.rm = TRUE)) %>% 
+  migrate(long, lat)
+
+temporal_cluster
+```
+
+```{r eval = FALSE}
+gly <- GGally::glyphs(temporal_cluster, x_major = "long", x_minor = "wk",
+                      y_major = "lat", y_minor = "prcp", height = 2, width = 4)
+
+state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+p1 <- plot_map(state_map) + 
+  geom_text(data = temporal_cluster %>% tamp(), aes(x = long, y = lat, label = cluster)) + 
+  geom_path(data = gly, aes(x = gx, y = gy, group = gid))
+
+p1
+```
+
+
+```{r eval = FALSE, echo = FALSE}
+ggsave(p1, filename = here::here("man/figures/spatial-temporal-agg-map.png"), 
+       width = 5, height = 5)
+```
+
+```{r echo = FALSE}
+knitr::include_graphics(here::here("man/figures/spatial-temporal-agg-map.png"))
+```
+
+```{r eval = FALSE}
+p2 <- temporal_ind %>% 
+  ggplot(aes(x = wk, y = prcp, group = id)) + 
+  geom_line(alpha = .5) + 
+  facet_wrap(vars(cluster))
+
+p2
+```
+
+```{r eval = FALSE, echo = FALSE}
+ggsave(p2, filename = here::here("man/figures/spatial-temporal-agg-ind.png"), 
+       width = 5, height = 5)
+```
+
+```{r echo = FALSE}
+knitr::include_graphics(here::here("man/figures/spatial-temporal-agg-ind.png"))
+```
+
+```{r eval = FALSE}
+tas_latlong <- temporal_ind %>% 
+  migrate(lat, long) %>% 
+  filter(lat < -40) %>% 
+  filter(prcp == max(prcp))
+
+state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+p3 <- plot_map(state_map) + 
+  geom_point(data = station_clustered, aes(x = long, y = lat), size = 0.5) + 
+  geom_sf(data = spatial_cluster %>% mutate(ll_cluster = sf::st_as_sfc(ll_cluster)), 
+          aes(geometry = ll_cluster), fill = "transparent") + 
+  geom_point(data = tas_latlong, aes(x = long, y =lat), col = "red")
+
+p3  
+```
+
+```{r eval = FALSE, echo = FALSE}
+ggsave(p3, filename = here::here("man/figures/spatial-temporal-diag.png"), 
+       width =5, height = 5)
+```
+
+```{r echo = FALSE}
+knitr::include_graphics(here::here("man/figures/spatial-temporal-diag.png"))
+```

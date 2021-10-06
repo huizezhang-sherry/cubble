@@ -45,10 +45,12 @@ Suggests:
     ggrepel,
     geofacet,
     rnaturalearth,
-    sf
+    sf,
+    weatherdata
 Remotes:
     tidyverse/dplyr
     r-lib/rlang
+    huizezhang-sherry/weatherdata
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
