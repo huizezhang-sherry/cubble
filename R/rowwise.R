@@ -51,16 +51,57 @@ switch_key <- function(data, new_key, back = FALSE){
   new_key <- enquo(new_key)
   test_cubble(data)
 
-  if (back){
-    leaves <- new_leaves(data %>% unnest_cubble(tsibble_key = !!new_key), !!new_key)
-  } else{
-    leaves <- new_leaves(data %>% unnest_cubble(), !!new_key)
-  }
+  # if (back){
+  #   leaves <- new_leaves(data %>% unnest_cubble(tsibble_key = !!new_key), !!new_key)
+  # } else{
+  #   leaves <- new_leaves(data %>% unnest_cubble(), !!new_key)
+  # }
+
+  leaves <- leaves(data)
 
   new_cubble(data,
              key = as_name(new_key), index = index(data), coords = coords(data),
              leaves = leaves, form = determine_form(data))
 }
+
+#' @export
+remove_key <- function(data, key){
+  key <- enquo(key)
+  test_cubble(data)
+
+  old_key <- key_vars(data)
+  leaves <- leaves(data)
+
+  if (!as_name(key) %in% old_key){
+    abort(glue::glue("{as_name(key)} is not a cubble key!"))
+  }
+
+  new_key <- old_key[old_key != as_name(key)]
+
+  ts_df <- data %>% select(new_key, ts) %>% as_tibble()
+  out_ts <- vec_split(ts_df[,which(names(ts_df) != new_key)],
+                          ts_df[,new_key]) %>%
+    as_tibble() %>%
+    unpack(key) %>%
+    mutate(ts = map(val, ~unchop(.x, ts) %>% unpack(ts)))
+
+  data <- as_tibble(data)
+  inv <- find_invariant(data, !!new_key)
+
+  out <- vec_split(data[,which(!names(data) %in% c(inv$invariant, "ts"))],
+                   data[,inv$invariant]) %>%
+    as_tibble() %>%
+    unpack(key) %>%
+    left_join(out_ts %>% select(new_key, ts), by = new_key) %>%
+    arrange(!!sym(new_key))
+
+  leaves <- as_leaves(data, variant = inv$variant)
+
+  new_cubble(out,
+             key = new_key, index = index(data), coords = coords(data),
+             leaves = leaves, form = determine_form(data))
+}
+
 
 #' Rename the key variable
 #' @param data a cubble

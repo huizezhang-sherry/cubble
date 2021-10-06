@@ -23,6 +23,6 @@ test_missing <- function(quo, var){
 }
 
 get_listcol <- function(data){
-  col_type <- map_chr(data, class)
+  col_type <- map(data, class)
   names(data)[col_type == "list"]
 }

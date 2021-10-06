@@ -53,7 +53,7 @@
   out <- data
   out %@% "names" <- value
 
-  key_idx <- which(names(data) == key_vars(data))[1]
+  key_idx <- which(names(data) == key_vars(data)[1])
   new_key <- sym(names(out)[key_idx])
   long_idx <- which(names(data) == coord_x(data))
   new_long <- names(out)[long_idx]
