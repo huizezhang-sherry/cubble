@@ -17,7 +17,6 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(patchwork)
-library(sf)
 library(ggplot2)
 ```
 

@@ -47,7 +47,6 @@ Suggests:
     rnaturalearth,
     rnaturalearthdata,
     absmapsdata,
-    sf,
     weatherdata
 Remotes:
     tidyverse/dplyr,

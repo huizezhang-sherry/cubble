@@ -55,10 +55,13 @@
 #'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 #' }
 #' @examples
+#' \dontrun{
 #' library(ggplot2)
 #' map <- sf::st_as_sf(rnaturalearth::ne_countries(scale = "medium", returnclass = "sf"))
 #' plot_map(map) +
 #'   geom_point(data = world_climate, aes(x = long, y = lat))
+#' }
+#'
 "world_climate"
 
 #' Climate data with missing value
