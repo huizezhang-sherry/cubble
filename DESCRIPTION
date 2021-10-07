@@ -48,8 +48,8 @@ Suggests:
     sf,
     weatherdata
 Remotes:
-    tidyverse/dplyr
-    r-lib/rlang
+    tidyverse/dplyr,
+    r-lib/rlang,
     huizezhang-sherry/weatherdata
 VignetteBuilder: knitr
 Depends: 
