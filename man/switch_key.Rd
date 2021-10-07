@@ -9,9 +9,7 @@ switch_key(data, key)
 \arguments{
 \item{data}{a cubble}
 
-\item{new_key}{the new key}
-
-\item{back}{whether it is a switch back to the individual level}
+\item{key}{the new key}
 }
 \description{
 Switch to a different key of a cubble

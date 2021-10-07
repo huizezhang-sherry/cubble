@@ -48,9 +48,9 @@
 }
 
 #' @export
-`names<-.cubble_df` <- function(data, value){
+`names<-.cubble_df` <- function(x, value){
 
-  out <- data
+  out <- data <- x
   out %@% "names" <- value
 
   key_idx <- which(names(data) == key_vars(data)[1])

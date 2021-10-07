@@ -45,12 +45,15 @@ Suggests:
     ggrepel,
     geofacet,
     rnaturalearth,
+    rnaturalearthdata,
+    absmapsdata,
     sf,
     weatherdata
 Remotes:
     tidyverse/dplyr,
     r-lib/rlang,
-    huizezhang-sherry/weatherdata
+    huizezhang-sherry/weatherdata,
+    wfmackey/absmapsdata
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
