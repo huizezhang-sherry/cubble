@@ -1,17 +1,15 @@
 ---
-title: "1. Cubble attributes"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{attribute}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "1. details-on-cubble-design"
 ---
 
-```{r, include = FALSE, echo = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+```{r setup}
 library(cubble)
 library(dplyr)
 ```
