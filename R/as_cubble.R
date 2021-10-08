@@ -95,3 +95,53 @@ as_cubble.rowwise_df <- function(data, key, index, coords) {
              key = as_name(key), index = as_name(index), coords = coords,
              leaves = leaves, form = "nested")
 }
+
+#' @export
+as_cubble.ncdf4 <- function(data, key, index, coords){
+
+  lat_raw <- extract_longlat(data)$long
+  long_raw <- extract_longlat(data)$lat
+  time_raw <- extract_time(data)
+  var <- extract_var(data)
+  data <- var$var
+  var_name <- var$name
+
+  if (!length(long_raw) %in% dim(data) | !length(lat_raw) %in% dim(data)){
+    abort("lat, long doesn't match with the data dimension.")
+  }
+
+  out <- expand.grid(long = long_raw, lat = lat_raw) %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(
+      long_idx = match(.data$long, long_raw),
+      lat_idx = match(.data$lat, lat_raw),
+      id = dplyr::row_number()
+    ) %>%
+    dplyr::rowwise()
+
+  if (length(long_raw) == dim(data)[1]) {
+
+    out <- out %>%
+      dplyr::mutate(ts = list(tibble::tibble(
+        time = time_raw,
+        var_name = as.vector(data[long_idx, lat_idx,])
+      ))) %>%
+      dplyr::select(-long_idx, -lat_idx)
+  } else{
+
+    out <- out %>%
+      dplyr::mutate(ts = list(tibble::tibble(
+        time = time_raw,
+        var_name = as.vector(data[lat_idx, long_idx,])
+      ))) %>%
+      dplyr::select(-long_idx, -lat_idx)
+
+  }
+  leaves <- as_leaves(out, variant = NULL)
+
+  new_cubble(out,
+             key = "id", index = "time", coords = c("long", "lat"),
+             leaves = leaves, form = "nested")
+
+}
+
