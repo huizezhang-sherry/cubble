@@ -19,6 +19,7 @@ Imports:
     glue,
     lubridate,
     magrittr,
+    ncdf4,
     patchwork,
     pillar,
     plotly,
