@@ -26,9 +26,12 @@ The dataset contains weather data from WMO and GSN stations in
 the United States, Australia, Austria, Spain, France, and China.
 }
 \examples{
+\dontrun{
 library(ggplot2)
 map <- sf::st_as_sf(rnaturalearth::ne_countries(scale = "medium", returnclass = "sf"))
 plot_map(map) +
   geom_point(data = world_climate, aes(x = long, y = lat))
+}
+
 }
 \keyword{datasets}

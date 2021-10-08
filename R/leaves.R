@@ -21,19 +21,26 @@ new_leaves <- function(data, key){
   data <- as_tibble(data)
   data <- data[map_lgl(as_tibble(data), ~all(class(.x) != "list") )]
   key <- enquo(key)
-  all_vars <- find_invariant(data, !!key)
-  invariant <- data %>% select(all_vars$invariant) %>% map_chr(pillar::type_sum)
-  variant <- data %>% select(all_vars$variant) %>% map_chr(pillar::type_sum)
-  leaves_data <- unique(data[names(invariant)])
+  if (quo_is_null(key)){
+    tibble::new_tibble(data, nrow = nrow(data),
+                       invariant = NULL, variant = NULL,
+                       class = "leaves")
+  } else{
+    all_vars <- find_invariant(data, !!key)
+    invariant <- data %>% select(all_vars$invariant) %>% map_chr(pillar::type_sum)
+    variant <- data %>% select(all_vars$variant) %>% map_chr(pillar::type_sum)
+    leaves_data <- unique(data[names(invariant)])
 
-  tibble::new_tibble(leaves_data, nrow = nrow(leaves_data),
-                     #key = as_name(key),
-                     invariant = invariant, variant = variant,
-                     class = "leaves")
+    tibble::new_tibble(leaves_data, nrow = nrow(leaves_data),
+                       #key = as_name(key),
+                       invariant = invariant, variant = variant,
+                       class = "leaves")
+  }
 }
 
 as_leaves <- function(data, variant){
 
+  data <- data %>% select(-get_listcol(data))
   invariant <- data %>%  map_chr(pillar::type_sum)
 
   tibble::new_tibble(data, nrow = nrow(data),
