@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(cubble)
 library(s2)
+library(sf)
 library(ggplot2)
 library(patchwork)
 ```

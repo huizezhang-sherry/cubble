@@ -25,6 +25,7 @@ The data is computed from National Oceanic and Atmospheric Administration (NOAA)
 }
 \examples{
 library(rmapshaper)
+library(sf)
 library(ggplot2)
 state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 plot_map(state_map) +

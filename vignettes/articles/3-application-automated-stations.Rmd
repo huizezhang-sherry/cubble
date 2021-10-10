@@ -17,6 +17,7 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(ggplot2)
+library(sf)
 ```
 
 An interesting thing about the Australian GHCND weather station data is that some station names are suffixed with "AWS", standing for *Automated Weather Stations*. This draws our interest to investigate how these automated stations differ from the traditional ones. An initial plot of all the automated stations shows that most of them are located in New South Wales, so these stations will be our interest to investigate.

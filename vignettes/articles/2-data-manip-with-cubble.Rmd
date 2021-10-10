@@ -17,6 +17,7 @@ library(dplyr)
 library(cubble)
 library(ggplot2)
 library(GGally)
+library(sf)
 ```
 
 For spatio-temporal data, one may want to plot the time series on the map to observe the spatial relationship among sites close to each other. A glyph map allows you to inset the time series, as a glyph, into the map to detect any global or local pattern. Below is an example of the monthly maximum temperature collected from 61 stations in Australia in 2020.

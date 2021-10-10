@@ -26,6 +26,7 @@ Imports:
     purrr,
     rlang (>= 0.4.11.9001),
     s2,
+    sf,
     stringr,
     tibble,
     tidyr,
