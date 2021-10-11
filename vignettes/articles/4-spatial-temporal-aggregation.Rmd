@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(tidyverse)
+library(dplyr)
 library(cubble)
 library(s2)
 library(sf)
@@ -120,8 +120,8 @@ tas_latlong <- temporal_ind %>%
 state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 p3 <- plot_map(state_map) + 
   geom_point(data = station_clustered, aes(x = long, y = lat), size = 0.5) + 
-  # geom_sf(data = spatial_cluster %>% mutate(ll_cluster = sf::st_as_sfc(ll_cluster)), 
-  #         aes(geometry = ll_cluster), fill = "transparent") + 
+  geom_sf(data = spatial_cluster %>% mutate(ll_cluster = sf::st_as_sfc(ll_cluster)),
+          aes(geometry = ll_cluster), fill = "transparent") +
   geom_point(data = tas_latlong, aes(x = long, y =lat), col = "red")
 
 p3  
