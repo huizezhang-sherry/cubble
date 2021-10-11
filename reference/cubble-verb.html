@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Incorporate group-wise metadata into a long form cubble — migrate • cubble</title>
+<title>Move item-wise variables into long form — migrate • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Incorporate group-wise metadata into a long form cubble — migrate" />
-<meta property="og:description" content="Incorporate group-wise metadata into a long form cubble" />
+<meta property="og:title" content="Move item-wise variables into long form — migrate" />
+<meta property="og:description" content="Move item-wise variables into long form" />
 
 
 
@@ -95,16 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/aws.html">Comparing records in Automated and traditional weather stations</a>
+      <a href="../articles/articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
     </li>
     <li>
-      <a href="../articles/articles/upstream.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/articles/1-details-on-cubble-design.html">1. details-on-cubble-design</a>
     </li>
     <li>
-      <a href="../articles/articles/workflow.html">2. Data manipulation with cubble</a>
+      <a href="../articles/articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
     </li>
     <li>
-      <a href="../articles/attributes.html">1. Cubble attributes</a>
+      <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
+    </li>
+    <li>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
     </li>
   </ul>
 </li>
@@ -124,13 +127,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Incorporate group-wise metadata into a long form cubble</h1>
+    <h1>Move item-wise variables into long form</h1>
     
     <div class="hidden name"><code>cubble-verb.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Incorporate group-wise metadata into a long form cubble</p>
+    <p>Move item-wise variables into long form</p>
     </div>
 
     <pre class="usage"><span class='fu'>migrate</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -150,31 +153,38 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Some spatio-temporal visualisations, i.e. a glyph map, require both group-wise variables
-and time-wise variables to make the plot. While data manipulation can be easier when separating
-those two types of variables, the last step before plotting the data is to transfer the useful
-group-wise variables into the long form. <code>migrate()</code> is a shortcut for transferring group-wise
-variables from cubble's metadata. For transfering other group-wise variables, use <code>left_join</code>.</p>
+    <p>Some spatio-temporal visualisations, i.e. a glyph map, require both item-wise
+and time-wise variables to create the plot. <code>migrate()</code> moves item-wise variables
+into the long form before creating the visualisation.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>migrate</span><span class='op'>(</span><span class='va'>lat</span>, <span class='va'>long</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "station"</span></div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
-#&gt; <span style='color: #949494;'># Key:    station [55]</span>
-#&gt; <span style='color: #949494;'># Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct],
-#&gt; #   tmax_missing [lgl], tmin_missing [lgl], tmin_missing_first [lgl]</span>
-#&gt;    station     date        prcp  tmax  tmin   lat  long
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 2015-01-01   164  31.5  25   -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00001019 2015-01-02   124  31.3  25   -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00001019 2015-01-03    50  29.2  24.7 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00001019 2015-01-04   204  32.1  24.3 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00001019 2015-01-05   412  31.4  24.6 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00001019 2015-01-06   200  28.7  25.1 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00001019 2015-01-07   822  30.2  24.5 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00001019 2015-01-08    22  31    26.6 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00001019 2015-01-09    62  32.7  26.2 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #BCBCBC;'>10</span> ASN00001019 2015-01-10   274  32.9  22.6 -<span style='color: #BB0000;'>14.3</span>  127.
-#&gt; <span style='color: #949494;'># … with 120,311 more rows</span></div></pre>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggobi.github.io/ggally/'>GGally</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Registered S3 method overwritten by 'GGally':</span>
+#&gt; <span class='message'>  method from   </span>
+#&gt; <span class='message'>  +.gg   ggplot2</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='va'>dt</span> <span class='op'>&lt;-</span> <span class='va'>aus_climate</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>migrate</span><span class='op'>(</span><span class='va'>lat</span>, <span class='va'>long</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>date</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>yday <span class='op'>=</span> <span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>yday</a></span><span class='op'>(</span><span class='va'>date</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>date</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Joining, by = "id"</span></div><div class='input'>
+<span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggobi.github.io/ggally/reference/glyphs.html'>glyphs</a></span><span class='op'>(</span><span class='va'>dt</span>,
+            x_major <span class='op'>=</span> <span class='st'>"long"</span>, x_minor <span class='op'>=</span> <span class='st'>"yday"</span>,
+            y_major <span class='op'>=</span> <span class='st'>"lat"</span>, y_minor <span class='op'>=</span> <span class='st'>"tmax"</span>, height <span class='op'>=</span> <span class='fl'>1</span>, width <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+
+<span class='va'>state_map</span> <span class='op'>&lt;-</span> <span class='fu'>rmapshaper</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html'>ms_simplify</a></span><span class='op'>(</span><span class='fu'>ozmaps</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/ozmaps/man/abs-data.html'>abs_ste</a></span>, keep <span class='op'>=</span> <span class='fl'>2e-3</span><span class='op'>)</span>
+<span class='fu'><a href='plot_map.html'>plot_map</a></span><span class='op'>(</span><span class='va'>state_map</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>ggplot2</span><span class='fu'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_path</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>g</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>gx</span>, <span class='va'>gy</span>, group <span class='op'>=</span> <span class='va'>gid</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>ggplot2</span><span class='fu'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_void</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>ggplot2</span><span class='fu'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>""</span>, y <span class='op'>=</span> <span class='st'>""</span><span class='op'>)</span>
+</div><div class='img'><img src='cubble-verb-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

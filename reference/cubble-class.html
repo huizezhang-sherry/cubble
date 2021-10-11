@@ -95,16 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/aws.html">Comparing records in Automated and traditional weather stations</a>
+      <a href="../articles/articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
     </li>
     <li>
-      <a href="../articles/articles/upstream.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/articles/1-details-on-cubble-design.html">1. details-on-cubble-design</a>
     </li>
     <li>
-      <a href="../articles/articles/workflow.html">2. Data manipulation with cubble</a>
+      <a href="../articles/articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
     </li>
     <li>
-      <a href="../articles/attributes.html">1. Cubble attributes</a>
+      <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
+    </li>
+    <li>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
     </li>
   </ul>
 </li>
@@ -175,45 +178,18 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># create a nested tibble</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tibble.tidyverse.org/'>tibble</a></span><span class='op'>)</span>
-<span class='va'>dt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
-  station <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span><span class='op'>)</span>,
-  long <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>110</span>, <span class='fl'>120</span><span class='op'>)</span>,
-  lat <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>20</span><span class='op'>)</span>,
-  ts <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
-      date <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-        <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-07-01"</span><span class='op'>)</span>,
-        <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-08-01"</span><span class='op'>)</span>
-      <span class='op'>)</span>,
-      prcp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,
-      tmax <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>125</span><span class='op'>)</span>,
-      tmin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>15</span>, <span class='fl'>18</span><span class='op'>)</span>
-    <span class='op'>)</span>,
-    <span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>
-      date <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-        <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-07-01"</span><span class='op'>)</span>,
-        <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-08-01"</span><span class='op'>)</span>
-      <span class='op'>)</span>,
-      prcp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>100</span><span class='op'>)</span>,
-      tmax <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>15</span><span class='op'>)</span>,
-      tmin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fl'>8</span><span class='op'>)</span>
-    <span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-
-<span class='co'># create a cubble from `dt`</span>
-<span class='co'># cubble(dt,</span>
-<span class='co'>#        group = station,</span>
-<span class='co'>#        leaves = tibble(</span>
-<span class='co'>#          station = c("A", "B"),</span>
-<span class='co'>#          long = c(110, 120),</span>
-<span class='co'>#          lat = c(-10, -20)</span>
-<span class='co'>#        ),</span>
-<span class='co'>#        form = "long"</span>
-<span class='co'># )</span>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>climate_flat</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>as_cubble</span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>id</span>, index <span class='op'>=</span> <span class='va'>date</span>, coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>long</span>, <span class='va'>lat</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: id-wise: nested form</span>
+#&gt; <span style='color: #949494;'># Key:    id [5]</span>
+#&gt; <span style='color: #949494;'># Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
+#&gt;   id            lat  long  elev name           wmo_id ts                
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>           <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
+#&gt; <span style='color: #BCBCBC;'>1</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.  15.4 perth airport   <span style='text-decoration: underline;'>94</span>610 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>2</span> ASN00010311 -<span style='color: #BB0000;'>31.9</span>  117. 179   york            <span style='text-decoration: underline;'>94</span>623 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>3</span> ASN00010614 -<span style='color: #BB0000;'>32.9</span>  117. 338   narrogin        <span style='text-decoration: underline;'>94</span>627 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>4</span> ASN00014015 -<span style='color: #BB0000;'>12.4</span>  131.  30.4 darwin airport  <span style='text-decoration: underline;'>94</span>120 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>5</span> ASN00015131 -<span style='color: #BB0000;'>17.6</span>  134. 220   elliott         <span style='text-decoration: underline;'>94</span>236 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

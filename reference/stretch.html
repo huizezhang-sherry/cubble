@@ -95,16 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/aws.html">Comparing records in Automated and traditional weather stations</a>
+      <a href="../articles/articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
     </li>
     <li>
-      <a href="../articles/articles/upstream.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/articles/1-details-on-cubble-design.html">1. details-on-cubble-design</a>
     </li>
     <li>
-      <a href="../articles/articles/workflow.html">2. Data manipulation with cubble</a>
+      <a href="../articles/articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
     </li>
     <li>
-      <a href="../articles/attributes.html">1. Cubble attributes</a>
+      <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
+    </li>
+    <li>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
     </li>
   </ul>
 </li>
@@ -162,24 +165,24 @@ and timestamp defines a row. The long form cubble is always of class <code>cubbl
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>climate_flat</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='as_cubble.html'>as_cubble</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>station</span>, index <span class='op'>=</span> <span class='va'>date</span>, coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>long</span>, <span class='va'>lat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='as_cubble.html'>as_cubble</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>id</span>, index <span class='op'>=</span> <span class='va'>date</span>, coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>long</span>, <span class='va'>lat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>stretch</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
-#&gt; <span style='color: #949494;'># Key:    station [2]</span>
-#&gt; <span style='color: #949494;'># Leaves: station [fct], lat [dbl], long [dbl], elevation [dbl], name [fct]</span>
-#&gt;    station     date        prcp  tmax  tmin
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00001019 2020-01-01    46  38.6  25.1
-#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00001019 2020-01-02     0  38.8  28.1
-#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00001019 2020-01-03   266  37.9  23.6
-#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00001019 2020-01-04     0  34.3  26.2
-#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00001019 2020-01-05    46  35.4  26.7
-#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00001019 2020-01-06   760  27.5  24.8
-#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00001019 2020-01-07  <span style='text-decoration: underline;'>1</span>168  31.6  23.2
-#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00001019 2020-01-08  <span style='text-decoration: underline;'>1</span>178  32.7  24  
-#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00001019 2020-01-09    48  34.2  25.1
-#&gt; <span style='color: #BCBCBC;'>10</span> ASN00001019 2020-01-10     0  35.4  26.7
-#&gt; <span style='color: #949494;'># … with 722 more rows</span></div><div class='input'>
+#&gt; <span style='color: #949494;'># Key:    id [5]</span>
+#&gt; <span style='color: #949494;'># Leaves: id [chr], lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span>
+#&gt;    id          date        prcp  tmax  tmin
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00009021 2020-01-01     0   319   153
+#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00009021 2020-01-02     0   249   164
+#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00009021 2020-01-03     6   232   130
+#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00009021 2020-01-04     0   284   124
+#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00009021 2020-01-05     0   353   116
+#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00009021 2020-01-06     0   348   131
+#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00009021 2020-01-07     0   328   151
+#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00009021 2020-01-08     0   304   174
+#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00009021 2020-01-09     0   287   173
+#&gt; <span style='color: #BCBCBC;'>10</span> ASN00009021 2020-01-10     0   326   158
+#&gt; <span style='color: #949494;'># … with 1,820 more rows</span></div><div class='input'>
 <span class='co'># another example for stretching two cubbles</span>
 
 </div></pre>

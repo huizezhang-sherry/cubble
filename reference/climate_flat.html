@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Australia climate data (minimal) — climate_flat • cubble</title>
+<title>Australia climate data (tibble) — climate_flat • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Australia climate data (minimal) — climate_flat" />
-<meta property="og:description" content="A minimal 2020 climate dataset recorded in 2 stations in a tibble format. This data is used to
+<meta property="og:title" content="Australia climate data (tibble) — climate_flat" />
+<meta property="og:description" content="A minimal 2020 climate dataset recorded in 5 stations in a tibble format. This data is used to
 show how to create a cubble object from tibble." />
 
 
@@ -96,16 +96,19 @@ show how to create a cubble object from tibble." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/aws.html">Comparing records in Automated and traditional weather stations</a>
+      <a href="../articles/articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
     </li>
     <li>
-      <a href="../articles/articles/upstream.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/articles/1-details-on-cubble-design.html">1. details-on-cubble-design</a>
     </li>
     <li>
-      <a href="../articles/articles/workflow.html">2. Data manipulation with cubble</a>
+      <a href="../articles/articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
     </li>
     <li>
-      <a href="../articles/attributes.html">1. Cubble attributes</a>
+      <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
+    </li>
+    <li>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
     </li>
   </ul>
 </li>
@@ -125,13 +128,13 @@ show how to create a cubble object from tibble." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Australia climate data (minimal)</h1>
+    <h1>Australia climate data (tibble)</h1>
     
     <div class="hidden name"><code>climate_flat.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A minimal 2020 climate dataset recorded in 2 stations in a tibble format. This data is used to
+    <p>A minimal 2020 climate dataset recorded in 5 stations in a tibble format. This data is used to
 show how to create a cubble object from tibble.</p>
     </div>
 
@@ -140,8 +143,8 @@ show how to create a cubble object from tibble.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A tibble object with 732 rows and 9 columns</p><dl>
-<dt>station</dt><dd><p>station id</p></dd>
+    <p>A tibble object with 1830 rows and 10 columns</p><dl>
+<dt>id</dt><dd><p>station id</p></dd>
 <dt>lat</dt><dd><p>latitude of the station</p></dd>
 <dt>long</dt><dd><p>longitude of the station</p></dd>
 <dt>elev</dt><dd><p>elevation of the station</p></dd>
@@ -151,9 +154,6 @@ show how to create a cubble object from tibble.</p>
 
 </dl>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>climate_small</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

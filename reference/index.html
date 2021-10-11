@@ -94,16 +94,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/aws.html">Comparing records in Automated and traditional weather stations</a>
+      <a href="../articles/articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
     </li>
     <li>
-      <a href="../articles/articles/upstream.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/articles/1-details-on-cubble-design.html">1. details-on-cubble-design</a>
     </li>
     <li>
-      <a href="../articles/articles/workflow.html">2. Data manipulation with cubble</a>
+      <a href="../articles/articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
     </li>
     <li>
-      <a href="../articles/attributes.html">1. Cubble attributes</a>
+      <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
+    </li>
+    <li>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
     </li>
   </ul>
 </li>
@@ -137,7 +140,70 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-create-and-change-mode-of-a-cubble" class="hasAnchor"><a href="#section-create-and-change-mode-of-a-cubble" class="anchor"></a>Create and change mode of a cubble</h2>
+          <h2 id="section-s-method-on-cubble" class="hasAnchor"><a href="#section-s-method-on-cubble" class="anchor"></a>S3 method on cubble</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="cubble-class.html">as_cubble()</a></code> <code><a href="cubble-class.html">cubble()</a></code> <code><a href="cubble-class.html">tbl_sum(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="cubble-class.html">is_cubble()</a></code> </p>
+        </td>
+        <td><p>Constructor for the cubble class</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-extract-cubble-attributes" class="hasAnchor"><a href="#section-extract-cubble-attributes" class="anchor"></a>Extract cubble attributes</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="attributes.html">form()</a></code> <code><a href="attributes.html">leaves()</a></code> <code><a href="attributes.html">key_vars()</a></code> <code><a href="attributes.html">key_data()</a></code> <code><a href="attributes.html">coords()</a></code> <code><a href="attributes.html">coord_x()</a></code> <code><a href="attributes.html">coord_y()</a></code> <code><a href="attributes.html">index()</a></code> </p>
+        </td>
+        <td><p>Functions to extract cubble attributes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="leaves.html">new_leaves()</a></code> <code><a href="leaves.html">is_leaves()</a></code> <code><a href="leaves.html">invariant()</a></code> <code><a href="leaves.html">variant()</a></code> </p>
+        </td>
+        <td><p>Create and manipulate leaves attributes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-quality-check" class="hasAnchor"><a href="#section-data-quality-check" class="anchor"></a>Data quality check</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="missing.html">add_missing_prct()</a></code> <code><a href="missing.html">add_missing_dscrb()</a></code> </p>
+        </td>
+        <td><p>Compute missing summary</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-manipulation" class="hasAnchor"><a href="#section-data-manipulation" class="anchor"></a>Data manipulation</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -163,127 +229,31 @@
         <td>
           <p><code><a href="cubble-verb.html">migrate()</a></code> </p>
         </td>
-        <td><p>Incorporate group-wise metadata into a long form cubble</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-extract-attributes-from-a-cubble" class="hasAnchor"><a href="#section-extract-attributes-from-a-cubble" class="anchor"></a>Extract attributes from a cubble</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="attributes.html">form()</a></code> <code><a href="attributes.html">leaves()</a></code> <code><a href="attributes.html">key_vars()</a></code> <code><a href="attributes.html">key_data()</a></code> <code><a href="attributes.html">coords()</a></code> <code><a href="attributes.html">coord_x()</a></code> <code><a href="attributes.html">coord_y()</a></code> <code><a href="attributes.html">index()</a></code> </p>
-        </td>
-        <td><p>Functions to get attributes from a cubble object</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-s-on-cubble" class="hasAnchor"><a href="#section-s-on-cubble" class="anchor"></a>S3 on cubble</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="cubble-class.html">as_cubble()</a></code> <code><a href="cubble-class.html">cubble()</a></code> <code><a href="cubble-class.html">tbl_sum(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="cubble-class.html">is_cubble()</a></code> </p>
-        </td>
-        <td><p>Constructor for the cubble class</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-s-on-the-leaves-attribute" class="hasAnchor"><a href="#section-s-on-the-leaves-attribute" class="anchor"></a>S3 on the leaves attribute</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="leaves.html">new_leaves()</a></code> <code><a href="leaves.html">is_leaves()</a></code> <code><a href="leaves.html">invariant()</a></code> <code><a href="leaves.html">variant()</a></code> </p>
-        </td>
-        <td><p>Create a leaves object</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-missing-summary" class="hasAnchor"><a href="#section-missing-summary" class="anchor"></a>Missing summary</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="missing.html">add_missing_prct()</a></code> <code><a href="missing.html">add_missing_dscrb()</a></code> </p>
-        </td>
-        <td><p>Compute missing summary</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-data-quality" class="hasAnchor"><a href="#section-data-quality" class="anchor"></a>Data quality</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="glyph.html">glyph_pixel()</a></code> <code><a href="glyph.html">quality_map()</a></code> </p>
-        </td>
-        <td><p>Function to create a glyph dataset and plot with maps</p></td>
+        <td><p>Move item-wise variables into long form</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="quality_plot.html">quality_plot()</a></code> </p>
+          <p><code><a href="strip_rowwise.html">strip_rowwise()</a></code> </p>
         </td>
-        <td><p>data quality plot</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-data-manipulation" class="hasAnchor"><a href="#section-data-manipulation" class="anchor"></a>Data manipulation</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
+        <td><p>Remove the rowwise grouping of a cubble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="switch_key.html">switch_key()</a></code> </p>
+        </td>
+        <td><p>Switch to a different key of a cubble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rename_key.html">rename_key()</a></code> </p>
+        </td>
+        <td><p>Rename the key variable</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="attributes.html">form()</a></code> <code><a href="attributes.html">leaves()</a></code> <code><a href="attributes.html">key_vars()</a></code> <code><a href="attributes.html">key_data()</a></code> <code><a href="attributes.html">coords()</a></code> <code><a href="attributes.html">coord_x()</a></code> <code><a href="attributes.html">coord_y()</a></code> <code><a href="attributes.html">index()</a></code> </p>
         </td>
-        <td><p>Functions to get attributes from a cubble object</p></td>
+        <td><p>Functions to extract cubble attributes</p></td>
       </tr><tr>
         
         <td>
@@ -306,32 +276,7 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-map" class="hasAnchor"><a href="#section-map" class="anchor"></a>Map</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="bbox.html">bbox()</a></code> </p>
-        </td>
-        <td><p>Extract bbox of the coordinate with a buffer</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_map.html">plot_map()</a></code> </p>
-        </td>
-        <td><p>A quick plot of maps</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-generating-grid-for-using-geofacet" class="hasAnchor"><a href="#section-generating-grid-for-using-geofacet" class="anchor"></a>Generating grid for using geofacet</h2>
+          <h2 id="section-visualising-spatial-temporal-data" class="hasAnchor"><a href="#section-visualising-spatial-temporal-data" class="anchor"></a>Visualising spatial-temporal data</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -345,7 +290,13 @@
         <td>
           <p><code><a href="gen_grid.html">gen_grid()</a></code> </p>
         </td>
-        <td><p>Generate geofacet grid based on long and lat</p></td>
+        <td><p>Automatic generation of geofacet grid</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_map.html">plot_map()</a></code> </p>
+        </td>
+        <td><p>A quick plot of map</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -362,27 +313,27 @@
       <tr>
         
         <td>
+          <p><code><a href="aus_climate.html">aus_climate</a></code> </p>
+        </td>
+        <td><p>Australia climate data</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="climate_flat.html">climate_flat</a></code> </p>
         </td>
-        <td><p>Australia climate data (minimal)</p></td>
+        <td><p>Australia climate data (tibble)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="climate_large.html">climate_large</a></code> </p>
+          <p><code><a href="climate_missing.html">climate_missing</a></code> </p>
         </td>
-        <td><p>Australia climate data (large)</p></td>
+        <td><p>Climate data with missing value</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="climate_small.html">climate_small</a></code> </p>
+          <p><code><a href="world_climate.html">world_climate</a></code> </p>
         </td>
-        <td><p>Australia climate data (small)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="station.html">station</a></code> </p>
-        </td>
-        <td><p>Australian weather stations</p></td>
+        <td><p>Worldwide climate data</p></td>
       </tr>
     </tbody>
     </table>

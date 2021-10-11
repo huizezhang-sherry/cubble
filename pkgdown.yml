@@ -2,9 +2,10 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  articles/aws: aws.html
-  articles/upstream: upstream.html
-  articles/workflow: workflow.html
-  attributes: attributes.html
-last_built: 2021-09-19T11:28Z
+  articles/0-create-cubble-from-wild: 0-create-cubble-from-wild.html
+  articles/1-details-on-cubble-design: 1-details-on-cubble-design.html
+  articles/2-data-manip-with-cubble: 2-data-manip-with-cubble.html
+  articles/3-application-automated-stations: 3-application-automated-stations.html
+  articles/4-spatial-temporal-aggregation: 4-spatial-temporal-aggregation.html
+last_built: 2021-10-11T04:03Z
 

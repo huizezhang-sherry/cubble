@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Functions to get attributes from a cubble object — form • cubble</title>
+<title>Functions to extract cubble attributes — form • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Functions to get attributes from a cubble object — form" />
-<meta property="og:description" content="Functions to get attributes from a cubble object" />
+<meta property="og:title" content="Functions to extract cubble attributes — form" />
+<meta property="og:description" content="Functions to extract cubble attributes" />
 
 
 
@@ -95,16 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/aws.html">Comparing records in Automated and traditional weather stations</a>
+      <a href="../articles/articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
     </li>
     <li>
-      <a href="../articles/articles/upstream.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/articles/1-details-on-cubble-design.html">1. details-on-cubble-design</a>
     </li>
     <li>
-      <a href="../articles/articles/workflow.html">2. Data manipulation with cubble</a>
+      <a href="../articles/articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
     </li>
     <li>
-      <a href="../articles/attributes.html">1. Cubble attributes</a>
+      <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
+    </li>
+    <li>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
     </li>
   </ul>
 </li>
@@ -124,13 +127,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Functions to get attributes from a cubble object</h1>
+    <h1>Functions to extract cubble attributes</h1>
     
     <div class="hidden name"><code>attributes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Functions to get attributes from a cubble object</p>
+    <p>Functions to extract cubble attributes</p>
     </div>
 
     <pre class="usage"><span class='fu'>form</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
@@ -161,38 +164,37 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Apart from inheriting attributes <code>names</code>, <code>row.names</code>, and <code>class</code> from the underlying tibble,
-a cubble object will also have additional attributes: <code>groups</code>, <code>meta</code> and <code>form</code>.</p>
-<p><code><a href='https://dplyr.tidyverse.org/reference/group_data.html'>groups()</a></code>, <code>meta()</code>, and <code>form()</code> provide a more  convenient way to extract
-these attributes without <code>%@%</code> from a cubble.
-<code><a href='https://dplyr.tidyverse.org/reference/group_data.html'>group_vars()</a></code> extracts the variable name of the group, which can often be useful.</p>
+a cubble has its site identifier: <code>key</code>, temporal identifier, <code>index</code>, and
+spatial coordinate reference: <code>coords</code>.</p>
 <p>If a cubble object is also a tsibble, then tsibble attributes (<code>key</code>, <code>index</code>, <code>index2</code>, <code>interval</code>)
-are also preserved and can be accessed via the relevant functions in the tsibble package.</p>
+are also preserved and can be accessed via the relevant functions in the tsibble package. (NOT FULLY IMPLEMENTED)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># extract attributes of a cubble object</span>
-<span class='fu'>form</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "nested"</div><div class='input'><span class='fu'>leaves</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Leaves: 5 x 5</span>
-#&gt;   station       lat  long elevation name               
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>              
-#&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019 -<span style='color: #BB0000;'>14.3</span>  127.      23   kalumburu          
-#&gt; <span style='color: #BCBCBC;'>2</span> ASN00002012 -<span style='color: #BB0000;'>18.2</span>  128.     422   halls creek airport
-#&gt; <span style='color: #BCBCBC;'>3</span> ASN00003003 -<span style='color: #BB0000;'>17.9</span>  122.       7.4 broome airport     
-#&gt; <span style='color: #BCBCBC;'>4</span> ASN00006011 -<span style='color: #BB0000;'>24.9</span>  114.       4   carnarvon airport  
-#&gt; <span style='color: #BCBCBC;'>5</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.      15.4 perth airport      </div><div class='input'><span class='fu'>key_data</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
+<span class='fu'>form</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "nested"</div><div class='input'><span class='fu'>leaves</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># Leaves: 5 x 6</span>
+#&gt;   id            lat  long  elev name           wmo_id
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>           <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.  15.4 perth airport   <span style='text-decoration: underline;'>94</span>610
+#&gt; <span style='color: #BCBCBC;'>2</span> ASN00010311 -<span style='color: #BB0000;'>31.9</span>  117. 179   york            <span style='text-decoration: underline;'>94</span>623
+#&gt; <span style='color: #BCBCBC;'>3</span> ASN00010614 -<span style='color: #BB0000;'>32.9</span>  117. 338   narrogin        <span style='text-decoration: underline;'>94</span>627
+#&gt; <span style='color: #BCBCBC;'>4</span> ASN00014015 -<span style='color: #BB0000;'>12.4</span>  131.  30.4 darwin airport  <span style='text-decoration: underline;'>94</span>120
+#&gt; <span style='color: #BCBCBC;'>5</span> ASN00015131 -<span style='color: #BB0000;'>17.6</span>  134. 220   elliott         <span style='text-decoration: underline;'>94</span>236</div><div class='input'><span class='fu'>key_data</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 × 2</span>
-#&gt;   station           .rows
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;list&lt;int&gt;&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>1</span> ASN00001019         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>2</span> ASN00002012         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>3</span> ASN00003003         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>4</span> ASN00006011         <span style='color: #949494;'>[1]</span>
-#&gt; <span style='color: #BCBCBC;'>5</span> ASN00009021         <span style='color: #949494;'>[1]</span></div><div class='input'><span class='fu'>key_vars</span><span class='op'>(</span><span class='va'>climate_small</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "station"</div><div class='input'>
-<span class='co'># print out the attribute names of cubble with a tsibble underlying class</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/attributes.html'>attributes</a></span><span class='op'>(</span><span class='va'>climate_small</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Using `date` as index variable.</span></div><div class='output co'>#&gt;  [1] "class"     "row.names" "names"     "key"       "index"     "index2"   
-#&gt;  [7] "interval"  "groups"    "coords"    "leaves"    "form"     </div></pre>
+#&gt;   id                .rows
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;list&lt;int&gt;&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> ASN00009021         <span style='color: #949494;'>[1]</span>
+#&gt; <span style='color: #BCBCBC;'>2</span> ASN00010311         <span style='color: #949494;'>[1]</span>
+#&gt; <span style='color: #BCBCBC;'>3</span> ASN00010614         <span style='color: #949494;'>[1]</span>
+#&gt; <span style='color: #BCBCBC;'>4</span> ASN00014015         <span style='color: #949494;'>[1]</span>
+#&gt; <span style='color: #BCBCBC;'>5</span> ASN00015131         <span style='color: #949494;'>[1]</span></div><div class='input'><span class='fu'>key_vars</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "id"</div><div class='input'><span class='fu'>index</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "date"</div><div class='input'><span class='fu'>coords</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "long" "lat" </div><div class='input'><span class='fu'>coord_x</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "long"</div><div class='input'><span class='fu'>coord_y</span><span class='op'>(</span><span class='va'>aus_climate</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "lat"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

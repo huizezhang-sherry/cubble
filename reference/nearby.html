@@ -95,16 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/articles/aws.html">Comparing records in Automated and traditional weather stations</a>
+      <a href="../articles/articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
     </li>
     <li>
-      <a href="../articles/articles/upstream.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/articles/1-details-on-cubble-design.html">1. details-on-cubble-design</a>
     </li>
     <li>
-      <a href="../articles/articles/workflow.html">2. Data manipulation with cubble</a>
+      <a href="../articles/articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
     </li>
     <li>
-      <a href="../articles/attributes.html">1. Cubble attributes</a>
+      <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
+    </li>
+    <li>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
     </li>
   </ul>
 </li>
@@ -168,10 +171,10 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>slice_nearby</span><span class='op'>(</span><span class='va'>climate_large</span>, <span class='va'>name</span> <span class='op'>==</span> <span class='st'>"Melbourne Airport"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-   <span class='fu'>view_nearby</span><span class='op'>(</span>origin <span class='op'>=</span> <span class='va'>climate_large</span>,
+    <pre class="examples"><div class='input'><span class='fu'>slice_nearby</span><span class='op'>(</span><span class='va'>aus_climate</span>, <span class='va'>name</span> <span class='op'>==</span> <span class='st'>"melbourne airport"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+   <span class='fu'>view_nearby</span><span class='op'>(</span>origin <span class='op'>=</span> <span class='va'>aus_climate</span>,
                map <span class='op'>=</span> <span class='fu'>ozmaps</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/ozmaps/man/abs-data.html'>abs_ste</a></span> <span class='op'>%&gt;%</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>NAME</span> <span class='op'>==</span> <span class='st'>"Victoria"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>The bounding box gives 18 candidates</span></div><div class='img'><img src='nearby-1.png' alt='' width='700' height='433' /></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>The bounding box gives 7 candidates</span></div><div class='img'><img src='nearby-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
