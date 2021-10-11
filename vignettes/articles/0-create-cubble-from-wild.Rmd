@@ -14,8 +14,6 @@ knitr::opts_chunk$set(
 library(cubble)
 library(rnoaa)
 library(dplyr)
-library(tidyr)
-library(stringr)
 library(patchwork)
 library(ggplot2)
 library(sf)
@@ -41,7 +39,7 @@ Usually, you also need a master list with all the candidate stations to choose f
    as_tibble())
 ```
 
-Now we write a small function to find the 5 closest stations in the master list for both cities. The Euclidean distance is used here for simplicity and it doesn't differ too much from the spherical distance when calculating between nearby points.
+Sphereical distance between pair of stations can be calculated via `rnoaa::meteo_spherical_distance()`. We write a small wrapper function here to find the 5 closest stations in each city:
 
 ```{r}
 calc_dist <- function(df_ref, df, n = 5){
@@ -49,9 +47,12 @@ calc_dist <- function(df_ref, df, n = 5){
   lat_ref <- df_ref$lat
   
   df %>% 
-    mutate(dist = sqrt((long_ref - long)^2 + (lat_ref - lat)^2)) %>% 
+    mutate(long_ref = long_ref,
+           lat_ref=  lat_ref,
+           dist = rnoaa::meteo_spherical_distance(lat, long,lat_ref, long_ref)) %>% 
     slice_min(dist, n = n) %>% 
-    mutate(city = df_ref$id)
+    mutate(city = df_ref$id) %>% 
+    select(-long_ref, -lat_ref)
 }
 
 (stations <- do.call("rbind", purrr::map(1:nrow(latlon_ref), 
