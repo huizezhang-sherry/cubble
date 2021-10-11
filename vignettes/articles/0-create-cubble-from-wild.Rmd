@@ -8,8 +8,7 @@ knitr::opts_chunk$set(
   comment = "#>", 
   cache = TRUE, 
   warning = FALSE,
-  message = FALSE,
-  eval = FALSE
+  message = FALSE
 )
 
 library(cubble)
@@ -19,87 +18,99 @@ library(tidyr)
 library(stringr)
 library(patchwork)
 library(ggplot2)
+library(sf)
 ```
 
-This article shows you how to create a cubble from data in the wild through the example of query climate data from National Oceanic and Atmospheric Administration (NOAA) using the `rnoaa` package.
+This article shows you how to create a cubble from data in the wild through an example of querying climate data from National Oceanic and Atmospheric Administration (NOAA). Here I use a workflow involving row-wise data frame making it easy to organise and  turn data into a cubble. This involves first create a row-wise tibble with one row per station, and then query the climate data as a nested list for each station.
 
-While there are many ways to query the data from NOAA, here I introduce a workflow using row-wise data frame, which makes it easy to turn into a cubble. This involves first create a row-wise tibble with one row per station, and then query the climate data as a nested list for each station.
+# Find target stations
 
-Suppose we want to find a few climate stations close to Melbourne and Sydney, `rnoaa` has a function `meteo_nearby_stations()` for this task, given the coordinates of the locations. Here we create `lat_long_df` that contains the coordinates of the two cities. We also create a station data, `all_stations`, that includes all the Australia stations with a WMO ID and have records in 2020. This reduce the searching range from stations all over the global to only Australian stations and records from WMO stations tend to have better quality control. We set `limit = 5` to query 5 closest stations of each city. After some cleaning, this is what we've got:
+Suppose we want to find a few climate stations close to Melbourne and Sydney, here we create a reference list with the longitude and latitude of both cities:
 
 ```{r}
-lat_lon_df <- data.frame(id = c("sydney", "melbourne"),
-                         latitude = c(-33.8675, -37.8136),
-                         longitude = c(151.2070, 144.9631))
-
-all_stations <- ghcnd_stations() %>%
-  filter(str_detect(id, "ASN"),
-         first_year < 2020,
-         last_year > 2019) %>%
-  mutate(wmo_id = as.numeric(wmo_id)) %>%
-  filter(!is.na(wmo_id), element %in% c("PRCP", "TMAX", "TMIN")) %>%
-  nest(element: last_year) %>%
-  rowwise() %>%
-  filter(nrow(data) == 3) %>%
-  unnest(data)
-
-nearby_stations <-  meteo_nearby_stations(lat_lon_df = lat_lon_df,
-                                          station_data = all_stations, 
-                                          limit = 5)
-
-stations <- bind_rows(nearby_stations$melbourne %>% mutate(city = "melbourne"),
-                      nearby_stations$sydney %>% mutate(city = "sydney")) %>% 
-  rename(lat = latitude, long = longitude)
-
-stations
+(latlon_ref <- tibble::tibble(id = c("sydney", "melbourne"),
+                         lat = c(-33.8675, -37.8136),
+                         long = c(151.2070, 144.9631)))
 ```
 
-Lastly, we can grab the climate data with `meteo_pull_monitors()` and again, with the row-wise data frame structure, we can append all the climate information into a list-column without expanding the time dimension. To make it quick-and-dirty, we only query the results in January 2020.
+Usually, you also need a master list with all the candidate stations to choose from. Here we use the stations saved in the built-in data, `aus_climate`.
 
 ```{r}
+(cand <- aus_climate %>% 
+  select(id, lat, long, elev, name, wmo_id) %>% 
+   as_tibble())
+```
+
+Now we write a small function to find the 5 closest stations in the master list for both cities. The Euclidean distance is used here for simplicity and it doesn't differ too much from the spherical distance when calculating between nearby points.
+
+```{r}
+calc_dist <- function(df_ref, df, n = 5){
+  long_ref <- df_ref$long
+  lat_ref <- df_ref$lat
+  
+  df %>% 
+    mutate(dist = sqrt((long_ref - long)^2 + (lat_ref - lat)^2)) %>% 
+    slice_min(dist, n = n) %>% 
+    mutate(city = df_ref$id)
+}
+
+(stations <- do.call("rbind", purrr::map(1:nrow(latlon_ref), 
+                             ~calc_dist(latlon_ref[.x, ], cand))))
+```
+
+# Query weather data
+
+The weather station data can be queried by `rnoaa::meteo_pull_monitors()` with the date range and variable supplied. Here the use of row-wise operation nests the queried climate data into a `ts` column. The nested data is then ready to be turned into a cubble with 
+
+  - `id` as the key to identify each station, 
+  - `date` as the index to identify time, and 
+  - `coords` to identify the spatial coordinates of each station.
+
+```{r eval = FALSE}
 sydmel_climate <- stations %>% 
+  rowwise() %>% 
   mutate(ts = list(meteo_pull_monitors(id, 
                                        date_min = "2020-01-01", 
-                                       date_max = "2020-01-31",
+                                       date_max = "2020-12-31",
                                        var = c("PRCP", "TMAX", "TMIN")) %>% 
-                     select(-id)))
-
-sydmel_climate
-```
-
-If you have followed along, the output you have should be a row-wise data frame with all the climate time series data nested into a column called `ts`. This data can be directly turned into a cubble with `tamp` with a supply of the grouping variable, `id`:
-
-```{r}
-sydmel_climate %>% 
+                     select(-id))) %>% 
   as_cubble(key = id, index = date, coords = c(long, lat))
 ```
 
-Here you go! Let's look at these stations on the map:
+```{r echo = FALSE}
+(sydmel_climate <- stations %>% 
+   left_join(aus_climate) %>% 
+   as_cubble(key = id, index = date, coords = c(long, lat)))
+```
+
+# Before you go
+
+Let's look at these stations on the map:
 
 ```{r fig.width=10, fig.height=5, echo = FALSE}
-state_map <- absmapsdata::sa42016 %>% 
-  filter(gcc_name_2016 %in% c("Greater Melbourne", "Greater Sydney")) 
+syd_map <- absmapsdata::sa42016  %>% filter(gcc_name_2016 == "Greater Sydney")
+mel_map <- absmapsdata::sa42016  %>% filter(gcc_name_2016 == "Greater Melbourne")
 
-out <- sydmel_climate %>% 
-  as_cubble(key = id, index = date, coords = c(long, lat))
+syd_station <- sydmel_climate %>% filter(city == "sydney")
+mel_station <- sydmel_climate %>% filter(city == "melbourne")
 
-p1 <-  plot_map(state_map %>% filter(gcc_name_2016 == "Greater Sydney")) +
-  ggrepel::geom_label_repel(data = out %>% filter(city == "sydney"), 
-                   aes(x = long, y = lat, label = name), 
-                   max.iter = 1e7, min.segment.length = 0.01, box.padding = 0.5) + 
-  geom_point(data = out %>% filter(city == "sydney"), 
-             aes(x = long, y = lat)) + 
+p1 <-  plot_map(syd_map) +
+  ggrepel::geom_label_repel(
+    data = syd_station, 
+    aes(x = long, y = lat, label = name),
+    max.iter = 1e7, min.segment.length = 0.01, box.padding = 0.5) + 
+  geom_point(data = syd_station, aes(x = long, y = lat)) + 
   theme_minimal() + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + 
   ggtitle("Sydney")
 
-p2 <- plot_map(state_map %>% filter(gcc_name_2016 == "Greater Melbourne")) +
-  ggrepel::geom_label_repel(data = out %>% filter(city == "melbourne"), 
-                   aes(x = long, y = lat, label = name), 
-                   max.iter = 1e7, min.segment.length = 0.1) + 
-  geom_point(data = out %>% filter(city == "melbourne"), 
-             aes(x = long, y = lat)) + 
+p2 <- plot_map(mel_map) +
+  ggrepel::geom_label_repel(
+    data = mel_station,  
+    aes(x = long, y = lat, label = name), 
+    max.iter = 1e7, min.segment.length = 0.1) + 
+  geom_point(data = mel_station, aes(x = long, y = lat)) + 
   theme_minimal() + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + 
