@@ -152,11 +152,11 @@
 <span class="co">#&gt; # Leaves: id [chr], wk [dbl], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   cluster val               ts      chull  ll_cluster      centroid   long   lat</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;list&gt;            &lt;list&gt;  &lt;list&gt; &lt;s2_geography&gt;  &lt;s2_geog&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1 &lt;tibble [46 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((150… &lt;POINT (…  149. -36.4</span>
-<span class="co">#&gt; 2       2 &lt;tibble [67 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((119… &lt;POINT (…  118. -31.2</span>
-<span class="co">#&gt; 3       3 &lt;tibble [15 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((146… &lt;POINT (…  143. -25.8</span>
-<span class="co">#&gt; 4       4 &lt;tibble [48 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((146… &lt;POINT (…  145. -37.3</span>
-<span class="co">#&gt; 5       5 &lt;tibble [37 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((135… &lt;POINT (…  131. -14.8</span></code></pre></div>
+<span class="co">#&gt; 1       1 &lt;tibble [28 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((147… &lt;POINT (…  145. -38.4</span>
+<span class="co">#&gt; 2       2 &lt;tibble [31 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((145… &lt;POINT (…  142. -18.3</span>
+<span class="co">#&gt; 3       3 &lt;tibble [49 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((141… &lt;POINT (…  138. -34.1</span>
+<span class="co">#&gt; 4       4 &lt;tibble [21 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((148… &lt;POINT (…  147. -22.0</span>
+<span class="co">#&gt; 5       5 &lt;tibble [35 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((153… &lt;POINT (…  152. -30.1</span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">temporal_ind</span> <span class="op">&lt;-</span> <span class="va">spatial_cluster</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span>
@@ -168,11 +168,11 @@
 <span class="co">#&gt; #   long [dbl], lat [dbl]</span>
 <span class="co">#&gt;   cluster id             wk  prcp  tmax  tmin</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1 ASN00069017     1  1260  231.  182.</span>
-<span class="co">#&gt; 2       1 ASN00069017     2   614  241.  192.</span>
-<span class="co">#&gt; 3       1 ASN00069017     3   530  248.  189.</span>
-<span class="co">#&gt; 4       1 ASN00069017     4   558  253.  199.</span>
-<span class="co">#&gt; 5       1 ASN00069017     5   782  240.  187.</span></code></pre></div>
+<span class="co">#&gt; 1       1 ASN00083024     1   638  186. 103. </span>
+<span class="co">#&gt; 2       1 ASN00083024     2  1276  189. 102. </span>
+<span class="co">#&gt; 3       1 ASN00083024     3  1108  200. 105. </span>
+<span class="co">#&gt; 4       1 ASN00083024     4  1170  197. 114. </span>
+<span class="co">#&gt; 5       1 ASN00083024     5  1172  175.  86.6</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">temporal_cluster</span> <span class="op">&lt;-</span> <span class="va">spatial_cluster</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -189,11 +189,11 @@
 <span class="co">#&gt; #   long [dbl], lat [dbl]</span>
 <span class="co">#&gt;   cluster    wk  prcp  tmax  tmin  long   lat</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1     1 33195  262.  141.  149. -36.4</span>
-<span class="co">#&gt; 2       1     2 39825  274.  148.  149. -36.4</span>
-<span class="co">#&gt; 3       1     3 36793  278.  141.  149. -36.4</span>
-<span class="co">#&gt; 4       1     4 29316  281.  161.  149. -36.4</span>
-<span class="co">#&gt; 5       1     5 45870  267.  142.  149. -36.4</span></code></pre></div>
+<span class="co">#&gt; 1       1     1  7234  251.  136.  145. -38.4</span>
+<span class="co">#&gt; 2       1     2 13838  260.  138.  145. -38.4</span>
+<span class="co">#&gt; 3       1     3 20966  267.  142.  145. -38.4</span>
+<span class="co">#&gt; 4       1     4 16249  267.  145.  145. -38.4</span>
+<span class="co">#&gt; 5       1     5 27019  257.  134.  145. -38.4</span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gly</span> <span class="op">&lt;-</span> <span class="fu">GGally</span><span class="fu">::</span><span class="fu"><a href="https://ggobi.github.io/ggally/reference/glyphs.html">glyphs</a></span><span class="op">(</span><span class="va">temporal_cluster</span>, x_major <span class="op">=</span> <span class="st">"long"</span>, x_minor <span class="op">=</span> <span class="st">"wk"</span>,
                       y_major <span class="op">=</span> <span class="st">"lat"</span>, y_minor <span class="op">=</span> <span class="st">"prcp"</span>, height <span class="op">=</span> <span class="fl">2</span>, width <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>

@@ -136,7 +136,7 @@
     <p>Functions to extract NetCDF dimension and variables</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extract_var</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>selected</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>extract_var</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>vars</span><span class='op'>)</span>
 
 <span class='fu'>extract_longlat</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
 
@@ -148,6 +148,10 @@
     <tr>
       <th>data</th>
       <td><p>a NetCDF file read in from <code><a href='https://rdrr.io/pkg/ncdf4/man/nc_open.html'>ncdf4::nc_open()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>vars</th>
+      <td><p>variables to read, see the variables in your data with <code><a href='https://rdrr.io/r/base/names.html'>names(data$var)</a></code></p></td>
     </tr>
     </table>
 
