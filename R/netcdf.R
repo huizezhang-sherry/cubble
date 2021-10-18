@@ -3,14 +3,20 @@
 #' @export
 #' @importFrom ncdf4 ncvar_get ncatt_get
 #' @rdname netcdf
-extract_var <- function(data){
+extract_var <- function(data, selected){
 
   if (class(data) != "ncdf4") abort("Data supplied is not of class ncdf4")
 
   vars <- names(data$var)
-  if (length(vars) > 1) infom("Only read in the first variable.")
+  if (length(vars) > 1) {
+    inform("Only read one variable.")
+    selected <- selected
+  } else{
+    selected <- vars
+  }
 
-  list(var = ncdf4::ncvar_get(data, vars), name = vars)
+
+  list(var = ncdf4::ncvar_get(data, selected), name = vars)
 }
 
 #'@export
@@ -20,20 +26,20 @@ extract_longlat <- function(data){
 
   dims <- names(data$dim)
 
-  if (all(!dims %in% c("long", "lat", "time"))){
+  if (all(!dims %in% c("longitude", "latitude", "time"))){
     abort("Dimension supported by cubble from NetCDF file: long, lat, and time.")
   }
 
 
-  if ("lon" %in% dims) long <- ncdf4::ncvar_get(data, "lon")
-  if ("lat" %in% dims) lat <- ncdf4::ncvar_get(data, "lat")
+  if ("longitude" %in% dims) long <- ncdf4::ncvar_get(data, "longitude")
+  if ("latitude" %in% dims) lat <- ncdf4::ncvar_get(data, "latitude")
 
   list(long = long, lat = lat)
 
 }
 
 #' @importFrom stringr word
-#' @importFrom lubridate %m+%
+#' @importFrom lubridate %m+% hours
 #' @export
 #' @rdname netcdf
 extract_time <- function(data){
@@ -50,6 +56,7 @@ extract_time <- function(data){
   }
 
   time_origin <- as.Date(gsub("[^0-9|-]", "\\1", tunits$value))
-  out <- time_origin %m+%  do.call(tperiod, list(x = time))
+  #f <- paste0("lubridate::", tperiod)
+  out <- time_origin %m+% do.call(tperiod, list(x = time))
   out
 }

@@ -9,7 +9,7 @@
 \alias{is_cubble}
 \title{Constructor for the cubble class}
 \usage{
-as_cubble(data, key, index, coords)
+as_cubble(data, key, index, coords, ...)
 
 \method{as_cubble}{tbl_df}(data, key, index, coords)
 

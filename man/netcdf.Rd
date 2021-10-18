@@ -6,7 +6,7 @@
 \alias{extract_time}
 \title{Functions to extract NetCDF dimension and variables}
 \usage{
-extract_var(data)
+extract_var(data, selected)
 
 extract_longlat(data)
 

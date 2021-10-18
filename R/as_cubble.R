@@ -1,7 +1,7 @@
 #' @rdname cubble-class
 #' @importFrom tidyr unchop
 #' @export
-as_cubble <- function(data, key, index, coords) {
+as_cubble <- function(data, key, index, coords, ...) {
   UseMethod("as_cubble")
 }
 
@@ -97,12 +97,12 @@ as_cubble.rowwise_df <- function(data, key, index, coords) {
 }
 
 #' @export
-as_cubble.ncdf4 <- function(data, key, index, coords){
+as_cubble.ncdf4 <- function(data, key, index, coords, selected){
 
-  lat_raw <- extract_longlat(data)$long
-  long_raw <- extract_longlat(data)$lat
+  lat_raw <- extract_longlat(data)$lat
+  long_raw <- extract_longlat(data)$long
   time_raw <- extract_time(data)
-  var <- extract_var(data)
+  var <- extract_var(data, selected)
   data <- var$var
   var_name <- var$name
 
