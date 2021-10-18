@@ -1,22 +1,22 @@
 #' Functions to extract NetCDF dimension and variables
 #' @param data a NetCDF file read in from \code{ncdf4::nc_open()}
+#' @param vars variables to read, see the variables in your data with \code{names(data$var)}
 #' @export
 #' @importFrom ncdf4 ncvar_get ncatt_get
 #' @rdname netcdf
-extract_var <- function(data, selected){
-
+extract_var <- function(data, vars){
   if (class(data) != "ncdf4") abort("Data supplied is not of class ncdf4")
 
-  vars <- names(data$var)
-  if (length(vars) > 1) {
+  vars_all <- names(data$var)
+  if (length(vars) == 1) {
     inform("Only read one variable.")
-    selected <- selected
-  } else{
     selected <- vars
+  } else{
+    selected <- vars_all
   }
 
 
-  list(var = ncdf4::ncvar_get(data, selected), name = vars)
+  list(var = ncdf4::ncvar_get(data, selected), name = selected)
 }
 
 #'@export
@@ -48,15 +48,41 @@ extract_time <- function(data){
   if (!"time" %in% dims) inform("No time dimension detected!")
   if ("time" %in% dims) time <- ncdf4::ncvar_get(data, "time")
 
-  tunits <- ncdf4::ncatt_get(data,"time","units")
-  tperiod <- stringr::word(tunits$value)
+  tunits <- ncdf4::ncatt_get(data, "time", "units")
 
+  # process period
+  tperiod <- stringr::word(tunits$value)
   if (tperiod %in% c("day", "hour", "minute", "second" ,"month", "year")) {
     tperiod <- paste0(tperiod, "s")
   }
 
-  time_origin <- as.Date(gsub("[^0-9|-]", "\\1", tunits$value))
-  #f <- paste0("lubridate::", tperiod)
-  out <- time_origin %m+% do.call(tperiod, list(x = time))
+  origin <- parse_time(tunits$value)
+  out <- origin %m+% do.call(tperiod, list(x = time))
   out
+
+}
+
+parse_time <- function(tstring){
+
+  # process date time and timezone
+  tstring <- stringr::str_extract(tstring, "[?<=\\d].*$")
+  seg_n <- stringr::str_split(tstring, " ", simplify = TRUE)
+
+  dttm <- tstring
+  tzone_std <- "UTC"
+
+  if (length(seg_n) == 3) {
+    dttm <- stringr::str_remove(tstring, seg_n[3])
+    tzone_string <- as.numeric(stringr::str_replace(seg_n[3], ":", "."))
+    tzone_std <- tzone_list %>%
+      dplyr::filter(as.numeric(.data$utc_offset_h) == tzone_string) %>%
+      dplyr::pull(.data$tz_name)
+
+    if (length(tzone_std) == 0){
+      cli::cli_abort("Timezone can't be parsed.")
+    }
+  }
+
+  lubridate::as_datetime(dttm, tz = tzone_std)
+
 }

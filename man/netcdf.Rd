@@ -6,7 +6,7 @@
 \alias{extract_time}
 \title{Functions to extract NetCDF dimension and variables}
 \usage{
-extract_var(data, selected)
+extract_var(data, vars)
 
 extract_longlat(data)
 
@@ -14,6 +14,8 @@ extract_time(data)
 }
 \arguments{
 \item{data}{a NetCDF file read in from \code{ncdf4::nc_open()}}
+
+\item{vars}{variables to read, see the variables in your data with \code{names(data$var)}}
 }
 \description{
 Functions to extract NetCDF dimension and variables
