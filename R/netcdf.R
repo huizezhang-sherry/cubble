@@ -2,21 +2,14 @@
 #' @param data a NetCDF file read in from \code{ncdf4::nc_open()}
 #' @param vars variables to read, see the variables in your data with \code{names(data$var)}
 #' @export
-#' @importFrom ncdf4 ncvar_get ncatt_get
+#' @importFrom ncdf4 ncvar_get
 #' @rdname netcdf
 extract_var <- function(data, vars){
   if (class(data) != "ncdf4") abort("Data supplied is not of class ncdf4")
 
-  vars_all <- names(data$var)
-  if (length(vars) == 1) {
-    inform("Only read one variable.")
-    selected <- vars
-  } else{
-    selected <- vars_all
-  }
+  out <- map(vars, ~ncdf4::ncvar_get(data,.x))
 
-
-  list(var = ncdf4::ncvar_get(data, selected), name = selected)
+  list(var = out, name = vars)
 }
 
 #'@export

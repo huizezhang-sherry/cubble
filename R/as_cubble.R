@@ -99,19 +99,18 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
 #' @export
 as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
 
-  #browser()
   lat_raw <- extract_longlat(data)$lat
   long_raw <- extract_longlat(data)$long
   time_raw <- extract_time(data)
   var <- extract_var(data, vars)
   data <- var$var
-  var_name <- sym(var$name)
+  var_name <- syms(var$name)
 
-  if (!length(long_raw) %in% dim(data) | !length(lat_raw) %in% dim(data)){
+  if (!length(long_raw) %in% dim(data[[1]]) | !length(lat_raw) %in% dim(data[[1]])){
     abort("lat, long doesn't match with the data dimension.")
   }
 
-  out <- expand.grid(long = long_raw, lat = lat_raw) %>%
+  grid <- expand.grid(long = long_raw, lat = lat_raw) %>%
     tibble::as_tibble() %>%
     dplyr::mutate(
       long_idx = match(.data$long, long_raw),
@@ -120,22 +119,31 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
     ) %>%
     dplyr::rowwise()
 
-  if (length(long_raw) == dim(data)[1]) {
+  if (length(long_raw) == dim(data[[1]])[1]) {
 
-    out <- out %>%
-      dplyr::mutate(ts = list(tibble::tibble(
-        time = time_raw,
-        {{var_name}} := as.vector(data[long_idx, lat_idx,])
-      ))) %>%
-      dplyr::select(-long_idx, -lat_idx)
+  # this bulk need to be further simplified for performance
+    ts_col <- map(1:nrow(grid),
+                function(idx)
+                  map2_dfr(var_name, data,
+                           ~tibble::tibble(time = time_raw) %>%
+                             dplyr::bind_cols(
+                               tibble::tibble({{.x}} := .y[grid$long_idx[idx], grid$lat_idx[idx], ]))))
+
+    out <- grid %>%
+      dplyr::bind_cols(tibble::tibble(ts = ts_col)) %>%
+      dplyr::select(-.data$long_idx, -.data$lat_idx)
   } else{
 
-    out <- out %>%
-      dplyr::mutate(ts = list(tibble::tibble(
-        time = time_raw,
-        {{var_name}} := as.vector(data[lat_idx, long_idx,])
-      ))) %>%
-      dplyr::select(-long_idx, -lat_idx)
+    ts_col <- map(1:nrow(grid),
+                  function(idx)
+                    map2_dfr(var_name, data,
+                             ~tibble::tibble(time = time_raw) %>%
+                               dplyr::bind_cols(
+                                 tibble::tibble({{.x}} := .y[grid$lat_idx[idx], grid$long_idx[idx], ]))))
+
+    out <- grid %>%
+      dplyr::bind_cols(tibble::tibble(ts = ts_col)) %>%
+      dplyr::select(-.data$long_idx, -.data$lat_idx)
 
   }
   leaves <- as_leaves(out, variant = NULL)
