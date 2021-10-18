@@ -5,6 +5,7 @@
 #' @importFrom tidyr nest unnest
 #' @importFrom rlang .data
 #' @importFrom purrr map_dfr map2_dfr
+#' @importFrom cli cli_abort
 #' @aliases cubble-package
 #' @keywords internal
 "_PACKAGE"

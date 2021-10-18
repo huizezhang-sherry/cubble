@@ -11,9 +11,9 @@
 \usage{
 as_cubble(data, key, index, coords, ...)
 
-\method{as_cubble}{tbl_df}(data, key, index, coords)
+\method{as_cubble}{tbl_df}(data, key, index, coords, ...)
 
-\method{as_cubble}{rowwise_df}(data, key, index, coords)
+\method{as_cubble}{rowwise_df}(data, key, index, coords, ...)
 
 cubble(..., key, index, coords)
 

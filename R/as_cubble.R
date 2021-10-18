@@ -7,7 +7,7 @@ as_cubble <- function(data, key, index, coords, ...) {
 
 #' @rdname cubble-class
 #' @export
-as_cubble.tbl_df <- function(data, key, index, coords) {
+as_cubble.tbl_df <- function(data, key, index, coords, ...) {
 
   key <- enquo(key)
   index <- enquo(index)
@@ -56,7 +56,7 @@ as_cubble.tbl_df <- function(data, key, index, coords) {
 
 #' @rdname cubble-class
 #' @export
-as_cubble.rowwise_df <- function(data, key, index, coords) {
+as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -97,14 +97,15 @@ as_cubble.rowwise_df <- function(data, key, index, coords) {
 }
 
 #' @export
-as_cubble.ncdf4 <- function(data, key, index, coords, selected){
+as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
 
+  #browser()
   lat_raw <- extract_longlat(data)$lat
   long_raw <- extract_longlat(data)$long
   time_raw <- extract_time(data)
-  var <- extract_var(data, selected)
+  var <- extract_var(data, vars)
   data <- var$var
-  var_name <- var$name
+  var_name <- sym(var$name)
 
   if (!length(long_raw) %in% dim(data) | !length(lat_raw) %in% dim(data)){
     abort("lat, long doesn't match with the data dimension.")
@@ -124,7 +125,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, selected){
     out <- out %>%
       dplyr::mutate(ts = list(tibble::tibble(
         time = time_raw,
-        var_name = as.vector(data[long_idx, lat_idx,])
+        {{var_name}} := as.vector(data[long_idx, lat_idx,])
       ))) %>%
       dplyr::select(-long_idx, -lat_idx)
   } else{
@@ -132,7 +133,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, selected){
     out <- out %>%
       dplyr::mutate(ts = list(tibble::tibble(
         time = time_raw,
-        var_name = as.vector(data[lat_idx, long_idx,])
+        {{var_name}} := as.vector(data[lat_idx, long_idx,])
       ))) %>%
       dplyr::select(-long_idx, -lat_idx)
 
