@@ -8,7 +8,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   message = FALSE, 
   warning = FALSE,
-  out.width = "100%"
+  out.width = "100%", 
+  cache = TRUE
 )
 ```
 
@@ -18,29 +19,11 @@ library(cubble)
 library(ggplot2)
 library(GGally)
 library(sf)
+library(s2)
 ```
 
 For spatio-temporal data, one may want to plot the time series on the map to observe the spatial relationship among sites close to each other. A glyph map allows you to inset the time series, as a glyph, into the map to detect any global or local pattern. Below is an example of the monthly maximum temperature collected from 61 stations in Australia in 2020.
 
-```{r fig.height=7, fig.width=10, echo = FALSE,  fig.align='center'}
-state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 5e-3)
-
-out <- aus_climate %>% 
-  stretch() %>% 
-  filter(lubridate::year(date) == 2020) %>% 
-  mutate(ym = tsibble::yearmonth(date)) %>% 
-  group_by(ym) %>% 
-  summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
-  migrate(lat, long)
-
-gly_dt <- glyphs(out, 
-                 x_major = "long", y_major = "lat", 
-                 x_minor = "ym", y_minor = "tmax", 
-                 height = 1, width = 2)
-
-plot_map(state_map) + 
-  ggplot2::geom_path(data = gly_dt, ggplot2::aes(gx, gy, group = gid))
-```
 
 To be able to produce the glyph map above, two tasks need to done: 
 
@@ -52,10 +35,10 @@ To be able to produce the glyph map above, two tasks need to done:
 Filtering 2020 records is an operation on the time dimension since it requires to decide whether the year component of the date is 2020. A cubble processes all the time dimension operations using the long form, so we first use `stretch()` to switch the data to the long form and then filter on the year:
 
 ```{r}
-long <- aus_climate %>% 
-  stretch() %>% 
-  filter(lubridate::year(date) == 2020)
-long
+nsw_vic <- ozmaps::abs_ste %>% filter(NAME %in% c("Victoria", "New South Wales"))
+
+(tmax_subset <- weatherdata::historical_tmax %>% 
+  filter(s2_within(s2_lnglat(longitude, latitude), s2::s2_union(nsw_vic))))
 ```
 
 # Summarise
@@ -65,32 +48,27 @@ Daily measures are usually too sparse to be plotted and aggregation is a common 
 We create a `ym` variable from `tsibble::yearmonth()` and add an additional grouping on `ym` with `group_by()`. This allows us create a summary for each station in each month in the next step: 
 
 ```{r}
-summarised_long <- long %>% 
-  mutate(ym = tsibble::yearmonth(date)) %>% 
-  group_by(ym) %>% 
-  summarise(tmax = mean(tmax, na.rm = TRUE))
-summarised_long
+(tmax_summarised <- tmax_subset %>% 
+  stretch() %>% 
+  filter(lubridate::year(date) %in% c(1971:1975, 2016:2020)) %>% 
+  mutate(month = lubridate::month(date),
+         group = as.factor(ifelse(lubridate::year(date) > 2015, "2016 ~ 2020", "1971 ~ 1975"))) %>% 
+  group_by(month, group) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE)))
 ```
 
-This gives all we need to make the time series glyph, let's see how they look like in a grid view: 
 
-```{r fig.height=7, fig.width=10}
-summarised_long %>% 
-  ggplot(aes(x = ym, y = tmax)) + 
-  geom_line() +
-  facet_wrap(vars(forcats::fct_reorder(id, -tmax))) +
-  tsibble::scale_x_yearmonth(date_labels = "%b") + 
-  xlab("month")
-```
 
 # Join
 
 A glyph map requires a  set of major coordinate (`x_major` and `y_major`) and minor coordinate (`x_minor` and `y_minor`) to locate the glyph in the map. In our case, the major axes are `long` and `lat` and minor axes are `date` and `tmax`. One last step before making the glyph map is to collect these variables in one table and this can be done with `migrate()`, which moves the time-invariant variables in the nested form into the long form: 
 
 ```{r}
-migrated <- summarised_long %>% 
-  migrate(lat, long)
-migrated
+(tmax_clean <- tmax_summarised %>% 
+  tamp() %>% 
+  filter(nrow(ts) == 24) %>% 
+  stretch() %>% 
+  migrate(latitude, longitude))
 ```
 
 
@@ -99,15 +77,49 @@ migrated
 Now let's use `glyphs` from `GGally` to create the glyph data and here you go, the glyph map you see in the beginning of this vignette!
 
 ```{r fig.height=7, fig.width=7, fig.align='center'}
-state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 5e-3)
-gly_dt <- GGally::glyphs(migrated, 
-                 x_major = "long", y_major = "lat", 
-                 x_minor = "ym", y_minor = "tmax", 
-                 height = 1, width = 2)
+gly <- glyphs(tmax_clean,
+                x_major = "longitude", y_major = "latitude", 
+                x_minor = "month", y_minor = "tmax", 
+                height = 0.6, width = 1)
 
-plot_map(state_map) + 
-  geom_path(data = gly_dt, aes(gx, gy, group = gid))
+p1 <- plot_map(nsw_vic, fill = "transparent") + 
+  ggplot2::geom_path(data = gly, 
+                     ggplot2::aes(gx, gy, 
+                                  group = interaction(id, group),
+                                  color = group)) + 
+  scale_color_brewer(palette = "Dark2")
 ```
 
 
 In the code above, the map underlayed is from `ozmaps::abs_ste` and `rmapshaper::ms_simplify()`  simplifies the map by keeping only a proportion of points along the coastline to avoid unnecessary details. `plot_map()` is a function in `cubble` that wraps around `ggplot() + geom_sf(data, ...)` with some default aesthetic: `color = "grey80", alpha = 0.4, linetype = 3,` to save some typing. 
+
+```{r eval = FALSE}
+tmax_clean %>% filter(id == "ASN00048027") %>% 
+  ggplot(aes(x = month, 
+             y = tmax, 
+             color = group)) + 
+  geom_line(size = 1.5) +
+  scale_color_brewer(palette = "Dark2", guide = "none") +
+  scale_x_continuous(breaks = seq(1,12, 1)) + 
+  labs(x = "Month", title = "ASN00048027: Cobar") + 
+  theme_bw() + 
+  theme(aspect.ratio = 0.5, 
+        axis.text = element_text(size = 20), title =  element_text(size = 20))
+
+#ggsave(filename = here::here("inst/hist-tmax-single.png"))
+```
+
+```{r out.width="100%"}
+cobar <- tmax_clean %>% filter(id == "ASN00048027") %>% tamp()
+single <- tibble::tibble(img =  glue::glue(here::here("inst/hist-tmax-single.png")))
+p1 +
+  geom_rect(data = cobar,  aes(xmin = longitude - 0.6, 
+                                  xmax = longitude + 0.6, 
+                                  ymin = latitude - 0.1,
+                                  ymax = latitude + 0.35), 
+            fill = "transparent", color = "black") + 
+  ggimg::geom_point_img(data = single, 
+                        aes(x = 155, y = -37, img = img), size = 7) + 
+  theme(legend.position = "bottom")
+```
+
