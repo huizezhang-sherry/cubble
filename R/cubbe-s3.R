@@ -13,26 +13,34 @@
 cubble <- function(..., key, index, coords) {
   data <- tibble::tibble(!!!list2(...))
   key <- enquo(key)
-  leaves <- new_leaves(leaves, !!key)
   new_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
-             leaves = leaves, form = "nested")
+             spatial = NULL, form = "nested")
 
 }
 
 new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL) {
-  #browser()
   key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
 
-  attr <- list(
-    x = data, groups = key_data, index = index,
-    spatial = spatial, coords = coords, form = form,
-    class = "cubble_df") %>%
+  attr <- list(x = data,
+               groups = key_data, index = index,
+               spatial = spatial, coords = coords, form = form,
+               class = "cubble_df") %>%
     Filter(f = length)
+
+  # check column ts present,
+  if (form == "nested"){
+    # also need to check
+    # * ts is a list column
+    # * ts column contain index
+    if (!"ts" %in% names(data)){
+      cli::cli_abort("data need to contain a {.code ts} column to construct a cubble")
+    }
+
+  }
 
 
   #tsibble_attr <- NULL
-
   if ("tbl_ts" %in% class(data)){
 
     # `key` attribute is not included since it is already there

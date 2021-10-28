@@ -14,64 +14,17 @@
 #' To extract the leaves object from a cubble, use `leaves()`
 #'
 #' @param data a flat data without any nesting structure
-#' @param key the spatial identifier
-#'
-#' @rdname leaves
-new_leaves <- function(data, key){
-  data <- as_tibble(data)
-  data <- data[map_lgl(as_tibble(data), ~all(class(.x) != "list") )]
-  key <- enquo(key)
-  if (quo_is_null(key)){
-    tibble::new_tibble(data, nrow = nrow(data),
-                       invariant = NULL, variant = NULL,
-                       class = "leaves")
+new_spatial <- function(data){
+  test_cubble(data)
+
+  form <- determine_form(data)
+  if (form == "nested"){
+    spatial <-  NULL
+  } else if (form == "long"){
+    spatial <- spatial(data)
   } else{
-    all_vars <- find_invariant(data, !!key)
-    invariant <- data %>% select(all_vars$invariant) %>% map_chr(pillar::type_sum)
-    variant <- data %>% select(all_vars$variant) %>% map_chr(pillar::type_sum)
-    leaves_data <- unique(data[names(invariant)])
-
-    tibble::new_tibble(leaves_data, nrow = nrow(leaves_data),
-                       #key = as_name(key),
-                       invariant = invariant, variant = variant,
-                       class = "leaves")
+    cli::cli_abort("{.field form} can only be either long or nested in a cubble.")
   }
+
+  spatial
 }
-
-as_leaves <- function(data, variant){
-
-  data <- data %>% select(-get_listcol(data))
-  invariant <- data %>%  map_chr(pillar::type_sum)
-
-  tibble::new_tibble(data, nrow = nrow(data),
-                     #key = as_name(key),
-                     invariant = invariant, variant = variant,
-                     class = "leaves")
-}
-
-#' #' @export
-#' tbl_sum.leaves <- function(data){
-#'   var_names <- names(variant(data))
-#'   var_type <- variant(data)
-#'   c("Leaves" = glue::glue("{nrow(data)} x {ncol(data)}"))
-#' }
-#'
-#' #' @export
-#' #' @rdname leaves
-#' is_leaves <- function(data){
-#'   inherits(data, "leaves")
-#' }
-#'
-#' #' @export
-#' #' @rdname leaves
-#' invariant <- function(data){
-#'   test_leaves(data)
-#'   data %@% invariant
-#' }
-#'
-#' #' @export
-#' #' @rdname leaves
-#' variant <- function(data){
-#'   test_leaves(data)
-#'   data %@% variant
-#' }

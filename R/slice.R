@@ -3,7 +3,7 @@ slice_factory <- function(f, ...){
   function(data, ...){
     if (form(data) != "nested"){
       # think about slicing on the long form
-      abort("slicing should be performed in the nested form on the grouping variable")
+      cli::cli_abort("slicing should be performed in the nested form on the grouping variable")
     }
     key <- key_vars(data)
     data <- tibble::as_tibble(data)
@@ -65,7 +65,7 @@ slice_sample.cubble_df <- slice_factory("slice_sample")
 slice_nearby <- function(data, ..., buffer = 1, n = 5){
 
   if (form(data) != "nested") {
-    abort("slicing should be performed in the nested form on the grouping variable")
+    cli::cli_abort("slicing should be performed in the nested form on the grouping variable")
   }
 
   dots <- enquos(...)
@@ -75,9 +75,9 @@ slice_nearby <- function(data, ..., buffer = 1, n = 5){
   target <- dplyr_reconstruct(target, data)
 
   if (nrow(target) == 0) {
-    abort(
+    cli::cli_abort(
       "No candidate fulfill the condition(s),
-          try `data %>% filter(...) on the condition to diagnose`"
+          try {.code data %>% filter(...)} on the condition to diagnose"
     )
   }
 
@@ -95,10 +95,10 @@ slice_nearby <- function(data, ..., buffer = 1, n = 5){
       !(!!sym(key_vars(data)) %in% target_var)
     )
 
-  inform(glue::glue("The bounding box gives {nrow(cand)} candidates"))
+  cli::cli_inform("The bounding box gives {.code nrow(cand)} candidates")
 
   if (n > nrow(cand)) {
-    inform("Number of element to sample is larger than the candidate.
+    cli::cli_inform("Number of element to sample is larger than the candidate.
            All candidates are selected")
   }
 
@@ -126,7 +126,7 @@ slice_nearby <- function(data, ..., buffer = 1, n = 5){
 #' @rdname nearby
 view_nearby <- function(data, origin, map = NULL) {
   if (!"type" %in% colnames(data)) {
-    abort("Data needs to have the `type` column outputted from `slice_nearby`!")
+    cli::cli_abort("Data needs to have the {.field type} column outputted from `slice_nearby`!")
   }
 
   if (is.null(map)) {

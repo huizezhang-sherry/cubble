@@ -22,14 +22,7 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   # }
   # update leaves
   # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
-  form <- determine_form(data)
-  if (form == "nested"){
-    spatial <- NULL
-  } else if (form == "long"){
-    leaves_data <-  spatial(data)
-  } else{
-    abort("{form} meeds to be either long or nested")
-  }
+  spatial <- new_spatial(data)
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
@@ -43,14 +36,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   out <- vec_slice(data, i)
   key <- key_vars(data)
 
-  form <- determine_form(data)
-  if (form == "nested"){
-    spatial = NULL
-  } else if (form == "long"){
-    spatial <- spatial(data)
-  } else{
-    abort("{form} meeds to be either long or nested")
-  }
+  spatial <- new_spatial(data)
 
 
   if ("tbl_ts" %in% class(data)){
@@ -76,14 +62,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   #   cols <- unique(c(key, new_leaves))
   #   leaves_data <- leaves(template)[cols]
   # }
-
-  if (form == "nested"){
-    spatial = NULL
-  } else if (form == "long"){
-    spatial <- spatial(data)
-  } else{
-    abort("{form} meeds to be either long or nested")
-  }
+  spatial <- new_spatial(template)
 
 
   new_cubble(data,
@@ -94,12 +73,12 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 #' @export
 summarise.cubble_df <- function(data, ...){
   key <- key_vars(data)
-  leaves_data <- leaves(data)
+  spatial <- new_spatial(data)
   out <- NextMethod("summarise")
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             leaves = leaves_data, form = determine_form(out))
+             spatial = spatial, form = determine_form(out))
 }
 
 #' @export
@@ -113,19 +92,21 @@ left_join.cubble_df <- function(data1, data2, by = NULL, ...){
     inform("Joining variable(s) being invariant to the group variable ...")
   }
 
+  if (is_null(by)){
+    by <- intersect(names(data1), names(data2))
+  }
   out <- NextMethod("left_join")
 
 
   if (is_cubble(data2)){
-    key <- c(key_vars(data1), key_vars(data2))
-    index <- index(data1)
-    coords <- list(coords(data1), coords(data2))
-    leaves <- list(leaves(data1), leaves(data2))
-    form <- determine_form(out)
-
-    out <- new_cubble(out,
-               key = key, index = index, coords = coords,
-               leaves = leaves, form = form)
+    # key <- c(key_vars(data1), key_vars(data2))
+    # index <- index(data1)
+    # coords <- list(coords(data1), coords(data2))
+    # leaves <- list(leaves(data1), leaves(data2))
+    #
+    # out <- new_cubble(out,
+    #            key = key, index = index, coords = coords,
+    #            leaves = leaves, form = determine_form(out))
   } else{
     out <- dplyr_reconstruct(out, data1)
   }
@@ -148,7 +129,7 @@ group_by.cubble_df <- function(data, ...){
 
   new_cubble(data,
              key = key, index = index(data), coords = coords(data),
-             leaves = leaves(data), form = determine_form(data))
+             spatial = spatial(data), form = determine_form(data))
 }
 
 #' @export
@@ -157,11 +138,11 @@ ungroup.cubble_df <- function(data, ...){
 
   if (!all(ungroup_var %in% names(data))){
     problem <- ungroup_var[!ungroup_var %in% names(data)]
-    abort(glue::glue("the ungroup variable: {problem} is not found in the data"))
+    cli::cli_abort("the ungroup variable: {problem} is not found in the data")
   }
 
   if (key_vars(data)[1] %in% ungroup_var){
-    abort("Can't ungroup the spatio identifier!")
+    cli::cli_abort("Can't ungroup the spatio identifier!")
   }
 
 
@@ -169,7 +150,7 @@ ungroup.cubble_df <- function(data, ...){
 
   new_cubble(data,
              key = updated_group_var, index = index(data), coords = coords(data),
-             leaves = leaves(data), form = determine_form(data))
+             spatial = new_spatial(data), form = determine_form(data))
 }
 
 #' @export
@@ -197,6 +178,6 @@ unnest_cubble <- function(data, ..., tsibble_key = NULL){
     out <- data %>% as_tibble() %>% unnest(...)
   }
 
-  dplyr_reconstruct(out, data)
+  out
 }
 

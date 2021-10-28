@@ -9,9 +9,9 @@ stretch(data, col, ...)
 \arguments{
 \item{data}{a cubble object}
 
-\item{...}{variables to be stretched into a single column}
+\item{col}{the list column to be stretched}
 
-\item{cols}{the list column to be stretched}
+\item{...}{variables to be stretched into a single column}
 }
 \description{
 Switch a cubble object into a long form

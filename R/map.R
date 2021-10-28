@@ -28,7 +28,7 @@ plot_map <- function(map_data, ...){
       ggplot2::coord_sf() +
       ggplot2::theme_void()
   } else{
-    abort("`map_data` needs to have a column called `geometry`")
+    cli::cli_abort("{.fn map_data} needs to have a column called {.field geometry}")
   }
 
 # -------------------------------------------------------------------------

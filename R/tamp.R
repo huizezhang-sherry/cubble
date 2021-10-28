@@ -26,7 +26,6 @@ tamp <- function(data, key) {
 #' @importFrom tsibble index as_tsibble
 #' @export
 tamp.cubble_df <- function(data, key) {
-  #browser()
   test_cubble(data)
 
   # will only keep the first grouping variable if more than one
@@ -48,7 +47,7 @@ tamp.cubble_df <- function(data, key) {
   tvars <- colnames(data)[colnames(data) != as_name(key)]
 
   if (form(data) != "long"){
-    cli::abort("{.fn tamp} requires data to be in long form.")
+    cli::cli_abort("{.fn tamp} requires data to be in long form.")
   }
 
   out <- tibble::as_tibble(data) %>%
