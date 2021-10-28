@@ -1,6 +1,7 @@
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
+  #browser()
 
   key <- key_vars(data)
 

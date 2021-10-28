@@ -2,7 +2,7 @@
 % Please edit documentation in R/cubble-attr.R
 \name{form}
 \alias{form}
-\alias{leaves}
+\alias{spatial}
 \alias{key_vars}
 \alias{key_data}
 \alias{coords}
@@ -13,7 +13,7 @@
 \usage{
 form(data)
 
-leaves(data)
+spatial(data)
 
 key_vars(data)
 

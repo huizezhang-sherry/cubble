@@ -42,9 +42,9 @@ determine_form <- function(data){
 
 #' @export
 #' @rdname attributes
-leaves <- function(data){
+spatial <- function(data){
   test_cubble(data)
-  data %@% "leaves"
+  data %@% "spatial"
 }
 
 #' @export

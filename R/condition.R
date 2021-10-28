@@ -26,3 +26,14 @@ get_listcol <- function(data){
   col_type <- map(data, class)
   names(data)[col_type == "list"]
 }
+
+test_list <- function(data, col){
+  col <- enquo(col)
+  idx <- tidyselect::eval_select(col, data)
+  class_vec <- map_chr(as_tibble(data), class)
+  res <- class_vec[idx]
+  if (res != "list") {
+    abort("The column to stretch need to be a list-column")
+  }
+
+}

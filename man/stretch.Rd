@@ -4,14 +4,14 @@
 \alias{stretch}
 \title{Switch a cubble object into a long form}
 \usage{
-stretch(data, cols, ...)
+stretch(data, col, ...)
 }
 \arguments{
 \item{data}{a cubble object}
 
-\item{cols}{the list column to be stretched}
-
 \item{...}{variables to be stretched into a single column}
+
+\item{cols}{the list column to be stretched}
 }
 \description{
 Switch a cubble object into a long form

@@ -49,29 +49,29 @@ as_leaves <- function(data, variant){
                      class = "leaves")
 }
 
-#' @export
-tbl_sum.leaves <- function(data){
-  var_names <- names(variant(data))
-  var_type <- variant(data)
-  c("Leaves" = glue::glue("{nrow(data)} x {ncol(data)}"))
-}
-
-#' @export
-#' @rdname leaves
-is_leaves <- function(data){
-  inherits(data, "leaves")
-}
-
-#' @export
-#' @rdname leaves
-invariant <- function(data){
-  test_leaves(data)
-  data %@% invariant
-}
-
-#' @export
-#' @rdname leaves
-variant <- function(data){
-  test_leaves(data)
-  data %@% variant
-}
+#' #' @export
+#' tbl_sum.leaves <- function(data){
+#'   var_names <- names(variant(data))
+#'   var_type <- variant(data)
+#'   c("Leaves" = glue::glue("{nrow(data)} x {ncol(data)}"))
+#' }
+#'
+#' #' @export
+#' #' @rdname leaves
+#' is_leaves <- function(data){
+#'   inherits(data, "leaves")
+#' }
+#'
+#' #' @export
+#' #' @rdname leaves
+#' invariant <- function(data){
+#'   test_leaves(data)
+#'   data %@% invariant
+#' }
+#'
+#' #' @export
+#' #' @rdname leaves
+#' variant <- function(data){
+#'   test_leaves(data)
+#'   data %@% variant
+#' }

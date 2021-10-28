@@ -2,18 +2,9 @@
 % Please edit documentation in R/leaves.R
 \name{new_leaves}
 \alias{new_leaves}
-\alias{is_leaves}
-\alias{invariant}
-\alias{variant}
 \title{Create and manipulate leaves attributes}
 \usage{
 new_leaves(data, key)
-
-is_leaves(data)
-
-invariant(data)
-
-variant(data)
 }
 \arguments{
 \item{data}{a flat data without any nesting structure}

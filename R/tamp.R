@@ -26,39 +26,43 @@ tamp <- function(data, key) {
 #' @importFrom tsibble index as_tsibble
 #' @export
 tamp.cubble_df <- function(data, key) {
+  #browser()
   test_cubble(data)
 
   # will only keep the first grouping variable if more than one
-  key <- enquo(key)
-  if (quo_is_missing(key)){
-    key <- key_vars(data)
-    if (length(key) > 1) key <- key[1]
-    key <- quo(!!sym(key))
-  }
+  # key <- enquo(key)
+  # if (quo_is_missing(key)){
+  #   key <- key_vars(data)
+  #   if (length(key) > 1) key <- key[1]
+  #   key <- quo(!!sym(key))
+  # }
 
   # compute metadata again if change to a different key
-  all_vars <- find_invariant(data, !!key)
-  if (as_name(key) %in% key_vars(data)){
-    leaves_data <- leaves(data)
-  } else{
-    leaves_data <- new_leaves(data, !!key)
+  # all_vars <- find_invariant(data, !!key)
+  # if (as_name(key) %in% key_vars(data)){
+  #
+  # } else{
+  #   leaves_data <- new_leaves(data, !!key)
+  # }
+
+  spatial <- spatial(data)
+  tvars <- colnames(data)[colnames(data) != as_name(key)]
+
+  if (form(data) != "long"){
+    cli::abort("{.code{tamp}} requires data to be in long form.")
   }
 
-  if (form(data) == "long"){
-    out <- tibble::as_tibble(data) %>%
-      left_join(leaves_data) %>%
-      tidyr::nest(ts = c(!!!all_vars$variant)) %>%
-      dplyr::rowwise()
-  } else{
-    abort("Currently `tamp.cubble_df` is only for switching form long form to nested form")
-  }
+  out <- tibble::as_tibble(data) %>%
+    left_join(spatial) %>%
+    tidyr::nest(ts = c(tvars)) %>%
+    dplyr::rowwise()
 
   if ("tbl_ts" %in% class(data)){
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
   }
 
   new_cubble(out,
-             key = as_name(key), index = index(data), coords = coords(data),
-             leaves = leaves_data, form = "nested")
+             key = key_vars(key)[1], index = index(data), coords = coords(data),
+             form = "nested")
 }
 

@@ -37,7 +37,6 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
       tidyr::nest(ts = c(!!!all_vars$variant)) %>%
       dplyr::rowwise()
 
-    leaves_data <- new_leaves(data, !!key)
   } else{
     listcol_var <- listcol_var[1]
     invariant_var <- names(col_type)[col_type != "list"]
@@ -46,12 +45,11 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
 
     out <- data
     variant <- chopped$ts %>% map_chr(pillar::type_sum)
-    leaves_data <- as_leaves(data[,invariant_var], variant)
   }
 
   new_cubble(out,
              key = as_name(key), index = as_name(index), coords = coords,
-             leaves = leaves_data, form = "nested")
+             form = "nested")
 }
 
 #' @rdname cubble-class
@@ -76,7 +74,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
   # }
 
   # compute leaves
-  leaves <- as_tibble(data) %>% tidyr::unnest() %>% new_leaves(!!key)
+  #leaves <- as_tibble(data) %>% tidyr::unnest() %>% new_leaves(!!key)
   list_col <- get_listcol(data)
 
   if (length(list_col) == 0){
@@ -93,7 +91,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
 
   new_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
-             leaves = leaves, form = "nested")
+             form = "nested")
 }
 
 #' @export
@@ -146,11 +144,11 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
       dplyr::select(-.data$long_idx, -.data$lat_idx)
 
   }
-  leaves <- as_leaves(out, variant = NULL)
+  #leaves <- as_leaves(out, variant = NULL)
 
   new_cubble(out,
              key = "id", index = "time", coords = c("long", "lat"),
-             leaves = leaves, form = "nested")
+             form = "nested")
 
 }
 

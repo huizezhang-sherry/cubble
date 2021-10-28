@@ -20,16 +20,22 @@ cubble <- function(..., key, index, coords) {
 
 }
 
-new_cubble <- function(data, key, index, coords, leaves, form, tsibble_attr = NULL) {
-  key_data <- group_data(dplyr::grouped_df(data, vars = key))
+new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL) {
+  #browser()
+  key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
 
-  attr <- list(x = data,
-               groups = key_data,
-               index = index,
-               coords = coords,
-               leaves = leaves,
-               form = form,
-               class = "cubble_df")
+  if (form == "long") {
+    attr <- list(
+      x = data, groups = key_data, index = index,
+      coords = coords, spatial = spatial, form = form,
+      class = "cubble_df")
+  } else{
+    attr <- list(
+      x = data, groups = key_data, index = index,
+      coords = coords, form = form, class = "cubble_df")
+  }
+
+
   #tsibble_attr <- NULL
 
   if ("tbl_ts" %in% class(data)){
@@ -63,26 +69,26 @@ tbl_sum.cubble_df <- function(data) {
   key_msg <- glue::glue_collapse(glue::glue("{key} [{key_n}]"), sep = ", ")
 
 
-  if (form(data) == "nested"){
-    if (vec_is_list(leaves(data))) {
-      variant <- Reduce(c, map(leaves(data), ~variant(.x)))
-    } else {
-      variant <- variant(leaves(data))
-    }
-
-    var_names <- names(variant)
-    var_type <- variant
-
-  } else if (form(data) == "long"){
-    if (vec_is_list(leaves(data))) {
-      invariant <- Reduce(c, map(leaves(data), ~invariant(.x)))
-    } else {
-      invariant <- invariant(leaves(data))
-    }
-    var_names <- names(invariant)
-    var_type <- invariant
-  }
-  leaves_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
+  # if (form(data) == "nested"){
+  #   if (vec_is_list(leaves(data))) {
+  #     variant <- Reduce(c, map(leaves(data), ~variant(.x)))
+  #   } else {
+  #     variant <- variant(leaves(data))
+  #   }
+  #
+  #   var_names <- names(variant)
+  #   var_type <- variant
+  #
+  # } else if (form(data) == "long"){
+  #   if (vec_is_list(leaves(data))) {
+  #     invariant <- Reduce(c, map(leaves(data), ~invariant(.x)))
+  #   } else {
+  #     invariant <- invariant(leaves(data))
+  #   }
+  #   var_names <- names(invariant)
+  #   var_type <- invariant
+  # }
+  # leaves_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
 
 
   if(form(data) == "nested"){
@@ -98,8 +104,8 @@ tbl_sum.cubble_df <- function(data) {
 
   c(
     "Cubble" = msg,
-    "Key" = key_msg,
-    "Leaves" = leaves_msg
+    "Key" = key_msg
+    #"Leaves" = leaves_msg
 
   )
 }
