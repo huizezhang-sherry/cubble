@@ -44,7 +44,7 @@ are also preserved and can be accessed via the relevant functions in the tsibble
 \examples{
 # extract attributes of a cubble object
 form(aus_climate)
-leaves(aus_climate) \%>\% head(5)
+spatial(aus_climate) \%>\% head(5)
 key_data(aus_climate) \%>\% head(5)
 key_vars(aus_climate)
 index(aus_climate)

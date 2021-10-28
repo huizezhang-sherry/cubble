@@ -24,16 +24,11 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
   #browser()
   key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
 
-  if (form == "long") {
-    attr <- list(
-      x = data, groups = key_data, index = index,
-      coords = coords, spatial = spatial, form = form,
-      class = "cubble_df")
-  } else{
-    attr <- list(
-      x = data, groups = key_data, index = index,
-      coords = coords, form = form, class = "cubble_df")
-  }
+  attr <- list(
+    x = data, groups = key_data, index = index,
+    spatial = spatial, coords = coords, form = form,
+    class = "cubble_df") %>%
+    Filter(f = length)
 
 
   #tsibble_attr <- NULL

@@ -30,12 +30,12 @@ tamp.cubble_df <- function(data, key) {
   test_cubble(data)
 
   # will only keep the first grouping variable if more than one
-  # key <- enquo(key)
-  # if (quo_is_missing(key)){
-  #   key <- key_vars(data)
-  #   if (length(key) > 1) key <- key[1]
-  #   key <- quo(!!sym(key))
-  # }
+  key <- enquo(key)
+  if (quo_is_missing(key)){
+    key <- key_vars(data)
+    if (length(key) > 1) key <- key[1]
+    key <- quo(!!sym(key))
+  }
 
   # compute metadata again if change to a different key
   # all_vars <- find_invariant(data, !!key)
@@ -44,12 +44,11 @@ tamp.cubble_df <- function(data, key) {
   # } else{
   #   leaves_data <- new_leaves(data, !!key)
   # }
-
   spatial <- spatial(data)
   tvars <- colnames(data)[colnames(data) != as_name(key)]
 
   if (form(data) != "long"){
-    cli::abort("{.code{tamp}} requires data to be in long form.")
+    cli::abort("{.fn tamp} requires data to be in long form.")
   }
 
   out <- tibble::as_tibble(data) %>%
@@ -62,7 +61,7 @@ tamp.cubble_df <- function(data, key) {
   }
 
   new_cubble(out,
-             key = key_vars(key)[1], index = index(data), coords = coords(data),
-             form = "nested")
+             key = as_name(key), index = index(data), coords = coords(data),
+             spatial = NULL, form = "nested")
 }
 

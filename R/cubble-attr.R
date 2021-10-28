@@ -11,7 +11,7 @@
 #' @examples
 #' # extract attributes of a cubble object
 #' form(aus_climate)
-#' leaves(aus_climate) %>% head(5)
+#' spatial(aus_climate) %>% head(5)
 #' key_data(aus_climate) %>% head(5)
 #' key_vars(aus_climate)
 #' index(aus_climate)
@@ -44,7 +44,13 @@ determine_form <- function(data){
 #' @rdname attributes
 spatial <- function(data){
   test_cubble(data)
-  data %@% "spatial"
+
+  if (determine_form(data) == "long"){
+    data %@% "spatial"
+  } else{
+    NULL
+  }
+
 }
 
 #' @export

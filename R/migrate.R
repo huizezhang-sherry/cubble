@@ -30,20 +30,20 @@
 #' @export
 #' @rdname cubble-verb
 migrate <- function(data, ...){
-
   dots <- enquos(..., .named = TRUE)
   test_cubble(data)
 
   if (form(data) != "long"){
-    abort("data needs to be in long form, convert using `stretch()`")
+    cli::cli_abort("{.fn migrate} should be used on the long form.")
   }
 
-  in_leaves <- map_lgl(names(dots), ~.x %in% names(leaves(data)))
-  if (!all(in_leaves)){
-    inform(glue::glue("`{names(dots)[!in_leaves]}` does not present in the spatial stem of the data, hence not migrated. "))
+  in_spatial <- map_lgl(names(dots), ~.x %in% names(spatial(data)))
+  if (!all(in_spatial)){
+    cli::cli_inform(
+      "{.code {names(dots)[!in_spatial]}} does not exist in spaital stem. No migration")
   }
 
-  to_join <- leaves(data) %>% select(key_vars(data)[1], names(dots)[in_leaves])
+  to_join <- spatial(data) %>% select(key_vars(data)[1], names(dots)[in_spatial])
   data %>% left_join(to_join)
 
 }

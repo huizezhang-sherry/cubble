@@ -123,21 +123,21 @@ stretch.cubble_df <- function(data, col, ...){
 #
 
 # helper
-unnest_with_rename <- function(data, cols, key, first_key, col_tojoin1, col_tojoin2){
-
-  dt <- data %>% as_tibble() %>% select(key, cols)
-
-  cur_key <- as_name(key)
-  if (cur_key != first_key){
-
-    dt <- dt %>% rename(!!sym(first_key) := cur_key) %>% unnest(cols)
-    if (!is_null(col_tojoin1) & !is_null(col_tojoin2)) {
-      dt <- map2_dfr(col_tojoin1, col_tojoin2, ~dt %>% rename(!!sym(.x) := !!sym(.y)))
-    }
-  } else {
-    dt <- dt %>% unnest(cols)
-  }
-
-  dt
-
-}
+# unnest_with_rename <- function(data, cols, key, first_key, col_tojoin1, col_tojoin2){
+#
+#   dt <- data %>% as_tibble() %>% select(key, cols)
+#
+#   cur_key <- as_name(key)
+#   if (cur_key != first_key){
+#
+#     dt <- dt %>% rename(!!sym(first_key) := cur_key) %>% unnest(cols)
+#     if (!is_null(col_tojoin1) & !is_null(col_tojoin2)) {
+#       dt <- map2_dfr(col_tojoin1, col_tojoin2, ~dt %>% rename(!!sym(.x) := !!sym(.y)))
+#     }
+#   } else {
+#     dt <- dt %>% unnest(cols)
+#   }
+#
+#   dt
+#
+# }

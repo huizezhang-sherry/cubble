@@ -60,10 +60,11 @@
   lat_idx <- which(names(data) == coord_y(data))
   new_lat <- names(out)[lat_idx]
 
-  leaves_data <- new_leaves(out, !!new_key)
+  #leaves_data <- new_leaves(out, !!new_key)
+  spatial = spatial(out)
 
   new_cubble(out,
              key = as_name(new_key), index = index(data), coords = c(new_long, new_lat),
-             leaves = leaves_data, form = determine_form(out))
+             spatial = spatial, form = determine_form(out))
 
 }

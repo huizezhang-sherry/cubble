@@ -23,9 +23,7 @@ add_missing_prct <- function(data, ...){
   exprs <- expr(...)
   vars <- tidyselect::eval_select(exprs, data %>% stretch())
 
-  # different scenarios for long/nested form
-  # now assume a nested form
-
+  # add_missing_prct should be called only in nested form
   var_names <- data %>% stretch() %>% names()
 
   if (!all(names(vars) %in% var_names)){
@@ -40,7 +38,7 @@ add_missing_prct <- function(data, ...){
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             leaves = new_leaves(data, !!key), form = determine_form(data))
+             spatial = NULL, form = "nested")
 }
 
 #' @rdname missing
@@ -67,6 +65,6 @@ add_missing_dscrb <- function(data, cutoff = 0.99){
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             leaves = new_leaves(data,!!key), form = determine_form(data))
+             spatial = NULL, form = "nested")
 
 }

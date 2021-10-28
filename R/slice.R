@@ -11,7 +11,7 @@ slice_factory <- function(f, ...){
 
     new_cubble(out,
                key = key , index = index(data), coords = coords(data),
-               leaves = new_leaves(out, !!key), form = determine_form(out))
+               spatial = NULL, form = "nested")
   }
 }
 

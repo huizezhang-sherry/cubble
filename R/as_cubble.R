@@ -49,7 +49,7 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
 
   new_cubble(out,
              key = as_name(key), index = as_name(index), coords = coords,
-             form = "nested")
+             spatial = NULL, form = "nested")
 }
 
 #' @rdname cubble-class

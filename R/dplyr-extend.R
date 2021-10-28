@@ -1,7 +1,7 @@
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
-  #browser()
+
 
   key <- key_vars(data)
 
@@ -24,19 +24,16 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
   # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
   form <- determine_form(data)
   if (form == "nested"){
-    leaves_data <- out %>%
-      mutate(ts = map(.data$ts, tibble::as_tibble)) %>%
-      unnest_cubble(.data$ts) %>%
-      new_leaves(!!key)
+    spatial <- NULL
   } else if (form == "long"){
-    leaves_data <-  leaves(data)
+    leaves_data <-  spatial(data)
   } else{
     abort("{form} meeds to be either long or nested")
   }
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             leaves = leaves_data, form = determine_form(out),
+             spatial = spatial, form = determine_form(out),
              tsibble_attr = tsibble_attr)
 }
 
@@ -48,12 +45,9 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 
   form <- determine_form(data)
   if (form == "nested"){
-    leaves_data <- as_tibble(out) %>%
-      mutate(ts = map(.data$ts, tibble::as_tibble)) %>%
-      tidyr::unnest(.data$ts) %>%
-      new_leaves(!!key)
+    spatial = NULL
   } else if (form == "long"){
-    leaves_data <- leaves(data)
+    spatial <- spatial(data)
   } else{
     abort("{form} meeds to be either long or nested")
   }
@@ -64,7 +58,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   }
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             leaves = leaves_data, form = determine_form(out))
+             spatial = spatial, form = determine_form(out))
 }
 
 #' @export
@@ -73,20 +67,28 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   form <- determine_form(template)
   key <- key_vars(template)[1]
 
-  if (form == "long"){
-    leaves_data <-  leaves(template)
+  # if (form == "long"){
+  #   leaves_data <-  leaves(template)
+  # } else{
+  #   data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
+  #   old_leaves <- leaves(template) %>% names()
+  #   new_leaves <- data_var[data_var %in% old_leaves]
+  #   cols <- unique(c(key, new_leaves))
+  #   leaves_data <- leaves(template)[cols]
+  # }
+
+  if (form == "nested"){
+    spatial = NULL
+  } else if (form == "long"){
+    spatial <- spatial(data)
   } else{
-    data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
-    old_leaves <- leaves(template) %>% names()
-    new_leaves <- data_var[data_var %in% old_leaves]
-    cols <- unique(c(key, new_leaves))
-    leaves_data <- leaves(template)[cols]
+    abort("{form} meeds to be either long or nested")
   }
 
 
   new_cubble(data,
              key = key, index = index(template), coords = coords(template),
-             leaves = leaves_data, form = determine_form(template))
+             spatial = spatial, form = determine_form(template))
 }
 
 #' @export
