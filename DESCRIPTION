@@ -50,7 +50,8 @@ Suggests:
     rnaturalearth,
     rnaturalearthdata,
     absmapsdata,
-    weatherdata
+    weatherdata,
+    ggimg
 Remotes:
     tidyverse/dplyr,
     r-lib/rlang,
