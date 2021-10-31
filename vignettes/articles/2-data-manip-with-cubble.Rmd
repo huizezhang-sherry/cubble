@@ -35,10 +35,11 @@ To be able to produce the glyph map above, two tasks need to done:
 Filtering 2020 records is an operation on the time dimension since it requires to decide whether the year component of the date is 2020. A cubble processes all the time dimension operations using the long form, so we first use `stretch()` to switch the data to the long form and then filter on the year:
 
 ```{r}
-nsw_vic <- ozmaps::abs_ste %>% filter(NAME %in% c("Victoria", "New South Wales"))
+nsw_vic <- ozmaps::abs_ste %>% filter(NAME %in% c("Victoria", "New South Wales")) 
 
 (tmax_subset <- weatherdata::historical_tmax %>% 
-  filter(s2_within(s2_lnglat(longitude, latitude), s2::s2_union(nsw_vic))))
+  mutate(district = stringr::str_sub(id, 7, 8)) %>% 
+  filter(between(district, 46, 90)))
 ```
 
 # Summarise

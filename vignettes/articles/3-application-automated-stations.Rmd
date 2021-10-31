@@ -80,9 +80,9 @@ matched_auto <- auto %>%
   left_join(matched_non %>% select(matched, group, dist), 
             by = c("id" = "matched"))
 
-(matched_both <- matched_auto %>% bind_rows(matched_non) %>% 
-  select(-matched) %>% 
-  as_cubble(key = id, index = date, coords = c(long, lat)))
+(matched_both <- matched_auto %>% 
+    bind_rows(matched_non) %>% 
+    select(-matched))
 ```
 
 Now there are various things we can do with this data, i.e. lets look at those pairs in the map:

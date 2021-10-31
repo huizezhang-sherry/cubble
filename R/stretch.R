@@ -40,21 +40,21 @@ stretch.cubble_df <- function(data, col, ...){
     }
   }
 
-  test_list(data, col)
+  test_list(data, !!col)
 
   if (is_tsibble){
     data$ts <- map(data$ts, tibble::as_tibble)
   }
 
 
-  out <- data %>% select(!!!key, col) %>% unnest(c(col))
+  out <- data %>% select(!!!key, !!col) %>% unnest(c(!!col))
   # out <- map2_dfr(cols, key,
   #                 ~unnest_with_rename(data = data,
   #                                     .x, .y,
   #                                     first_key = first_key,
   #                                     col_tojoin1, col_tojoin2))
 
-  spatial <- data %>% select(-col)
+  spatial <- data %>% select(-!!col)
 
   if (is_tsibble) {
     out <- out %>% tsibble::as_tsibble(key = !!key[[1]])

@@ -45,6 +45,7 @@ tamp.cubble_df <- function(data, key) {
   # }
   spatial <- spatial(data)
   tvars <- colnames(data)[colnames(data) != as_name(key)]
+  tvars <- tvars[!tvars %in% colnames(spatial)]
 
   if (form(data) != "long"){
     cli::cli_abort("{.fn tamp} requires data to be in long form.")

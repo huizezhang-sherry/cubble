@@ -50,12 +50,6 @@ climate_flat %>%
 
 The `leaves` attribute records the time-invariant variables to ensure a cubble can be switch between the nested and long form. The `leaves` attribute itself has two attributes `invariant` and `variant`, which contains both types of variables as seen below: 
 
-```{r}
-leaves(nested)
-leaves(nested) %>% invariant()
-leaves(nested) %>% variant()
-```
-
 In this dataset, variables that are invariant to time include `lat`, `long`, `elevation` and `name` while those vary across time include `date`, `prcp`, `tmax`, and `tmin`. Notice that although time-variant variables are not directly shown in the nested form, they can be read from the third line of the cubble header:
 
 ```{r}

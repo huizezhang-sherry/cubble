@@ -29,6 +29,7 @@
 switch_key <- function(data, key){
   new_key <- enquo(key)
   new_key_var <- as_name(new_key)
+  old_key <- key_vars(data)
   test_cubble(data)
 
   if (!as_name(new_key) %in% names(data)){
@@ -39,8 +40,8 @@ switch_key <- function(data, key){
   if (orig_form == "long") data <- data %>% tamp()
 
   data <- tibble::as_tibble(data)
-  ts_df <- data %>% dplyr::select(!!new_key, .data$ts) %>% tibble::as_tibble()
-  out_ts <- vctrs::vec_split(ts_df, ts_df[,new_key_var]) %>%
+  ts_df <- data %>% dplyr::select(!!new_key, !!old_key, .data$ts) %>% tibble::as_tibble()
+  out_ts <- vctrs::vec_split(ts_df %>% select(-new_key_var), ts_df[,new_key_var]) %>%
     tibble::as_tibble() %>%
     tidyr::unpack(key) %>%
     dplyr::mutate(ts = map(.data$val, ~tidyr::unchop(.x, .data$ts) %>% tidyr::unpack(.data$ts))) %>%

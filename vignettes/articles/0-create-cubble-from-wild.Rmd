@@ -35,8 +35,8 @@ Usually, you also need a master list with all the candidate stations to choose f
 
 ```{r}
 (cand <- aus_climate %>% 
-  select(id, lat, long, elev, name, wmo_id) %>% 
-   as_tibble())
+   as_tibble() %>% 
+   select(id, lat, long, elev, name, wmo_id))
 ```
 
 Sphereical distance between pair of stations can be calculated via `rnoaa::meteo_spherical_distance()`. We write a small wrapper function here to find the 5 closest stations in each city:
