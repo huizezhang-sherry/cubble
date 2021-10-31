@@ -78,3 +78,55 @@ rename_key <- function(data, ...){
              key = names(list(...)), index = index(data), coords = coords(data),
              spatial = spatial(data), form = determine_form(data))
 }
+
+#' Matching
+#'
+#' @param major
+#' @param minor
+#' @param n_slice
+#' @param dist_max
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+match_key <- function(major, minor, n_slice = 1, dist_max = 10, ...){
+  test_cubble(major)
+  test_cubble(minor)
+
+  coords_mj <- syms(coords(major))
+  coords_mn <- syms(coords(minor))
+
+  if (identical(coords_mj, coords_mn)){
+    major <- major %>% rename(long_ref = coords_mj[[1]],
+                              lat_ref = coords_mj[[2]])
+    coords_mj <- syms(c("long_ref", "lat_ref"))
+  }
+
+  key_mj <- key_vars(major)
+  key_mn <- key_vars(minor)
+
+  if (identical(key_mj, key_mn)){
+    major <- major %>% rename_key(key_mj = key_mj)
+    key_mj <- "key_mj"
+    minor <- minor %>% rename_key(key_mn = key_mn)
+    key_mn <- "key_mn"
+  }
+
+  out <- major %>%
+    as_tibble() %>%
+    mutate(minor = list(as_tibble(minor) %>% select(!!key_mn, !!!coords_mn))) %>%
+    unnest(minor) %>%
+    mutate(dist = rnoaa::meteo_spherical_distance(long1 = !!coords_mj[[1]],
+                                                  long2 = !!coords_mn[[1]],
+                                                  lat1 = !!coords_mj[[2]],
+                                                  lat2 = !!coords_mn[[2]])) %>%
+    group_by(!!sym(key_mj)) %>% slice_min(dist, n = n_slice) %>%
+    select(!!sym(key_mj), !!sym(key_mn), dist) %>%
+    ungroup() %>%
+    filter(dist <= dist_max) %>%
+    mutate(.group = row_number())
+
+  out
+}
