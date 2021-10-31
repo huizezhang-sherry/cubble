@@ -81,17 +81,14 @@ rename_key <- function(data, ...){
 
 #' Matching
 #'
-#' @param major
-#' @param minor
-#' @param n_slice
-#' @param dist_max
-#' @param ...
+#' @param major The major dataset to match, every key in the major dataset will have a match, unless filtered by \code{dist_max}
+#' @param minor The dataset to match from
+#' @param n_slice number of match to keep for each key in the major dataset
+#' @param dist_max maximum distance allowed
 #'
-#' @return
+#' @return a tibble
 #' @export
-#'
-#' @examples
-match_key <- function(major, minor, n_slice = 1, dist_max = 10, ...){
+match_key <- function(major, minor, n_slice = 1, dist_max = 10){
   test_cubble(major)
   test_cubble(minor)
 
