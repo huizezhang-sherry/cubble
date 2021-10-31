@@ -112,7 +112,7 @@ tmax_clean %>% filter(id == "ASN00048027") %>%
 
 ```{r out.width="100%"}
 cobar <- tmax_clean %>% filter(id == "ASN00048027") %>% tamp()
-single <- tibble::tibble(img =  glue::glue(here::here("inst/hist-tmax-single.png")))
+single <- tibble::tibble(img =  glue::glue("inst/hist-tmax-single.png"))
 p1 +
   geom_rect(data = cobar,  aes(xmin = longitude - 0.6, 
                                   xmax = longitude + 0.6, 
