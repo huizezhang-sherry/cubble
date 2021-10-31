@@ -46,43 +46,20 @@ The color in the map shows whether a station is an automated one or not and we c
 The chunk below finds the closest traditional station, if any, that is within 10 kilometer of an automated one.
 
 ```{r}
-query_nearby <- function(df_ref, df, n = 1){
-
-  # check long and lat column in df_ref
-  
-  df %>% 
-    as_tibble() %>% 
-    mutate(long_ref = df_ref$long,
-           lat_ref=  df_ref$lat,
-           dist = rnoaa::meteo_spherical_distance(lat, long,
-                                                  lat_ref, 
-                                                  long_ref)) %>% 
-    slice_min(dist, n = n) %>% 
-    select(-long_ref, -lat_ref)
-}
-
 auto <- nsw %>% filter(automated)
 non_auto <- nsw %>% filter(!automated)
 
-(stations <- do.call("bind_rows", purrr::map(1:nrow(auto), 
-                             ~query_nearby(auto[.x, ], non_auto) %>% mutate(matched = auto$id[.x]))))
+matched <- match_key(non_auto, auto) 
 ```
 
 Here are some post-processing to join the aws stations with non-aws.
 
 ```{r}
-matched_non <- stations %>% 
-  filter(dist < 10) %>% 
-  mutate(group = row_number())
-
+matched_non <- non_auto %>% 
+  inner_join(matched %>% select(key_mj, .group), by = c("id" = "key_mj"))
 matched_auto <- auto %>% 
-  filter(id %in% matched_non$matched) %>% 
-  left_join(matched_non %>% select(matched, group, dist), 
-            by = c("id" = "matched"))
-
-(matched_both <- matched_auto %>% 
-    bind_rows(matched_non) %>% 
-    select(-matched))
+  inner_join(matched %>% select(key_mn, .group), by = c("id" = "key_mn"))
+(matched_both <- matched_auto %>% bind_rows(matched_non))
 ```
 
 Now there are various things we can do with this data, i.e. lets look at those pairs in the map:
@@ -92,7 +69,7 @@ p1 <- plot_map(nsw_map) +
   geom_point(data = matched_both, 
              aes(x = long, y = lat, color = automated)) + 
   ggrepel::geom_label_repel(data = matched_auto,
-                            aes(x = long, y = lat, label = group)) + 
+                            aes(x = long, y = lat, label = .group)) + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("New Sourth Wales") + 
   theme_minimal() + 
@@ -101,14 +78,16 @@ p1 <- plot_map(nsw_map) +
   coord_sf(xlim = c(141, 154))
 
 ts <- matched_both %>%
+  switch_key(.group) %>% 
   stretch(ts) %>%
   filter(lubridate::month(date) == 1) %>% 
-  migrate(group, automated) 
+  migrate(.group) %>% 
+  left_join(as_tibble(matched_both) %>% select(id, automated))
 
 p2 <- ts %>%
-  ggplot(aes(x = date, y = tmax,color = automated, group = id)) +
+  ggplot(aes(x = date, y = tmax, color = automated, group = id)) +
   geom_line() +
-  facet_wrap(vars(group)) +
+  facet_wrap(vars(.group)) +
   scale_color_brewer(palette = "Dark2") + 
   theme(legend.position = "none")
 

@@ -80,7 +80,7 @@ cluster_nested %>% head(5)
 After we have got `cluster_nested`, spatial and temporal data at both levels can be easily obtained. If we use `station` and `cluster` prefix to denote the two levels and `nested` and `long` for whether the data shows the spatial or temporal dimension, the relationship among the four datasets can be illustrated in the following workflow:
 
 ```{r echo = FALSE}
-knitr::include_graphics(here::here("man/figures/hier-workflow.png"))
+knitr::include_graphics("man/figures/hier-workflow.png")
 ```
 
 Start with the original `station_nested`, `stretch()` expands the `ts` column with each station (`id`) forming a group and attach variables invariant to `id` as an attribute. `switch_key()` changes the `key` from `id` to `cluster` and nests all the spatial variables that variant to `cluster`. `stretch()` `cluster_nested` will store variables that are invariant to `cluster` as a tibble in the attribute.
