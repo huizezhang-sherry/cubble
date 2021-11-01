@@ -22,105 +22,141 @@ library(sf)
 library(s2)
 ```
 
-For spatio-temporal data, one may want to plot the time series on the map to observe the spatial relationship among sites close to each other. A glyph map allows you to inset the time series, as a glyph, into the map to detect any global or local pattern. Below is an example of the monthly maximum temperature collected from 61 stations in Australia in 2020.
+This vignette introduces how to perform spatial and temporal manipulate in a cubble with dplyr verbs. We will illustrate with `weatherdata::historical_tmax` data, which have the historical maximum temperature recorded for Australian stations with the earliest dating back to 1859.
 
+# Spatial manipulation 
 
-To be able to produce the glyph map above, two tasks need to done: 
-
-  - filter out only the 2020 records
-  - summarise the daily maximum temperature into monthly measure
-
-# Mutate and filter
-
-Filtering 2020 records is an operation on the time dimension since it requires to decide whether the year component of the date is 2020. A cubble processes all the time dimension operations using the long form, so we first use `stretch()` to switch the data to the long form and then filter on the year:
+`historical_tmax` is already in a nested cubble format, which is suitable for station-wise manipulation. `rnoaa` construct the station id by prefix `ASN00` to the Bureau of Meteorology (BOM) station number. In  [BOM's numbering system](http://www.bom.gov.au/climate/cdo/about/site-num.shtml), the 2nd and 3rd digit denotes the state a station is located in and this is equivalent to the 7th to 8th digit in our string. We can mutate/ filter station in a particular state based on this information and here we add a column called `state_id` and filter out the ones in New South Wales and Victoria (ranging from 46 to 90). 
 
 ```{r}
-nsw_vic <- ozmaps::abs_ste %>% filter(NAME %in% c("Victoria", "New South Wales")) 
+tmax_nested <- weatherdata::historical_tmax %>%
+  mutate(state_id = stringr::str_sub(id, 7, 8)) %>%
+  filter(between(state_id, 46, 90))
 
-(tmax_subset <- weatherdata::historical_tmax %>% 
-  mutate(district = stringr::str_sub(id, 7, 8)) %>% 
-  filter(between(district, 46, 90)))
+tmax_nested %>% head(5)
 ```
 
-# Summarise
+# Temporal manipulation 
 
-Daily measures are usually too sparse to be plotted and aggregation is a common treatment for this. Next, we will aggregate the daily maximum temperature into monthly measure and since this is a time-wise operation involving `date`, we need to switch to the long cubble:
+There are some operations in the time dimension we would like to make:
 
-We create a `ym` variable from `tsibble::yearmonth()` and add an additional grouping on `ym` with `group_by()`. This allows us create a summary for each station in each month in the next step: 
+  - Extract observations in a particular period, say, those in 1971 to 1975 and 2016 to 2020. This can be used to compare the historical and recent climate. 
+  - Summarise daily records into monthly to remove sparsity
+  
+These time dimension operations can be computed in the long form and `stretch()` converts a nested cubble to a long cubble. From a long cubble, we can write the exact  same dplyr codes to complete the two tasks: 
 
 ```{r}
-(tmax_summarised <- tmax_subset %>% 
-  stretch() %>% 
-  filter(lubridate::year(date) %in% c(1971:1975, 2016:2020)) %>% 
+tmax_long <- tmax_nested %>%
+  stretch() %>%
+  filter(lubridate::year(date) %in% c(1971:1975, 2016:2020)) %>%
   mutate(month = lubridate::month(date),
-         group = as.factor(ifelse(lubridate::year(date) > 2015, "2016 ~ 2020", "1971 ~ 1975"))) %>% 
-  group_by(month, group) %>% 
-  summarise(tmax = mean(tmax, na.rm = TRUE)))
+         group = as.factor(ifelse(
+           lubridate::year(date) > 2015,
+           "2016 ~ 2020",
+           "1971 ~ 1975"
+         ))) %>%
+  group_by(month, group) %>%
+  summarise(tmax = mean(tmax, na.rm = TRUE))
+
+tmax_long %>% head(5)
+```
+
+# Back to spatial
+
+A data quality issue with the `rnoaa` data is that while it records the first and last year recorded of each series,  it doesn't report the period of missingness. For example, station `ASN00047048` starts it first record in 1957, pauses for a period from 1963 to 1990, and then resumes it recording till today. Out of the `r nrow(tmax_nested)` stations in New South Wales and Victoria, 7 stations have this issue and we would like to remove those stations from the comparison.
+
+Again, this is a station-wise operation and to convert back from the long cubble to a nested one, use `tamp()`. Here we keep the stations with 24 observations (12 months for both periods) after the monthly aggregation.
+
+```{r}
+tmax_nested2 <- tmax_long %>%
+  tamp() %>%
+  filter(nrow(ts) == 24)
+
+tmax_nested2 %>% head(5)
 ```
 
 
+# The final step
 
-# Join
+In some visualisation, we may need information from both spatial and temporal dimension. One example of this is a glyph map, where spatial variables, i.e. `longitude` and `latitude`, are used to construct the major axes and temporal variables, i.e. `month` and `tmax`, are used to construct the minor axes. This requires these variables to be in the same table, rather than in different forms. In cubble, you can append spatial variables that are invariant to the `key` withe `migrate()`
 
-A glyph map requires a  set of major coordinate (`x_major` and `y_major`) and minor coordinate (`x_minor` and `y_minor`) to locate the glyph in the map. In our case, the major axes are `long` and `lat` and minor axes are `date` and `tmax`. One last step before making the glyph map is to collect these variables in one table and this can be done with `migrate()`, which moves the time-invariant variables in the nested form into the long form: 
 
 ```{r}
-(tmax_clean <- tmax_summarised %>% 
-  tamp() %>% 
-  filter(nrow(ts) == 24) %>% 
-  stretch() %>% 
-  migrate(latitude, longitude))
+tmax_long2 <- tmax_nested2 %>%
+  stretch() %>%
+  migrate(latitude, longitude)
+
+tmax_long2 %>% head(5)
 ```
 
 
 # Glyph map
 
-Now let's use `glyphs` from `GGally` to create the glyph data and here you go, the glyph map you see in the beginning of this vignette!
+Now its time for the glyph map! 
 
-```{r fig.height=7, fig.width=7, fig.align='center'}
-gly <- glyphs(tmax_clean,
-                x_major = "longitude", y_major = "latitude", 
-                x_minor = "month", y_minor = "tmax", 
-                height = 0.6, width = 1)
+```{r}
+gly <- glyphs(
+  tmax_long2,
+  x_major = "longitude",
+  y_major = "latitude",
+  x_minor = "month",
+  y_minor = "tmax",
+  height = 0.6,
+  width = 1
+)
 
-p1 <- plot_map(nsw_vic, fill = "transparent") + 
-  ggplot2::geom_path(data = gly, 
-                     ggplot2::aes(gx, gy, 
-                                  group = interaction(id, group),
-                                  color = group)) + 
+nsw_vic <-
+  ozmaps::abs_ste %>% filter(NAME %in% c("Victoria", "New South Wales"))
+
+p1 <- plot_map(nsw_vic, fill = "transparent") +
+  geom_path(data = gly, aes(gx, gy,
+                            group = interaction(id, group),
+                            color = group)) +
   scale_color_brewer(palette = "Dark2")
+
+p1
 ```
 
+We see, on average, a higher maximum temperature in the recent years as compared to the first half of 1970s. This is observable in the beginning of the year in most of stations in New South Wales and end of the year in both New South Wales and Victoria. Maximum temperature during winter doesn't seem to change much in these two periods. 
 
-In the code above, the map underlayed is from `ozmaps::abs_ste` and `rmapshaper::ms_simplify()`  simplifies the map by keeping only a proportion of points along the coastline to avoid unnecessary details. `plot_map()` is a function in `cubble` that wraps around `ggplot() + geom_sf(data, ...)` with some default aesthetic: `color = "grey80", alpha = 0.4, linetype = 3,` to save some typing. 
+In order to know which month the average maximum temperature starts to diverge after winter in these two periods, we can inset a glyph with more detailed annotation on labels and axes. This can be done through the `ggimg` package where you first create the glyph you want to inset, save it, and use `ggimg::geom_point_img` to inset it as an image. Here we pick station `ASN00085072` to make the glyph and it says there has been a warmer November in recent years!
 
 ```{r eval = FALSE}
-tmax_clean %>% filter(id == "ASN00048027") %>% 
-  ggplot(aes(x = month, 
-             y = tmax, 
-             color = group)) + 
+tmax_long %>% filter(id == "ASN00085072") %>%
+  ggplot(aes(x = month,
+             y = tmax,
+             color = group)) +
   geom_line(size = 1.5) +
   scale_color_brewer(palette = "Dark2", guide = "none") +
-  scale_x_continuous(breaks = seq(1,12, 1)) + 
-  labs(x = "Month", title = "ASN00048027: Cobar") + 
-  theme_bw() + 
-  theme(aspect.ratio = 0.5, 
-        axis.text = element_text(size = 20), title =  element_text(size = 20))
+  scale_x_continuous(breaks = seq(1, 12, 1)) +
+  labs(x = "Month", title = "ASN00085072: East Sale Airport") +
+  theme_bw() +
+  theme(
+    aspect.ratio = 0.5,
+    axis.text = element_text(size = 20),
+    title =  element_text(size = 20)
+  )
 
-#ggsave(filename = here::here("inst/hist-tmax-single.png"))
+#ggsave(filename = here::here("vignettes/figures/hist-tmax-single.png"))
 ```
 
-```{r out.width="100%"}
-cobar <- tmax_clean %>% filter(id == "ASN00048027") %>% tamp()
-single <- tibble::tibble(img =  glue::glue("inst/hist-tmax-single.png"))
+```{r}
+box_df <- tmax_nested %>% filter(id == "ASN00085072")
+single <-
+  tibble::tibble(img = here::here("vignettes/figures/hist-tmax-single.png"))
 p1 +
-  geom_rect(data = cobar,  aes(xmin = longitude - 0.6, 
-                                  xmax = longitude + 0.6, 
-                                  ymin = latitude - 0.1,
-                                  ymax = latitude + 0.35), 
-            fill = "transparent", color = "black") + 
-  ggimg::geom_point_img(data = single, 
-                        aes(x = 155, y = -37, img = img), size = 7) + 
-  theme(legend.position = "bottom")
+  geom_rect(
+    data = box_df,
+    aes(
+      xmin = longitude - 0.6,
+      xmax = longitude + 0.6,
+      ymin = latitude - 0.12,
+      ymax = latitude + 0.2
+    ),
+    fill = "transparent",
+    color = "black"
+  ) +
+  ggimg::geom_point_img(data = single,
+                        aes(x = 155, y = -37, img = img), size = 7)
 ```
 
