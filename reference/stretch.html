@@ -107,7 +107,7 @@
       <a href="../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
     </li>
     <li>
-      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
+      <a href="../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
     </li>
   </ul>
 </li>
@@ -136,7 +136,7 @@
     <p>Switch a cubble object into a long form</p>
     </div>
 
-    <pre class="usage"><span class='fu'>stretch</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cols</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>stretch</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>col</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,7 +146,7 @@
       <td><p>a cubble object</p></td>
     </tr>
     <tr>
-      <th>cols</th>
+      <th>col</th>
       <td><p>the list column to be stretched</p></td>
     </tr>
     <tr>
@@ -169,7 +169,6 @@ and timestamp defines a row. The long form cubble is always of class <code>cubbl
   <span class='fu'>stretch</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: time-wise: long form</span>
 #&gt; <span style='color: #949494;'># Key:    id [5]</span>
-#&gt; <span style='color: #949494;'># Leaves: id [chr], lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span>
 #&gt;    id          date        prcp  tmax  tmin
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;date&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span> ASN00009021 2020-01-01     0   319   153

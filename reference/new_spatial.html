@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructor for the cubble class — as_cubble • cubble</title>
+<title>Create and manipulate leaves attributes — new_spatial • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Constructor for the cubble class — as_cubble" />
-<meta property="og:description" content="Constructor for the cubble class" />
+<meta property="og:title" content="Create and manipulate leaves attributes — new_spatial" />
+<meta property="og:description" content="A leaves object records whether a variable in the cubble varies across time or not and
+make it possible for a cubble to switch between the nested and long form.
+This set of functions create and manipulate the leaves object." />
 
 
 
@@ -127,68 +129,41 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Constructor for the cubble class</h1>
+    <h1>Create and manipulate leaves attributes</h1>
     
-    <div class="hidden name"><code>cubble-class.Rd</code></div>
+    <div class="hidden name"><code>new_spatial.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Constructor for the cubble class</p>
+    <p>A leaves object records whether a variable in the cubble varies across time or not and
+make it possible for a cubble to switch between the nested and long form.
+This set of functions create and manipulate the leaves object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as_cubble</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for tbl_df</span>
-<span class='fu'>as_cubble</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for rowwise_df</span>
-<span class='fu'>as_cubble</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>cubble</span><span class='op'>(</span><span class='va'>...</span>, <span class='va'>key</span>, <span class='va'>index</span>, <span class='va'>coords</span><span class='op'>)</span>
-
-<span class='co'># S3 method for cubble_df</span>
-<span class='fu'><a href='https://pillar.r-lib.org/reference/tbl_sum.html'>tbl_sum</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
-
-<span class='fu'>is_cubble</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>new_spatial</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>the object to be created or tested as cubble</p></td>
-    </tr>
-    <tr>
-      <th>key</th>
-      <td><p>the spatial identifier</p></td>
-    </tr>
-    <tr>
-      <th>index</th>
-      <td><p>the time identifier</p></td>
-    </tr>
-    <tr>
-      <th>coords</th>
-      <td><p>the coordinates that characterise the spatial dimension</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>a list object to create new cubble</p></td>
+      <td><p>a flat data without any nesting structure</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>climate_flat</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>as_cubble</span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>id</span>, index <span class='op'>=</span> <span class='va'>date</span>, coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>long</span>, <span class='va'>lat</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: id-wise: nested form</span>
-#&gt; <span style='color: #949494;'># Key:    id [5]</span>
-#&gt;   id            lat  long  elev name           wmo_id ts                
-#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>           <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>            
-#&gt; <span style='color: #BCBCBC;'>1</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.  15.4 perth airport   <span style='text-decoration: underline;'>94</span>610 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>2</span> ASN00010311 -<span style='color: #BB0000;'>31.9</span>  117. 179   york            <span style='text-decoration: underline;'>94</span>623 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>3</span> ASN00010614 -<span style='color: #BB0000;'>32.9</span>  117. 338   narrogin        <span style='text-decoration: underline;'>94</span>627 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>4</span> ASN00014015 -<span style='color: #BB0000;'>12.4</span>  131.  30.4 darwin airport  <span style='text-decoration: underline;'>94</span>120 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>5</span> ASN00015131 -<span style='color: #BB0000;'>17.6</span>  134. 220   elliott         <span style='text-decoration: underline;'>94</span>236 <span style='color: #949494;'>&lt;tibble [366 × 4]&gt;</span></div></pre>
+    
+<ul>
+<li><p><code>new_leaves()</code> creates a leaves object by supplying a flat data and the grouping variable</p></li>
+<li><p><code>is_leaves()</code> tests whether the object is a leaves object</p></li>
+<li><p><code>invariant()</code> and <code>variant()</code> extracts the time-variant and invariant variables from a leaves object</p></li>
+<li><p><code><a href='https://pillar.r-lib.org/reference/tbl_sum.html'>tbl_sum()</a></code> provides a customised printing header for leaves</p></li>
+</ul>
+
+<p>Notice that users may not need to these functions to directly manipulate the leaves.
+To extract the leaves object from a cubble, use <code>leaves()</code></p>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

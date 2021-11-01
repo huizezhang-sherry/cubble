@@ -66,7 +66,7 @@
       <a href="../../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
     </li>
     <li>
-      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
+      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
     </li>
   </ul>
 </li>
@@ -122,7 +122,6 @@
 <span class="va">nested</span>
 <span class="co">#&gt; # Cubble: id-wise: nested form</span>
 <span class="co">#&gt; # Key:    id [5]</span>
-<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                </span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;            </span>
 <span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 &lt;tibble [366 × 4]&gt;</span>
@@ -156,16 +155,6 @@
 <span class="co">#&gt; $coords</span>
 <span class="co">#&gt; [1] "long" "lat" </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $leaves</span>
-<span class="co">#&gt; # Leaves: 5 x 6</span>
-<span class="co">#&gt;   id            lat  long  elev name           wmo_id</span>
-<span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610</span>
-<span class="co">#&gt; 2 ASN00010311 -31.9  117. 179   york            94623</span>
-<span class="co">#&gt; 3 ASN00010614 -32.9  117. 338   narrogin        94627</span>
-<span class="co">#&gt; 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120</span>
-<span class="co">#&gt; 5 ASN00015131 -17.6  134. 220   elliott         94236</span>
-<span class="co">#&gt; </span>
 <span class="co">#&gt; $form</span>
 <span class="co">#&gt; [1] "nested"</span></code></pre></div>
 <p>In this example, two stations recorded are <code>ASN00001019</code> and <code>ASN00002012</code>.</p>
@@ -176,7 +165,6 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: id-wise: nested form</span>
 <span class="co">#&gt; # Key:    id [5]</span>
-<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                  rain</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;             &lt;int&gt;</span>
 <span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 &lt;tibble [366 × 4]&gt;   104</span>
@@ -200,28 +188,11 @@
 <span class="co">#&gt; 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120 &lt;tibble [366 × 4]&gt;   106</span>
 <span class="co">#&gt; 5 ASN00015131 -17.6  134. 220   elliott         94236 &lt;tibble [366 × 4]&gt;    63</span></code></pre></div>
 <p>The <code>leaves</code> attribute records the time-invariant variables to ensure a cubble can be switch between the nested and long form. The <code>leaves</code> attribute itself has two attributes <code>invariant</code> and <code>variant</code>, which contains both types of variables as seen below:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span>
-<span class="co">#&gt; # Leaves: 5 x 6</span>
-<span class="co">#&gt;   id            lat  long  elev name           wmo_id</span>
-<span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610</span>
-<span class="co">#&gt; 2 ASN00010311 -31.9  117. 179   york            94623</span>
-<span class="co">#&gt; 3 ASN00010614 -32.9  117. 338   narrogin        94627</span>
-<span class="co">#&gt; 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120</span>
-<span class="co">#&gt; 5 ASN00015131 -17.6  134. 220   elliott         94236</span>
-<span class="fu"><a href="../../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/new_leaves.html">invariant</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt;     id    lat   long   elev   name wmo_id </span>
-<span class="co">#&gt;  "chr"  "dbl"  "dbl"  "dbl"  "chr"  "dbl"</span>
-<span class="fu"><a href="../../reference/form.html">leaves</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/new_leaves.html">variant</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt;   date   prcp   tmax   tmin </span>
-<span class="co">#&gt; "date"  "dbl"  "dbl"  "dbl"</span></code></pre></div>
 <p>In this dataset, variables that are invariant to time include <code>lat</code>, <code>long</code>, <code>elevation</code> and <code>name</code> while those vary across time include <code>date</code>, <code>prcp</code>, <code>tmax</code>, and <code>tmin</code>. Notice that although time-variant variables are not directly shown in the nested form, they can be read from the third line of the cubble header:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nested</span>
 <span class="co">#&gt; # Cubble: id-wise: nested form</span>
 <span class="co">#&gt; # Key:    id [5]</span>
-<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                </span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;            </span>
 <span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 &lt;tibble [366 × 4]&gt;</span>
@@ -234,12 +205,11 @@
 <h2 class="hasAnchor">
 <a href="#long-cubble" class="anchor"></a>Long cubble</h2>
 <p>A long form cubble is built from a <code>grouped_df</code>, instead of <code>rowwise_df</code>. <code>grouped_df</code> ensures records of all the timestamps from a “spot” is in the same group. Below prints the attributes of a long cubble:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">long</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
 <span class="co">#&gt; # Key:    id [5]</span>
-<span class="co">#&gt; # Leaves: id [chr], lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span>
 <span class="co">#&gt;    id          date        prcp  tmax  tmin</span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt;  1 ASN00009021 2020-01-01     0   319   153</span>
@@ -406,11 +376,8 @@
 <span class="co">#&gt; $index</span>
 <span class="co">#&gt; [1] "date"</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $coords</span>
-<span class="co">#&gt; [1] "long" "lat" </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $leaves</span>
-<span class="co">#&gt; # Leaves: 5 x 6</span>
+<span class="co">#&gt; $spatial</span>
+<span class="co">#&gt; # A tibble: 5 × 6</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610</span>
@@ -418,6 +385,9 @@
 <span class="co">#&gt; 3 ASN00010614 -32.9  117. 338   narrogin        94627</span>
 <span class="co">#&gt; 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120</span>
 <span class="co">#&gt; 5 ASN00015131 -17.6  134. 220   elliott         94236</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $coords</span>
+<span class="co">#&gt; [1] "long" "lat" </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $form</span>
 <span class="co">#&gt; [1] "long"</span></code></pre></div>

@@ -66,7 +66,7 @@
       <a href="../../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
     </li>
     <li>
-      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
+      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
     </li>
   </ul>
 </li>
@@ -111,8 +111,8 @@
 <p>Usually, you also need a master list with all the candidate stations to choose from. Here we use the stations saved in the built-in data, <code>aus_climate</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">cand</span> <span class="op">&lt;-</span> <span class="va">aus_climate</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">lat</span>, <span class="va">long</span>, <span class="va">elev</span>, <span class="va">name</span>, <span class="va">wmo_id</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-   <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+   <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">lat</span>, <span class="va">long</span>, <span class="va">elev</span>, <span class="va">name</span>, <span class="va">wmo_id</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 85 × 6</span>
 <span class="co">#&gt;    id            lat  long  elev name                   wmo_id</span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;</span>
@@ -181,7 +181,6 @@
   <span class="fu"><a href="../../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>#&gt; # Cubble: id-wise: nested form
 #&gt; # Key:    id [10]
-#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
 #&gt;    id            lat  long  elev name             wmo_id  dist city   ts        
 #&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;list&gt;    
 #&gt;  1 ASN00066037 -33.9  151.   6   sydney airport …  94767  9.32 sydney &lt;tibble […

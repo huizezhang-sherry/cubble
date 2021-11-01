@@ -66,7 +66,7 @@
       <a href="../../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
     </li>
     <li>
-      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
+      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
     </li>
   </ul>
 </li>
@@ -115,67 +115,29 @@
 <p>The color in the map shows whether a station is an automated one or not and we can observe that some automated weather stations are actually close to the traditional ones. This provides a basis to investigate whether numbers recorded by nearby automated and traditional stations match with each other.</p>
 <p>The chunk below finds the closest traditional station, if any, that is within 10 kilometer of an automated one.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">query_nearby</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df_ref</span>, <span class="va">df</span>, <span class="va">n</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span>
-
-  <span class="co"># check long and lat column in df_ref</span>
-  
-  <span class="va">df</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>long_ref <span class="op">=</span> <span class="va">df_ref</span><span class="op">$</span><span class="va">long</span>,
-           lat_ref<span class="op">=</span>  <span class="va">df_ref</span><span class="op">$</span><span class="va">lat</span>,
-           dist <span class="op">=</span> <span class="fu">rnoaa</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/rnoaa/reference/meteo_spherical_distance.html">meteo_spherical_distance</a></span><span class="op">(</span><span class="va">lat</span>, <span class="va">long</span>,
-                                                  <span class="va">lat_ref</span>, 
-                                                  <span class="va">long_ref</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice_min</a></span><span class="op">(</span><span class="va">dist</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">long_ref</span>, <span class="op">-</span><span class="va">lat_ref</span><span class="op">)</span>
-<span class="op">}</span>
-
-<span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">automated</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">automated</span><span class="op">)</span>
 <span class="va">non_auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">automated</span><span class="op">)</span>
 
-<span class="op">(</span><span class="va">stations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="st">"bind_rows"</span>, <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">auto</span><span class="op">)</span>, 
-                             <span class="op">~</span><span class="fu">query_nearby</span><span class="op">(</span><span class="va">auto</span><span class="op">[</span><span class="va">.x</span>, <span class="op">]</span>, <span class="va">non_auto</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>matched <span class="op">=</span> <span class="va">auto</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">.x</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 28 × 10</span>
-<span class="co">#&gt;    id            lat  long  elev name     wmo_id ts     automated   dist matched</span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;list&gt; &lt;lgl&gt;      &lt;dbl&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt;  1 ASN00047029 -33.4  143.   53  pooncar…  95692 &lt;tibb… FALSE     491.   ASN000…</span>
-<span class="co">#&gt;  2 ASN00073151 -34.4  148.  280. temora …  95722 &lt;tibb… FALSE      61.8  ASN000…</span>
-<span class="co">#&gt;  3 ASN00056018 -29.8  151.  664  inverel…  94541 &lt;tibb… FALSE     287.   ASN000…</span>
-<span class="co">#&gt;  4 ASN00056018 -29.8  151.  664  inverel…  94541 &lt;tibb… FALSE     135.   ASN000…</span>
-<span class="co">#&gt;  5 ASN00056037 -30.5  152.  987  armidal…  94773 &lt;tibb… FALSE     144.   ASN000…</span>
-<span class="co">#&gt;  6 ASN00056037 -30.5  152.  987  armidal…  94773 &lt;tibb… FALSE     100.   ASN000…</span>
-<span class="co">#&gt;  7 ASN00056037 -30.5  152.  987  armidal…  94773 &lt;tibb… FALSE       5.16 ASN000…</span>
-<span class="co">#&gt;  8 ASN00066124 -33.8  151.   55  parrama…  94764 &lt;tibb… FALSE     115.   ASN000…</span>
-<span class="co">#&gt;  9 ASN00060085 -31.4  152.  155  yarras …  94783 &lt;tibb… FALSE     153.   ASN000…</span>
-<span class="co">#&gt; 10 ASN00063226 -33.5  150.  900  lithgow…  94741 &lt;tibb… FALSE     112.   ASN000…</span>
-<span class="co">#&gt; # … with 18 more rows</span></code></pre></div>
+<span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/match_key.html">match_key</a></span><span class="op">(</span><span class="va">non_auto</span>, <span class="va">auto</span><span class="op">)</span> </code></pre></div>
 <p>Here are some post-processing to join the aws stations with non-aws.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">matched_non</span> <span class="op">&lt;-</span> <span class="va">stations</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">dist</span> <span class="op">&lt;</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>group <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
+<code class="sourceCode R"><span class="va">matched_non</span> <span class="op">&lt;-</span> <span class="va">non_auto</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span><span class="va">matched</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">key_mj</span>, <span class="va">.group</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span> <span class="op">=</span> <span class="st">"key_mj"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">matched_auto</span> <span class="op">&lt;-</span> <span class="va">auto</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op">%in%</span> <span class="va">matched_non</span><span class="op">$</span><span class="va">matched</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">matched_non</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">matched</span>, <span class="va">group</span>, <span class="va">dist</span><span class="op">)</span>, 
-            by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span> <span class="op">=</span> <span class="st">"matched"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="op">(</span><span class="va">matched_both</span> <span class="op">&lt;-</span> <span class="va">matched_auto</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">matched_non</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">matched</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span><span class="va">matched</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">key_mn</span>, <span class="va">.group</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span> <span class="op">=</span> <span class="st">"key_mn"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">matched_both</span> <span class="op">&lt;-</span> <span class="va">matched_auto</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">matched_non</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: id-wise: nested form</span>
 <span class="co">#&gt; # Key:    id [8]</span>
-<span class="co">#&gt; # Leaves: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
-<span class="co">#&gt;   id            lat  long   elev name       wmo_id ts      automated group  dist</span>
-<span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;list&gt;  &lt;lgl&gt;     &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 ASN00056238 -30.5  152. 1079   armidale …  95773 &lt;tibbl… TRUE          1  5.16</span>
-<span class="co">#&gt; 2 ASN00066194 -33.9  151.    3   canterbur…  94766 &lt;tibbl… TRUE          2  7.14</span>
-<span class="co">#&gt; 3 ASN00067113 -33.7  151.   24.7 penrith l…  94763 &lt;tibbl… TRUE          3  8.77</span>
-<span class="co">#&gt; 4 ASN00072160 -36.1  147.  164.  albury ai…  95896 &lt;tibbl… TRUE          4  8.33</span>
-<span class="co">#&gt; 5 ASN00056037 -30.5  152.  987   armidale …  94773 &lt;tibbl… FALSE         1  5.16</span>
-<span class="co">#&gt; 6 ASN00066037 -33.9  151.    6   sydney ai…  94767 &lt;tibbl… FALSE         2  7.14</span>
-<span class="co">#&gt; 7 ASN00063077 -33.7  151.  320   springwoo…  95744 &lt;tibbl… FALSE         3  8.77</span>
-<span class="co">#&gt; 8 ASN00072023 -36.1  147.  184   hume rese…  94901 &lt;tibbl… FALSE         4  8.33</span></code></pre></div>
+<span class="co">#&gt;   id            lat  long   elev name          wmo_id ts        automated .group</span>
+<span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;list&gt;    &lt;lgl&gt;      &lt;int&gt;</span>
+<span class="co">#&gt; 1 ASN00056238 -30.5  152. 1079   armidale air…  95773 &lt;tibble … TRUE           1</span>
+<span class="co">#&gt; 2 ASN00066194 -33.9  151.    3   canterbury r…  94766 &lt;tibble … TRUE           3</span>
+<span class="co">#&gt; 3 ASN00067113 -33.7  151.   24.7 penrith lake…  94763 &lt;tibble … TRUE           2</span>
+<span class="co">#&gt; 4 ASN00072160 -36.1  147.  164.  albury airpo…  95896 &lt;tibble … TRUE           4</span>
+<span class="co">#&gt; 5 ASN00056037 -30.5  152.  987   armidale (tr…  94773 &lt;tibble … FALSE          1</span>
+<span class="co">#&gt; 6 ASN00063077 -33.7  151.  320   springwood b…  95744 &lt;tibble … FALSE          2</span>
+<span class="co">#&gt; 7 ASN00066037 -33.9  151.    6   sydney airpo…  94767 &lt;tibble … FALSE          3</span>
+<span class="co">#&gt; 8 ASN00072023 -36.1  147.  184   hume reservo…  94901 &lt;tibble … FALSE          4</span></code></pre></div>
 <p>Now there are various things we can do with this data, i.e. lets look at those pairs in the map:</p>
 <p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-5-1.png" width="960"></p>
 <p>Plotting the maximum temperature of each pair shows that in general, recordings from nearby stations match pretty well, except some missing values, i.e. in Pair 6, 11, and 13. Noticeably, there is a constant gap between the automated and traditional recording in Pair 9 and 13 and this would indicate further calibration of the themometer.</p>

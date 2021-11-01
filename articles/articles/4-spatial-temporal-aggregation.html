@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4. Application: Spatial-temporal-aggregation • cubble</title>
+<title>4. Application: Spatial and temporal aggregation • cubble</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../../bootstrap-toc.css">
 <script src="../../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
-<script src="../../pkgdown.js"></script><meta property="og:title" content="4. Application: Spatial-temporal-aggregation">
+<script src="../../pkgdown.js"></script><meta property="og:title" content="4. Application: Spatial and temporal aggregation">
 <meta property="og:description" content="cubble">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -66,7 +66,7 @@
       <a href="../../articles/articles/3-application-automated-stations.html">3. Application: Comparing records in automated and traditional weather stations</a>
     </li>
     <li>
-      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial-temporal-aggregation</a>
+      <a href="../../articles/articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
     </li>
   </ul>
 </li>
@@ -84,7 +84,7 @@
       </header><script src="4-spatial-temporal-aggregation_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>4. Application: Spatial-temporal-aggregation</h1>
+      <h1 data-toc-skip>4. Application: Spatial and temporal aggregation</h1>
             
       
       
@@ -94,142 +94,172 @@
 
     
     
+<p>On top of <code>aus_climate</code> data in this package, <code>climate_full</code> from package <a href="https://github.com/huizezhang-sherry/weatherdata"><code>weatherdata</code></a> has daily climate data of 639 Australia stations from 2016 to 2020. This is where these stations locate in an Australia map:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">cubble</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/s2/">s2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span></code></pre></div>
-<p>This vignette shows an example of spatial and temporal aggregation on the Victoria weather station data.</p>
-<p>In the package <code>weatherdata</code> includes all the active (in 2020) Australian stations that record precipitation, maximum and minimum temperature.</p>
+<code class="sourceCode R"><span class="va">state_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">abs_ste</a></span>, keep <span class="op">=</span> <span class="fl">2e-3</span><span class="op">)</span>
+<span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> , <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="4-spatial-temporal-aggregation_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p>This is a lot of stations to look at for one climate variable and they can’t all fit into a glyph map. What we can do is to group stations into clusters and look at the aggregated series in the glyph map. In this vignette, I will introduce how to perform spatial (and temporal) aggregation using hierarchical data structure in cubble.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">aus_stations</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ll <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_lnglat.html">s2_lnglat</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-   <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">station_nested</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ll <span class="op">=</span> <span class="fu">s2_lnglat</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>wk <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/week.html">week</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">wk</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">prcp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, 
-            tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-            tmin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">tmin</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">state_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">abs_ste</a></span>, keep <span class="op">=</span> <span class="fl">2e-3</span><span class="op">)</span>
-<span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aus_stations</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="4-spatial-temporal-aggregation_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<p>With package <code>s2</code>, we can compute the distance matrix between stations. We use k-means for a basic clustering to aggregate the stations in the spatial dimension based on the distance matrix. After several trials, 20 clusters work well for all the stations in Australia.</p>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">prcp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div id="hierarchical-data-structure" class="section level1">
+<h1 class="hasAnchor">
+<a href="#hierarchical-data-structure" class="anchor"></a>Hierarchical data structure</h1>
+<p>Imposing a clustering structure can be thought of as building a hierarchical structure where stations are nested within clusters. As an example to illustrate here, we use a kmean clustering algorithm based on the distance matrix and specify the number of centers to be 20. More complex algorithms can also be used for more complex problem, as long as a mapping from each station id to the cluster id can be constructed. We then join this data to our station data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dist_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_closest_feature.html">s2_distance_matrix</a></span><span class="op">(</span><span class="va">aus_stations</span><span class="op">$</span><span class="va">ll</span>, <span class="va">aus_stations</span><span class="op">$</span><span class="va">ll</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">dist_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="fu">s2_distance_matrix</span><span class="op">(</span><span class="va">station_nested</span><span class="op">$</span><span class="va">ll</span>, <span class="va">station_nested</span><span class="op">$</span><span class="va">ll</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="va">dist_raw</span>, centers <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
+<span class="va">cluster_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">station_nested</span><span class="op">$</span><span class="va">id</span>,
+                      cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="va">dist_raw</span>, centers <span class="op">=</span> <span class="fl">20</span>, nstart <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">$</span><span class="va">cluster</span><span class="op">)</span>
 
-<span class="va">station_clustered</span> <span class="op">&lt;-</span> <span class="va">aus_stations</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/strip_rowwise.html">strip_rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>cluster<span class="op">=</span> <span class="va">k</span><span class="op">$</span><span class="va">cluster</span><span class="op">)</span>
-  <span class="co"># left_join(tibble(id = aus_stations$id,</span>
-  <span class="co">#                  cluster = k$cluster))</span>
-<span class="co"># left_join should update leaves</span></code></pre></div>
-<p>After this, there are several functionalities and plots that we hope to make:</p>
-<ul>
-<li>extract the aggregated centroid (potentially alpha hull to know the coverage of each cluster) of the cluster</li>
-<li>aggregate the series within the same cluster (potentially further aggregation is needed on the original series itself)</li>
-<li>look at how the aggregated series look like on the map (with glyph map)</li>
-<li>look at whether the series within each cluster is homogeneous, so that the aggregated series don’t miss the feature of each individual.</li>
-</ul>
+<span class="va">station_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">cluster_res</span><span class="op">)</span> 
+<span class="va">station_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; # Cubble: id-wise: nested form</span>
+<span class="co">#&gt; # Key:    id [5]</span>
+<span class="co">#&gt;   id            lat  long  elev name             wmo_id ll       ts      cluster</span>
+<span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;s2_lng&gt; &lt;list&gt;    &lt;int&gt;</span>
+<span class="co">#&gt; 1 ASN00001006 -15.5  128.   3.8 wyndham aero      95214 (128.15… &lt;tibbl…      13</span>
+<span class="co">#&gt; 2 ASN00001007 -13.8  126.   6   troughton island  94102 (126.14… &lt;tibbl…      13</span>
+<span class="co">#&gt; 3 ASN00001018 -16.4  126. 546   mount elizabeth   94211 (126.10… &lt;tibbl…       8</span>
+<span class="co">#&gt; 4 ASN00001019 -14.3  127.  23   kalumburu         94100 (126.64… &lt;tibbl…      13</span>
+<span class="co">#&gt; 5 ASN00001020 -14.1  126.  51   truscott          95101 (126.38… &lt;tibbl…      13</span></code></pre></div>
+<p>One thing we hope to do with the cluster is to find the coordinates of the centroid. These are variables variant to the station but invariant to the cluster and it would be nice to have a function that structure each cluster as a row. <code><a href="../../reference/switch_key.html">switch_key()</a></code> is the function that does this: it lets you to specify a new key, say <code>cluster</code> and nests all spatial variables variant to <code>cluster</code> into a column. Temporal observations from different stations while within the same cluster are bound in the nested column <code>ts</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">spatial_cluster</span> <span class="op">&lt;-</span> <span class="va">station_clustered</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>chull <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/chull.html">chull</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">long</span>, <span class="va">val</span><span class="op">$</span><span class="va">lat</span><span class="op">)</span><span class="op">)</span>,
-         ll_cluster <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_geog_point.html">s2_make_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">long</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, 
-                                      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">lat</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, oriented <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-         centroid <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_boundary.html">s2_centroid</a></span><span class="op">(</span><span class="va">ll_cluster</span><span class="op">)</span>,
-         long <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_is_collection.html">s2_x</a></span><span class="op">(</span><span class="va">centroid</span><span class="op">)</span>,
-         lat <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_is_collection.html">s2_y</a></span><span class="op">(</span><span class="va">centroid</span><span class="op">)</span><span class="op">)</span> 
-<span class="va">spatial_cluster</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
+<span class="va">cluster_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: cluster-wise: nested form</span>
 <span class="co">#&gt; # Key:    cluster [5]</span>
-<span class="co">#&gt; # Leaves: id [chr], wk [dbl], prcp [dbl], tmax [dbl], tmin [dbl]</span>
-<span class="co">#&gt;   cluster val               ts      chull  ll_cluster      centroid   long   lat</span>
-<span class="co">#&gt;     &lt;int&gt; &lt;list&gt;            &lt;list&gt;  &lt;list&gt; &lt;s2_geography&gt;  &lt;s2_geog&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1 &lt;tibble [31 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((148… &lt;POINT (…  147. -37.2</span>
-<span class="co">#&gt; 2       2 &lt;tibble [49 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((148… &lt;POINT (…  147. -41.8</span>
-<span class="co">#&gt; 3       3 &lt;tibble [24 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((123… &lt;POINT (…  119. -21.3</span>
-<span class="co">#&gt; 4       4 &lt;tibble [29 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((150… &lt;POINT (…  150. -35.7</span>
-<span class="co">#&gt; 5       5 &lt;tibble [26 × 7]&gt; &lt;tibbl… &lt;int … &lt;POLYGON ((149… &lt;POINT (…  148. -33.0</span></code></pre></div>
+<span class="co">#&gt;   cluster val               ts                  </span>
+<span class="co">#&gt;     &lt;int&gt; &lt;list&gt;            &lt;list&gt;              </span>
+<span class="co">#&gt; 1       1 &lt;tibble [64 × 7]&gt; &lt;tibble [3,392 × 3]&gt;</span>
+<span class="co">#&gt; 2       2 &lt;tibble [49 × 7]&gt; &lt;tibble [2,571 × 3]&gt;</span>
+<span class="co">#&gt; 3       3 &lt;tibble [17 × 7]&gt; &lt;tibble [901 × 3]&gt;  </span>
+<span class="co">#&gt; 4       4 &lt;tibble [49 × 7]&gt; &lt;tibble [2,597 × 3]&gt;</span>
+<span class="co">#&gt; 5       5 &lt;tibble [16 × 7]&gt; &lt;tibble [848 × 3]&gt;</span></code></pre></div>
+<p>This structure makes it easy to compute cluster level variable, although there are a few steps to calculate the centroid coordinates: we need to find the convex hull that wraps around the cluster, make it a polygon, find the centroid of the polygon and finally, extract the x and y coordinate of each centroid:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">temporal_ind</span> <span class="op">&lt;-</span> <span class="va">spatial_cluster</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span>
-
-<span class="va">temporal_ind</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Key:    cluster [1]</span>
-<span class="co">#&gt; # Leaves: cluster [int], ll_cluster [s2_geography], centroid [s2_geography],</span>
-<span class="co">#&gt; #   long [dbl], lat [dbl]</span>
-<span class="co">#&gt;   cluster id             wk  prcp  tmax  tmin</span>
-<span class="co">#&gt;     &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1 ASN00071032     1  1486  177   83.3</span>
-<span class="co">#&gt; 2       1 ASN00071032     2  2260  180.  87.1</span>
-<span class="co">#&gt; 3       1 ASN00071032     3  1590  184.  78.3</span>
-<span class="co">#&gt; 4       1 ASN00071032     4   884  191.  99.1</span>
-<span class="co">#&gt; 5       1 ASN00071032     5  1574  170.  75.3</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>chull <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/chull.html">chull</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">long</span>, <span class="va">val</span><span class="op">$</span><span class="va">lat</span><span class="op">)</span><span class="op">)</span>,
+         ll_cluster <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html">st_as_sfc</a></span><span class="op">(</span>
+           <span class="fu">s2_make_polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">long</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, 
+                           <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">lat</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, oriented <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,
+         centroid <span class="op">=</span> <span class="fu">s2_centroid</span><span class="op">(</span><span class="va">ll_cluster</span><span class="op">)</span>,
+         cent_long <span class="op">=</span> <span class="fu">s2_x</span><span class="op">(</span><span class="va">centroid</span><span class="op">)</span>,
+         cent_lat <span class="op">=</span> <span class="fu">s2_y</span><span class="op">(</span><span class="va">centroid</span><span class="op">)</span><span class="op">)</span> 
+<span class="va">cluster_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; # Cubble: cluster-wise: nested form</span>
+<span class="co">#&gt; # Key:    cluster [5]</span>
+<span class="co">#&gt;   cluster val    ts      chull                    ll_cluster centroid  cent_long</span>
+<span class="co">#&gt;     &lt;int&gt; &lt;list&gt; &lt;list&gt;  &lt;list&gt;                &lt;POLYGON [°]&gt; &lt;s2_geog&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       1 &lt;tibb… &lt;tibbl… &lt;int … ((118.5372 -26.6136, 114.69… &lt;POINT (…      117.</span>
+<span class="co">#&gt; 2       2 &lt;tibb… &lt;tibbl… &lt;int … ((148.2794 -41.9953, 148.30… &lt;POINT (…      147.</span>
+<span class="co">#&gt; 3       3 &lt;tibb… &lt;tibbl… &lt;int … ((146.8651 -29.9614, 143.81… &lt;POINT (…      144.</span>
+<span class="co">#&gt; 4       4 &lt;tibb… &lt;tibbl… &lt;int … ((153.2089 -24.7298, 152.71… &lt;POINT (…      152.</span>
+<span class="co">#&gt; 5       5 &lt;tibb… &lt;tibbl… &lt;int … ((122.9753 -25.7964, 119.74… &lt;POINT (…      122.</span>
+<span class="co">#&gt; # … with 1 more variable: cent_lat &lt;dbl&gt;</span></code></pre></div>
+</div>
+<div id="now-its-time-to-look-at-the-australia-precipitation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#now-its-time-to-look-at-the-australia-precipitation" class="anchor"></a>Now it’s time to look at the Australia precipitation</h1>
+<p>After we have got <code>cluster_nested</code>, spatial and temporal data at both levels can be easily obtained. If we use <code>station</code> and <code>cluster</code> prefix to denote the two levels and <code>nested</code> and <code>long</code> for whether the data shows the spatial or temporal dimension, the relationship among the four datasets can be illustrated in the following workflow:</p>
+<p><img src="../figures/hier-workflow.png" width="805"></p>
+<p>Start with the original <code>station_nested</code>, <code><a href="../../reference/stretch.html">stretch()</a></code> expands the <code>ts</code> column with each station (<code>id</code>) forming a group and attach variables invariant to <code>id</code> as an attribute. <code><a href="../../reference/switch_key.html">switch_key()</a></code> changes the <code>key</code> from <code>id</code> to <code>cluster</code> and nests all the spatial variables that variant to <code>cluster</code>. <code><a href="../../reference/stretch.html">stretch()</a></code> <code>cluster_nested</code> will store variables that are invariant to <code>cluster</code> as a tibble in the attribute.</p>
+<div id="aggregated-overview" class="section level2">
+<h2 class="hasAnchor">
+<a href="#aggregated-overview" class="anchor"></a>Aggregated overview</h2>
+<p>Now we can obtain the aggregated series as described in the workflow diagram above and construct the glyph map with <code><a href="https://ggobi.github.io/ggally/reference/glyphs.html">GGally::glyphs()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">temporal_cluster</span> <span class="op">&lt;-</span> <span class="va">spatial_cluster</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">cluster_long</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">wk</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">prcp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, 
-            tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-            tmin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">tmin</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">prcp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">cent_long</span>, <span class="va">cent_lat</span><span class="op">)</span>
 
-<span class="va">temporal_cluster</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
+<span class="va">cluster_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; # Cubble: time-wise: long form</span>
 <span class="co">#&gt; # Key:    cluster [1]</span>
-<span class="co">#&gt; # Leaves: cluster [int], ll_cluster [s2_geography], centroid [s2_geography],</span>
-<span class="co">#&gt; #   long [dbl], lat [dbl]</span>
-<span class="co">#&gt;   cluster    wk  prcp  tmax  tmin  long   lat</span>
-<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1     1 17932  259.  131.  147. -37.2</span>
-<span class="co">#&gt; 2       1     2 29137  269.  137.  147. -37.2</span>
-<span class="co">#&gt; 3       1     3 31166  274.  134.  147. -37.2</span>
-<span class="co">#&gt; 4       1     4 21255  274.  149.  147. -37.2</span>
-<span class="co">#&gt; 5       1     5 31611  260.  130.  147. -37.2</span></code></pre></div>
+<span class="co">#&gt;   cluster    wk  prcp cent_long cent_lat</span>
+<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       1     1  2315      117.    -31.2</span>
+<span class="co">#&gt; 2       1     2  3947      117.    -31.2</span>
+<span class="co">#&gt; 3       1     3 54687      117.    -31.2</span>
+<span class="co">#&gt; 4       1     4  9508      117.    -31.2</span>
+<span class="co">#&gt; 5       1     5 27524      117.    -31.2</span>
+
+<span class="va">gly</span> <span class="op">&lt;-</span> <span class="fu">GGally</span><span class="fu">::</span><span class="fu"><a href="https://ggobi.github.io/ggally/reference/glyphs.html">glyphs</a></span><span class="op">(</span><span class="va">cluster_long</span>, 
+                      x_major <span class="op">=</span> <span class="st">"cent_long"</span>, x_minor <span class="op">=</span> <span class="st">"wk"</span>,
+                      y_major <span class="op">=</span> <span class="st">"cent_lat"</span>, y_minor <span class="op">=</span> <span class="st">"prcp"</span>, 
+                      height <span class="op">=</span> <span class="fl">2</span>, width <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+
+<span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cluster_nested</span>, 
+            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cent_long</span>, y <span class="op">=</span> <span class="va">cent_lat</span>, label <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">gly</span>, 
+            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">gx</span>, y <span class="op">=</span> <span class="va">gy</span>, group <span class="op">=</span> <span class="va">gid</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="4-spatial-temporal-aggregation_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+</div>
+<div id="individual-series-within-the-cluster" class="section level2">
+<h2 class="hasAnchor">
+<a href="#individual-series-within-the-cluster" class="anchor"></a>Individual series within the cluster</h2>
+<p>We can also look at the precipitation of each individual station within the same cluster:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gly</span> <span class="op">&lt;-</span> <span class="fu">GGally</span><span class="fu">::</span><span class="fu"><a href="https://ggobi.github.io/ggally/reference/glyphs.html">glyphs</a></span><span class="op">(</span><span class="va">temporal_cluster</span>, x_major <span class="op">=</span> <span class="st">"long"</span>, x_minor <span class="op">=</span> <span class="st">"wk"</span>,
-                      y_major <span class="op">=</span> <span class="st">"lat"</span>, y_minor <span class="op">=</span> <span class="st">"prcp"</span>, height <span class="op">=</span> <span class="fl">2</span>, width <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">station_long</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
 
-<span class="va">state_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">abs_ste</a></span>, keep <span class="op">=</span> <span class="fl">2e-3</span><span class="op">)</span>
-<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">temporal_cluster</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, label <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">gly</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">gx</span>, y <span class="op">=</span> <span class="va">gy</span>, group <span class="op">=</span> <span class="va">gid</span><span class="op">)</span><span class="op">)</span>
+<span class="va">station_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; # Cubble: time-wise: long form</span>
+<span class="co">#&gt; # Key:    id [1]</span>
+<span class="co">#&gt;   id             wk  prcp cluster</span>
+<span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1 ASN00001006     1  3660      13</span>
+<span class="co">#&gt; 2 ASN00001006     2  1766      13</span>
+<span class="co">#&gt; 3 ASN00001006     3  1748      13</span>
+<span class="co">#&gt; 4 ASN00001006     4  4614      13</span>
+<span class="co">#&gt; 5 ASN00001006     5  1080      13</span>
 
-<span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">temporal_ind</span> <span class="op">%&gt;%</span> 
+<span class="va">station_long</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wk</span>, y <span class="op">=</span> <span class="va">prcp</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></code></pre></div>
-<p><img src="4-spatial-temporal-aggregation_files/figure-html/unnamed-chunk-7-1.png" width="1920"></p>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
+<p><img src="4-spatial-temporal-aggregation_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+</div>
+<div id="spot-the-weirdo" class="section level2">
+<h2 class="hasAnchor">
+<a href="#spot-the-weirdo" class="anchor"></a>Spot the weirdo</h2>
+<p>Lastly, there is one series on Tasmania island standing out from others, lets look at where it is:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tas_latlong</span> <span class="op">&lt;-</span> <span class="va">temporal_ind</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">lat</span>, <span class="va">long</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">40</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">prcp</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">prcp</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># this part still needs some fixing</span>
+<span class="va">tas_latlong</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">40</span><span class="op">)</span> <span class="op">%&gt;%</span>  
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/strip_rowwise.html">strip_rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">p</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">state_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">abs_ste</a></span>, keep <span class="op">=</span> <span class="fl">2e-3</span><span class="op">)</span>
-<span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">station_clustered</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">spatial_cluster</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ll_cluster <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html">st_as_sfc</a></span><span class="op">(</span><span class="va">ll_cluster</span><span class="op">)</span><span class="op">)</span>,
-          <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">ll_cluster</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"transparent"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tas_latlong</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span><span class="va">lat</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>
-
-<span class="va">p3</span>  </code></pre></div>
-<p><img src="4-spatial-temporal-aggregation_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">station_nested</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cluster_nested</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">ll_cluster</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"transparent"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tas_latlong</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
+<p><img src="4-spatial-temporal-aggregation_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
