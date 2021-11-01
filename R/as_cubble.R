@@ -91,7 +91,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
 
   new_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
-             form = "nested")
+             spatial = NULL, form = "nested")
 }
 
 #' @export
@@ -148,7 +148,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
 
   new_cubble(out,
              key = "id", index = "time", coords = c("long", "lat"),
-             form = "nested")
+             spatial = NULL, form = "nested")
 
 }
 
