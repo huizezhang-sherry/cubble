@@ -235,11 +235,11 @@
     title <span class="op">=</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
   <span class="op">)</span>
 
-<span class="co">#ggsave(filename = here::here("vignettes/figures/hist-tmax-single.png"))</span></code></pre></div>
+<span class="co">#ggsave(filename = here::here("man/figures/hist-tmax-single.png"))</span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">box_df</span> <span class="op">&lt;-</span> <span class="va">tmax_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="st">"ASN00085072"</span><span class="op">)</span>
 <span class="va">single</span> <span class="op">&lt;-</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>img <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"vignettes/figures/hist-tmax-single.png"</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>img <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"man/figures/hist-tmax-single.png"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">p1</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_rect</a></span><span class="op">(</span>
     data <span class="op">=</span> <span class="va">box_df</span>,
