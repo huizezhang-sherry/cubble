@@ -137,13 +137,13 @@ tmax_long %>% filter(id == "ASN00085072") %>%
     title =  element_text(size = 20)
   )
 
-#ggsave(filename = here::here("vignettes/figures/hist-tmax-single.png"))
+#ggsave(filename = here::here("man/figures/hist-tmax-single.png"))
 ```
 
 ```{r}
 box_df <- tmax_nested %>% filter(id == "ASN00085072")
 single <-
-  tibble::tibble(img = here::here("vignettes/figures/hist-tmax-single.png"))
+  tibble::tibble(img = here::here("man/figures/hist-tmax-single.png"))
 p1 +
   geom_rect(
     data = box_df,
