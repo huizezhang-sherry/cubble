@@ -1,5 +1,5 @@
 ---
-title: "3. Application: Comparing records in automated and traditional weather stations"
+title: "3. Application: Matching nearby stations"
 ---
 
 ```{r, include = FALSE}
@@ -8,11 +8,9 @@ knitr::opts_chunk$set(
   comment = "#>", 
   warning = FALSE,
   message = FALSE,
-  fig.height = 5,
-  fig.width = 10
+  out.width = "100%"
 )
 library(cubble)
-library(rnoaa)
 library(dplyr)
 library(tidyr)
 library(stringr)
@@ -21,15 +19,23 @@ library(sf)
 library(patchwork)
 ```
 
-An interesting thing about the Australian GHCND weather station data is that some station names are suffixed with "aws", standing for *Automated Weather Stations*. This draws our interest to investigate how these automated stations differ from the traditional ones. Most of these automated stations are located in New South Wales, so we will look at pairs there.
+One common type of task with spatial temporal data is to match records from nearby sites. For example, we may want to verify if the location of an old list of stations matches up with the current stations, or we may want to investigate if the records from traditional and automated weather stations match up with each other for calibration, or we may want to investigate whether the rainfall will get translated to the river level. All of these tasks involve finding nearby pairs from two data tables.
+
+This vignette will introduce how to perform this type of task in cubble with an example of matching traditional and automated weather station records in New South Wales. New South Wales is selected since automated stations there are labelled with `aws` in its name. Let's first look at the distribution of these station on the map: 
 
 ```{r}
 nsw_map <- ozmaps::abs_ste %>% filter(NAME == "New South Wales")  
 
-nsw <- aus_climate %>%   
-  filter(s2::s2_lnglat(long, lat) %>% s2::s2_within(nsw_map)) %>% 
-  mutate(automated = str_detect(name, "aws"))
+nsw <- weatherdata::climate_full %>%   
+  filter(between(stringr::str_sub(id, 7, 8), 46, 75)) %>%
+  mutate(automated = str_detect(name, "aws")) %>% 
+  stretch(ts) %>%
+  filter(lubridate::month(date) == 1,
+         lubridate::year(date) == 2020) %>% 
+  tamp() %>% 
+  filter(!any(is.na(ts$tmax)))
  
+
 plot_map(nsw_map) +
   geom_point(data = nsw, 
              aes(x = long, y = lat, color = automated)) + 
@@ -43,29 +49,33 @@ plot_map(nsw_map) +
 
 The color in the map shows whether a station is an automated one or not and we can observe that some automated weather stations are actually close to the traditional ones. This provides a basis to investigate whether numbers recorded by nearby automated and traditional stations match with each other.
 
-The chunk below finds the closest traditional station, if any, that is within 10 kilometer of an automated one.
+To find pairs of nearby stations, you can use `match_key()`. The function requires two datasets: a major set where matches will be found for every station and a minor set, which is the candidate pool for matching each station in the major set. It then calculates the spherical distance between each pair combination. Argument `n_slice` and `dist_max` are used to control the number of match to find for each site in the major dataset and the maximum distance allowed. The default value is `n_slice = 1` and `dist_max = 10`. 
+
+Here we construct two datasets by filtering on whether they are automated or not and want to find the closest traditional station for each automated station if their distance is less than 10 kilometer:
 
 ```{r}
 auto <- nsw %>% filter(automated)
 non_auto <- nsw %>% filter(!automated)
 
-matched <- match_key(non_auto, auto) 
+matched <- match_key(auto, non_auto) 
+matched 
 ```
 
-Here are some post-processing to join the aws stations with non-aws.
+You can then filter out the matched stations in both dataset and combine them together:
 
 ```{r}
-matched_non <- non_auto %>% 
+matched_non <- auto %>% 
   inner_join(matched %>% select(key_mj, .group), by = c("id" = "key_mj"))
-matched_auto <- auto %>% 
+matched_auto <- non_auto %>% 
   inner_join(matched %>% select(key_mn, .group), by = c("id" = "key_mn"))
-(matched_both <- matched_auto %>% bind_rows(matched_non))
+
+matched_both <- matched_auto %>% bind_rows(matched_non)
 ```
 
-Now there are various things we can do with this data, i.e. lets look at those pairs in the map:
+Then we can create visualisation to see where these station are in the nested cubble:
 
-```{r echo = FALSE}
-p1 <- plot_map(nsw_map) +
+```{r}
+plot_map(nsw_map) +
   geom_point(data = matched_both, 
              aes(x = long, y = lat, color = automated)) + 
   ggrepel::geom_label_repel(data = matched_auto,
@@ -76,23 +86,25 @@ p1 <- plot_map(nsw_map) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +
   coord_sf(xlim = c(141, 154))
+```
 
+or compare the series within the same pair using the long cubble (as an example here we only look at records in Jan 2020):
+
+```{r echo = FALSE}
 ts <- matched_both %>%
   switch_key(.group) %>% 
-  stretch(ts) %>%
-  filter(lubridate::month(date) == 1) %>% 
+  stretch(ts) %>% 
   migrate(.group) %>% 
   left_join(as_tibble(matched_both) %>% select(id, automated))
 
-p2 <- ts %>%
+ts %>%
   ggplot(aes(x = date, y = tmax, color = automated, group = id)) +
   geom_line() +
   facet_wrap(vars(.group)) +
   scale_color_brewer(palette = "Dark2") + 
-  theme(legend.position = "none")
-
-(p1 | p2) + plot_layout(guides = "collect")
+  scale_x_date(date_labels = "%d") + 
+  theme_bw()
 ```
 
-Plotting the maximum temperature of each pair shows that in general, recordings from nearby stations match pretty well, except some missing values, i.e. in Pair 6, 11, and 13. Noticeably, there is a constant gap between the automated and traditional recording in Pair 9 and 13 and this would indicate further calibration of the themometer. 
+We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There's a constant gap in pair 7, which suggests the two stations need to be further calibrated.
 

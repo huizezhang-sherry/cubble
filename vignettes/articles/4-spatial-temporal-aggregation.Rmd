@@ -8,7 +8,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning = FALSE, 
   message = FALSE,
-  cache = TRUE # currently mutate(ll = s2_lnglat(long, lat)) is a bit slow
+  cache = TRUE, # currently mutate(ll = s2_lnglat(long, lat)) is a bit slow
+  out.width = "100%"
 )
 library(dplyr)
 library(cubble)
@@ -27,6 +28,8 @@ plot_map(state_map) +
 ```
 
 This is a lot of stations to look at for one climate variable and they can't all fit into a glyph map. What we can do is to group stations into clusters and look at the aggregated series in the glyph map. In this vignette, I will introduce how to perform spatial (and temporal) aggregation using hierarchical data structure in cubble. 
+
+First let's add a new column `ll` for calculating distance matrix in the next section and aggregate the daily precipitation into weekly measure. These steps should be familiar from the vignette *Data manipulation with cubble*.
 
 ```{r}
 station_nested <- weatherdata::climate_full %>% 
@@ -123,8 +126,9 @@ station_long %>% head(5)
 
 station_long %>% 
   ggplot(aes(x = wk, y = prcp, group = id)) + 
-  geom_line(alpha = .5) + 
-  facet_wrap(vars(cluster), scales = "free_y", ncol = 4)
+  geom_line(alpha = .3) + 
+  facet_wrap(vars(cluster), scales = "free_y", ncol = 4) + 
+  theme_bw()
 ```
 
 ## Spot the weirdo
