@@ -127,11 +127,11 @@
 <span class="co">#&gt; # Key:    id [5]</span>
 <span class="co">#&gt;   id            lat  long  elev name             wmo_id ll       ts      cluster</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;s2_lng&gt; &lt;list&gt;    &lt;int&gt;</span>
-<span class="co">#&gt; 1 ASN00001006 -15.5  128.   3.8 wyndham aero      95214 (128.15… &lt;tibbl…       5</span>
-<span class="co">#&gt; 2 ASN00001007 -13.8  126.   6   troughton island  94102 (126.14… &lt;tibbl…       5</span>
-<span class="co">#&gt; 3 ASN00001018 -16.4  126. 546   mount elizabeth   94211 (126.10… &lt;tibbl…      14</span>
-<span class="co">#&gt; 4 ASN00001019 -14.3  127.  23   kalumburu         94100 (126.64… &lt;tibbl…       5</span>
-<span class="co">#&gt; 5 ASN00001020 -14.1  126.  51   truscott          95101 (126.38… &lt;tibbl…       5</span></code></pre></div>
+<span class="co">#&gt; 1 ASN00001006 -15.5  128.   3.8 wyndham aero      95214 (128.15… &lt;tibbl…      19</span>
+<span class="co">#&gt; 2 ASN00001007 -13.8  126.   6   troughton island  94102 (126.14… &lt;tibbl…      19</span>
+<span class="co">#&gt; 3 ASN00001018 -16.4  126. 546   mount elizabeth   94211 (126.10… &lt;tibbl…      19</span>
+<span class="co">#&gt; 4 ASN00001019 -14.3  127.  23   kalumburu         94100 (126.64… &lt;tibbl…      19</span>
+<span class="co">#&gt; 5 ASN00001020 -14.1  126.  51   truscott          95101 (126.38… &lt;tibbl…      19</span></code></pre></div>
 <p>One thing we hope to do with the cluster is to find the coordinates of the centroid. These are variables variant to the station but invariant to the cluster and it would be nice to have a function that structure each cluster as a row. <code><a href="../../reference/switch_key.html">switch_key()</a></code> is the function that does this: it lets you to specify a new key, say <code>cluster</code> and nests all spatial variables variant to <code>cluster</code> into a column. Temporal observations from different stations while within the same cluster are bound in the nested column <code>ts</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op">%&gt;%</span> 
@@ -141,11 +141,11 @@
 <span class="co">#&gt; # Key:    cluster [5]</span>
 <span class="co">#&gt;   cluster val               ts                  </span>
 <span class="co">#&gt;     &lt;int&gt; &lt;list&gt;            &lt;list&gt;              </span>
-<span class="co">#&gt; 1       1 &lt;tibble [21 × 7]&gt; &lt;tibble [1,113 × 3]&gt;</span>
-<span class="co">#&gt; 2       2 &lt;tibble [21 × 7]&gt; &lt;tibble [1,113 × 3]&gt;</span>
-<span class="co">#&gt; 3       3 &lt;tibble [16 × 7]&gt; &lt;tibble [848 × 3]&gt;  </span>
-<span class="co">#&gt; 4       4 &lt;tibble [49 × 7]&gt; &lt;tibble [2,580 × 3]&gt;</span>
-<span class="co">#&gt; 5       5 &lt;tibble [30 × 7]&gt; &lt;tibble [1,590 × 3]&gt;</span></code></pre></div>
+<span class="co">#&gt; 1       1 &lt;tibble [18 × 7]&gt; &lt;tibble [954 × 3]&gt;  </span>
+<span class="co">#&gt; 2       2 &lt;tibble [36 × 7]&gt; &lt;tibble [1,891 × 3]&gt;</span>
+<span class="co">#&gt; 3       3 &lt;tibble [59 × 7]&gt; &lt;tibble [3,127 × 3]&gt;</span>
+<span class="co">#&gt; 4       4 &lt;tibble [60 × 7]&gt; &lt;tibble [3,180 × 3]&gt;</span>
+<span class="co">#&gt; 5       5 &lt;tibble [56 × 7]&gt; &lt;tibble [2,968 × 3]&gt;</span></code></pre></div>
 <p>This structure makes it easy to compute cluster level variable, although there are a few steps to calculate the centroid coordinates: we need to find the convex hull that wraps around the cluster, make it a polygon, find the centroid of the polygon and finally, extract the x and y coordinate of each centroid:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op">%&gt;%</span> 
@@ -161,11 +161,11 @@
 <span class="co">#&gt; # Key:    cluster [5]</span>
 <span class="co">#&gt;   cluster val    ts      chull                    ll_cluster centroid  cent_long</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;list&gt; &lt;list&gt;  &lt;list&gt;                &lt;POLYGON [°]&gt; &lt;s2_geog&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1 &lt;tibb… &lt;tibbl… &lt;int … ((148.1223 -30.0372, 147.97… &lt;POINT (…      145.</span>
-<span class="co">#&gt; 2       2 &lt;tibb… &lt;tibbl… &lt;int … ((145.5592 -16.3842, 143.53… &lt;POINT (…      146.</span>
-<span class="co">#&gt; 3       3 &lt;tibb… &lt;tibbl… &lt;int … ((134.6849 -23.4564, 133.63… &lt;POINT (…      130.</span>
-<span class="co">#&gt; 4       4 &lt;tibb… &lt;tibbl… &lt;int … ((153.2089 -24.7298, 152.71… &lt;POINT (…      152.</span>
-<span class="co">#&gt; 5       5 &lt;tibb… &lt;tibbl… &lt;int … ((136.8203 -12.2741, 132.97… &lt;POINT (…      131.</span>
+<span class="co">#&gt; 1       1 &lt;tibb… &lt;tibbl… &lt;int … ((146.8651 -29.9614, 145.68… &lt;POINT (…      144.</span>
+<span class="co">#&gt; 2       2 &lt;tibb… &lt;tibbl… &lt;int … ((153.1187 -30.3107, 152.01… &lt;POINT (…      150.</span>
+<span class="co">#&gt; 3       3 &lt;tibb… &lt;tibbl… &lt;int … ((118.5372 -26.6136, 116.02… &lt;POINT (…      117.</span>
+<span class="co">#&gt; 4       4 &lt;tibb… &lt;tibbl… &lt;int … ((152.1612 -32.7103, 151.45… &lt;POINT (…      150.</span>
+<span class="co">#&gt; 5       5 &lt;tibb… &lt;tibbl… &lt;int … ((145.7308 -36.8472, 145.60… &lt;POINT (…      143.</span>
 <span class="co">#&gt; # … with 1 more variable: cent_lat &lt;dbl&gt;</span></code></pre></div>
 </div>
 <div id="now-its-time-to-look-at-the-australia-precipitation" class="section level1">
@@ -190,11 +190,11 @@
 <span class="co">#&gt; # Key:    cluster [1]</span>
 <span class="co">#&gt;   cluster    wk  prcp cent_long cent_lat</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1     1  4513      145.    -30.3</span>
-<span class="co">#&gt; 2       1     2  2327      145.    -30.3</span>
-<span class="co">#&gt; 3       1     3  6187      145.    -30.3</span>
-<span class="co">#&gt; 4       1     4 10915      145.    -30.3</span>
-<span class="co">#&gt; 5       1     5  4397      145.    -30.3</span>
+<span class="co">#&gt; 1       1     1  2386      144.    -30.3</span>
+<span class="co">#&gt; 2       1     2  1553      144.    -30.3</span>
+<span class="co">#&gt; 3       1     3  5532      144.    -30.3</span>
+<span class="co">#&gt; 4       1     4  5939      144.    -30.3</span>
+<span class="co">#&gt; 5       1     5  3528      144.    -30.3</span>
 
 <span class="va">gly</span> <span class="op">&lt;-</span> <span class="fu">GGally</span><span class="fu">::</span><span class="fu"><a href="https://ggobi.github.io/ggally/reference/glyphs.html">glyphs</a></span><span class="op">(</span><span class="va">cluster_long</span>, 
                       x_major <span class="op">=</span> <span class="st">"cent_long"</span>, x_minor <span class="op">=</span> <span class="st">"wk"</span>,
@@ -222,11 +222,11 @@
 <span class="co">#&gt; # Key:    id [1]</span>
 <span class="co">#&gt;   id             wk  prcp cluster</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1 ASN00001006     1  3660       5</span>
-<span class="co">#&gt; 2 ASN00001006     2  1766       5</span>
-<span class="co">#&gt; 3 ASN00001006     3  1748       5</span>
-<span class="co">#&gt; 4 ASN00001006     4  4614       5</span>
-<span class="co">#&gt; 5 ASN00001006     5  1080       5</span>
+<span class="co">#&gt; 1 ASN00001006     1  3660      19</span>
+<span class="co">#&gt; 2 ASN00001006     2  1766      19</span>
+<span class="co">#&gt; 3 ASN00001006     3  1748      19</span>
+<span class="co">#&gt; 4 ASN00001006     4  4614      19</span>
+<span class="co">#&gt; 5 ASN00001006     5  1080      19</span>
 
 <span class="va">station_long</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wk</span>, y <span class="op">=</span> <span class="va">prcp</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
