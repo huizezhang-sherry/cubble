@@ -34,6 +34,7 @@ aus_climate_cubble <- aus_climate_raw %>%
 aus_climate <- aus_climate_cubble %>%
   stretch() %>%
   filter(lubridate::year(date) == 2020) %>%
+  mutate(tmax = tmax/10, tmin = tmin/ 10) %>%
   tamp() %>%
   add_missing_prct(prcp:tmin) %>%
   filter(prcp_missing == 0, tmax_missing == 0, tmin_missing == 0) %>%
