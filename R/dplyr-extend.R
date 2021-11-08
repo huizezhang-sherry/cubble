@@ -36,9 +36,13 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   out <- vec_slice(data, i)
   key <- key_vars(data)
 
-  keep <- unique(out[[key]])
-  spatial <- new_spatial(data) %>% filter(!!sym(key) %in% keep)
+  spatial <- new_spatial(data)
 
+  if (determine_form(data) == "long"){
+    keep <- unique(out[[key]])
+    spatial <- spatial %>% filter(!!sym(key) %in% keep)
+
+  }
 
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = key_vars(data)[1])
