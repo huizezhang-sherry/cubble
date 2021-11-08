@@ -57,28 +57,17 @@ Here we construct two datasets by filtering on whether they are automated or not
 auto <- nsw %>% filter(automated)
 non_auto <- nsw %>% filter(!automated)
 
-matched <- match_key(auto, non_auto) 
+matched <- match_sites(auto, non_auto, match_temporal = FALSE) 
 matched 
-```
-
-You can then filter out the matched stations in both dataset and combine them together:
-
-```{r}
-matched_non <- auto %>% 
-  inner_join(matched %>% select(key_mj, .group), by = c("id" = "key_mj"))
-matched_auto <- non_auto %>% 
-  inner_join(matched %>% select(key_mn, .group), by = c("id" = "key_mn"))
-
-matched_both <- matched_auto %>% bind_rows(matched_non)
 ```
 
 Then we can create visualisation to see where these station are in the nested cubble:
 
 ```{r}
 plot_map(nsw_map) +
-  geom_point(data = matched_both, 
+  geom_point(data = matched, 
              aes(x = long, y = lat, color = automated)) + 
-  ggrepel::geom_label_repel(data = matched_auto,
+  ggrepel::geom_label_repel(data = matched %>% filter(automated),
                             aes(x = long, y = lat, label = .group)) + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("New Sourth Wales") + 
@@ -91,11 +80,11 @@ plot_map(nsw_map) +
 or compare the series within the same pair using the long cubble (as an example here we only look at records in Jan 2020):
 
 ```{r echo = FALSE}
-ts <- matched_both %>%
+ts <- matched %>%
   switch_key(.group) %>% 
   stretch(ts) %>% 
   migrate(.group) %>% 
-  left_join(as_tibble(matched_both) %>% select(id, automated))
+  left_join(as_tibble(matched) %>% select(id, automated))
 
 ts %>%
   ggplot(aes(x = date, y = tmax, color = automated, group = id)) +
@@ -107,4 +96,73 @@ ts %>%
 ```
 
 We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There's a constant gap in pair 7, which suggests the two stations need to be further calibrated.
+
+
+```{r}
+river <- weatherdata::water %>% 
+  stretch() %>% 
+  select(date, Water_course_level) %>% 
+  tamp() %>% 
+  mutate(type = "river")
+
+climate <- weatherdata::climate_full %>% 
+  filter(between(stringr::str_sub(id, 7, 8), 76, 90)) %>% 
+  stretch() %>% 
+  filter(lubridate::year(date) == 2020) %>% 
+  tamp() %>% 
+  mutate(type = "climate")
+
+vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste %>% filter(NAME == "Victoria"))  
+plot_map(vic_map) +
+  geom_point(data = dplyr::bind_rows(river, climate) , 
+             aes(x = long, y = lat, color = type)) + 
+  scale_color_brewer(palette = "Dark2") +
+  theme_bw()
+
+river <- river %>% 
+  stretch() %>% 
+  rename(prcp = Water_course_level) %>% 
+  tamp()
+```
+
+```{r}
+res <- match_sites(river, climate, 
+            temporal_var_to_match = prcp,
+            temporal_independent = climate, 
+            temporal_n_highest = 30, 
+            temporal_min_match = 15)
+```
+
+```{r}
+plot_map(vic_map) +
+  geom_point(data = res, 
+             aes(x = long, y = lat, color = type)) + 
+  ggrepel::geom_label_repel(data = res %>% filter(type == "river"),
+                            aes(x = long, y = lat, label = .group)) + 
+  scale_color_brewer(palette = "Dark2") + 
+  ggtitle("Victoria") + 
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+
+
+```{r}
+res_long <- res %>% 
+  stretch() %>% 
+  migrate(.group) %>% 
+  mutate(prcp = scale(prcp)[,1]) %>% 
+  switch_key(.group) %>% 
+  left_join(as_tibble(res) %>% select(.group, type, id))
+
+res_long %>% 
+  ggplot(aes(x = date, y = prcp, color = type)) + 
+  geom_line() + 
+  facet_wrap(vars(.group)) + 
+  scale_color_brewer(palette = "Dark2", guide = "none") + 
+  theme_bw() + 
+  labs(x=  "week") + 
+  scale_x_date(date_labels = "%b")
+
+```
 

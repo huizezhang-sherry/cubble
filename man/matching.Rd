@@ -10,13 +10,15 @@
 match_sites(
   major,
   minor,
+  match_temporal = TRUE,
   spatial_single_match = TRUE,
   spatial_n_keep = 1,
   spatial_dist_max = 10,
   temporal_var_to_match,
   temporal_n_highest = 20,
   temporal_independent,
-  temporal_window = 5
+  temporal_window = 5,
+  temporal_min_match = 10
 )
 
 match_spatial(
@@ -35,13 +37,16 @@ match_temporal(
   temporal_var_to_match,
   temporal_n_highest = 20,
   temporal_independent,
-  temporal_window = 5
+  temporal_window = 5,
+  temporal_min_match = 10
 )
 }
 \arguments{
 \item{major}{The major dataset to match, every key in the major dataset will have a match, unless filtered by \code{dist_max}}
 
 \item{minor}{The dataset to match from}
+
+\item{match_temporal}{Wether to perform temporal matching}
 
 \item{spatial_single_match}{Whether each observation in the minor dataset is only allowed to to be matched once, default to \code{TRUE}}
 
@@ -57,6 +62,8 @@ match_temporal(
 need to be the name of either major or minor.}
 
 \item{temporal_window}{The temporal window allowed to fall in}
+
+\item{temporal_min_match}{The minimum number of peak matching for temporal matching}
 
 \item{match_table}{The output from \code{match_spatial()}}
 }
