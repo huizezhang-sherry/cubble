@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Formulate or switch an object into a cubble in the nested form — tamp • cubble</title>
+<title>Matching sites from two data sources — match_sites • cubble</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,14 @@
 
 
 
-<meta property="og:title" content="Formulate or switch an object into a cubble in the nested form — tamp" />
-<meta property="og:description" content="Create a cubble object or switch an existing cubble object into the nested form" />
+<meta property="og:title" content="Matching sites from two data sources — match_sites" />
+<meta property="og:description" content="The function includes both spatial and temporal matching. The spatial matching
+is based on the distance and the distance is calculated using the Vincenty
+formula assuming earth is sphere with a radius of 6371 km. The temporal matching
+first filters out the n largest increases, determined by temporal_n_highest,
+in both datasets,  constructs an interval of length temporal_window from
+one dataset and count the number that large increase from the other dataset
+falls into the interval constructed." />
 
 
 
@@ -127,65 +133,113 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Formulate or switch an object into a cubble in the nested form</h1>
+    <h1>Matching sites from two data sources</h1>
     
-    <div class="hidden name"><code>tamp.Rd</code></div>
+    <div class="hidden name"><code>matching.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a cubble object or switch an existing cubble object into the nested form</p>
+    <p>The function includes both spatial and temporal matching. The spatial matching
+is based on the distance and the distance is calculated using the Vincenty
+formula assuming earth is sphere with a radius of 6371 km. The temporal matching
+first filters out the <code>n</code> largest increases, determined by <code>temporal_n_highest</code>,
+in both datasets,  constructs an interval of length <code>temporal_window</code> from
+one dataset and count the number that large increase from the other dataset
+falls into the interval constructed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tamp</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>key</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>match_sites</span><span class='op'>(</span>
+  <span class='va'>major</span>,
+  <span class='va'>minor</span>,
+  match_temporal <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  spatial_single_match <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  spatial_n_keep <span class='op'>=</span> <span class='fl'>1</span>,
+  spatial_dist_max <span class='op'>=</span> <span class='fl'>10</span>,
+  <span class='va'>temporal_var_to_match</span>,
+  temporal_n_highest <span class='op'>=</span> <span class='fl'>20</span>,
+  <span class='va'>temporal_independent</span>,
+  temporal_window <span class='op'>=</span> <span class='fl'>5</span>,
+  temporal_min_match <span class='op'>=</span> <span class='fl'>10</span>
+<span class='op'>)</span>
+
+<span class='fu'>match_spatial</span><span class='op'>(</span>
+  <span class='va'>major</span>,
+  <span class='va'>minor</span>,
+  spatial_single_match <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  spatial_n_keep <span class='op'>=</span> <span class='fl'>1</span>,
+  spatial_dist_max <span class='op'>=</span> <span class='fl'>10</span>
+<span class='op'>)</span>
+
+<span class='fu'>match_postprocessing</span><span class='op'>(</span><span class='va'>major</span>, <span class='va'>minor</span>, <span class='va'>match_table</span><span class='op'>)</span>
+
+<span class='fu'>match_temporal</span><span class='op'>(</span>
+  <span class='va'>major</span>,
+  <span class='va'>minor</span>,
+  <span class='va'>temporal_var_to_match</span>,
+  temporal_n_highest <span class='op'>=</span> <span class='fl'>20</span>,
+  <span class='va'>temporal_independent</span>,
+  temporal_window <span class='op'>=</span> <span class='fl'>5</span>,
+  temporal_min_match <span class='op'>=</span> <span class='fl'>10</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>the data to be converted into a cubble object</p></td>
+      <th>major</th>
+      <td><p>The major dataset to match, every key in the major dataset will have a match, unless filtered by <code>dist_max</code></p></td>
     </tr>
     <tr>
-      <th>key</th>
-      <td><p>the spatio identifier. Key can be automatically detected for a cubble object</p></td>
+      <th>minor</th>
+      <td><p>The dataset to match from</p></td>
+    </tr>
+    <tr>
+      <th>match_temporal</th>
+      <td><p>Wether to perform temporal matching</p></td>
+    </tr>
+    <tr>
+      <th>spatial_single_match</th>
+      <td><p>Whether each observation in the minor dataset is only allowed to to be matched once, default to <code>TRUE</code></p></td>
+    </tr>
+    <tr>
+      <th>spatial_n_keep</th>
+      <td><p>The number of matching to keep</p></td>
+    </tr>
+    <tr>
+      <th>spatial_dist_max</th>
+      <td><p>The maximum distance allowed between matched pair</p></td>
+    </tr>
+    <tr>
+      <th>temporal_var_to_match</th>
+      <td><p>The variable used for temporal matching</p></td>
+    </tr>
+    <tr>
+      <th>temporal_n_highest</th>
+      <td><p>The number of highest peak used for temporal matching</p></td>
+    </tr>
+    <tr>
+      <th>temporal_independent</th>
+      <td><p>The dataset used to construct the temporal window,
+need to be the name of either major or minor.</p></td>
+    </tr>
+    <tr>
+      <th>temporal_window</th>
+      <td><p>The temporal window allowed to fall in</p></td>
+    </tr>
+    <tr>
+      <th>temporal_min_match</th>
+      <td><p>The minimum number of peak matching for temporal matching</p></td>
+    </tr>
+    <tr>
+      <th>match_table</th>
+      <td><p>The output from <code>match_spatial()</code></p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-<ul>
-<li><p>For an object that is not <code>cubble_df</code>, <code>tamp()</code> will initialise a cubble object upon
-providing a <code>group</code> variable.</p></li>
-<li><p>For an existing <code>cubble</code> in the long form, <code>tamp()</code>
-switches the object back to the nested form. This form is easier to computing
-group-specific variables.</p></li>
-</ul>
+    <p>A cubble with matched pairs</p>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other cubble verbs include <code><a href='stretch.html'>stretch</a></code> and <code><a href='migrate.html'>migrate</a></code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># switch to the nested form from the long form</span>
-<span class='va'>aus_climate</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='stretch.html'>stretch</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>tamp</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># Cubble: id-wise: nested form</span>
-#&gt; <span style='color: #949494;'># Key:    id [85]</span>
-#&gt;    id            lat  long  elev name                   wmo_id ts               
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>           
-#&gt; <span style='color: #BCBCBC;'> 1</span> ASN00009021 -<span style='color: #BB0000;'>31.9</span>  116.  15.4 perth airport           <span style='text-decoration: underline;'>94</span>610 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 2</span> ASN00010311 -<span style='color: #BB0000;'>31.9</span>  117. 179   york                    <span style='text-decoration: underline;'>94</span>623 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 3</span> ASN00010614 -<span style='color: #BB0000;'>32.9</span>  117. 338   narrogin                <span style='text-decoration: underline;'>94</span>627 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 4</span> ASN00014015 -<span style='color: #BB0000;'>12.4</span>  131.  30.4 darwin airport          <span style='text-decoration: underline;'>94</span>120 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 5</span> ASN00015131 -<span style='color: #BB0000;'>17.6</span>  134. 220   elliott                 <span style='text-decoration: underline;'>94</span>236 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 6</span> ASN00016065 -<span style='color: #BB0000;'>30.4</span>  137.  76   andamooka               <span style='text-decoration: underline;'>95</span>660 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 7</span> ASN00023034 -<span style='color: #BB0000;'>35.0</span>  139.   2   adelaide airport        <span style='text-decoration: underline;'>94</span>672 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 8</span> ASN00023373 -<span style='color: #BB0000;'>34.5</span>  139. 275   nuriootpa viticultural  <span style='text-decoration: underline;'>94</span>681 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'> 9</span> ASN00024024 -<span style='color: #BB0000;'>34.4</span>  141.  30.1 loxton research centre  <span style='text-decoration: underline;'>94</span>682 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #BCBCBC;'>10</span> ASN00024048 -<span style='color: #BB0000;'>34.2</span>  141.  31.5 renmark aero            <span style='text-decoration: underline;'>95</span>687 <span style='color: #949494;'>&lt;tibble [366 × 4</span>…
-#&gt; <span style='color: #949494;'># … with 75 more rows</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

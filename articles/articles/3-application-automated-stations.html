@@ -120,41 +120,44 @@
    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">154</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 <p>The color in the map shows whether a station is an automated one or not and we can observe that some automated weather stations are actually close to the traditional ones. This provides a basis to investigate whether numbers recorded by nearby automated and traditional stations match with each other.</p>
-<p>To find pairs of nearby stations, you can use <code><a href="../../reference/match_key.html">match_key()</a></code>. The function requires two datasets: a major set where matches will be found for every station and a minor set, which is the candidate pool for matching each station in the major set. It then calculates the spherical distance between each pair combination. Argument <code>n_slice</code> and <code>dist_max</code> are used to control the number of match to find for each site in the major dataset and the maximum distance allowed. The default value is <code>n_slice = 1</code> and <code>dist_max = 10</code>.</p>
+<p>To find pairs of nearby stations, you can use <code>match_key()</code>. The function requires two datasets: a major set where matches will be found for every station and a minor set, which is the candidate pool for matching each station in the major set. It then calculates the spherical distance between each pair combination. Argument <code>n_slice</code> and <code>dist_max</code> are used to control the number of match to find for each site in the major dataset and the maximum distance allowed. The default value is <code>n_slice = 1</code> and <code>dist_max = 10</code>.</p>
 <p>Here we construct two datasets by filtering on whether they are automated or not and want to find the closest traditional station for each automated station if their distance is less than 10 kilometer:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">automated</span><span class="op">)</span>
 <span class="va">non_auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">automated</span><span class="op">)</span>
 
-<span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/match_key.html">match_key</a></span><span class="op">(</span><span class="va">auto</span>, <span class="va">non_auto</span><span class="op">)</span> 
+<span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/match_sites.html">match_sites</a></span><span class="op">(</span><span class="va">auto</span>, <span class="va">non_auto</span>, match_temporal <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> 
 <span class="va">matched</span> 
-<span class="co">#&gt; # A tibble: 10 × 4</span>
-<span class="co">#&gt;    key_mj      key_mn       dist .group</span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;  &lt;int&gt;</span>
-<span class="co">#&gt;  1 ASN00048237 ASN00048027  6.86      1</span>
-<span class="co">#&gt;  2 ASN00050137 ASN00050052  1.41      2</span>
-<span class="co">#&gt;  3 ASN00056238 ASN00056037  5.16      3</span>
-<span class="co">#&gt;  4 ASN00063291 ASN00063005  9.30      4</span>
-<span class="co">#&gt;  5 ASN00064017 ASN00064008  6.58      5</span>
-<span class="co">#&gt;  6 ASN00066194 ASN00066037  7.14      6</span>
-<span class="co">#&gt;  7 ASN00067113 ASN00063077  8.77      7</span>
-<span class="co">#&gt;  8 ASN00068192 ASN00068257  8.17      8</span>
-<span class="co">#&gt;  9 ASN00070330 ASN00070263  7.03      9</span>
-<span class="co">#&gt; 10 ASN00072160 ASN00072023  8.33     10</span></code></pre></div>
-<p>You can then filter out the matched stations in both dataset and combine them together:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">matched_non</span> <span class="op">&lt;-</span> <span class="va">auto</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span><span class="va">matched</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">key_mj</span>, <span class="va">.group</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span> <span class="op">=</span> <span class="st">"key_mj"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">matched_auto</span> <span class="op">&lt;-</span> <span class="va">non_auto</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span><span class="va">matched</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">key_mn</span>, <span class="va">.group</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span> <span class="op">=</span> <span class="st">"key_mn"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">matched_both</span> <span class="op">&lt;-</span> <span class="va">matched_auto</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">matched_non</span><span class="op">)</span></code></pre></div>
+<span class="co">#&gt; # Cubble: id-wise: nested form</span>
+<span class="co">#&gt; # Key:    id [20]</span>
+<span class="co">#&gt;    id            lat  long   elev name      wmo_id automated ts      dist .group</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;     &lt;list&gt; &lt;dbl&gt;  &lt;int&gt;</span>
+<span class="co">#&gt;  1 ASN00050137 -33.1  147.  193.  condobol…  95708 TRUE      &lt;tibb…  1.41      1</span>
+<span class="co">#&gt;  2 ASN00050052 -33.1  147.  195   condobol…  94707 FALSE     &lt;tibb…  1.41      1</span>
+<span class="co">#&gt;  3 ASN00056238 -30.5  152. 1079   armidale…  95773 TRUE      &lt;tibb…  5.16      2</span>
+<span class="co">#&gt;  4 ASN00056037 -30.5  152.  987   armidale…  94773 FALSE     &lt;tibb…  5.16      2</span>
+<span class="co">#&gt;  5 ASN00064017 -31.3  149.  643   coonabar…  95728 TRUE      &lt;tibb…  6.58      3</span>
+<span class="co">#&gt;  6 ASN00064008 -31.3  149.  505   coonabar…  94728 FALSE     &lt;tibb…  6.58      3</span>
+<span class="co">#&gt;  7 ASN00048237 -31.5  146.  218   cobar ai…  94710 TRUE      &lt;tibb…  6.86      4</span>
+<span class="co">#&gt;  8 ASN00048027 -31.5  146.  260   cobar mo   94711 FALSE     &lt;tibb…  6.86      4</span>
+<span class="co">#&gt;  9 ASN00070330 -34.8  150.  640   goulburn…  95716 TRUE      &lt;tibb…  7.03      5</span>
+<span class="co">#&gt; 10 ASN00070263 -34.7  150.  670   goulburn…  94716 FALSE     &lt;tibb…  7.03      5</span>
+<span class="co">#&gt; 11 ASN00066194 -33.9  151.    3   canterbu…  94766 TRUE      &lt;tibb…  7.14      6</span>
+<span class="co">#&gt; 12 ASN00066037 -33.9  151.    6   sydney a…  94767 FALSE     &lt;tibb…  7.14      6</span>
+<span class="co">#&gt; 13 ASN00068192 -34.0  151.   73.9 camden a…  94755 TRUE      &lt;tibb…  8.17      7</span>
+<span class="co">#&gt; 14 ASN00068257 -34.1  151.  112   campbell…  94757 FALSE     &lt;tibb…  8.17      7</span>
+<span class="co">#&gt; 15 ASN00072160 -36.1  147.  164.  albury a…  95896 TRUE      &lt;tibb…  8.33      8</span>
+<span class="co">#&gt; 16 ASN00072023 -36.1  147.  184   hume res…  94901 FALSE     &lt;tibb…  8.33      8</span>
+<span class="co">#&gt; 17 ASN00067113 -33.7  151.   24.7 penrith …  94763 TRUE      &lt;tibb…  8.77      9</span>
+<span class="co">#&gt; 18 ASN00063077 -33.7  151.  320   springwo…  95744 FALSE     &lt;tibb…  8.77      9</span>
+<span class="co">#&gt; 19 ASN00063291 -33.4  150.  744.  bathurst…  94729 TRUE      &lt;tibb…  9.30     10</span>
+<span class="co">#&gt; 20 ASN00063005 -33.4  150.  713   bathurst…  94730 FALSE     &lt;tibb…  9.30     10</span></code></pre></div>
 <p>Then we can create visualisation to see where these station are in the nested cubble:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">nsw_map</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">matched_both</span>, 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">matched</span>, 
              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">automated</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">matched_auto</span>,
+  <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">matched</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">automated</span><span class="op">)</span>,
                             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, label <span class="op">=</span> <span class="va">.group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"New Sourth Wales"</span><span class="op">)</span> <span class="op">+</span> 
@@ -162,10 +165,72 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
         panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">154</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-4-1.png" width="100%"></p>
 <p>or compare the series within the same pair using the long cubble (as an example here we only look at records in Jan 2020):</p>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
 <p>We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There’s a constant gap in pair 7, which suggests the two stations need to be further calibrated.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">river</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">water</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">Water_course_level</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"river"</span><span class="op">)</span>
+
+<span class="va">climate</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html">between</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html">str_sub</a></span><span class="op">(</span><span class="va">id</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fl">76</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"climate"</span><span class="op">)</span>
+
+<span class="va">vic_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">abs_ste</a></span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">==</span> <span class="st">"Victoria"</span><span class="op">)</span><span class="op">)</span>  
+<span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">vic_map</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">river</span>, <span class="va">climate</span><span class="op">)</span> , 
+             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">river</span> <span class="op">&lt;-</span> <span class="va">river</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="va">Water_course_level</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/match_sites.html">match_sites</a></span><span class="op">(</span><span class="va">river</span>, <span class="va">climate</span>, 
+            temporal_var_to_match <span class="op">=</span> <span class="va">prcp</span>,
+            temporal_independent <span class="op">=</span> <span class="va">climate</span>, 
+            temporal_n_highest <span class="op">=</span> <span class="fl">30</span>, 
+            temporal_min_match <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">vic_map</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">res</span>, 
+             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_label_repel</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">res</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"river"</span><span class="op">)</span>,
+                            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, label <span class="op">=</span> <span class="va">.group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
+        panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">res_long</span> <span class="op">&lt;-</span> <span class="va">res</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">.group</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">prcp</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">.group</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">.group</span>, <span class="va">type</span>, <span class="va">id</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">res_long</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">prcp</span>, color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="va">.group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x<span class="op">=</span>  <span class="st">"week"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b"</span><span class="op">)</span></code></pre></div>
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
