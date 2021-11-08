@@ -1,17 +1,14 @@
 # helper
 slice_factory <- function(f, ...){
   function(data, ...){
-    if (form(data) != "nested"){
-      # think about slicing on the long form
-      cli::cli_abort("slicing should be performed in the nested form on the grouping variable")
-    }
     key <- key_vars(data)
+    spatial <- spatial(data)
     data <- tibble::as_tibble(data)
-    out <- NextMethod(f)
+    out <- NextMethod()
 
     new_cubble(out,
                key = key , index = index(data), coords = coords(data),
-               spatial = NULL, form = "nested")
+               spatial = spatial, form = determine_form(data))
   }
 }
 
@@ -38,7 +35,7 @@ slice_factory <- function(f, ...){
 #' @importFrom dplyr slice_head slice_tail slice_min slice_max slice_sample
 #' @rdname slice
 #' @export
-slice_head.cubble_df <- slice_factory("slice_head")
+slice_head.cubble_df <- slice_factory("slice_head", group = FALSE)
 
 #' @rdname slice
 #' @export
