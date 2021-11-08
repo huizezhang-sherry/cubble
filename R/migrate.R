@@ -44,6 +44,7 @@ migrate <- function(data, ...){
   }
 
   to_join <- spatial(data) %>% select(key_vars(data)[1], names(dots)[in_spatial])
-  data %>% left_join(to_join)
+  suppressMessages(data %>% left_join(to_join))
+
 
 }

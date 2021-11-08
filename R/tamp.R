@@ -51,10 +51,12 @@ tamp.cubble_df <- function(data, key) {
     cli::cli_abort("{.fn tamp} requires data to be in long form.")
   }
 
+  suppressMessages(
   out <- tibble::as_tibble(data) %>%
     left_join(spatial) %>%
     tidyr::nest(ts = c(tvars)) %>%
     dplyr::rowwise()
+  )
 
   if ("tbl_ts" %in% class(data)){
     out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))

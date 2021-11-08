@@ -125,7 +125,9 @@ match_spatial <- function(major,
       good <- temp %>% filter(!dup) %>% pull(id)
       good_sites <- good[!good %in% prob_sites]
 
-      cli::cli_inform("Detect site {.val {prob_sites}} having multiple matches.")
+      cli::cli_inform(
+        "Detect site {.val {prob_sites}} having multiple matches.
+        Keep the cloest match.")
 
       dup_fixed <- out %>%
         dplyr::filter(!!sym(key_mn) %in% prob_sites) %>%
