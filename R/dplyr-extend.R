@@ -36,7 +36,8 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   out <- vec_slice(data, i)
   key <- key_vars(data)
 
-  spatial <- new_spatial(data)
+  keep <- unique(out[[key]])
+  spatial <- new_spatial(data) %>% filter(!!sym(key) %in% keep)
 
 
   if ("tbl_ts" %in% class(data)){
