@@ -19,9 +19,13 @@ library(sf)
 library(patchwork)
 ```
 
-One common type of task with spatial temporal data is to match records from nearby sites. For example, we may want to verify if the location of an old list of stations matches up with the current stations, or we may want to investigate if the records from traditional and automated weather stations match up with each other for calibration, or we may want to investigate whether the rainfall will get translated to the river level. All of these tasks involve finding nearby pairs from two data tables.
+One common type of task with spatial temporal data is to match records from nearby sites. For example, we may want to verify if the location of an old list of stations matches up with the current stations, or we may want to investigate if the records from traditional and automated weather stations match up with each other for calibration, or we may want to investigate whether the rainfall will get translated to the river level. Sometimes, matching is only needed on the spatial dimension, while in other cases, the matched pairs also need to be examined on the temporal dimension.  
 
-This vignette will introduce how to perform this type of task in cubble with an example of matching traditional and automated weather station records in New South Wales. New South Wales is selected since automated stations there are labelled with `aws` in its name. Let's first look at the distribution of these station on the map: 
+This vignette will introduce how to perform this type of task in cubble with two examples. The first one is a spatial matching of traditional and automated weather records in New South Wales. The second one matches the rainfall and river level in Victoria. Here we need the temporal matching as well since precipitation may not necessarily translate into river level on the same day. 
+
+# Example 1: Traditional vs. Automated stations
+
+In `weatherdata::climate_full`, automated stations in New South Wales are labelled with `aws` in its name. Let's first look at the distribution of these stations on the map: 
 
 ```{r}
 nsw_map <- ozmaps::abs_ste %>% filter(NAME == "New South Wales")  
@@ -48,16 +52,23 @@ plot_map(nsw_map) +
 ```
 
 The color in the map shows whether a station is an automated one or not and we can observe that some automated weather stations are actually close to the traditional ones. This provides a basis to investigate whether numbers recorded by nearby automated and traditional stations match with each other.
+ 
+The two working horses for matching in cubble are `match_spatial()` and `match_temporal()`. You can call `match_spatial()` for spatial matching only, or `match_sites()`, which houses both functions, for both spatial and temporal matching. `match_sites()` also has an argument `match_temporal` that default to `TRUE` for switching on/off the temporal matching, hence `match_spatial()` and `match_sites(..., match_temporal = TRUE)` are equivalent. Apart from `match_temporal`, all the arguments that control the temporal matching are prefixed with `temporal_`, so do the arguments for spatial matching. Here we will given more details on spatial matching and see the second example for the details on temporal matching. 
 
-To find pairs of nearby stations, you can use `match_key()`. The function requires two datasets: a major set where matches will be found for every station and a minor set, which is the candidate pool for matching each station in the major set. It then calculates the spherical distance between each pair combination. Argument `n_slice` and `dist_max` are used to control the number of match to find for each site in the major dataset and the maximum distance allowed. The default value is `n_slice = 1` and `dist_max = 10`. 
-
-Here we construct two datasets by filtering on whether they are automated or not and want to find the closest traditional station for each automated station if their distance is less than 10 kilometer:
+A spatial matching requires two datasets: a `major` set where matches will be found for every site and a `minor` set, which is the candidate pool for matching each site in the major set. Spatial matching calculates the spherical distance from *each* site in the `major` set to *every* sites in the `minor` set using the Vincenty formula. Three arguments are available to refine the matching results: `spatial_single_match`, `spatial_n_keep`, `spatial_dist_max`. Once the distance is calculated, `spatial_n_keep`, default to 1,  is first applied for the number of matching of each major site, `spaital_dist_max`, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. `spatial_single_match` is lastly applied to resolve the scenario where site `a` (minor) is the closest match for both site `A` and `B` (major), if `spatial_single_match = TRUE`, `a` will be matched to the major site with the smaller distance.
+  
+Let's get back to the New South Wales stations - Here we construct `auto` and `non_auto` by filtering on whether stations are automated or not. In this example, there's no different on  which one is the major data since both will give the same result, but in the later river example, this distinction will be necessary. We use `match_sites()` on both datasets and turn off the temporal matching: 
 
 ```{r}
 auto <- nsw %>% filter(automated)
 non_auto <- nsw %>% filter(!automated)
 
 matched <- match_sites(auto, non_auto, match_temporal = FALSE) 
+```
+
+The result is also a cubble of matched pairs, with additional column `.dist` and `.group` for distance and grouping index:
+
+```{r}
 matched 
 ```
 
@@ -70,7 +81,7 @@ plot_map(nsw_map) +
   ggrepel::geom_label_repel(data = matched %>% filter(automated),
                             aes(x = long, y = lat, label = .group)) + 
   scale_color_brewer(palette = "Dark2") + 
-  ggtitle("New Sourth Wales") + 
+  ggtitle("New South Wales") + 
   theme_minimal() + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +
@@ -95,8 +106,11 @@ ts %>%
   theme_bw()
 ```
 
-We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There's a constant gap in pair 7, which suggests the two stations need to be further calibrated.
+We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There's a constant gap in pair 9, which suggests the two stations need to be further calibrated.
 
+# Example 2: Rainfall translates into river level
+
+The water level data comes from [Bureau of Meteorology](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full) and has a copy in `weatherdata`. Here we extract the water course level and add a column annotate this data of type `river`. For the rainfall data, we will still use the `weatherdata::climate_full`, filtering for Victorian stations in 2020 should be pretty familiar by now. Again, we first look at where these stations are on the map first:
 
 ```{r}
 river <- weatherdata::water %>% 
@@ -118,19 +132,22 @@ plot_map(vic_map) +
              aes(x = long, y = lat, color = type)) + 
   scale_color_brewer(palette = "Dark2") +
   theme_bw()
+```
 
+
+
+```{r}
 river <- river %>% 
   stretch() %>% 
   rename(prcp = Water_course_level) %>% 
   tamp()
-```
 
-```{r}
-res <- match_sites(river, climate, 
-            temporal_var_to_match = prcp,
-            temporal_independent = climate, 
-            temporal_n_highest = 30, 
-            temporal_min_match = 15)
+res <- match_sites(river, climate,
+                   temporal_var_to_match = prcp,
+                   temporal_independent = climate,
+                   temporal_n_highest = 30,
+                   temporal_min_match = 0
+)
 ```
 
 ```{r}

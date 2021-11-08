@@ -20,7 +20,6 @@
 #' need to be the name of either major or minor.
 #' @param temporal_window The temporal window allowed to fall in
 #' @param temporal_min_match The minimum number of peak matching for temporal matching
-#' @param match_table The output from `match_spatial()`
 #'
 #'
 #' @return A cubble with matched pairs
@@ -39,15 +38,13 @@ match_sites <- function(major,
                         temporal_window = 5,
                         temporal_min_match = 10) {
 
-  match_table <- match_spatial(
+  out <- match_spatial(
     major,
     minor,
     spatial_single_match = spatial_single_match,
     spatial_n_keep = spatial_n_keep,
     spatial_dist_max = spatial_dist_max
   )
-
-  out <- match_postprocessing(major, minor, match_table)
 
   if (match_temporal) {
     independent <- temporal_independent
@@ -123,10 +120,10 @@ match_spatial <- function(major,
     tidyr::unnest(minor) %>%
     calc_dist(coords_mj, coords_mn) %>%
     dplyr::group_by(!!sym(key_mj)) %>%
-    dplyr::slice_min(dist, n = spatial_n_keep) %>%
-    dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$dist) %>%
+    dplyr::slice_min(.dist, n = spatial_n_keep) %>%
+    dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$.dist) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(dist <= spatial_dist_max)
+    dplyr::filter(.dist <= spatial_dist_max)
 
   if (spatial_single_match) {
     temp <- out %>%
@@ -148,7 +145,7 @@ match_spatial <- function(major,
       dup_fixed <- out %>%
         dplyr::filter(!!sym(key_mn) %in% prob_sites) %>%
         dplyr::group_by(!!sym(key_mn)) %>%
-        dplyr::filter(dist == min(dist))
+        dplyr::filter(.dist == min(.dist))
 
       out <- temp %>%
         dplyr::filter(!!sym(key_mn) %in% good_sites) %>%
@@ -159,10 +156,18 @@ match_spatial <- function(major,
   }
 
   out <- out %>%
-    arrange(dist) %>%
+    arrange(.dist) %>%
     mutate(.group = dplyr::row_number())
 
-  out
+  if (any(str_detect(coords_mj[[1]], "ref"))) {
+    mn_long <- coords_mn[[1]]
+    mn_lat <-  coords_mn[[2]]
+    major <- major %>%
+      rename( !!{mn_long} := coords_mj[[1]],
+              !!{mn_lat} := coords_mj[[2]])
+  }
+
+  match_postprocessing(major, minor, out)
 }
 
 calc_dist <- function(data, coords1, coords2) {
@@ -183,7 +188,7 @@ calc_dist <- function(data, coords1, coords2) {
     )
 
   data %>%
-    mutate(dist = dt$d)
+    mutate(.dist = dt$d)
 
 }
 
@@ -192,7 +197,6 @@ to_radian <- function(val) {
 }
 
 
-#' @export
 #' @rdname matching
 match_postprocessing <- function(major, minor, match_table) {
   is_cubble(major)
@@ -201,8 +205,8 @@ match_postprocessing <- function(major, minor, match_table) {
   major_key <- key_vars(major)
   minor_key <- key_vars(minor)
 
-  matched_major <- match_table %>% select(1, dist, .data$.group)
-  matched_minor <- match_table %>% select(2, dist,  .data$.group)
+  matched_major <- match_table %>% select(1, .dist, .data$.group)
+  matched_minor <- match_table %>% select(2, .dist,  .data$.group)
 
   major_key2 <- colnames(matched_major)[1]
   minor_key2 <- colnames(matched_minor)[1]
@@ -238,7 +242,7 @@ match_postprocessing <- function(major, minor, match_table) {
     dplyr::select(common_var) %>%
     dplyr::bind_rows(joined_minor %>%
                        dplyr::select(common_var)) %>%
-    dplyr::arrange(dist)
+    dplyr::arrange(.dist)
 
   out
 }
