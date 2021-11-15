@@ -10,16 +10,17 @@
 #'
 #' @param major The major dataset to match, every key in the major dataset will have a match, unless filtered by \code{dist_max}
 #' @param minor The dataset to match from
-#' @param match_temporal Wether to perform temporal matching
 #' @param spatial_single_match Whether each observation in the minor dataset is only allowed to to be matched once, default to `TRUE`
 #' @param spatial_n_keep The number of matching to keep
 #' @param spatial_dist_max The maximum distance allowed between matched pair
+#' @param temporal_matching Wether to perform temporal matching
 #' @param temporal_var_to_match The variable used for temporal matching
 #' @param temporal_n_highest The number of highest peak used for temporal matching
 #' @param temporal_independent The dataset used to construct the temporal window,
 #' need to be the name of either major or minor.
 #' @param temporal_window The temporal window allowed to fall in
 #' @param temporal_min_match The minimum number of peak matching for temporal matching
+#' @param match_table The spatial matching table
 #'
 #'
 #' @return A cubble with matched pairs
@@ -28,10 +29,10 @@
 #'
 match_sites <- function(major,
                         minor,
-                        match_temporal = TRUE,
                         spatial_single_match = TRUE,
                         spatial_n_keep = 1,
                         spatial_dist_max = 10,
+                        temporal_matching = TRUE,
                         temporal_var_to_match,
                         temporal_n_highest = 20,
                         temporal_independent,
@@ -46,7 +47,7 @@ match_sites <- function(major,
     spatial_dist_max = spatial_dist_max
   )
 
-  if (match_temporal) {
+  if (temporal_matching) {
     independent <- temporal_independent
 
 

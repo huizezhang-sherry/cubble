@@ -19,13 +19,13 @@ library(sf)
 library(patchwork)
 ```
 
-One common type of task with spatial temporal data is to match records from nearby sites. For example, we may want to verify if the location of an old list of stations matches up with the current stations, or we may want to investigate if the records from traditional and automated weather stations match up with each other for calibration, or we may want to investigate whether the rainfall will get translated to the river level. Sometimes, matching is only needed on the spatial dimension, while in other cases, the matched pairs also need to be examined on the temporal dimension.  
+One common type of task with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to pair the automated weater station with the closest traditional station to calibrate records, or we may want to investigate whether the rainfall will get translated to the river level. Some of these matches only concern the spatial dimension, while others, i.e. matching rainfall and river level, also require the temporal agreement.
 
-This vignette will introduce how to perform this type of task in cubble with two examples. The first one is a spatial matching of traditional and automated weather records in New South Wales. The second one matches the rainfall and river level in Victoria. Here we need the temporal matching as well since precipitation may not necessarily translate into river level on the same day. 
+This vignette introduces how to spatially and spatio-temporally match between sites with the cubble structure with two examples. The first example pairs traditional weather stations with nearby automated stations in New South Wales, Australia. This exercise only concerns the matching based on spherical distance between stations. The next example pairs the river level recorded by the river gauges with the precipitation recorded by the nearby weather station in Victoria, Australia. 
 
 # Example 1
 
-In `weatherdata::climate_full`, automated stations in New South Wales are labelled with `aws` in its name. Let's first look at the distribution of these stations on the map: 
+In `weatherdata::climate_full`, New South Wales automated stations are suffixed with `aws` in its name. This information tells us the automated stations from the traditional one: 
 
 ```{r}
 nsw_map <- ozmaps::abs_ste %>% filter(NAME == "New South Wales")  
@@ -51,17 +51,20 @@ plot_map(nsw_map) +
    coord_sf(xlim = c(141, 154))
 ```
 
-The color in the map shows whether a station is an automated one or not and we can observe that some automated weather stations are actually close to the traditional ones. This provides a basis to investigate whether numbers recorded by nearby automated and traditional stations match with each other.
+The color in the map shows whether a station is an automated one or not and some automated stations are actually pretty close to the traditional ones. We would love to know whether records in these nearby pairs align with each other.
  
 ## Theory 
  
-The two working horses for matching in cubble are `match_spatial()` and `match_temporal()`. You can call `match_spatial()` for spatial matching only, or `match_sites()`, which houses both functions, for both spatial and temporal matching. `match_sites()` also has an argument `match_temporal` that default to `TRUE` for switching on/off the temporal matching, hence `match_spatial()` and `match_sites(..., match_temporal = TRUE)` are equivalent. Apart from `match_temporal`, all the arguments that control the temporal matching are prefixed with `temporal_`, so do the arguments for spatial matching. Here we will given more details on spatial matching and see the second example for the details on temporal matching. 
+The two workhorses for matching in a cubble are `match_spatial()` and `match_temporal()`. You can call `match_spatial()` for spatial matching only, or `match_sites()`, which houses both functions, for both spatial and temporal matching. `match_sites()` also has an argument `temporal_matching`, default to `TRUE`, for switching on/off the temporal matching, hence `match_spatial()` and `match_sites(..., temporal_matching = TRUE)` are equivalent. By design, all the arguments that control the temporal matching are prefixed with `temporal_`, so do the arguments for spatial matching. 
 
-A spatial matching requires two datasets: a `major` set where matches will be found for every site and a `minor` set, which is the candidate pool for matching each site in the major set. Spatial matching calculates the spherical distance from *each* site in the `major` set to *every* sites in the `minor` set using the Vincenty formula. Three arguments are available to refine the matching results: `spatial_single_match`, `spatial_n_keep`, `spatial_dist_max`. Once the distance is calculated, `spatial_n_keep`, default to 1,  is first applied for the number of matching of each major site, `spaital_dist_max`, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. `spatial_single_match` is lastly applied to resolve the scenario where site `a` (minor) is the closest match for both site `A` and `B` (major), if `spatial_single_match = TRUE`, `a` will be matched to the major site with the smaller distance.
+Here we will given more details on spatial matching and details on the temporal matching is in the *Theory* section of *Example 2*. A spatial matching requires two datasets: a `major` set and a `minor` set. Spatial matching calculates the spherical distance from *each* site in the `major` dataset to *every* site in the `minor` dataset using the Vincenty formula. 
+
+Once the distance is calculated, three arguments are available to refine the matching results: `spatial_single_match`, `spatial_n_keep`, `spatial_dist_max`.
+The order that these three arguments applied will slightly affect the results and in `cubble`, `spatial_n_keep`, default to 1,  is first applied to keep `n` site(s) for each major site, `spaital_dist_max`, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. `spatial_single_match` is lastly applied to resolve the scenario where site `a` (minor) is the closest match for both site `A` and `B` (major), 5km and 8km respectively, if `spatial_single_match = TRUE`, `a` will only be matched to the major site with the smaller distance, that is,  site `A` here.
   
 ## Traditional vs. Automated stations   
   
-Let's get back to the New South Wales stations - Here we construct `auto` and `non_auto` by filtering on whether stations are automated or not. In this example, there's no different on  which one is the major data since both will give the same result, but in the later river example, this distinction will be necessary. We use `match_sites()` on both datasets and turn off the temporal matching: 
+Let's get back to the New South Wales stations - Here we construct the major site `auto` and minor `non_auto` by filtering on whether stations are automated or not. This works in the scenario for examining records from newly-installed automated stations to long-lasting traditional stations (for every newly-installed station, we want to find a nearby traditional one). We apply the spatial matching with `match_sites()` and turn off the temporal matching: 
 
 ```{r}
 auto <- nsw %>% filter(automated)
@@ -70,13 +73,13 @@ non_auto <- nsw %>% filter(!automated)
 matched <- match_sites(auto, non_auto, match_temporal = FALSE) 
 ```
 
-The result is also a cubble of matched pairs, with additional column `.dist` and `.group` for distance and grouping index:
+The result from the pairing is also a cubble with two additional columns:  `.dist` as the distance between the pair and `.group` as the grouping index:
 
 ```{r}
 matched 
 ```
 
-Then we can create visualisation to see where these station are in the nested cubble:
+Then we can create visualisation to see where these pairs are in the map:
 
 ```{r}
 plot_map(nsw_map) +
@@ -92,7 +95,7 @@ plot_map(nsw_map) +
   coord_sf(xlim = c(141, 154))
 ```
 
-or compare the series within the same pair using the long cubble (as an example here we only look at records in Jan 2020):
+or compare the series within the same pair (as an example here we only look at records in Jan 2020):
 
 ```{r echo = FALSE}
 ts <- matched %>%
