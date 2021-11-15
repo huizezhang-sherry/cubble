@@ -306,10 +306,12 @@ match_temporal <- function(major,
     unique()
 
   good_n_match <- good %>%
-    dplyr::select(n_match, .group) %>%
+    dplyr::select(.data$n_match, .data$.group) %>%
     unique()
 
-  data %>% inner_join(good, by = c(".group", key))
+  data %>%
+    inner_join(good, by = c(".group", key)) %>%
+    dplyr::arrange(-.data$n_match)
 
 
 }

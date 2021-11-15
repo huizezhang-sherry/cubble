@@ -64,8 +64,6 @@ need to be the name of either major or minor.}
 \item{temporal_window}{The temporal window allowed to fall in}
 
 \item{temporal_min_match}{The minimum number of peak matching for temporal matching}
-
-\item{match_table}{The output from \code{match_spatial()}}
 }
 \value{
 A cubble with matched pairs
