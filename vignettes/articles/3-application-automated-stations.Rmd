@@ -70,7 +70,7 @@ Let's get back to the New South Wales stations - Here we construct the major sit
 auto <- nsw %>% filter(automated)
 non_auto <- nsw %>% filter(!automated)
 
-matched <- match_sites(auto, non_auto, match_temporal = FALSE) 
+matched <- match_sites(auto, non_auto, temporal_matching = FALSE) 
 ```
 
 The result from the pairing is also a cubble with two additional columns:  `.dist` as the distance between the pair and `.group` as the grouping index:
