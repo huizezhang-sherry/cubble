@@ -10,10 +10,10 @@
 match_sites(
   major,
   minor,
-  match_temporal = TRUE,
   spatial_single_match = TRUE,
   spatial_n_keep = 1,
   spatial_dist_max = 10,
+  temporal_matching = TRUE,
   temporal_var_to_match,
   temporal_n_highest = 20,
   temporal_independent,
@@ -46,13 +46,13 @@ match_temporal(
 
 \item{minor}{The dataset to match from}
 
-\item{match_temporal}{Wether to perform temporal matching}
-
 \item{spatial_single_match}{Whether each observation in the minor dataset is only allowed to to be matched once, default to \code{TRUE}}
 
 \item{spatial_n_keep}{The number of matching to keep}
 
 \item{spatial_dist_max}{The maximum distance allowed between matched pair}
+
+\item{temporal_matching}{Wether to perform temporal matching}
 
 \item{temporal_var_to_match}{The variable used for temporal matching}
 
