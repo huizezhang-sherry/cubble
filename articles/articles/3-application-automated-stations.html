@@ -96,9 +96,9 @@
     
 <p>One common type of task with spatial temporal data is to match records from nearby sites. For example, we may want to verify if the location of an old list of stations matches up with the current stations, or we may want to investigate if the records from traditional and automated weather stations match up with each other for calibration, or we may want to investigate whether the rainfall will get translated to the river level. Sometimes, matching is only needed on the spatial dimension, while in other cases, the matched pairs also need to be examined on the temporal dimension.</p>
 <p>This vignette will introduce how to perform this type of task in cubble with two examples. The first one is a spatial matching of traditional and automated weather records in New South Wales. The second one matches the rainfall and river level in Victoria. Here we need the temporal matching as well since precipitation may not necessarily translate into river level on the same day.</p>
-<div id="example-1-traditional-vs--automated-stations" class="section level1">
+<div id="example-1" class="section level1">
 <h1 class="hasAnchor">
-<a href="#example-1-traditional-vs--automated-stations" class="anchor"></a>Example 1: Traditional vs. Automated stations</h1>
+<a href="#example-1" class="anchor"></a>Example 1</h1>
 <p>In <code>weatherdata::climate_full</code>, automated stations in New South Wales are labelled with <code>aws</code> in its name. Let’s first look at the distribution of these stations on the map:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nsw_map</span> <span class="op">&lt;-</span> <span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html">abs_ste</a></span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">==</span> <span class="st">"New South Wales"</span><span class="op">)</span>  
@@ -124,8 +124,15 @@
    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">154</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 <p>The color in the map shows whether a station is an automated one or not and we can observe that some automated weather stations are actually close to the traditional ones. This provides a basis to investigate whether numbers recorded by nearby automated and traditional stations match with each other.</p>
+<div id="theory" class="section level2">
+<h2 class="hasAnchor">
+<a href="#theory" class="anchor"></a>Theory</h2>
 <p>The two working horses for matching in cubble are <code><a href="../../reference/match_sites.html">match_spatial()</a></code> and <code><a href="../../reference/match_sites.html">match_temporal()</a></code>. You can call <code><a href="../../reference/match_sites.html">match_spatial()</a></code> for spatial matching only, or <code><a href="../../reference/match_sites.html">match_sites()</a></code>, which houses both functions, for both spatial and temporal matching. <code><a href="../../reference/match_sites.html">match_sites()</a></code> also has an argument <code>match_temporal</code> that default to <code>TRUE</code> for switching on/off the temporal matching, hence <code><a href="../../reference/match_sites.html">match_spatial()</a></code> and <code><a href="../../reference/match_sites.html">match_sites(..., match_temporal = TRUE)</a></code> are equivalent. Apart from <code>match_temporal</code>, all the arguments that control the temporal matching are prefixed with <code>temporal_</code>, so do the arguments for spatial matching. Here we will given more details on spatial matching and see the second example for the details on temporal matching.</p>
 <p>A spatial matching requires two datasets: a <code>major</code> set where matches will be found for every site and a <code>minor</code> set, which is the candidate pool for matching each site in the major set. Spatial matching calculates the spherical distance from <em>each</em> site in the <code>major</code> set to <em>every</em> sites in the <code>minor</code> set using the Vincenty formula. Three arguments are available to refine the matching results: <code>spatial_single_match</code>, <code>spatial_n_keep</code>, <code>spatial_dist_max</code>. Once the distance is calculated, <code>spatial_n_keep</code>, default to 1, is first applied for the number of matching of each major site, <code>spaital_dist_max</code>, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. <code>spatial_single_match</code> is lastly applied to resolve the scenario where site <code>a</code> (minor) is the closest match for both site <code>A</code> and <code>B</code> (major), if <code>spatial_single_match = TRUE</code>, <code>a</code> will be matched to the major site with the smaller distance.</p>
+</div>
+<div id="traditional-vs--automated-stations" class="section level2">
+<h2 class="hasAnchor">
+<a href="#traditional-vs--automated-stations" class="anchor"></a>Traditional vs. Automated stations</h2>
 <p>Let’s get back to the New South Wales stations - Here we construct <code>auto</code> and <code>non_auto</code> by filtering on whether stations are automated or not. In this example, there’s no different on which one is the major data since both will give the same result, but in the later river example, this distinction will be necessary. We use <code><a href="../../reference/match_sites.html">match_sites()</a></code> on both datasets and turn off the temporal matching:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">automated</span><span class="op">)</span>
@@ -177,9 +184,10 @@
 <p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
 <p>We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There’s a constant gap in pair 9, which suggests the two stations need to be further calibrated.</p>
 </div>
-<div id="example-2-rainfall-translates-into-river-level" class="section level1">
+</div>
+<div id="example-2" class="section level1">
 <h1 class="hasAnchor">
-<a href="#example-2-rainfall-translates-into-river-level" class="anchor"></a>Example 2: Rainfall translates into river level</h1>
+<a href="#example-2" class="anchor"></a>Example 2</h1>
 <p>The water level data comes from <a href="http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full">Bureau of Meteorology</a> and has a copy in <code>weatherdata</code>. Here we extract the water course level and add a column annotate this data of type <code>river</code>. For the rainfall data, we will still use the <code>weatherdata::climate_full</code>, filtering for Victorian stations in 2020 should be pretty familiar by now. Again, we first look at where these stations are on the map first:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">river</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">water</span> <span class="op">%&gt;%</span> 
@@ -202,19 +210,47 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
+<div id="theory-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#theory-1" class="anchor"></a>Theory</h2>
+<p>Temporal matching checks how spatially matched pairs align temporally. We use the following chart to illustrate how the temporal matching works:</p>
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
+<p>For each spatially matched pair, say <code>A</code> and <code>a</code>, we first find the largest <code>n</code> points in each series, colored in brown points here. Here we use the largest three but you can tune this number by <code>temporal_n_highest</code>. Then we construct the interval of the largest points from one series and see how many points, from the other series, fall into the intervals. The series used to construct the interval is controlled by <code>temporal_independent</code> and the window size by <code>temporal_window</code> with a default of 5.</p>
+<p>In this illustration, we construct the interval based on series <code>A</code> and two of the three peaks from <code>a</code> falls into this interval at Time 7 and 27.</p>
+</div>
+<div id="rainfall-translates-into-river-level" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rainfall-translates-into-river-level" class="anchor"></a>Rainfall translates into river level</h2>
+<p>There’s another mandatory argument that hasn’t been introduced above: <code>temporal_var_to_match</code>. This argument controls the variable to match and it needs to appear in both the <code>major</code> and <code>minor</code> set. In the water level matching example, we match the variable <code>Water_course_level</code> from <code>river</code> to <code>prcp</code> from <code>climate</code>, hence need to manually rename one of them to match the other, here we rename <code>Water_course_level</code> to <code>prcp</code> in <code>river</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">river</span> <span class="op">&lt;-</span> <span class="va">river</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="va">Water_course_level</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/match_sites.html">match_sites</a></span><span class="op">(</span><span class="va">river</span>, <span class="va">climate</span>,
+  <span class="fu"><a href="../../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Now we use <code><a href="../../reference/match_sites.html">match_sites()</a></code> to first pair the weather stations with the river gauges spatially and then apply the temporal matching on <code>prcp</code>. We will construct the interval based on peaks in <code>climate</code> since we would expect a lag effect for precipitation to flow into the river and cause a raise in river level, hence <code>temporal_independent = climate</code>. We select the 30 highest peak from the series to construct the match by setting <code>temporal_n_highest = 30</code>. This is a tuning parameter and you can start with 10% of the points of one series (here we have daily data for a year, 10% is roughly 30 points). <code>temporal_min_match</code> filters out pairs don’t have enough match and to return all the pairs, set <code>temporal_min_match</code> to <code>0</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/match_sites.html">match_sites</a></span><span class="op">(</span><span class="va">river</span>, <span class="va">climate</span>,
                    temporal_var_to_match <span class="op">=</span> <span class="va">prcp</span>,
                    temporal_independent <span class="op">=</span> <span class="va">climate</span>,
                    temporal_n_highest <span class="op">=</span> <span class="fl">30</span>,
-                   temporal_min_match <span class="op">=</span> <span class="fl">0</span>
-<span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+                   temporal_min_match <span class="op">=</span> <span class="fl">15</span>
+<span class="op">)</span>
+
+<span class="va">res</span>
+<span class="co">#&gt; # Cubble: id-wise: nested form</span>
+<span class="co">#&gt; # Key:    id [8]</span>
+<span class="co">#&gt;   id          name                lat  long type  ts        .dist .group n_match</span>
+<span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;list&gt;    &lt;dbl&gt;  &lt;int&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1 405234      SEVEN CREEKS @ D… -36.9  146. river &lt;tibble …  6.15      5      21</span>
+<span class="co">#&gt; 2 ASN00082042 strathbogie       -36.8  146. clim… &lt;tibble …  6.15      5      21</span>
+<span class="co">#&gt; 3 404207      HOLLAND CREEK @ … -36.6  146. river &lt;tibble …  8.54     10      21</span>
+<span class="co">#&gt; 4 ASN00082170 benalla airport   -36.6  146. clim… &lt;tibble …  8.54     10      21</span>
+<span class="co">#&gt; 5 230200      MARIBYRNONG RIVE… -37.7  145. river &lt;tibble …  6.17      6      19</span>
+<span class="co">#&gt; 6 ASN00086038 essendon airport  -37.7  145. clim… &lt;tibble …  6.17      6      19</span>
+<span class="co">#&gt; 7 406213      CAMPASPE RIVER @… -37.0  145. river &lt;tibble …  1.84      1      18</span>
+<span class="co">#&gt; 8 ASN00088051 redesdale         -37.0  145. clim… &lt;tibble …  1.84      1      18</span></code></pre></div>
+<p>The output from temporal matching is also a cubble, with additional column <code>.dist</code> and <code>.group</code> inherent from spatial matching and <code>n_match</code> for the number of matched temporal peaks. Then you can use this output to plot the location of match:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">vic_map</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">res</span>, 
              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
@@ -225,8 +261,9 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
         panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
+<p>Or to look at the series:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res_long</span> <span class="op">&lt;-</span> <span class="va">res</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">.group</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -242,7 +279,8 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x<span class="op">=</span>  <span class="st">"week"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b"</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
+<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-12-1.png" width="100%"></p>
+</div>
 </div>
   </div>
 
