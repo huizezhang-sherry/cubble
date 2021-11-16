@@ -13,27 +13,28 @@
 #'   filter(lubridate::year(date) == 2020)
 #'
 #' # switch the key from id to country to aggregate on country
-#' # country_wise <- long %>%
-#' #   switch_key(country) %>%
-#' #   group_by(date) %>%
-#' #   summarise(tmax = mean(tmax, na.rm = TRUE))
+#' country_wise <- long %>%
+#'   switch_key(country) %>%
+#'   group_by(date) %>%
+#'   summarise(tmax = mean(tmax, na.rm = TRUE))
 #'
 #' # plot the aggregated maximum temperature for each country
-#' # country_wise %>%
-#' #   ggplot(aes(x = date, y = tmax, group = country)) +
-#' #   geom_line() +
-#' #   facet_wrap(vars(country)) +
-#' #   scale_x_date(date_labels = "%b")
+#' country_wise %>%
+#'   ggplot(aes(x = date, y = tmax, group = country)) +
+#'   geom_line() +
+#'   facet_wrap(vars(country)) +
+#'   scale_x_date(date_labels = "%b")
 #' @importFrom tidyr unpack unchop
 #' @export
 switch_key <- function(data, key){
+
   new_key <- enquo(key)
   new_key_var <- as_name(new_key)
   old_key <- key_vars(data)
   test_cubble(data)
 
   if (!as_name(new_key) %in% names(data)){
-    cli::cli_abort("{.field as_name(key)} does not exist in {data}!")
+    cli::cli_abort("{.field {new_key_var}} does not exist in the data!")
   }
 
   orig_form <- form(data)
