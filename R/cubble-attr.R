@@ -45,8 +45,16 @@ determine_form <- function(data){
 spatial <- function(data){
   test_cubble(data)
 
+
   if (determine_form(data) == "long"){
-    data %@% "spatial"
+    sp <- data %@% "spatial"
+    bottom_level <- sp %>% get_listcol()
+    if (length(bottom_level) != 0){
+      unnest(sp , bottom_level)
+    } else{
+      sp
+    }
+
   } else{
     NULL
   }

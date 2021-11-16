@@ -32,26 +32,19 @@
 migrate <- function(data, ...){
   dots <- enquos(..., .named = TRUE)
   test_cubble(data)
+  sp <- spatial(data)
 
   if (form(data) != "long"){
     cli::cli_abort("{.fn migrate} should be used on the long form.")
   }
 
-  bottom_level <- spatial(data) %>% get_listcol()
-
-  if (length(bottom_level) != 0){
-    to_join <- spatial(data) %>% unnest(bottom_level)
-  } else{
-    to_join <- spatial(data)
-  }
-
-  in_spatial <- map_lgl(names(dots), ~.x %in% names(to_join))
+  in_spatial <- map_lgl(names(dots), ~.x %in% names(sp))
   if (!all(in_spatial)){
     cli::cli_inform(
       "{.code {names(dots)[!in_spatial]}} does not exist in spaital stem. No migration")
   }
 
-  to_join <- to_join %>% select(key_vars(data)[1], names(dots)[in_spatial])
+  to_join <- sp %>% select(key_vars(data)[1], names(dots)[in_spatial])
   suppressMessages(data %>% left_join(to_join))
 
 
