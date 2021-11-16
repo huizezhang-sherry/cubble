@@ -3,11 +3,13 @@ slice_factory <- function(f, ...){
   function(data, ...){
     key <- key_vars(data)
     spatial <- spatial(data)
+    index <- index(data)
+    coords <- coords(data)
     data <- tibble::as_tibble(data)
     out <- NextMethod()
 
     new_cubble(out,
-               key = key , index = index(data), coords = coords(data),
+               key = key , index = index , coords = coords,
                spatial = spatial, form = determine_form(data))
   }
 }
