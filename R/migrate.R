@@ -37,13 +37,21 @@ migrate <- function(data, ...){
     cli::cli_abort("{.fn migrate} should be used on the long form.")
   }
 
-  in_spatial <- map_lgl(names(dots), ~.x %in% names(spatial(data)))
+  bottom_level <- spatial(data) %>% get_listcol()
+
+  if (length(bottom_level) != 0){
+    to_join <- spatial(data) %>% unnest(bottom_level)
+  } else{
+    to_join <- spatial(data)
+  }
+
+  in_spatial <- map_lgl(names(dots), ~.x %in% names(to_join))
   if (!all(in_spatial)){
     cli::cli_inform(
       "{.code {names(dots)[!in_spatial]}} does not exist in spaital stem. No migration")
   }
 
-  to_join <- spatial(data) %>% select(key_vars(data)[1], names(dots)[in_spatial])
+  to_join <- to_join %>% select(key_vars(data)[1], names(dots)[in_spatial])
   suppressMessages(data %>% left_join(to_join))
 
 
