@@ -72,45 +72,57 @@ tbl_sum.cubble_df <- function(data) {
   key_msg <- glue::glue_collapse(glue::glue("{key} [{key_n}]"), sep = ", ")
 
 
-  # if (form(data) == "nested"){
-  #   if (vec_is_list(leaves(data))) {
-  #     variant <- Reduce(c, map(leaves(data), ~variant(.x)))
-  #   } else {
-  #     variant <- variant(leaves(data))
-  #   }
-  #
-  #   var_names <- names(variant)
-  #   var_type <- variant
-  #
-  # } else if (form(data) == "long"){
-  #   if (vec_is_list(leaves(data))) {
-  #     invariant <- Reduce(c, map(leaves(data), ~invariant(.x)))
-  #   } else {
-  #     invariant <- invariant(leaves(data))
-  #   }
-  #   var_names <- names(invariant)
-  #   var_type <- invariant
-  # }
-  # leaves_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
+  if (form(data) == "nested"){
+    var_names <- Reduce(unique, map(data$ts, names))
+    ts <- data$ts
+    var_type <- Reduce(unique, map(1:length(ts), ~map(ts[[.x]], tibble::type_sum)))
 
+  } else if (form(data) == "long"){
+    bottom_level <- spatial(data) %>% get_listcol()
+    if (length(bottom_level) != 0){
+      sp <- spatial(data) %>% unnest(bottom_level)
+    } else{
+      sp <- spatial(data)
+    }
+
+    all <- map(sp, tibble::type_sum)
+    all <- all[names(all) != key]
+    var_names <- names(all)
+    var_type <- all
+
+  }
+  leaves_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
+
+  size <- tibble::size_sum(data)
 
   if(form(data) == "nested"){
     item <- key_vars(data)[1]
-    msg <- glue::glue("{item}-wise: nested form")
+    msg <- glue::glue("{item}-wise: nested form {size}")
   } else if(form(data) == "long"){
-    msg <- glue::glue("time-wise: long form")
+    msg <- glue::glue("time-wise: long form {size}")
   }
 
   if ("tbl_ts" %in% class(data)){
     msg <- glue::glue("{msg} [tsibble]")
   }
 
-  c(
-    "Cubble" = msg,
-    "Key" = key_msg
-    #"Leaves" = leaves_msg
+  if (form(data) == "nested"){
+    c(
+      "Cubble" = msg,
+      "Key" = key_msg,
+      "Temporal" = leaves_msg
 
-  )
+    )
+  } else{
+    c(
+      "Cubble" = msg,
+      "Key" = key_msg,
+      "Spatial" = leaves_msg
+
+    )
+  }
+
+
 }
 
 #' @rdname cubble-class
