@@ -67,10 +67,15 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 #' @importFrom  tibble tbl_sum
 #' @export
 tbl_sum.cubble_df <- function(data) {
-  key <- key_vars(data)
-  key_n <- map_dbl(key, ~length(unique(key_data(data)[[.x]])))
-  key_msg <- glue::glue_collapse(glue::glue("{key} [{key_n}]"), sep = ", ")
 
+  key <- key_vars(data)[1]
+  key_n <- map_dbl(key, ~length(unique(key_data(data)[[.x]])))
+
+  check <- check_coords(data)
+  signal <- check$msg
+  bbox <- check$bbox
+
+  bbox_msg <- glue::glue("[{bbox}]{signal}")
 
   if (form(data) == "nested"){
     var_names <- Reduce(unique, map(data$ts, names))
@@ -78,28 +83,22 @@ tbl_sum.cubble_df <- function(data) {
     var_type <- Reduce(unique, map(1:length(ts), ~map(ts[[.x]], tibble::type_sum)))
 
   } else if (form(data) == "long"){
-    bottom_level <- spatial(data) %>% get_listcol()
-    if (length(bottom_level) != 0){
-      sp <- spatial(data) %>% unnest(bottom_level)
-    } else{
-      sp <- spatial(data)
-    }
 
+    sp <- spatial(data)
     all <- map(sp, tibble::type_sum)
     all <- all[names(all) != key]
     var_names <- names(all)
     var_type <- all
 
   }
-  leaves_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
+  var_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
 
   size <- tibble::size_sum(data)
-
   if(form(data) == "nested"){
-    item <- key_vars(data)[1]
-    msg <- glue::glue("{item}-wise: nested form {size}")
+    msg <- glue::glue("{key} [{key_n}]: nested form")
   } else if(form(data) == "long"){
-    msg <- glue::glue("time-wise: long form {size}")
+    index <- index(data)
+    msg <- glue::glue("{index}, {key} [{key_n}]: long form")
   }
 
   if ("tbl_ts" %in% class(data)){
@@ -107,19 +106,9 @@ tbl_sum.cubble_df <- function(data) {
   }
 
   if (form(data) == "nested"){
-    c(
-      "Cubble" = msg,
-      "Key" = key_msg,
-      "Temporal" = leaves_msg
-
-    )
+    c("cubble" = msg, "bbox" = bbox_msg, "temporal" = var_msg)
   } else{
-    c(
-      "Cubble" = msg,
-      "Key" = key_msg,
-      "Spatial" = leaves_msg
-
-    )
+    c("cubble" = msg, "bbox" = bbox_msg, "spatial" = var_msg)
   }
 
 
@@ -131,3 +120,39 @@ is_cubble <- function(data){
   inherits(data, "cubble_df")
 }
 
+
+check_coords <- function(data, long_tol = 10, lat_tol = 5){
+
+  test_cubble(data)
+
+
+  if (form(data) == "nested"){
+    dt <- data
+  } else if (form(data) == "long"){
+    dt <- spatial(data)
+  }
+
+  long <- sort(dt[[coords(data)[1]]])
+  lat <- sort(dt[[coords(data)[2]]])
+
+  long_diff <- long - lag(long)
+  lat_diff <- lat - lag(lat)
+
+  detect_long_gap <- any(long_diff > long_tol, na.rm = TRUE)
+  detect_lat_gap <- any(lat_diff > lat_tol, na.rm = TRUE)
+
+  bbox <- glue::glue_collapse(c(range(long)[1], range(lat)[1],
+                                range(long)[2], range(lat)[2]), sep = ", ")
+
+  if (detect_long_gap & detect_lat_gap){
+    signal <- glue::glue("- check gap on {coords(data)[1]} and {coords(data)[2]}")
+  } else if (detect_long_gap){
+    signal <- glue::glue("- check gap on {coords(data)[2]}")
+  } else if (detect_lat_gap){
+    signal <- glue::glue("- check gap on {coords(data)[1]}")
+  } else{
+    signal <- ""
+  }
+
+  list(bbox = bbox, msg = signal)
+}
