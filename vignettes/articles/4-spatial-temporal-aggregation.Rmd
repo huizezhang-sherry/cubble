@@ -68,10 +68,10 @@ This structure makes it easy to compute cluster level variable, although there a
 
 ```{r}
 cluster_nested <- cluster_nested %>% 
-  mutate(chull = list(chull(val$long, val$lat)),
+  mutate(chull = list(chull(.val$long, .val$lat)),
          ll_cluster = sf::st_as_sfc(
-           s2_make_polygon(c(val$long[chull]), 
-                           c(val$lat[chull]), oriented = FALSE)),
+           s2_make_polygon(c(.val$long[chull]), 
+                           c(.val$lat[chull]), oriented = FALSE)),
          centroid = s2_centroid(ll_cluster),
          cent_long = s2_x(centroid),
          cent_lat = s2_y(centroid)) 

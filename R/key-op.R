@@ -54,6 +54,7 @@ switch_key <- function(data, key){
   other_cols <- names(data)[!names(data) %in% c(inv$invariant, "ts")]
   out <- vctrs::vec_split(data[,other_cols], data[,inv$invariant]) %>%
     tibble::as_tibble() %>%
+    rename(.val = val) %>%
     tidyr::unpack(key) %>%
     dplyr::left_join(out_ts %>% dplyr::select(!!new_key, .data$ts), by = new_key_var) %>%
     dplyr::arrange(!!new_key)

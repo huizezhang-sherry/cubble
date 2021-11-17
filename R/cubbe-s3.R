@@ -124,16 +124,12 @@ is_cubble <- function(data){
 
 
 check_coords <- function(data, long_tol = 10, lat_tol = 5){
-
   test_cubble(data)
 
 
   if (form(data) == "nested"){
     dt <- as_tibble(data)
-    nested_var <- dt %>% select(-ts) %>% get_listcol()
-    if (length(nested_var) > 0){
-      dt <- dt %>% unnest(nested_var)
-    }
+    if (".val" %in% names(dt)) dt <- dt %>% unnest(.val)
   } else if (form(data) == "long"){
     dt <- spatial(data)
   }
