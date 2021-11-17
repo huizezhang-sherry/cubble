@@ -48,9 +48,8 @@ spatial <- function(data){
 
   if (determine_form(data) == "long"){
     sp <- data %@% "spatial"
-    bottom_level <- sp %>% get_listcol()
-    if (length(bottom_level) != 0){
-      unnest(sp , bottom_level)
+    if (".val" %in% names(sp)) {
+      unnest(sp , .val)
     } else{
       sp
     }

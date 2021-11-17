@@ -124,8 +124,8 @@ is_cubble <- function(data){
 
 
 check_coords <- function(data, long_tol = 10, lat_tol = 5){
-  test_cubble(data)
 
+  test_cubble(data)
 
   if (form(data) == "nested"){
     dt <- as_tibble(data)
