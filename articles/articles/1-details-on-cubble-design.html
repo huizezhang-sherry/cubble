@@ -120,8 +120,9 @@
 <code class="sourceCode R"><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 <span class="va">nested</span>
-<span class="co">#&gt; # Cubble: id-wise: nested form</span>
-<span class="co">#&gt; # Key:    id [5]</span>
+<span class="co">#&gt; # cubble:   id [5]: nested form</span>
+<span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]- check gap on long and lat</span>
+<span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                </span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;            </span>
 <span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 &lt;tibble [366 × 4]&gt;</span>
@@ -163,8 +164,9 @@
 <code class="sourceCode R"><span class="va">climate_flat</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># cubble names the list-column as `ts` rather than `data`</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: id-wise: nested form</span>
-<span class="co">#&gt; # Key:    id [5]</span>
+<span class="co">#&gt; # cubble:   id [5]: nested form</span>
+<span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]- check gap on long and lat</span>
+<span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                  rain</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;             &lt;int&gt;</span>
 <span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 &lt;tibble [366 × 4]&gt;   104</span>
@@ -191,8 +193,9 @@
 <p>In this dataset, variables that are invariant to time include <code>lat</code>, <code>long</code>, <code>elevation</code> and <code>name</code> while those vary across time include <code>date</code>, <code>prcp</code>, <code>tmax</code>, and <code>tmin</code>. Notice that although time-variant variables are not directly shown in the nested form, they can be read from the third line of the cubble header:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nested</span>
-<span class="co">#&gt; # Cubble: id-wise: nested form</span>
-<span class="co">#&gt; # Key:    id [5]</span>
+<span class="co">#&gt; # cubble:   id [5]: nested form</span>
+<span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]- check gap on long and lat</span>
+<span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                </span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;            </span>
 <span class="co">#&gt; 1 ASN00009021 -31.9  116.  15.4 perth airport   94610 &lt;tibble [366 × 4]&gt;</span>
@@ -208,8 +211,9 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">long</span>
-<span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Key:    id [5]</span>
+<span class="co">#&gt; # cubble:  date, id [5]: long form</span>
+<span class="co">#&gt; # bbox:    [115.97, -32.94, 133.55, -12.42]- check gap on long and lat</span>
+<span class="co">#&gt; # spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span>
 <span class="co">#&gt;    id          date        prcp  tmax  tmin</span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt;  1 ASN00009021 2020-01-01     0  31.9  15.3</span>

@@ -151,10 +151,10 @@ falls into the interval constructed.</p>
     <pre class="usage"><span class='fu'>match_sites</span><span class='op'>(</span>
   <span class='va'>major</span>,
   <span class='va'>minor</span>,
-  match_temporal <span class='op'>=</span> <span class='cn'>TRUE</span>,
   spatial_single_match <span class='op'>=</span> <span class='cn'>TRUE</span>,
   spatial_n_keep <span class='op'>=</span> <span class='fl'>1</span>,
   spatial_dist_max <span class='op'>=</span> <span class='fl'>10</span>,
+  temporal_matching <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>temporal_var_to_match</span>,
   temporal_n_highest <span class='op'>=</span> <span class='fl'>20</span>,
   <span class='va'>temporal_independent</span>,
@@ -194,10 +194,6 @@ falls into the interval constructed.</p>
       <td><p>The dataset to match from</p></td>
     </tr>
     <tr>
-      <th>match_temporal</th>
-      <td><p>Wether to perform temporal matching</p></td>
-    </tr>
-    <tr>
       <th>spatial_single_match</th>
       <td><p>Whether each observation in the minor dataset is only allowed to to be matched once, default to <code>TRUE</code></p></td>
     </tr>
@@ -208,6 +204,10 @@ falls into the interval constructed.</p>
     <tr>
       <th>spatial_dist_max</th>
       <td><p>The maximum distance allowed between matched pair</p></td>
+    </tr>
+    <tr>
+      <th>temporal_matching</th>
+      <td><p>Wether to perform temporal matching</p></td>
     </tr>
     <tr>
       <th>temporal_var_to_match</th>

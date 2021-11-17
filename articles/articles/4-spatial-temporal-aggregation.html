@@ -123,49 +123,52 @@
 <span class="va">station_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">cluster_res</span><span class="op">)</span> 
 <span class="va">station_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: id-wise: nested form</span>
-<span class="co">#&gt; # Key:    id [5]</span>
+<span class="co">#&gt; # cubble:   id [5]: nested form</span>
+<span class="co">#&gt; # bbox:     [126.1, -16.42, 128.16, -13.75]</span>
+<span class="co">#&gt; # temporal: wk [dbl], prcp [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name             wmo_id ll       ts      cluster</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;s2_lng&gt; &lt;list&gt;    &lt;int&gt;</span>
-<span class="co">#&gt; 1 ASN00001006 -15.5  128.   3.8 wyndham aero      95214 (128.15… &lt;tibbl…      17</span>
-<span class="co">#&gt; 2 ASN00001007 -13.8  126.   6   troughton island  94102 (126.14… &lt;tibbl…       8</span>
-<span class="co">#&gt; 3 ASN00001018 -16.4  126. 546   mount elizabeth   94211 (126.10… &lt;tibbl…       8</span>
-<span class="co">#&gt; 4 ASN00001019 -14.3  127.  23   kalumburu         94100 (126.64… &lt;tibbl…       8</span>
-<span class="co">#&gt; 5 ASN00001020 -14.1  126.  51   truscott          95101 (126.38… &lt;tibbl…       8</span></code></pre></div>
+<span class="co">#&gt; 1 ASN00001006 -15.5  128.   3.8 wyndham aero      95214 (128.15… &lt;tibbl…      19</span>
+<span class="co">#&gt; 2 ASN00001007 -13.8  126.   6   troughton island  94102 (126.14… &lt;tibbl…      19</span>
+<span class="co">#&gt; 3 ASN00001018 -16.4  126. 546   mount elizabeth   94211 (126.10… &lt;tibbl…      19</span>
+<span class="co">#&gt; 4 ASN00001019 -14.3  127.  23   kalumburu         94100 (126.64… &lt;tibbl…      19</span>
+<span class="co">#&gt; 5 ASN00001020 -14.1  126.  51   truscott          95101 (126.38… &lt;tibbl…      19</span></code></pre></div>
 <p>One thing we hope to do with the cluster is to find the coordinates of the centroid. These are variables variant to the station but invariant to the cluster and it would be nice to have a function that structure each cluster as a row. <code><a href="../../reference/switch_key.html">switch_key()</a></code> is the function that does this: it lets you to specify a new key, say <code>cluster</code> and nests all spatial variables variant to <code>cluster</code> into a column. Temporal observations from different stations while within the same cluster are bound in the nested column <code>ts</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
 <span class="va">cluster_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: cluster-wise: nested form</span>
-<span class="co">#&gt; # Key:    cluster [5]</span>
-<span class="co">#&gt;   cluster val               ts                  </span>
+<span class="co">#&gt; # cubble:   cluster [5]: nested form</span>
+<span class="co">#&gt; # bbox:     [133.67, -39.13, 150.76, -18.75]</span>
+<span class="co">#&gt; # temporal: id [chr], wk [dbl], prcp [dbl]</span>
+<span class="co">#&gt;   cluster .val              ts                  </span>
 <span class="co">#&gt;     &lt;int&gt; &lt;list&gt;            &lt;list&gt;              </span>
-<span class="co">#&gt; 1       1 &lt;tibble [12 × 7]&gt; &lt;tibble [636 × 3]&gt;  </span>
-<span class="co">#&gt; 2       2 &lt;tibble [22 × 7]&gt; &lt;tibble [1,166 × 3]&gt;</span>
-<span class="co">#&gt; 3       3 &lt;tibble [17 × 7]&gt; &lt;tibble [901 × 3]&gt;  </span>
-<span class="co">#&gt; 4       4 &lt;tibble [49 × 7]&gt; &lt;tibble [2,571 × 3]&gt;</span>
-<span class="co">#&gt; 5       5 &lt;tibble [16 × 7]&gt; &lt;tibble [848 × 3]&gt;</span></code></pre></div>
+<span class="co">#&gt; 1       1 &lt;tibble [20 × 7]&gt; &lt;tibble [1,060 × 3]&gt;</span>
+<span class="co">#&gt; 2       2 &lt;tibble [58 × 7]&gt; &lt;tibble [3,074 × 3]&gt;</span>
+<span class="co">#&gt; 3       3 &lt;tibble [15 × 7]&gt; &lt;tibble [795 × 3]&gt;  </span>
+<span class="co">#&gt; 4       4 &lt;tibble [23 × 7]&gt; &lt;tibble [1,219 × 3]&gt;</span>
+<span class="co">#&gt; 5       5 &lt;tibble [25 × 7]&gt; &lt;tibble [1,325 × 3]&gt;</span></code></pre></div>
 <p>This structure makes it easy to compute cluster level variable, although there are a few steps to calculate the centroid coordinates: we need to find the convex hull that wraps around the cluster, make it a polygon, find the centroid of the polygon and finally, extract the x and y coordinate of each centroid:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>chull <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/chull.html">chull</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">long</span>, <span class="va">val</span><span class="op">$</span><span class="va">lat</span><span class="op">)</span><span class="op">)</span>,
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>chull <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/chull.html">chull</a></span><span class="op">(</span><span class="va">.val</span><span class="op">$</span><span class="va">long</span>, <span class="va">.val</span><span class="op">$</span><span class="va">lat</span><span class="op">)</span><span class="op">)</span>,
          ll_cluster <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html">st_as_sfc</a></span><span class="op">(</span>
-           <span class="fu">s2_make_polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">long</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, 
-                           <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">val</span><span class="op">$</span><span class="va">lat</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, oriented <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,
+           <span class="fu">s2_make_polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">.val</span><span class="op">$</span><span class="va">long</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, 
+                           <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">.val</span><span class="op">$</span><span class="va">lat</span><span class="op">[</span><span class="va">chull</span><span class="op">]</span><span class="op">)</span>, oriented <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,
          centroid <span class="op">=</span> <span class="fu">s2_centroid</span><span class="op">(</span><span class="va">ll_cluster</span><span class="op">)</span>,
          cent_long <span class="op">=</span> <span class="fu">s2_x</span><span class="op">(</span><span class="va">centroid</span><span class="op">)</span>,
          cent_lat <span class="op">=</span> <span class="fu">s2_y</span><span class="op">(</span><span class="va">centroid</span><span class="op">)</span><span class="op">)</span> 
 <span class="va">cluster_nested</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: cluster-wise: nested form</span>
-<span class="co">#&gt; # Key:    cluster [5]</span>
-<span class="co">#&gt;   cluster val    ts      chull                    ll_cluster centroid  cent_long</span>
+<span class="co">#&gt; # cubble:   cluster [5]: nested form</span>
+<span class="co">#&gt; # bbox:     [133.67, -39.13, 150.76, -18.75]</span>
+<span class="co">#&gt; # temporal: id [chr], wk [dbl], prcp [dbl]</span>
+<span class="co">#&gt;   cluster .val   ts      chull                    ll_cluster centroid  cent_long</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;list&gt; &lt;list&gt;  &lt;list&gt;                &lt;POLYGON [°]&gt; &lt;s2_geog&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1 &lt;tibb… &lt;tibbl… &lt;int … ((122.9753 -25.7964, 120.70… &lt;POINT (…      123.</span>
-<span class="co">#&gt; 2       2 &lt;tibb… &lt;tibbl… &lt;int … ((145.3106 -14.9672, 143.30… &lt;POINT (…      143.</span>
-<span class="co">#&gt; 3       3 &lt;tibb… &lt;tibbl… &lt;int … ((117.7494 -23.1725, 118.63… &lt;POINT (…      116.</span>
-<span class="co">#&gt; 4       4 &lt;tibb… &lt;tibbl… &lt;int … ((148.2794 -41.9953, 148.30… &lt;POINT (…      147.</span>
-<span class="co">#&gt; 5       5 &lt;tibb… &lt;tibbl… &lt;int … ((145.9521 -30.0362, 143.81… &lt;POINT (…      143.</span>
+<span class="co">#&gt; 1       1 &lt;tibb… &lt;tibbl… &lt;int … ((148.5942 -28.0489, 147.97… &lt;POINT (…      145.</span>
+<span class="co">#&gt; 2       2 &lt;tibb… &lt;tibbl… &lt;int … ((150.2275 -36.2519, 150.18… &lt;POINT (…      148.</span>
+<span class="co">#&gt; 3       3 &lt;tibb… &lt;tibbl… &lt;int … ((143.1425 -20.7289, 143.11… &lt;POINT (…      140.</span>
+<span class="co">#&gt; 4       4 &lt;tibb… &lt;tibbl… &lt;int … ((148.9536 -20.3658, 147.48… &lt;POINT (…      147.</span>
+<span class="co">#&gt; 5       5 &lt;tibb… &lt;tibbl… &lt;int … ((139.3357 -30.311, 140.195… &lt;POINT (…      137.</span>
 <span class="co">#&gt; # … with 1 more variable: cent_lat &lt;dbl&gt;</span></code></pre></div>
 </div>
 <div id="now-its-time-to-look-at-the-australia-precipitation" class="section level1">
@@ -186,15 +189,18 @@
   <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">cent_long</span>, <span class="va">cent_lat</span><span class="op">)</span>
 
 <span class="va">cluster_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Key:    cluster [1]</span>
+<span class="co">#&gt; # cubble:  date, cluster [1]: long form</span>
+<span class="co">#&gt; # bbox:    [113.53, -43.66, 153.64, -10.05]</span>
+<span class="co">#&gt; # spatial: id [chr], lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id</span>
+<span class="co">#&gt; #   [dbl], ll [s2_lnglat], chull [list], ll_cluster [POLYGON [°]], centroid</span>
+<span class="co">#&gt; #   [s2_geography], cent_long [dbl], cent_lat [dbl]</span>
 <span class="co">#&gt;   cluster    wk  prcp cent_long cent_lat</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1     1  1073      123.    -30.3</span>
-<span class="co">#&gt; 2       1     2  7355      123.    -30.3</span>
-<span class="co">#&gt; 3       1     3  7905      123.    -30.3</span>
-<span class="co">#&gt; 4       1     4  5403      123.    -30.3</span>
-<span class="co">#&gt; 5       1     5  8543      123.    -30.3</span>
+<span class="co">#&gt; 1       1     1  7966      145.    -29.3</span>
+<span class="co">#&gt; 2       1     1  7966      145.    -29.3</span>
+<span class="co">#&gt; 3       1     1  7966      145.    -29.3</span>
+<span class="co">#&gt; 4       1     1  7966      145.    -29.3</span>
+<span class="co">#&gt; 5       1     1  7966      145.    -29.3</span>
 
 <span class="va">gly</span> <span class="op">&lt;-</span> <span class="fu">GGally</span><span class="fu">::</span><span class="fu"><a href="https://ggobi.github.io/ggally/reference/glyphs.html">glyphs</a></span><span class="op">(</span><span class="va">cluster_long</span>, 
                       x_major <span class="op">=</span> <span class="st">"cent_long"</span>, x_minor <span class="op">=</span> <span class="st">"wk"</span>,
@@ -218,15 +224,17 @@
   <span class="fu"><a href="../../reference/migrate.html">migrate</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
 
 <span class="va">station_long</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
-<span class="co">#&gt; # Cubble: time-wise: long form</span>
-<span class="co">#&gt; # Key:    id [1]</span>
+<span class="co">#&gt; # cubble:  date, id [1]: long form</span>
+<span class="co">#&gt; # bbox:    [113.53, -43.66, 153.64, -10.05]</span>
+<span class="co">#&gt; # spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl], ll</span>
+<span class="co">#&gt; #   [s2_lnglat], cluster [int]</span>
 <span class="co">#&gt;   id             wk  prcp cluster</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt;</span>
-<span class="co">#&gt; 1 ASN00001006     1  3660      17</span>
-<span class="co">#&gt; 2 ASN00001006     2  1766      17</span>
-<span class="co">#&gt; 3 ASN00001006     3  1748      17</span>
-<span class="co">#&gt; 4 ASN00001006     4  4614      17</span>
-<span class="co">#&gt; 5 ASN00001006     5  1080      17</span>
+<span class="co">#&gt; 1 ASN00001006     1  3660      19</span>
+<span class="co">#&gt; 2 ASN00001006     2  1766      19</span>
+<span class="co">#&gt; 3 ASN00001006     3  1748      19</span>
+<span class="co">#&gt; 4 ASN00001006     4  4614      19</span>
+<span class="co">#&gt; 5 ASN00001006     5  1080      19</span>
 
 <span class="va">station_long</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wk</span>, y <span class="op">=</span> <span class="va">prcp</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 

@@ -143,8 +143,9 @@
 <p>The result from the pairing is also a cubble with two additional columns: <code>.dist</code> as the distance between the pair and <code>.group</code> as the grouping index:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">matched</span> 
-<span class="co">#&gt; # Cubble: id-wise: nested form</span>
-<span class="co">#&gt; # Key:    id [20]</span>
+<span class="co">#&gt; # cubble:   id [20]: nested form</span>
+<span class="co">#&gt; # bbox:     [145.79, -36.11, 151.67, -30.52]</span>
+<span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;    id            lat  long   elev name      wmo_id automated ts     .dist .group</span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;     &lt;list&gt; &lt;dbl&gt;  &lt;int&gt;</span>
 <span class="co">#&gt;  1 ASN00050137 -33.1  147.  193.  condobol…  95708 TRUE      &lt;tibb…  1.41      1</span>
@@ -238,8 +239,9 @@
 <span class="op">)</span>
 
 <span class="va">res</span>
-<span class="co">#&gt; # Cubble: id-wise: nested form</span>
-<span class="co">#&gt; # Key:    id [8]</span>
+<span class="co">#&gt; # cubble:   id [8]: nested form</span>
+<span class="co">#&gt; # bbox:     [144.52, -37.73, 146.06, -36.55]</span>
+<span class="co">#&gt; # temporal: date [date], prcp [dbl]</span>
 <span class="co">#&gt;   id          name                lat  long type  ts        .dist .group n_match</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;list&gt;    &lt;dbl&gt;  &lt;int&gt;   &lt;int&gt;</span>
 <span class="co">#&gt; 1 405234      SEVEN CREEKS @ D… -36.9  146. river &lt;tibble …  6.15      5      21</span>

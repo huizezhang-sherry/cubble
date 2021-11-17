@@ -179,8 +179,9 @@
                                        var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PRCP"</span>, <span class="st">"TMAX"</span>, <span class="st">"TMIN"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt; # Cubble: id-wise: nested form
-#&gt; # Key:    id [10]
+<pre><code>#&gt; # cubble:   id [10]: nested form
+#&gt; # bbox:     [144.47, -38.03, 151.18, -33.79]
+#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
 #&gt;    id            lat  long  elev name             wmo_id  dist city   ts        
 #&gt;    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;list&gt;    
 #&gt;  1 ASN00066037 -33.9  151.   6   sydney airport …  94767  9.32 sydney &lt;tibble […
