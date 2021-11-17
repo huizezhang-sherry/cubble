@@ -31,6 +31,8 @@ switch_key <- function(data, key){
   new_key <- enquo(key)
   new_key_var <- as_name(new_key)
   old_key <- key_vars(data)
+  coords <- coords(data)
+  index <- index(data)
   test_cubble(data)
 
   if (!as_name(new_key) %in% names(data)){
@@ -57,7 +59,7 @@ switch_key <- function(data, key){
     dplyr::arrange(!!new_key)
 
   out_cubble <- new_cubble(out,
-                           key = new_key_var, index = index(data), coords = coords(data),
+                           key = new_key_var, index = index, coords = coords,
                            spatial = NULL, form = "nested")
 
   if (orig_form == "long") out_cubble <- out_cubble %>% stretch(.data$ts)

@@ -57,7 +57,7 @@ stretch.cubble_df <- function(data, col, ...){
   spatial <- data %>% select(-!!col)
 
   if (is_tsibble) {
-    out <- out %>% tsibble::as_tsibble(key = !!key[[1]])
+    out <- out %>% tsibble::as_tsibble(key = !!key[[1]], index = index)
   }
 
   new_cubble(out,
