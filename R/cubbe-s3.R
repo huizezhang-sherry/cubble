@@ -23,13 +23,26 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 
   key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
 
+  all_cols <- names(data)
+
   if (length(coords) == 1){
     if ("sfc" %in% class(data[[coords]])){
         converted <- convert_sfc_to_ll(data, coords)
         data <- converted$data
         coords <- converted$coords
+
+        others <- all_cols[!all_cols %in% c(key, ".val", "ts", "geom")]
+        ordered <- c(key, ".val", others, "ts")
+        data <- data %>% select(ordered)
+
+    } else{
+      others <- all_cols[!all_cols %in% c(key, coords, "ts")]
+      ordered <- c(key, coords, others, "ts")
+      data <- data %>% select(ordered)
     }
+
   }
+
 
   attr <- list(x = data,
                groups = key_data, index = index,
@@ -123,13 +136,14 @@ is_cubble <- function(data){
 }
 
 
-check_coords <- function(data, long_tol = 10, lat_tol = 5){
-
+check_coords <- function(data, long_tol = 10, lat_tol = 10){
   test_cubble(data)
 
   if (form(data) == "nested"){
     dt <- as_tibble(data)
     if (".val" %in% names(dt)) dt <- dt %>% unnest(.val)
+
+
   } else if (form(data) == "long"){
     dt <- spatial(data)
   }
@@ -150,9 +164,9 @@ check_coords <- function(data, long_tol = 10, lat_tol = 5){
   if (detect_long_gap & detect_lat_gap){
     signal <- glue::glue("- check gap on {coords(data)[1]} and {coords(data)[2]}")
   } else if (detect_long_gap){
-    signal <- glue::glue("- check gap on {coords(data)[2]}")
-  } else if (detect_lat_gap){
     signal <- glue::glue("- check gap on {coords(data)[1]}")
+  } else if (detect_lat_gap){
+    signal <- glue::glue("- check gap on {coords(data)[2]}")
   } else{
     signal <- ""
   }
