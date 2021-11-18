@@ -16,9 +16,9 @@ world <- ghcnd_stations() %>%
   filter(nrow(data) == 3) %>%
   select(-data, -state, -gsn_flag) %>%
   mutate(
-    country = countrycode(country_abb,
-                          origin = "fips",
-                          destination = "country.name"),
+    # country = countrycode(country_abb,
+    #                       origin = "fips",
+    #                       destination = "country.name"),
     continent = countrycode(country_abb,
                             origin = "fips",
                             destination = "continent")
