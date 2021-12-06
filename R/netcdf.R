@@ -19,20 +19,26 @@ extract_longlat <- function(data){
 
   dims <- names(data$dim)
 
-  if (all(!dims %in% c("longitude", "latitude", "time"))){
-    abort("Dimension supported by cubble from NetCDF file: long, lat, and time.")
-  }
+  long_name <- c("lon", "long", "longitude")
+  if (any(dims %in% long_name)) long_idx <- which(dims %in% long_name)
+
+  lat_name <- c("lat", "latitude")
+  if (any(dims %in% lat_name)) lat_idx <- which(dims %in% lat_name)
+
+  # if (all(!dims %in% c("longitude", "latitude", "time"))){
+  #   abort("Dimension supported by cubble from NetCDF file: long, lat, and time.")
+  # }
 
 
-  if ("longitude" %in% dims) long <- ncdf4::ncvar_get(data, "longitude")
-  if ("latitude" %in% dims) lat <- ncdf4::ncvar_get(data, "latitude")
+  long <- ncdf4::ncvar_get(data, dims[long_idx])
+  lat <- ncdf4::ncvar_get(data, dims[lat_idx])
 
   list(long = long, lat = lat)
 
 }
 
 #' @importFrom stringr word
-#' @importFrom lubridate %m+% hours
+#' @importFrom lubridate %m+% hours days minutes seconds years
 #' @export
 #' @rdname netcdf
 extract_time <- function(data){
@@ -50,7 +56,7 @@ extract_time <- function(data){
   }
 
   origin <- parse_time(tunits$value)
-  out <- origin %m+% do.call(tperiod, list(x = time))
+  out <- origin %m+% do.call(tperiod, list(x = floor(time)))
   out
 
 }
