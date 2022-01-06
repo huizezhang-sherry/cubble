@@ -30,13 +30,9 @@ dt <- aus_climate \%>\%
   mutate(yday = lubridate::yday(date)) \%>\%
   select(-date)
 
-g <- glyphs(dt,
-            x_major = "long", x_minor = "yday",
-            y_major = "lat", y_minor = "tmax", height = 1, width = 2)
-
 state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 plot_map(state_map) +
-  ggplot2::geom_path(data = g, aes(gx, gy, group = gid)) +
-  ggplot2::theme_void() +
-  ggplot2::labs(x = "", y = "")
+  geom_glyph(data = dt,
+             aes(x_major = long, x_minor = yday,
+                 y_major = lat, y_minor = tmax))
 }

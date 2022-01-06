@@ -101,16 +101,13 @@ cluster_long <- cluster_nested %>%
 
 cluster_long %>% head(5)
 
-gly <- GGally::glyphs(cluster_long, 
-                      x_major = "cent_long", x_minor = "wk",
-                      y_major = "cent_lat", y_minor = "prcp", 
-                      height = 2, width = 4)
-
 plot_map(state_map) + 
   geom_text(data = cluster_nested, 
             aes(x = cent_long, y = cent_lat, label = cluster)) + 
-  geom_path(data = gly, 
-            aes(x = gx, y = gy, group = gid))
+  geom_glyph(data = cluster_long, 
+            aes(x_major = cent_long, x_minor = wk,
+                y_major = cent_lat, y_minor = prcp), 
+            height = 2, width = 4)
 ```
 
 ## Individual series within the cluster

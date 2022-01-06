@@ -95,23 +95,15 @@ tmax_long2 %>% head(5)
 Now its time for the glyph map! 
 
 ```{r}
-gly <- glyphs(
-  tmax_long2,
-  x_major = "longitude",
-  y_major = "latitude",
-  x_minor = "month",
-  y_minor = "tmax",
-  height = 0.6,
-  width = 1
-)
-
-nsw_vic <-
-  ozmaps::abs_ste %>% filter(NAME %in% c("Victoria", "New South Wales"))
+nsw_vic <- ozmaps::abs_ste %>% 
+  filter(NAME %in% c("Victoria", "New South Wales"))
 
 p1 <- plot_map(nsw_vic, fill = "transparent") +
-  geom_path(data = gly, aes(gx, gy,
-                            group = interaction(id, group),
-                            color = group)) +
+  geom_glyph(data = tmax_long2, 
+            aes(x_major = longitude, y_major = latitude,
+                x_minor = month, y_minor = tmax,
+                group = interaction(group, id), color = group),
+            height = 0.8, width = 1) +
   scale_color_brewer(palette = "Dark2")
 
 p1
