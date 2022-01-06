@@ -17,6 +17,7 @@ RoxygenNote: 7.1.2
 Imports: 
     cli,
     dplyr (>= 1.0.7.9000),
+    geosphere,
     glue,
     lubridate,
     magrittr,
