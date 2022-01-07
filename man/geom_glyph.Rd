@@ -2,7 +2,6 @@
 % Please edit documentation in R/glyph-map.R
 \name{geom_glyph}
 \alias{geom_glyph}
-\alias{stat_glyph}
 \title{Create glyph map with ggplot2}
 \usage{
 geom_glyph(
@@ -20,23 +19,6 @@ geom_glyph(
   height = ggplot2::rel(1.5),
   ref_line = FALSE,
   ref_box = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-)
-
-stat_glyph(
-  mapping = NULL,
-  data = NULL,
-  geom = "identity",
-  position = "identity",
-  ...,
-  x_major = NULL,
-  x_minor = NULL,
-  y_major = NULL,
-  y_minor = NULL,
-  polar = FALSE,
-  width = ggplot2::rel(1.5),
-  height = ggplot2::rel(1.5),
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -98,8 +80,6 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
-
-\item{geom}{The geometric object to use display the data}
 }
 \description{
 Create glyph map with ggplot2
