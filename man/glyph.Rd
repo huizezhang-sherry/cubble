@@ -2,9 +2,49 @@
 % Please edit documentation in R/glyph-map.R
 \name{geom_glyph}
 \alias{geom_glyph}
+\alias{geom_glyph_line}
+\alias{geom_glyph_box}
 \title{Create glyph map with ggplot2}
 \usage{
 geom_glyph(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  ...,
+  x_major = NULL,
+  x_minor = NULL,
+  y_major = NULL,
+  y_minor = NULL,
+  x_scale = "identity",
+  y_scale = "identity",
+  polar = FALSE,
+  width = ggplot2::rel(1.5),
+  height = ggplot2::rel(1.5),
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+geom_glyph_line(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  ...,
+  x_major = NULL,
+  x_minor = NULL,
+  y_major = NULL,
+  y_minor = NULL,
+  x_scale = "identity",
+  y_scale = "identity",
+  polar = FALSE,
+  width = ggplot2::rel(1.5),
+  height = ggplot2::rel(1.5),
+  show.legend = NA,
+  inherit.aes = TRUE
+)
+
+geom_glyph_box(
   mapping = NULL,
   data = NULL,
   stat = "identity",
@@ -59,6 +99,10 @@ to the paired geom/stat.}
 string) for the major and minor x and y axes. Together, each unique
 combination of \code{x_major} and \code{y_major} specifies a grid cell.}
 
+\item{y_scale, x_scale}{The scaling function to be applied to each set of
+minor values within a grid cell.  Defaults to \code{\link{identity}} so
+that no scaling is performed.}
+
 \item{polar}{A logical of length 1, specifying whether the glyphs should
 be drawn in polar coordinates.  Defaults to \code{FALSE}.}
 
@@ -107,6 +151,4 @@ ggplot() +
                  y_major = lat, y_minor = surftemp),
                  width = rel(2), height = 3) +
   theme(aspect.ratio = 1)
-
-
 }

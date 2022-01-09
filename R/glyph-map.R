@@ -11,7 +11,11 @@
 #'  the \code{\link[ggplot2]{resolution}} of the data. Specify the width
 #'  absolutely by supplying a numeric vector of length 1, or relative to the
 #'  resolution of the data by using \code{\link[ggplot2]{rel}}.
+#' @param y_scale,x_scale The scaling function to be applied to each set of
+#'  minor values within a grid cell.  Defaults to \code{\link{identity}} so
+#'  that no scaling is performed.
 #' @export
+#' @rdname glyph
 #' @examples
 #' library(ggplot2)
 #' library(GGally)
@@ -38,8 +42,6 @@
 #'                  y_major = lat, y_minor = surftemp),
 #'                  width = rel(2), height = 3) +
 #'   theme(aspect.ratio = 1)
-#'
-#'
 geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
                        position = "identity", ..., x_major = NULL,
                        x_minor = NULL, y_major = NULL, y_minor = NULL,
@@ -90,6 +92,7 @@ GeomGlyph <- ggplot2::ggproto(
 )
 
 #' @export
+#' @rdname glyph
 geom_glyph_line <- function(mapping = NULL, data = NULL, stat = "identity",
                             position = "identity", ..., x_major = NULL,
                             x_minor = NULL, y_major = NULL, y_minor = NULL,
@@ -142,6 +145,7 @@ GeomGlyphLine <- ggplot2::ggproto(
 )
 
 #' @export
+#' @rdname glyph
 geom_glyph_box <- function(mapping = NULL, data = NULL, stat = "identity",
                            position = "identity", ..., x_major = NULL,
                            x_minor = NULL, y_major = NULL, y_minor = NULL,
