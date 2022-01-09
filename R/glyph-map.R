@@ -43,6 +43,7 @@
 geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
                        position = "identity", ..., x_major = NULL,
                        x_minor = NULL, y_major = NULL, y_minor = NULL,
+                       x_scale = "identity", y_scale = "identity",
                        polar = FALSE, width = ggplot2::rel(1.5),
                        height = ggplot2::rel(1.5),
                        show.legend = NA,
@@ -72,7 +73,7 @@ GeomGlyph <- ggplot2::ggproto(
     glyph_data_setup(data, params)
   },
 
-  draw_panel = function(data,  panel_params, coord, ...) {
+  draw_panel = function(data, panel_params, coord, ...) {
     ggplot2:::GeomPath$draw_panel(data, panel_params, coord, ...)
   },
 
@@ -82,7 +83,9 @@ GeomGlyph <- ggplot2::ggproto(
     colour = "black", size = 0.5, linetype = "solid", alpha = 1,
     polar = FALSE,
     width = ggplot2::rel(1.5),
-    height = ggplot2::rel(1.5)
+    height = ggplot2::rel(1.5),
+    x_scale = "identity",
+    y_scale = "identity"
   )
 )
 
@@ -90,6 +93,7 @@ GeomGlyph <- ggplot2::ggproto(
 geom_glyph_line <- function(mapping = NULL, data = NULL, stat = "identity",
                             position = "identity", ..., x_major = NULL,
                             x_minor = NULL, y_major = NULL, y_minor = NULL,
+                            x_scale = "identity", y_scale = "identity",
                             polar = FALSE, width = ggplot2::rel(1.5),
                             height = ggplot2::rel(1.5),
                             show.legend = NA,
@@ -106,6 +110,8 @@ geom_glyph_line <- function(mapping = NULL, data = NULL, stat = "identity",
       polar = polar,
       width = width,
       height = height,
+      x_scale = x_scale,
+      y_scale = y_scale,
       ...
     )
   )
@@ -130,6 +136,8 @@ GeomGlyphLine <- ggplot2::ggproto(
     polar = FALSE,
     width = ggplot2::rel(1.5),
     height = ggplot2::rel(1.5),
+    x_scale = "identity",
+    y_scale = "identity"
   )
 )
 
@@ -137,6 +145,7 @@ GeomGlyphLine <- ggplot2::ggproto(
 geom_glyph_box <- function(mapping = NULL, data = NULL, stat = "identity",
                            position = "identity", ..., x_major = NULL,
                            x_minor = NULL, y_major = NULL, y_minor = NULL,
+                           x_scale = "identity", y_scale = "identity",
                            polar = FALSE, width = ggplot2::rel(1.5),
                            height = ggplot2::rel(1.5),
                            show.legend = NA,
@@ -153,6 +162,8 @@ geom_glyph_box <- function(mapping = NULL, data = NULL, stat = "identity",
       polar = polar,
       width = width,
       height = height,
+      x_scale = x_scale,
+      y_scale = y_scale,
       ...
     )
   )
@@ -178,6 +189,8 @@ GeomGlyphBox <- ggplot2::ggproto(
     polar = FALSE,
     width = ggplot2::rel(1.5),
     height = ggplot2::rel(1.5),
+    x_scale = "identity",
+    y_scale = "identity"
   )
 )
 
@@ -196,6 +209,18 @@ rescale11 <- function(x, xlim = NULL) 2 * rescale01(x, xlim) - 1
 glyph_data_setup <- function(data, params){
   if (length(unique(data$group)) == 1){
     data$group <- interaction(data$x_major, data$y_major, drop = TRUE)
+  }
+
+  if (!is_null(data$x_scale)){
+    data <- data %>%
+      dplyr::group_by() %>%
+      dplyr::mutate(x_minor = exec(unique(data$x_scale), x_minor))
+  }
+
+  if (!is_null(data$y_scale)){
+    data <- data %>%
+      dplyr::group_by() %>%
+      dplyr::mutate(y_minor = exec(unique(data$y_scale), y_minor))
   }
 
   data$polar <- params$polar
