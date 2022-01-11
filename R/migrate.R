@@ -9,7 +9,6 @@
 #' @param ... variables in metadata to included into the long form
 #' @examples
 #' library(ggplot2)
-#' library(GGally)
 #' library(dplyr)
 #' dt <- aus_climate %>%
 #'   stretch() %>%

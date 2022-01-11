@@ -18,7 +18,6 @@
 #' @rdname glyph
 #' @examples
 #' library(ggplot2)
-#' library(GGally)
 #' # basic glyph map with reference line and box---------------
 #' ggplot(data = GGally::nasa,
 #'        aes(x_major = long, x_minor = day,
@@ -26,14 +25,14 @@
 #'   geom_glyph_box() +
 #'   geom_glyph_line() +
 #'   geom_glyph() +
-#'   theme(aspect.ratio = 1)
+#'    theme_bw()
 #'
 #' # with polar coordinate ---------------
 #' ggplot() +
 #'   geom_glyph(data = GGally::nasa,
 #'              aes(x_major = long, x_minor = day,
 #'                  y_major = lat, y_minor = surftemp), polar = TRUE) +
-#'   theme(aspect.ratio = 1)
+#'    theme_bw()
 #'
 #' # adjust width and height with relative & absolute value ---------------
 #' ggplot() +
@@ -41,13 +40,13 @@
 #'              aes(x_major = long, x_minor = day,
 #'                  y_major = lat, y_minor = surftemp),
 #'                  width = rel(2), height = 3) +
-#'   theme(aspect.ratio = 1)
+#'    theme_bw()
 geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
                        position = "identity", ..., x_major = NULL,
                        x_minor = NULL, y_major = NULL, y_minor = NULL,
                        x_scale = "identity", y_scale = "identity",
-                       polar = FALSE, width = ggplot2::rel(1.5),
-                       height = ggplot2::rel(1.5),
+                       polar = FALSE, width = ggplot2::rel(2.3),
+                       height = ggplot2::rel(2.3),
                        show.legend = NA,
                        inherit.aes = TRUE) {
   ggplot2::layer(
@@ -97,8 +96,8 @@ geom_glyph_line <- function(mapping = NULL, data = NULL, stat = "identity",
                             position = "identity", ..., x_major = NULL,
                             x_minor = NULL, y_major = NULL, y_minor = NULL,
                             x_scale = "identity", y_scale = "identity",
-                            polar = FALSE, width = ggplot2::rel(1.5),
-                            height = ggplot2::rel(1.5),
+                            polar = FALSE, width = ggplot2::rel(2.3),
+                            height = ggplot2::rel(2.3),
                             show.legend = NA,
                             inherit.aes = TRUE) {
   ggplot2::layer(
@@ -150,8 +149,8 @@ geom_glyph_box <- function(mapping = NULL, data = NULL, stat = "identity",
                            position = "identity", ..., x_major = NULL,
                            x_minor = NULL, y_major = NULL, y_minor = NULL,
                            x_scale = "identity", y_scale = "identity",
-                           polar = FALSE, width = ggplot2::rel(1.5),
-                           height = ggplot2::rel(1.5),
+                           polar = FALSE, width = ggplot2::rel(2.3),
+                           height = ggplot2::rel(2.3),
                            show.legend = NA,
                            inherit.aes = TRUE) {
   ggplot2::layer(
