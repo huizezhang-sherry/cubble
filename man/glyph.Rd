@@ -19,8 +19,9 @@ geom_glyph(
   x_scale = "identity",
   y_scale = "identity",
   polar = FALSE,
-  width = ggplot2::rel(1.5),
-  height = ggplot2::rel(1.5),
+  width = ggplot2::rel(2.1),
+  height = ggplot2::rel(1.8),
+  global_rescale = TRUE,
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -35,11 +36,9 @@ geom_glyph_line(
   x_minor = NULL,
   y_major = NULL,
   y_minor = NULL,
-  x_scale = "identity",
-  y_scale = "identity",
   polar = FALSE,
-  width = ggplot2::rel(1.5),
-  height = ggplot2::rel(1.5),
+  width = ggplot2::rel(2.1),
+  height = ggplot2::rel(2.1),
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -54,11 +53,9 @@ geom_glyph_box(
   x_minor = NULL,
   y_major = NULL,
   y_minor = NULL,
-  x_scale = "identity",
-  y_scale = "identity",
   polar = FALSE,
-  width = ggplot2::rel(1.5),
-  height = ggplot2::rel(1.5),
+  width = ggplot2::rel(2.1),
+  height = ggplot2::rel(2.1),
   show.legend = NA,
   inherit.aes = TRUE
 )
@@ -111,6 +108,9 @@ the \code{\link[ggplot2]{resolution}} of the data. Specify the width
 absolutely by supplying a numeric vector of length 1, or relative to the
 resolution of the data by using \code{\link[ggplot2]{rel}}.}
 
+\item{global_rescale}{Whether rescale is performed globally or on each
+individual glyph.}
+
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
 \code{FALSE} never includes, and \code{TRUE} always includes.
@@ -127,7 +127,6 @@ Create glyph map with ggplot2
 }
 \examples{
 library(ggplot2)
-library(GGally)
 # basic glyph map with reference line and box---------------
 ggplot(data = GGally::nasa,
        aes(x_major = long, x_minor = day,
@@ -135,20 +134,27 @@ ggplot(data = GGally::nasa,
   geom_glyph_box() +
   geom_glyph_line() +
   geom_glyph() +
-  theme(aspect.ratio = 1)
+  theme_bw()
+
+# rescale on each individual glyph ---------------
+ggplot(data = GGally::nasa,
+       aes(x_major = long, x_minor = day,
+           y_major = lat, y_minor = surftemp)) +
+  geom_glyph(global_rescale = FALSE)
 
 # with polar coordinate ---------------
 ggplot() +
   geom_glyph(data = GGally::nasa,
              aes(x_major = long, x_minor = day,
                  y_major = lat, y_minor = surftemp), polar = TRUE) +
-  theme(aspect.ratio = 1)
+   theme_bw()
 
 # adjust width and height with relative & absolute value ---------------
 ggplot() +
   geom_glyph(data = GGally::nasa,
              aes(x_major = long, x_minor = day,
                  y_major = lat, y_minor = surftemp),
-                 width = rel(2), height = 3) +
-  theme(aspect.ratio = 1)
+                 width = rel(0.8), height = 1) +
+   theme_bw()
+
 }
