@@ -56,7 +56,8 @@ stretch.cubble_df <- function(data, col, ...){
   #                                     col_tojoin1, col_tojoin2))
 
   spatial <- data %>% select(-!!col)
-  if (".val" %in% colnames(spatial)) spatial <- spatial %>% unnest(.val)
+  if (".val" %in% colnames(spatial)) spatial <- spatial %>% unnest(.val
+                                                                   )
 
   if (is_tsibble) {
     out <- out %>% tsibble::as_tsibble(key = !!key[[1]], index = index)

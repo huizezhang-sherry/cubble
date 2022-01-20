@@ -20,7 +20,9 @@ get_centroid <- function(data){
   key <- key_vars(data)
   coords <- coords(data)
 
-  data %>%
+  out <- data %>%
+    as_tibble() %>%
+    rowwise() %>%
     mutate(chull = list(chull(.val[[coords[1]]],
                               .val[[coords[2]]])),
            hull = list(.val[chull,]),
@@ -28,6 +30,17 @@ get_centroid <- function(data){
            cent_long = as.numeric(cent[,1]),
            cent_lat = as.numeric(cent[,2])) %>%
     select(-chull, -cent)
+
+
+  new_cubble(
+    out,
+    key = key,
+    index = index(data),
+    coords = coords,
+    row_id = row_id(data),
+    spatial = NULL,
+    form = "nested"
+  )
 }
 
 

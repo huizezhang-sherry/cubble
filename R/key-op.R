@@ -35,15 +35,27 @@ switch_key <- function(data, key){
   index <- index(data)
   test_cubble(data)
 
+  orig_form <- form(data)
+  if (orig_form == "long") data <- data %>% tamp()
+
+  nested_already <- ".val" %in% names(data)
+  if (nested_already){
+    data <- data %>% tidyr::unnest(.val)
+  }
+
   if (!as_name(new_key) %in% names(data)){
     cli::cli_abort("{.field {new_key_var}} does not exist in the data!")
   }
 
-  orig_form <- form(data)
-  if (orig_form == "long") data <- data %>% tamp()
-
   data <- tibble::as_tibble(data)
-  out <- rearrange_index(data, key = new_key, old_key = old_key)
+
+  if (!nested_already){
+    out <- rearrange_index(data, key = new_key, old_key = old_key)
+  } else{
+    out <- rearrange_index2(data, key = new_key, old_key = old_key)
+  }
+
+
 
   out_cubble <- new_cubble(out,
                            key = new_key_var, index = index, coords = coords,
@@ -70,6 +82,28 @@ rearrange_index <- function(data, key, old_key = NULL){
     rename(.val = val) %>%
     tidyr::unpack(key) %>%
     dplyr::left_join(out_ts %>% dplyr::select(!!key, .data$ts), by = new_key_var) %>%
+    dplyr::arrange(!!key)
+
+  if (unique(map_dbl(out$.val, ncol)) == 0){
+    out <- out %>% dplyr::select(-.val)
+  }
+
+  out
+
+}
+
+rearrange_index2 <- function(data, key, old_key = NULL){
+  new_key_var <- as_name(key)
+  ts_df <- map_dfr(data$ts, rbind)
+  out_ts <- vctrs::vec_split(ts_df %>% select(-new_key_var) , ts_df[,new_key_var]) %>%
+    tibble::as_tibble() %>%
+    tidyr::unpack(key) %>%
+    dplyr::rename(ts = val)
+
+  inv <- find_invariant(data, !!key)
+  other_cols <- names(data)[!names(data) %in% c(inv$invariant, "ts")]
+  out <- data %>% dplyr::select(-ts) %>%
+    dplyr::left_join(out_ts, by = new_key_var) %>%
     dplyr::arrange(!!key)
 
   out
