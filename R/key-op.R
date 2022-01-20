@@ -43,30 +43,39 @@ switch_key <- function(data, key){
   if (orig_form == "long") data <- data %>% tamp()
 
   data <- tibble::as_tibble(data)
-  ts_df <- data %>% dplyr::select(!!new_key, !!old_key, .data$ts) %>% tibble::as_tibble()
+  out <- rearrange_index(data, key = new_key, old_key = old_key)
+
+  out_cubble <- new_cubble(out,
+                           key = new_key_var, index = index, coords = coords,
+                           row_id = old_key, spatial = NULL, form = "nested")
+
+  if (orig_form == "long") out_cubble <- out_cubble %>% stretch(.data$ts)
+
+  out_cubble
+}
+
+rearrange_index <- function(data, key, old_key = NULL){
+  new_key_var <- as_name(key)
+  ts_df <- data %>% dplyr::select(!!key, !!old_key, .data$ts) %>% tibble::as_tibble()
   out_ts <- vctrs::vec_split(ts_df %>% select(-new_key_var), ts_df[,new_key_var]) %>%
     tibble::as_tibble() %>%
     tidyr::unpack(key) %>%
     dplyr::mutate(ts = map(.data$val, ~tidyr::unchop(.x, .data$ts) %>% tidyr::unpack(.data$ts))) %>%
     dplyr::select(-.data$val)
 
-  inv <- find_invariant(data, !!new_key)
+  inv <- find_invariant(data, !!key)
   other_cols <- names(data)[!names(data) %in% c(inv$invariant, "ts")]
   out <- vctrs::vec_split(data[,other_cols], data[,inv$invariant]) %>%
     tibble::as_tibble() %>%
     rename(.val = val) %>%
     tidyr::unpack(key) %>%
-    dplyr::left_join(out_ts %>% dplyr::select(!!new_key, .data$ts), by = new_key_var) %>%
-    dplyr::arrange(!!new_key)
+    dplyr::left_join(out_ts %>% dplyr::select(!!key, .data$ts), by = new_key_var) %>%
+    dplyr::arrange(!!key)
 
-  out_cubble <- new_cubble(out,
-                           key = new_key_var, index = index, coords = coords,
-                           spatial = NULL, form = "nested")
+  out
 
-  if (orig_form == "long") out_cubble <- out_cubble %>% stretch(.data$ts)
-
-  out_cubble
 }
+
 
 
 #' Rename the key variable
@@ -80,6 +89,6 @@ rename_key <- function(data, ...){
 
   new_cubble(out,
              key = names(list(...)), index = index(data), coords = coords(data),
-             spatial = spatial(data), form = determine_form(data))
+             row_id = row_id(data), spatial = spatial(data), form = determine_form(data))
 }
 

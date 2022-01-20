@@ -15,15 +15,24 @@ cubble <- function(..., key, index, coords) {
   key <- enquo(key)
   new_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
-             spatial = NULL, form = "nested")
+             row_id = row_id, spatial = NULL, form = "nested")
 
 }
 
-new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL) {
+new_cubble <- function(data, key, index, coords, spatial, form, row_id, tsibble_attr = NULL) {
+  #browser()
 
   key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
 
   all_cols <- names(data)
+
+  if (form == "nested"){
+    unique_key <- unique(data[[key]]) %>% length()
+    if (unique_key != nrow(data)){
+      data <- data %>% ungroup() %>% rearrange_index(key = key, old_key = row_id)
+    }
+  }
+
 
   if (length(coords) == 1){
     if ("sfc" %in% class(data[[coords]])){
@@ -45,7 +54,7 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 
 
   attr <- list(x = data,
-               groups = key_data, index = index,
+               groups = key_data, index = index, row_id = row_id,
                spatial = spatial, coords = coords, form = form,
                class = "cubble_df") %>%
     Filter(f = length)

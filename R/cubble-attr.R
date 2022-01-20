@@ -97,3 +97,7 @@ coord_y <- function(data){
 index <- function(data){
   data %@% "index"
 }
+
+row_id <- function(data){
+  data %@% "row_id"
+}

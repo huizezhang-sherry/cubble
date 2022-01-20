@@ -24,7 +24,13 @@ test_missing <- function(quo, var){
 
 get_listcol <- function(data){
   col_type <- map(data, class)
-  names(data)[col_type == "list"]
+  n <- names(data)[col_type == "list"]
+
+  if (length(n) >= 2) {
+    cli::cli_abort("Please select the list column that contains the time series. ")
+  }
+
+  n
 }
 
 test_list <- function(data, col){

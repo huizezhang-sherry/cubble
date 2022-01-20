@@ -6,10 +6,11 @@ slice_factory <- function(f, ...){
     index <- index(data)
     coords <- coords(data)
     data <- tibble::as_tibble(data)
+    row_id <- row_id(data)
     out <- NextMethod()
 
     new_cubble(out,
-               key = key , index = index , coords = coords,
+               key = key , index = index , coords = coords, row_id = row_id,
                spatial = spatial, form = determine_form(data))
   }
 }

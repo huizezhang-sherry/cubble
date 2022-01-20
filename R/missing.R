@@ -38,7 +38,7 @@ add_missing_prct <- function(data, ...){
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             spatial = NULL, form = "nested")
+             row_id = row_id(data), spatial = NULL, form = "nested")
 }
 
 #' @rdname missing
@@ -65,6 +65,6 @@ add_missing_dscrb <- function(data, cutoff = 0.99){
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             spatial = NULL, form = "nested")
+             row_id = row_id(data), spatial = NULL, form = "nested")
 
 }

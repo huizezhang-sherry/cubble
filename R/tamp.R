@@ -64,6 +64,6 @@ tamp.cubble_df <- function(data, key) {
 
   new_cubble(out,
              key = as_name(key), index = index(data), coords = coords(data),
-             spatial = NULL, form = "nested")
+             row_id = row_id(data), spatial = NULL, form = "nested")
 }
 

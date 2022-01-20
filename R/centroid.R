@@ -3,7 +3,6 @@
 #' find the convex hull that wraps around the cluster, make it a polygon, find the centroid of the polygon and finally, extract the x and y coordinate of each centroid:
 #' @param data a cubble data object
 #'
-#' @return
 #' @importFrom geosphere centroid
 #' @export
 #'

@@ -28,6 +28,7 @@ stretch.cubble_df <- function(data, col, ...){
   key <- syms(key_vars(data))
   index <- index(data)
   coords <- coords(data)
+  row_id <- row_id(data)
 
   data <- as_tibble(data)
   is_tsibble <- "tbl_ts" %in% map_chr(data$ts, ~class(.x)[1])
@@ -55,14 +56,15 @@ stretch.cubble_df <- function(data, col, ...){
   #                                     col_tojoin1, col_tojoin2))
 
   spatial <- data %>% select(-!!col)
+  if (".val" %in% colnames(spatial)) spatial <- spatial %>% unnest(.val)
 
   if (is_tsibble) {
     out <- out %>% tsibble::as_tsibble(key = !!key[[1]], index = index)
   }
 
   new_cubble(out,
-             key = key, index = index, coords = coords,
-             spatial = spatial, form = "long")
+             key = map_chr(key, as_name), index = index, coords = coords,
+             row_id = row_id, spatial = spatial, form = "long")
 }
 
 

@@ -65,6 +65,6 @@
 
   new_cubble(out,
              key = as_name(new_key), index = index(data), coords = c(new_long, new_lat),
-             spatial = spatial, form = determine_form(out))
+             row_id = row_id(data), spatial = spatial, form = determine_form(out))
 
 }
