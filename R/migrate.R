@@ -39,7 +39,7 @@ migrate <- function(data, ...){
       "{.code {names(dots)[!in_spatial]}} does not exist in spaital stem. No migration")
   }
 
-  to_join <- sp %>% select(key_vars(data)[1], names(dots)[in_spatial])
+  to_join <- sp %>% select(key_vars(data)[1], names(dots)[in_spatial]) %>% dplyr::distinct()
   suppressMessages(data %>% left_join(to_join))
 
 
