@@ -100,9 +100,8 @@ or compare the series within the same pair (as an example here we only look at r
 ```{r echo = FALSE}
 ts <- matched %>%
   switch_key(.group) %>% 
-  stretch(ts) %>% 
-  migrate(.group) %>% 
-  left_join(as_tibble(matched) %>% select(id, automated))
+  stretch(ts) %>%
+  migrate(id, automated) 
 
 ts %>%
   ggplot(aes(x = date, y = tmax, color = automated, group = id)) +
@@ -135,7 +134,7 @@ climate <- weatherdata::climate_full %>%
 
 vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste %>% filter(NAME == "Victoria"))  
 plot_map(vic_map) +
-  geom_point(data = dplyr::bind_rows(river, climate) , 
+  geom_point(data = dplyr::bind_rows(river, climate) %>% unnest(.val), 
              aes(x = long, y = lat, color = type)) + 
   scale_color_brewer(palette = "Dark2") +
   theme_bw()
@@ -235,20 +234,19 @@ Or to look at the series:
 
 ```{r}
 res_long <- res %>% 
-  stretch() %>% 
+  stretch(ts) %>% 
   migrate(.group) %>% 
   mutate(prcp = scale(prcp)[,1]) %>% 
   switch_key(.group) %>% 
-  left_join(as_tibble(res) %>% select(.group, type, id))
+  migrate(type)
 
 res_long %>% 
-  ggplot(aes(x = date, y = prcp, color = type)) + 
+  ggplot(aes(x = date, y = prcp, color = type, group = id)) + 
   geom_line() + 
   facet_wrap(vars(.group)) + 
   scale_color_brewer(palette = "Dark2", guide = "none") + 
   theme_bw() + 
   labs(x=  "week") + 
   scale_x_date(date_labels = "%b")
-
 ```
 

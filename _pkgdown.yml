@@ -24,12 +24,19 @@ reference:
   - strip_rowwise
   - switch_key
   - rename_key
+  - get_centroid
+  - match_sites
   - contains("index")
   - contains("slice")
 - title: "Visualising spatial-temporal data"
 - contents:
   - gen_grid
   - plot_map
+  - geom_glyph
 - title: "In-built data"
 - contents:
   - contains("climate")
+- title: "Misc"
+- contents:
+  - new_spatial
+  - extract_var
