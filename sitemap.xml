@@ -1,57 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//index.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/attributes.html</loc>
+    <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/bbox.html</loc>
+    <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/climate_flat.html</loc>
+    <loc>/articles/0-create-cubble-from-wild.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/climate_large.html</loc>
+    <loc>/articles/1-details-on-cubble-design.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/climate_small.html</loc>
+    <loc>/articles/2-data-manip-with-cubble.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/cubble-package.html</loc>
+    <loc>/articles/3-application-automated-stations.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/data-structure.html</loc>
+    <loc>/articles/4-spatial-temporal-aggregation.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/glyph.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/index_by.cubble_df.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/migrate.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/missing.html</loc>
+    <loc>/reference/attributes.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/pipe.html</loc>
+    <loc>/reference/aus_climate.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/quality_plot.html</loc>
+    <loc>/reference/climate_flat.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/slice.html</loc>
+    <loc>/reference/climate_missing.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//reference/station.html</loc>
+    <loc>/reference/cubble-class.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//articles/data_structure.html</loc>
+    <loc>/reference/cubble-package.html</loc>
   </url>
   <url>
-    <loc>https://huizezhang-sherry.github.io/cubble//articles/workflow.html</loc>
+    <loc>/reference/cubble-verb.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gen_grid.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_centroid.html</loc>
+  </url>
+  <url>
+    <loc>/reference/glyph.html</loc>
+  </url>
+  <url>
+    <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/matching.html</loc>
+  </url>
+  <url>
+    <loc>/reference/missing.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nearby.html</loc>
+  </url>
+  <url>
+    <loc>/reference/netcdf.html</loc>
+  </url>
+  <url>
+    <loc>/reference/new_spatial.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_map.html</loc>
+  </url>
+  <url>
+    <loc>/reference/rename_key.html</loc>
+  </url>
+  <url>
+    <loc>/reference/slice.html</loc>
+  </url>
+  <url>
+    <loc>/reference/stretch.html</loc>
+  </url>
+  <url>
+    <loc>/reference/strip_rowwise.html</loc>
+  </url>
+  <url>
+    <loc>/reference/switch_key.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tamp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/world_climate.html</loc>
   </url>
 </urlset>
