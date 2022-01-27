@@ -40,7 +40,13 @@ migrate <- function(data, ...){
   }
 
   to_join <- sp %>% select(key_vars(data)[1], names(dots)[in_spatial]) %>% dplyr::distinct()
-  suppressMessages(data %>% left_join(to_join))
+  out <- suppressMessages(data %>% left_join(to_join))
 
-
+  if (nrow(out) != nrow(data)){
+    var <- names(dots)
+    cli::cli_alert_warning(
+      "The key and  migrated variable{?s} {.field {var}} are not one-to-one."
+    )
+  }
+  out
 }
