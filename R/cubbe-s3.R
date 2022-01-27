@@ -20,15 +20,13 @@ cubble <- function(..., key, index, coords) {
 }
 
 new_cubble <- function(data, key, index, coords, spatial, form, row_id, tsibble_attr = NULL) {
-  #browser()
-
   key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
 
   all_cols <- names(data)
 
   if (form == "nested"){
     unique_key <- unique(data[[key]]) %>% length()
-    if (unique_key != nrow(data)){
+    if (unique_key != nrow(data) & !is.null(row_id(data))){
       data <- data %>% ungroup() %>% rearrange_index(key = key, old_key = row_id)
     }
   }

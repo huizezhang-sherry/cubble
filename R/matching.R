@@ -121,10 +121,10 @@ match_spatial <- function(major,
     tidyr::unnest(minor) %>%
     calc_dist(coords_mj, coords_mn) %>%
     dplyr::group_by(!!sym(key_mj)) %>%
-    dplyr::slice_min(.dist, n = spatial_n_keep) %>%
-    dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$.dist) %>%
+    dplyr::slice_min(dist, n = spatial_n_keep) %>%
+    dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$dist) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.dist <= spatial_dist_max)
+    dplyr::filter(dist <= spatial_dist_max)
 
   if (spatial_single_match) {
     temp <- out %>%
@@ -146,7 +146,7 @@ match_spatial <- function(major,
       dup_fixed <- out %>%
         dplyr::filter(!!sym(key_mn) %in% prob_sites) %>%
         dplyr::group_by(!!sym(key_mn)) %>%
-        dplyr::filter(.dist == min(.dist))
+        dplyr::filter(dist == min(dist))
 
       out <- temp %>%
         dplyr::filter(!!sym(key_mn) %in% good_sites) %>%
@@ -157,8 +157,8 @@ match_spatial <- function(major,
   }
 
   out <- out %>%
-    arrange(.dist) %>%
-    mutate(.group = dplyr::row_number())
+    arrange(dist) %>%
+    mutate(group = dplyr::row_number())
 
   if (any(str_detect(coords_mj[[1]], "ref"))) {
     mn_long <- coords_mn[[1]]
@@ -189,7 +189,7 @@ calc_dist <- function(data, coords1, coords2) {
     )
 
   data %>%
-    mutate(.dist = dt$d)
+    mutate(dist = dt$d)
 
 }
 
@@ -206,8 +206,8 @@ match_postprocessing <- function(major, minor, match_table) {
   major_key <- key_vars(major)
   minor_key <- key_vars(minor)
 
-  matched_major <- match_table %>% select(1, .dist, .data$.group)
-  matched_minor <- match_table %>% select(2, .dist,  .data$.group)
+  matched_major <- match_table %>% select(1, dist, .data$group)
+  matched_minor <- match_table %>% select(2, dist,  .data$group)
 
   major_key2 <- colnames(matched_major)[1]
   minor_key2 <- colnames(matched_minor)[1]
@@ -228,7 +228,7 @@ match_postprocessing <- function(major, minor, match_table) {
   joined_minor <- minor %>%
     dplyr::inner_join(matched_minor,
                       by = stats::setNames(minor_key2, key_vars(minor))) %>%
-    arrange(.data$.group)
+    arrange(.data$group)
 
 
   common_var <-
@@ -243,7 +243,7 @@ match_postprocessing <- function(major, minor, match_table) {
     dplyr::select(common_var) %>%
     dplyr::bind_rows(joined_minor %>%
                        dplyr::select(common_var)) %>%
-    dplyr::arrange(.dist)
+    dplyr::arrange(dist)
 
   out
 }
@@ -277,14 +277,14 @@ match_temporal <- function(major,
 
   dt <- data %>%
     stretch() %>%
-    migrate(.data$.group) %>%
+    migrate(.data$group) %>%
     dplyr::mutate(lag = dplyr::lag(!!var),
                   diff = .data$lag-!!var) %>%
     dplyr::group_by(.data$id) %>%
     dplyr::top_n(n = temporal_n_highest, wt = diff) %>%
     dplyr::arrange(!!sym(index(data)), .by_group = TRUE)
 
-  ngroup <- unique(dt$.group)
+  ngroup <- unique(dt$group)
 
   out <- map_dfr(1:length(ngroup),
                  ~ {
@@ -300,18 +300,18 @@ match_temporal <- function(major,
     dplyr::arrange(-.data$n_match) %>%
     dplyr::filter(.data$n_match >= temporal_min_match) %>%
     as_tibble() %>%
-    select(!!sym(key), .group, n_match)
+    select(!!sym(key), group, n_match)
 
   good_groups <- good %>%
-    dplyr::pull(.group) %>%
+    dplyr::pull(group) %>%
     unique()
 
   good_n_match <- good %>%
-    dplyr::select(.data$n_match, .data$.group) %>%
+    dplyr::select(.data$n_match, .data$group) %>%
     unique()
 
   data %>%
-    inner_join(good, by = c(".group", key)) %>%
+    inner_join(good, by = c("group", key)) %>%
     dplyr::arrange(-.data$n_match)
 
 
@@ -319,9 +319,9 @@ match_temporal <- function(major,
 
 match_temporal_single <- function(data, group_id,
                                   independent, window = 5) {
-  data_long <- data %>% dplyr::filter(.data$.group == group_id)
+  data_long <- data %>% dplyr::filter(.data$group == group_id)
   data_nested <-
-    data %>% tamp() %>% dplyr::filter(.data$.group == group_id)
+    data %>% tamp() %>% dplyr::filter(.data$group == group_id)
 
   if (independent == "major") {
     major_id <- data_nested$id[1]
