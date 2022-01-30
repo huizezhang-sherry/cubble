@@ -73,7 +73,7 @@ non_auto <- nsw %>% filter(!automated)
 matched <- match_sites(auto, non_auto, temporal_matching = FALSE) 
 ```
 
-The result from the pairing is also a cubble with two additional columns:  `.dist` as the distance between the pair and `.group` as the grouping index:
+The result from the pairing is also a cubble with two additional columns:  `dist` as the distance between the pair and `group` as the grouping index:
 
 ```{r}
 matched 
@@ -86,7 +86,7 @@ plot_map(nsw_map) +
   geom_point(data = matched, 
              aes(x = long, y = lat, color = automated)) + 
   ggrepel::geom_label_repel(data = matched %>% filter(automated),
-                            aes(x = long, y = lat, label = .group)) + 
+                            aes(x = long, y = lat, label = group)) + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("New South Wales") + 
   theme_minimal() + 
@@ -99,14 +99,14 @@ or compare the series within the same pair (as an example here we only look at r
 
 ```{r echo = FALSE}
 ts <- matched %>%
-  switch_key(.group) %>% 
+  switch_key(group) %>% 
   stretch(ts) %>%
   migrate(id, automated) 
 
 ts %>%
   ggplot(aes(x = date, y = tmax, color = automated, group = id)) +
   geom_line() +
-  facet_wrap(vars(.group)) +
+  facet_wrap(vars(group)) +
   scale_color_brewer(palette = "Dark2") + 
   scale_x_date(date_labels = "%d") + 
   theme_bw()
@@ -119,11 +119,7 @@ We can see that in general the maximum temperatures recorded in traditional and 
 The water level data comes from [Bureau of Meteorology](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full) and has a copy in `weatherdata`. Here we extract the water course level and add a column annotate this data of type `river`. For the rainfall data, we will still use the `weatherdata::climate_full`, filtering for Victorian stations in 2020 should be pretty familiar by now. Again, we first look at where these stations are on the map first:
 
 ```{r}
-river <- weatherdata::water %>% 
-  stretch() %>% 
-  select(date, Water_course_level) %>% 
-  tamp() %>% 
-  mutate(type = "river")
+river <- weatherdata::water %>% mutate(type = "river")
 
 climate <- weatherdata::climate_full %>% 
   filter(between(stringr::str_sub(id, 7, 8), 76, 90)) %>% 
@@ -134,7 +130,7 @@ climate <- weatherdata::climate_full %>%
 
 vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste %>% filter(NAME == "Victoria"))  
 plot_map(vic_map) +
-  geom_point(data = dplyr::bind_rows(river, climate) %>% unnest(.val), 
+  geom_point(data = dplyr::bind_rows(river, climate), 
              aes(x = long, y = lat, color = type)) + 
   scale_color_brewer(palette = "Dark2") +
   theme_bw()
@@ -192,37 +188,27 @@ In this illustration, we construct the interval based on series `A` and two of t
 
 ## Rainfall translates into river level
 
-There's another mandatory argument that hasn't been introduced above: `temporal_var_to_match`. This argument controls the variable to match and it needs to appear in both the `major` and `minor` set. In the water level matching example, we match the variable `Water_course_level` from `river` to `prcp` from `climate`, hence need to manually rename one of them to match the other, here we rename `Water_course_level` to `prcp` in `river`: 
-
-```{r}
-river <- river %>% 
-  stretch() %>% 
-  rename(prcp = Water_course_level) %>% 
-  tamp()
-```
-
-Now we use `match_sites()` to first pair the weather stations with the river gauges spatially and then apply the temporal matching on `prcp`. We will construct the interval based on peaks in `climate` since we would expect a lag effect for precipitation to flow into the river and cause a raise in river level, hence `temporal_independent = climate`. We select the 30 highest peak from the series to construct the match by setting `temporal_n_highest = 30`. This is a tuning parameter and you can start with 10% of the points of one series (here we have daily data for a year, 10% is roughly 30 points). `temporal_min_match` filters out pairs don't have enough match and to return all the pairs, set `temporal_min_match` to `0`. 
+There's another mandatory argument that hasn't been introduced above: `temporal_var_to_match`. This argument controls the variable to match and it needs to appear in both the `major` and `minor` set. In the water level matching example, we match the variable `Water_course_level` from `river` to `prcp` from `climate`. Now we use `match_sites()` to first pair the weather stations with the river gauges spatially and then apply the temporal matching on `prcp`. We will construct the interval based on peaks in `climate` since we would expect a lag effect for precipitation to flow into the river and cause a raise in river level, hence `temporal_independent = climate`. We select the 30 highest peak from the series to construct the match by setting `temporal_n_highest = 30`. This is a tuning parameter and you can start with 10% of the points of one series (here we have daily data for a year, 10% is roughly 30 points). `temporal_min_match` filters out pairs don't have enough match and to return all the pairs, set `temporal_min_match` to `0`. 
 
 
 ```{r}
 res <- match_sites(river, climate,
-                   temporal_var_to_match = prcp,
-                   temporal_independent = climate,
+                   temporal_var_to_match = c("Water_course_level" = "prcp"),
+                   temporal_independent = "prcp",
                    temporal_n_highest = 30,
-                   temporal_min_match = 15
-)
+                   temporal_min_match = 15)
 
 res
 ```
 
-The output from temporal matching is also a cubble, with additional column `.dist` and `.group` inherent from spatial matching and `n_match` for the number of matched temporal peaks. Then you can use this output to plot the location of match: 
+The output from temporal matching is also a cubble, with additional column `dist` and `group` inherent from spatial matching and `n_match` for the number of matched temporal peaks. Then you can use this output to plot the location of match: 
 
 ```{r}
 plot_map(vic_map) +
   geom_point(data = res, 
              aes(x = long, y = lat, color = type)) + 
   ggrepel::geom_label_repel(data = res %>% filter(type == "river"),
-                            aes(x = long, y = lat, label = .group)) + 
+                            aes(x = long, y = lat, label = group)) + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("Victoria") + 
   theme_minimal() + 
@@ -235,18 +221,16 @@ Or to look at the series:
 ```{r}
 res_long <- res %>% 
   stretch(ts) %>% 
-  migrate(.group) %>% 
-  mutate(prcp = scale(prcp)[,1]) %>% 
-  switch_key(.group) %>% 
-  migrate(type)
+  migrate(group, type) %>% 
+  rename(prcp = matched_var) %>% 
+  mutate(prcp = (prcp - min(prcp, na.rm = TRUE))/ (max(prcp, na.rm = TRUE) - min(prcp, na.rm = TRUE))) 
 
 res_long %>% 
-  ggplot(aes(x = date, y = prcp, color = type, group = id)) + 
+  ggplot(aes(x = date, y = prcp, group = type,color = type)) + 
   geom_line() + 
-  facet_wrap(vars(.group)) + 
+  facet_wrap(vars(group)) + 
   scale_color_brewer(palette = "Dark2", guide = "none") + 
   theme_bw() + 
   labs(x=  "week") + 
   scale_x_date(date_labels = "%b")
 ```
-
