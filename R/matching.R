@@ -48,28 +48,19 @@ match_sites <- function(major,
   )
 
   if (temporal_matching) {
-    independent <- temporal_independent
 
+    major_id <- key_data(major) %>% dplyr::pull(!!key_vars(major))
+    minor_id <- key_data(minor) %>% dplyr::pull(!!key_vars(minor))
 
-    half <- nrow(out) / 2
-    major_matched <- out[1:half, ]
-    minor_matched <- out[(half + 1):(2 * half), ]
-
-    if (identical(independent, major)) {
-      independent <- major_matched
-    } else if (identical(independent, minor)) {
-      independent <- minor_matched
-    } else{
-      cli::cli_abort("The independent set needs to be either the major or minor set.")
-    }
-
+    major_matched <- out %>% filter(id %in% major_id)
+    minor_matched <- out %>% filter(id %in% minor_id)
 
     out <- match_temporal(
       major_matched,
       minor_matched,
-      temporal_var_to_match = !!enquo(temporal_var_to_match),
+      temporal_var_to_match = temporal_var_to_match,
       temporal_n_highest = temporal_n_highest,
-      temporal_independent = independent,
+      temporal_independent = temporal_independent,
       temporal_window = temporal_window,
       temporal_min_match = temporal_min_match
     )
@@ -160,7 +151,7 @@ match_spatial <- function(major,
     arrange(dist) %>%
     mutate(group = dplyr::row_number())
 
-  if (any(str_detect(coords_mj[[1]], "ref"))) {
+  if (any(stringr::str_detect(coords_mj[[1]], "ref"))) {
     mn_long <- coords_mn[[1]]
     mn_lat <-  coords_mn[[2]]
     major <- major %>%
@@ -260,27 +251,27 @@ match_temporal <- function(major,
                            temporal_min_match = 10) {
   is_cubble(major)
   is_cubble(minor)
-  var <- enquo(temporal_var_to_match)
-  independent <- temporal_independent
 
-  data <- dplyr::bind_rows(major, minor)
+  major_var <- names(temporal_var_to_match)
+  minor_var <- unname(temporal_var_to_match)
+
+  data <- dplyr::bind_rows(fix_data(major, major_var), fix_data(minor, minor_var))
   key <- key_vars(data)
 
-  if (identical(independent, major)) {
-    independent <-  "major"
-  } else if (identical(independent, minor)) {
-    independent <- "minor"
+  if (identical(temporal_independent, major_var)) {
+    temporal_independent <-  "major"
+  } else if (identical(temporal_independent, minor_var)) {
+    temporal_independent <- "minor"
   } else{
-    cli::cli_abort("The independent set needs to be either the major or minor set.")
+    cli::cli_abort("The independent set needs to be either the major or minor variable.")
   }
 
 
   dt <- data %>%
     stretch() %>%
-    migrate(.data$group) %>%
-    dplyr::mutate(lag = dplyr::lag(!!var),
-                  diff = .data$lag-!!var) %>%
-    dplyr::group_by(.data$id) %>%
+    migrate(group) %>%
+    dplyr::mutate(lag = dplyr::lag(matched_var),
+                  diff = .data$lag-matched_var) %>%
     dplyr::top_n(n = temporal_n_highest, wt = diff) %>%
     dplyr::arrange(!!sym(index(data)), .by_group = TRUE)
 
@@ -292,7 +283,7 @@ match_temporal <- function(major,
 
                    match_temporal_single(dt,
                                          group_id = group_id,
-                                         independent = independent,
+                                         independent = temporal_independent,
                                          window = temporal_window)
                  })
 
@@ -315,6 +306,15 @@ match_temporal <- function(major,
     dplyr::arrange(-.data$n_match)
 
 
+}
+
+fix_data <- function(data, chosen_var){
+  test_cubble(data)
+  data %>%
+    stretch() %>%
+    dplyr::select(key_vars(data), index(data), chosen_var) %>%
+    dplyr::rename(matched_var = chosen_var) %>%
+    tamp()
 }
 
 match_temporal_single <- function(data, group_id,
