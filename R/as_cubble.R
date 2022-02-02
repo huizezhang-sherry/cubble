@@ -97,15 +97,17 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
 }
 
 #' @export
-as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
+as_cubble.ncdf4 <- function(data, key, index, coords, vars,
+                            lat_range = NULL, long_range = NULL, ...){
 
   lat_raw <- extract_longlat(data)$lat
   long_raw <- extract_longlat(data)$long
+
   time_raw <- extract_time(data)
   var <- extract_var(data, vars)
 
   first_dim <- dim(var$var[[1]])[[1]]
-  default_order <- c(length(time_raw), length(var))
+  default_order <- c(length(time_raw), length(var$name))
   longl <- length(long_raw); latl <- length(lat_raw)
   if (length(long_raw) == first_dim){
     dim_order <- c(longl, latl , default_order)
@@ -116,7 +118,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
   latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>%
     dplyr::mutate(id = row_number())
 
-  mapping <- tidyr::expand_grid(time = time_raw, var = var$name) %>%
+  mapping <- tidyr::expand_grid(var = var$name, time = time_raw) %>%
     tidyr::expand_grid(latlong_grid)
 
   data <- array(unlist(var$var), dim = dim_order) %>%
@@ -127,6 +129,14 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
     dplyr::arrange(id) %>%
     tidyr::pivot_wider(names_from = var, values_from = Freq)
 
+  if (!is.null(lat_range)){
+    lat_range <- lat_range[lat_range %in% lat_raw]
+    data <- data %>% filter(lat %in% lat_range)
+  }
+  if (!is.null(long_range)) {
+    long_range <- long_range[long_range %in% long_raw]
+    data <- data %>% filter(long %in% long_range)
+  }
   key <- "id"
   all_vars <- find_invariant(data, !!key)
 
