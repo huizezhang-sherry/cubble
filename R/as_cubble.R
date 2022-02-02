@@ -103,54 +103,39 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars, ...){
   long_raw <- extract_longlat(data)$long
   time_raw <- extract_time(data)
   var <- extract_var(data, vars)
-  data <- var$var
-  var_name <- syms(var$name)
 
-  if (!length(long_raw) %in% dim(data[[1]]) | !length(lat_raw) %in% dim(data[[1]])){
-    abort("lat, long doesn't match with the data dimension.")
+  first_dim <- dim(var$var[[1]])[[1]]
+  default_order <- c(length(time_raw), length(var))
+  longl <- length(long_raw); latl <- length(lat_raw)
+  if (length(long_raw) == first_dim){
+    dim_order <- c(longl, latl , default_order)
+  } else if(length(lat_raw) == first_dim){
+    dim_order <- c(latl, longl, default_order)
   }
 
-  grid <- expand.grid(long = long_raw, lat = lat_raw) %>%
-    tibble::as_tibble() %>%
-    dplyr::mutate(
-      long_idx = match(.data$long, long_raw),
-      lat_idx = match(.data$lat, lat_raw),
-      id = dplyr::row_number()
-    ) %>%
+  latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>%
+    dplyr::mutate(id = row_number())
+
+  mapping <- tidyr::expand_grid(time = time_raw, var = var$name) %>%
+    tidyr::expand_grid(latlong_grid)
+
+  data <- array(unlist(var$var), dim = dim_order) %>%
+    as.data.frame.table() %>%
+    as_tibble() %>%
+    dplyr::bind_cols(mapping) %>%
+    dplyr::select(id, long, lat, time, var, Freq) %>%
+    dplyr::arrange(id) %>%
+    tidyr::pivot_wider(names_from = var, values_from = Freq)
+
+  key <- "id"
+  all_vars <- find_invariant(data, !!key)
+
+  out <- data %>%
+    tidyr::nest(ts = c(!!!all_vars$variant)) %>%
     dplyr::rowwise()
 
-  if (length(long_raw) == dim(data[[1]])[1]) {
-
-  # this bulk need to be further simplified for performance
-    ts_col <- map(1:nrow(grid),
-                function(idx)
-                  map2_dfr(var_name, data,
-                           ~tibble::tibble(time = time_raw) %>%
-                             dplyr::bind_cols(
-                               tibble::tibble({{.x}} := .y[grid$long_idx[idx], grid$lat_idx[idx], ]))))
-
-    out <- grid %>%
-      dplyr::bind_cols(tibble::tibble(ts = ts_col)) %>%
-      dplyr::select(-.data$long_idx, -.data$lat_idx)
-  } else{
-
-    ts_col <- map(1:nrow(grid),
-                  function(idx)
-                    map2_dfr(var_name, data,
-                             ~tibble::tibble(time = time_raw) %>%
-                               dplyr::bind_cols(
-                                 tibble::tibble({{.x}} := .y[grid$lat_idx[idx], grid$long_idx[idx], ]))))
-
-    out <- grid %>%
-      dplyr::bind_cols(tibble::tibble(ts = ts_col)) %>%
-      dplyr::select(-.data$long_idx, -.data$lat_idx)
-
-  }
-  #leaves <- as_leaves(out, variant = NULL)
-
   new_cubble(out,
-             key = "id", index = "time", coords = c("long", "lat"),
-             row_id = "id", spatial = NULL, form = "nested")
-
+               key = key, index = "time", coords = c("long", "lat"),
+               row_id = key, spatial = NULL, form = "nested")
 }
 

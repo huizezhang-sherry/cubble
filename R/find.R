@@ -10,14 +10,19 @@ find_invariant <- function(data, key) {
   nested_col <- data[,which(names(data) != key)]
   list_col <- vec_split(nested_col, key_col)$val
 
-
-  out <- map(list_col, function(data){
+  if (length(list_col) > 10000){
+    data <- list_col[[1]]
     var_length <- map_dbl(colnames(data), ~ nrow(unique(data[.x])))
-    c(key, colnames(data)[var_length == 1])
-  })
-
-  invariant <- Reduce(intersect, out)
-  names(invariant) <- NULL
+    invariant <- c(key, colnames(data)[var_length == 1])
+    cli::cli_alert_info("More than 10,000 ids - use only the first id to test the variant/invariant variables.")
+  } else{
+    out <- map(list_col, function(data){
+      var_length <- map_dbl(colnames(data), ~ nrow(unique(data[.x])))
+      c(key, colnames(data)[var_length == 1])
+    })
+    invariant <- Reduce(intersect, out)
+    names(invariant) <- NULL
+  }
 
   col_names <- names2(data)
   variant <- col_names[!col_names %in% invariant]

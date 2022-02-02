@@ -100,9 +100,17 @@ tbl_sum.cubble_df <- function(data) {
   bbox_msg <- glue::glue("[{bbox}]{signal}")
 
   if (form(data) == "nested"){
-    var_names <- Reduce(unique, map(data$ts, names))
-    ts <- data$ts
-    var_type <- Reduce(unique, map(1:length(ts), ~map(ts[[.x]], tibble::type_sum)))
+
+    if (length(data$ts) > 10000){
+      var_names <- names(data$ts[[1]])
+      ts <- data$ts[[1]]
+      var_type <- Reduce(unique, map(1:length(ts), ~map(ts[[.x]], tibble::type_sum)))
+    } else{
+      var_names <- Reduce(unique, map(data$ts, names))
+      ts <- data$ts
+      var_type <- Reduce(unique, map(1:length(ts), ~map(ts[[.x]], tibble::type_sum)))
+    }
+
 
   } else if (form(data) == "long"){
 
