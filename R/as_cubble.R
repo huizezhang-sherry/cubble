@@ -99,29 +99,34 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
 #' @export
 as_cubble.ncdf4 <- function(data, key, index, coords, vars,
                             lat_range = NULL, long_range = NULL, ...){
-
+  # extract variables
   lat_raw <- extract_longlat(data)$lat
   long_raw <- extract_longlat(data)$long
-
   time_raw <- extract_time(data)
   var <- extract_var(data, vars)
+  lat_idx <- 1:length(lat_raw)
+  long_idx <- 1:length(long_raw)
 
-  first_dim <- dim(var$var[[1]])[[1]]
-  default_order <- c(length(time_raw), length(var$name))
-  longl <- length(long_raw); latl <- length(lat_raw)
-  if (length(long_raw) == first_dim){
-    dim_order <- c(longl, latl , default_order)
-  } else if(length(lat_raw) == first_dim){
-    dim_order <- c(latl, longl, default_order)
+  # subset long lat if applicable
+  if (!is.null(lat_range)) {
+    lat_idx <- which(lat_raw %in% lat_range)
+    lat_raw <- lat_raw[which(lat_raw %in% lat_range)]
   }
+  if (!is.null(long_range)) {
+    long_idx <- which(long_raw %in% long_range)
+    long_raw <- long_raw[which(long_raw %in% long_range)]
+  }
+  raw_data <- var$var %>% map(~.x[long_idx, lat_idx,])
 
+  # define dimension and grid
+  dim_order <- c(length(long_raw), length(lat_raw) , length(time_raw), length(var$name))
   latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>%
     dplyr::mutate(id = row_number())
-
   mapping <- tidyr::expand_grid(var = var$name, time = time_raw) %>%
     tidyr::expand_grid(latlong_grid)
 
-  data <- array(unlist(var$var), dim = dim_order) %>%
+  # restructure data into flat
+  data <- array(unlist(raw_data), dim = dim_order) %>%
     as.data.frame.table() %>%
     as_tibble() %>%
     dplyr::bind_cols(mapping) %>%
@@ -129,14 +134,6 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
     dplyr::arrange(id) %>%
     tidyr::pivot_wider(names_from = var, values_from = Freq)
 
-  if (!is.null(lat_range)){
-    lat_range <- lat_range[lat_range %in% lat_raw]
-    data <- data %>% filter(lat %in% lat_range)
-  }
-  if (!is.null(long_range)) {
-    long_range <- long_range[long_range %in% long_raw]
-    data <- data %>% filter(long %in% long_range)
-  }
   key <- "id"
   all_vars <- find_invariant(data, !!key)
 
