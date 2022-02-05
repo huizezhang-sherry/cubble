@@ -6,9 +6,6 @@
 #' @param index the time identifier
 #' @param coords the coordinates that characterise the spatial dimension
 #' @rdname cubble-class
-#' @examples
-#' climate_flat %>%
-#'   as_cubble(key = id, index = date, coords = c(long, lat))
 #' @export
 cubble <- function(..., key, index, coords) {
   data <- tibble::tibble(!!!list2(...))

@@ -9,9 +9,6 @@ get_centroid(data)
 \arguments{
 \item{data}{a cubble data object}
 }
-\value{
-
-}
 \description{
 find the convex hull that wraps around the cluster, make it a polygon, find the centroid of the polygon and finally, extract the x and y coordinate of each centroid:
 }

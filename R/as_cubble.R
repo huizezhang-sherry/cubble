@@ -1,6 +1,31 @@
 #' @rdname cubble-class
 #' @importFrom tidyr unchop
+#' @importFrom tsibble key_vars index
 #' @export
+#' @examples
+#' # Declaimer: to make the examples easier, here we first `climate_flat` into
+#' different classes and show how they can be casted into a cubble. This is to
+#' demonstrate if your data come in one of the classes, it can be directly cast
+#' into a cubble. By no mean you need to first transform your data into any of
+#' the following class and then cast it to cubble.
+#'
+#' # If the data is in a tibble:
+#' climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
+#'
+#' # If the data is already in a rowwise_df:
+#' dt <- climate_flat %>%
+#'   tidyr::nest(ts = date:tmin) %>%
+#'   dplyr::rowwise()
+#' dt %>% as_cubble(key = id, index = date, coords = c(long, lat))
+#'
+#' # If the data is already in a tsibble, only need to supply `coords`
+#' dt <- climate_flat %>% tsibble::as_tsibble(key = id, index = date)
+#' dt %>% as_cubble(coords = c(long, lat))
+#'
+#' # If the data is in netcdf:
+#' path <- system.file("ncdf/era5-pressure.nc", package = "weatherdata")
+#' raw <- ncdf4::nc_open(path)
+#' dt <- as_cubble(raw, vars = c("q", "z"))
 as_cubble <- function(data, key, index, coords, ...) {
   UseMethod("as_cubble")
 }
@@ -8,20 +33,16 @@ as_cubble <- function(data, key, index, coords, ...) {
 #' @rdname cubble-class
 #' @export
 as_cubble.tbl_df <- function(data, key, index, coords, ...) {
-
-  key <- enquo(key)
-  index <- enquo(index)
+  if (inherits(data, "tbl_ts")){
+    key <- sym(tsibble::key_vars(data))
+    index <- sym(tsibble::index(data))
+  } else{
+    key <- enquo(key)
+    index <- enquo(index)
+  }
   coords <- enquo(coords)
   row_id <- key
 
-  test_missing(quo = key, var = "key")
-  test_missing(quo = index, var = "index")
-  test_missing(quo = coords, var = "coords")
-
-  # check presents in the data
-  # checks for key
-  # checks for index
-  # checks for coords
   coords <- names(data)[eval_select(coords, data)]
   # - check lat between -90 to 90
   # - check long between -180 to 180?
@@ -99,6 +120,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
 #' @export
 as_cubble.ncdf4 <- function(data, key, index, coords, vars,
                             lat_range = NULL, long_range = NULL, ...){
+
   # extract variables
   lat_raw <- extract_longlat(data)$lat
   long_raw <- extract_longlat(data)$long
@@ -142,7 +164,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
     dplyr::rowwise()
 
   new_cubble(out,
-               key = key, index = "time", coords = c("long", "lat"),
+             key = key, index = "time", coords = c("long", "lat"),
                row_id = key, spatial = NULL, form = "nested")
 }
 

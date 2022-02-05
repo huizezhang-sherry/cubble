@@ -36,6 +36,27 @@ is_cubble(data)
 Constructor for the cubble class
 }
 \examples{
-climate_flat \%>\%
-  as_cubble(key = id, index = date, coords = c(long, lat))
+# Declaimer: to make the examples easier, here we first `climate_flat` into
+# different classes and show how they can be casted into a cubble. This is to
+demonstrate if your data come in one of the classes, it can be directly cast
+into a cubble. By no mean you need to first transform your data into any of
+the following class and then cast it to cubble.
+
+# If the data is in a tibble:
+climate_flat \%>\% as_cubble(key = id, index = date, coords = c(long, lat))
+
+# If the data is already in a rowwise_df:
+dt <- climate_flat \%>\%
+  tidyr::nest(ts = date:tmin) \%>\%
+  dplyr::rowwise()
+dt \%>\% as_cubble(key = id, index = date, coords = c(long, lat))
+
+# If the data is already in a tsibble, only need to supply `coords`
+dt <- climate_flat \%>\% tsibble::as_tsibble(key = id, index = date)
+dt \%>\% as_cubble(coords = c(long, lat))
+
+# If the data is in netcdf:
+path <- system.file("ncdf/era5-pressure.nc", package = "weatherdata")
+raw <- ncdf4::nc_open(path)
+dt <- as_cubble(raw, vars = c("q", "z"))
 }
