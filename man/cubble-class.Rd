@@ -38,9 +38,9 @@ Constructor for the cubble class
 \examples{
 # Declaimer: to make the examples easier, here we first `climate_flat` into
 # different classes and show how they can be casted into a cubble. This is to
-demonstrate if your data come in one of the classes, it can be directly cast
-into a cubble. By no mean you need to first transform your data into any of
-the following class and then cast it to cubble.
+# demonstrate if your data come in one of the classes, it can be directly cast
+# into a cubble. By no mean you need to first transform your data into any of
+# the following class and then cast it to cubble.
 
 # If the data is in a tibble:
 climate_flat \%>\% as_cubble(key = id, index = date, coords = c(long, lat))
