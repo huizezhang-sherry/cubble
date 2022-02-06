@@ -131,10 +131,11 @@ select.cubble_df <- function(data, ...){
 
 #' @export
 group_by.cubble_df <- function(data, ...){
-  new_group_var <- enquos(..., .named = TRUE)
-  key <- union(key_vars(data), names(new_group_var))
+  groups <- dplyr:::group_by_prepare(data, ..., .add = TRUE, caller_env = caller_env())
+  key <- groups$group_names
+  out <- groups$data
 
-  new_cubble(data,
+  new_cubble(out,
              key = key, index = index(data), coords = coords(data),
              row_id = row_id(data), spatial = spatial(data), form = determine_form(data))
 }
