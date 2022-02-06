@@ -19,29 +19,21 @@ library(ggplot2)
 library(sf)
 ```
 
-This article shows you how to create a cubble from data in the wild through an example of querying climate data from National Oceanic and Atmospheric Administration (NOAA). Here I use a workflow involving row-wise data frame making it easy to organise and  turn data into a cubble. This involves first create a row-wise tibble with one row per station, and then query the climate data as a nested list for each station.
+This article shows you how to create a cubble from data in the wild through an example of querying climate data from National Oceanic and Atmospheric Administration (NOAA). Here row-wise data frame is used to organise the data before turning it into a cubble. The row-wise data frame is constructed by first creating a row-wise data frame with all the metadata and then querying the climate data as a nested list.
 
-# Find target stations
+# Construct the meta dataset
 
-Suppose we want to find a few climate stations close to Melbourne and Sydney, here we create a reference list with the longitude and latitude of both cities:
+Suppose we are interested in the climate stations close to Melbourne and Sydney, here are ten of them: 
 
-```{r}
-(latlon_ref <- tibble::tibble(id = c("sydney", "melbourne"),
+```{r echo = FALSE}
+latlon_ref <- tibble::tibble(id = c("sydney", "melbourne"),
                          lat = c(-33.8675, -37.8136),
-                         long = c(151.2070, 144.9631)))
-```
+                         long = c(151.2070, 144.9631))
 
-Usually, you also need a master list with all the candidate stations to choose from. Here we use the stations saved in the built-in data, `aus_climate`.
-
-```{r}
-(cand <- aus_climate %>% 
+master_list <- aus_climate %>% 
    as_tibble() %>% 
-   select(id, lat, long, elev, name, wmo_id))
-```
+   select(id, lat, long, elev, name, wmo_id)
 
-Sphereical distance between pair of stations can be calculated via `rnoaa::meteo_spherical_distance()`. We write a small wrapper function here to find the 5 closest stations in each city:
-
-```{r}
 calc_dist <- function(df_ref, df, n = 5){
   long_ref <- df_ref$long
   lat_ref <- df_ref$lat
@@ -55,34 +47,43 @@ calc_dist <- function(df_ref, df, n = 5){
     select(-long_ref, -lat_ref)
 }
 
-(stations <- do.call("rbind", purrr::map(1:nrow(latlon_ref), 
-                             ~calc_dist(latlon_ref[.x, ], cand))))
+stations <- do.call("rbind", purrr::map(1:nrow(latlon_ref), 
+                             ~calc_dist(latlon_ref[.x, ], master_list)))
 ```
+
+```{r}
+stations
+```
+
+This datasets contains the station id and a few meta information of the station: `lat`, `long`, `elev`, `name`, `wmo_id` (World Meteorology Organisation ID) and its distance to Melbourne and Sydney city center.
+
+Such a dataset can be constructed via subsetting a station master list, i.e. `rnoaa::ghcnd_stations()`, with some criteria on variable, distance and recording years.
+
 
 # Query weather data
 
-The weather station data can be queried by `rnoaa::meteo_pull_monitors()` with the date range and variable supplied. Here the use of row-wise operation nests the queried climate data into a `ts` column. The nested data is then ready to be turned into a cubble with 
+The time series of climate variables can be queried by `rnoaa::meteo_pull_monitors()` with the date range and variable supplied. Here we turn the `stations` data into a rowwise data frame and then query the climate variables as a list-column, `ts`:  
+
+```{r}
+raw <- stations %>% 
+  rowwise() %>% 
+  mutate(ts = list(rnoaa::meteo_pull_monitors(id, 
+                                       date_min = "2020-01-01", 
+                                       date_max = "2020-12-31",
+                                       var = c("PRCP", "TMAX", "TMIN")))) 
+```
+
+The nested data is then ready to be turned into a cubble with 
 
   - `id` as the key to identify each station, 
   - `date` as the index to identify time, and 
   - `coords` to identify the spatial coordinates of each station.
 
-```{r eval = FALSE}
-sydmel_climate <- stations %>% 
-  rowwise() %>% 
-  mutate(ts = list(meteo_pull_monitors(id, 
-                                       date_min = "2020-01-01", 
-                                       date_max = "2020-12-31",
-                                       var = c("PRCP", "TMAX", "TMIN")) %>% 
-                     select(-id))) %>% 
+```{r}
+sydmel_climate <- raw %>% 
   as_cubble(key = id, index = date, coords = c(long, lat))
 ```
 
-```{r echo = FALSE}
-(sydmel_climate <- stations %>% 
-   left_join(aus_climate) %>% 
-   as_cubble(key = id, index = date, coords = c(long, lat)))
-```
 
 # Before you go
 
