@@ -90,56 +90,13 @@
 
     
     
-<p>This article shows you how to create a cubble from data in the wild through an example of querying climate data from National Oceanic and Atmospheric Administration (NOAA). Here I use a workflow involving row-wise data frame making it easy to organise and turn data into a cubble. This involves first create a row-wise tibble with one row per station, and then query the climate data as a nested list for each station.</p>
+<p>This article shows you how to create a cubble from data in the wild through an example of querying climate data from National Oceanic and Atmospheric Administration (NOAA). Here row-wise data frame is used to organise the data before turning it into a cubble. The row-wise data frame is constructed by first creating a row-wise data frame with all the metadata and then querying the climate data as a nested list.</p>
 <div class="section level2">
-<h2 id="find-target-stations">Find target stations<a class="anchor" aria-label="anchor" href="#find-target-stations"></a>
+<h2 id="construct-the-meta-dataset">Construct the meta dataset<a class="anchor" aria-label="anchor" href="#construct-the-meta-dataset"></a>
 </h2>
-<p>Suppose we want to find a few climate stations close to Melbourne and Sydney, here we create a reference list with the longitude and latitude of both cities:</p>
+<p>Suppose we are interested in the climate stations close to Melbourne and Sydney, here are ten of them:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">latlon_ref</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sydney"</span>, <span class="st">"melbourne"</span><span class="op">)</span>,
-                         lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">33.8675</span>, <span class="op">-</span><span class="fl">37.8136</span><span class="op">)</span>,
-                         long <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">151.2070</span>, <span class="fl">144.9631</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span>
-<span class="co">#&gt;   id          lat  long</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> sydney    -<span style="color: #BB0000;">33.9</span>  151.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> melbourne -<span style="color: #BB0000;">37.8</span>  145.</span></code></pre></div>
-<p>Usually, you also need a master list with all the candidate stations to choose from. Here we use the stations saved in the built-in data, <code>aus_climate</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">cand</span> <span class="op">&lt;-</span> <span class="va">aus_climate</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-   <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">lat</span>, <span class="va">long</span>, <span class="va">elev</span>, <span class="va">name</span>, <span class="va">wmo_id</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 85 × 6</span></span>
-<span class="co">#&gt;    id            lat  long  elev name                   wmo_id</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport           <span style="text-decoration: underline;">94</span>610</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york                    <span style="text-decoration: underline;">94</span>623</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin                <span style="text-decoration: underline;">94</span>627</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport          <span style="text-decoration: underline;">94</span>120</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott                 <span style="text-decoration: underline;">94</span>236</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00016065 -<span style="color: #BB0000;">30.4</span>  137.  76   andamooka               <span style="text-decoration: underline;">95</span>660</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00023034 -<span style="color: #BB0000;">35.0</span>  139.   2   adelaide airport        <span style="text-decoration: underline;">94</span>672</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00023373 -<span style="color: #BB0000;">34.5</span>  139. 275   nuriootpa viticultural  <span style="text-decoration: underline;">94</span>681</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00024024 -<span style="color: #BB0000;">34.4</span>  141.  30.1 loxton research centre  <span style="text-decoration: underline;">94</span>682</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00024048 -<span style="color: #BB0000;">34.2</span>  141.  31.5 renmark aero            <span style="text-decoration: underline;">95</span>687</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 75 more rows</span></span></code></pre></div>
-<p>Sphereical distance between pair of stations can be calculated via <code><a href="https://docs.ropensci.org/rnoaa/reference/meteo_spherical_distance.html" class="external-link">rnoaa::meteo_spherical_distance()</a></code>. We write a small wrapper function here to find the 5 closest stations in each city:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">calc_dist</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df_ref</span>, <span class="va">df</span>, <span class="va">n</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">long_ref</span> <span class="op">&lt;-</span> <span class="va">df_ref</span><span class="op">$</span><span class="va">long</span>
-  <span class="va">lat_ref</span> <span class="op">&lt;-</span> <span class="va">df_ref</span><span class="op">$</span><span class="va">lat</span>
-  
-  <span class="va">df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>long_ref <span class="op">=</span> <span class="va">long_ref</span>,
-           lat_ref<span class="op">=</span>  <span class="va">lat_ref</span>,
-           dist <span class="op">=</span> <span class="fu">rnoaa</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/rnoaa/reference/meteo_spherical_distance.html" class="external-link">meteo_spherical_distance</a></span><span class="op">(</span><span class="va">lat</span>, <span class="va">long</span>,<span class="va">lat_ref</span>, <span class="va">long_ref</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_min</a></span><span class="op">(</span><span class="va">dist</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>city <span class="op">=</span> <span class="va">df_ref</span><span class="op">$</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">long_ref</span>, <span class="op">-</span><span class="va">lat_ref</span><span class="op">)</span>
-<span class="op">}</span>
-
-<span class="op">(</span><span class="va">stations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="st">"rbind"</span>, <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">latlon_ref</span><span class="op">)</span>, 
-                             <span class="op">~</span><span class="fu">calc_dist</span><span class="op">(</span><span class="va">latlon_ref</span><span class="op">[</span><span class="va">.x</span>, <span class="op">]</span>, <span class="va">cand</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">stations</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 8</span></span>
 <span class="co">#&gt;    id            lat  long  elev name                         wmo_id  dist city </span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
@@ -153,11 +110,21 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00086077 -<span style="color: #BB0000;">38.0</span>  145.  12.1 moorabbin airport             <span style="text-decoration: underline;">94</span>870 21.9  melb…</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00088162 -<span style="color: #BB0000;">37.4</span>  145. 528.  wallan (kilmore gap)          <span style="text-decoration: underline;">94</span>860 48.1  melb…</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00087113 -<span style="color: #BB0000;">38.0</span>  144.  10.6 avalon airport                <span style="text-decoration: underline;">94</span>854 48.8  melb…</span></code></pre></div>
+<p>This datasets contains the station id and a few meta information of the station: <code>lat</code>, <code>long</code>, <code>elev</code>, <code>name</code>, <code>wmo_id</code> (World Meteorology Organisation ID) and its distance to Melbourne and Sydney city center.</p>
+<p>Such a dataset can be constructed via subsetting a station master list, i.e. <code><a href="https://docs.ropensci.org/rnoaa/reference/ghcnd_stations.html" class="external-link">rnoaa::ghcnd_stations()</a></code>, with some criteria on variable, distance and recording years.</p>
 </div>
 <div class="section level2">
 <h2 id="query-weather-data">Query weather data<a class="anchor" aria-label="anchor" href="#query-weather-data"></a>
 </h2>
-<p>The weather station data can be queried by <code><a href="https://docs.ropensci.org/rnoaa/reference/meteo_pull_monitors.html" class="external-link">rnoaa::meteo_pull_monitors()</a></code> with the date range and variable supplied. Here the use of row-wise operation nests the queried climate data into a <code>ts</code> column. The nested data is then ready to be turned into a cubble with</p>
+<p>The time series of climate variables can be queried by <code><a href="https://docs.ropensci.org/rnoaa/reference/meteo_pull_monitors.html" class="external-link">rnoaa::meteo_pull_monitors()</a></code> with the date range and variable supplied. Here we turn the <code>stations</code> data into a rowwise data frame and then query the climate variables as a list-column, <code>ts</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">raw</span> <span class="op">&lt;-</span> <span class="va">stations</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">rnoaa</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/rnoaa/reference/meteo_pull_monitors.html" class="external-link">meteo_pull_monitors</a></span><span class="op">(</span><span class="va">id</span>, 
+                                       date_min <span class="op">=</span> <span class="st">"2020-01-01"</span>, 
+                                       date_max <span class="op">=</span> <span class="st">"2020-12-31"</span>,
+                                       var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRCP"</span>, <span class="st">"TMAX"</span>, <span class="st">"TMIN"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+<p>The nested data is then ready to be turned into a cubble with</p>
 <ul>
 <li>
 <code>id</code> as the key to identify each station,</li>
@@ -166,36 +133,15 @@
 <li>
 <code>coords</code> to identify the spatial coordinates of each station.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sydmel_climate</span> <span class="op">&lt;-</span> <span class="va">stations</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">meteo_pull_monitors</span><span class="op">(</span><span class="va">id</span>, 
-                                       date_min <span class="op">=</span> <span class="st">"2020-01-01"</span>, 
-                                       date_max <span class="op">=</span> <span class="st">"2020-12-31"</span>,
-                                       var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRCP"</span>, <span class="st">"TMAX"</span>, <span class="st">"TMIN"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-                     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sydmel_climate</span> <span class="op">&lt;-</span> <span class="va">raw</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># bbox:     [144.47, -38.03, 151.18, -33.79]</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="co">#&gt;    id            lat  long  elev name                wmo_id  dist city  ts      </span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00066037 -<span style="color: #BB0000;">33.9</span>  151.   6   sydney airport amo   <span style="text-decoration: underline;">94</span>767  9.32 sydn… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00066194 -<span style="color: #BB0000;">33.9</span>  151.   3   canterbury racecou…  <span style="text-decoration: underline;">94</span>766  9.63 sydn… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00066124 -<span style="color: #BB0000;">33.8</span>  151.  55   parramatta north (…  <span style="text-decoration: underline;">94</span>764 19.4  sydn… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00066137 -<span style="color: #BB0000;">33.9</span>  151.   6.5 bankstown airport …  <span style="text-decoration: underline;">94</span>765 21.1  sydn… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00068192 -<span style="color: #BB0000;">34.0</span>  151.  73.9 camden airport aws   <span style="text-decoration: underline;">94</span>755 51.4  sydn… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00086038 -<span style="color: #BB0000;">37.7</span>  145.  78.4 essendon airport     <span style="text-decoration: underline;">95</span>866 10.8  melb… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00086282 -<span style="color: #BB0000;">37.7</span>  145. 113.  melbourne airport    <span style="text-decoration: underline;">94</span>866 20.1  melb… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00086077 -<span style="color: #BB0000;">38.0</span>  145.  12.1 moorabbin airport    <span style="text-decoration: underline;">94</span>870 21.9  melb… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00088162 -<span style="color: #BB0000;">37.4</span>  145. 528.  wallan (kilmore ga…  <span style="text-decoration: underline;">94</span>860 48.1  melb… &lt;tibble&gt;</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00087113 -<span style="color: #BB0000;">38.0</span>  144.  10.6 avalon airport       <span style="text-decoration: underline;">94</span>854 48.8  melb… &lt;tibble&gt;</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="before-you-go">Before you go<a class="anchor" aria-label="anchor" href="#before-you-go"></a>
 </h2>
 <p>Let’s look at these stations on the map:</p>
-<p><img src="0-create-cubble-from-wild_files/figure-html/unnamed-chunk-7-1.png" width="960"></p>
+<p><img src="0-create-cubble-from-wild_files/figure-html/unnamed-chunk-6-1.png" width="960"></p>
 </div>
   </div>
 

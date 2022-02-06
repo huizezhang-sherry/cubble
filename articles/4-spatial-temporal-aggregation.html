@@ -124,26 +124,26 @@
 <span class="co">#&gt; <span style="color: #949494;"># temporal: wk [dbl], prcp [dbl]</span></span>
 <span class="co">#&gt;   id            lat  long  elev name             wmo_id ll      ts       cluster</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;s2_ln&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00001006 -<span style="color: #BB0000;">15.5</span>  128.   3.8 wyndham aero      <span style="text-decoration: underline;">95</span>214 (128.1… &lt;tibble&gt;      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00001007 -<span style="color: #BB0000;">13.8</span>  126.   6   troughton island  <span style="text-decoration: underline;">94</span>102 (126.1… &lt;tibble&gt;      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00001018 -<span style="color: #BB0000;">16.4</span>  126. 546   mount elizabeth   <span style="text-decoration: underline;">94</span>211 (126.1… &lt;tibble&gt;      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00001019 -<span style="color: #BB0000;">14.3</span>  127.  23   kalumburu         <span style="text-decoration: underline;">94</span>100 (126.6… &lt;tibble&gt;      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00001020 -<span style="color: #BB0000;">14.1</span>  126.  51   truscott          <span style="text-decoration: underline;">95</span>101 (126.3… &lt;tibble&gt;      16</span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00001006 -<span style="color: #BB0000;">15.5</span>  128.   3.8 wyndham aero      <span style="text-decoration: underline;">95</span>214 (128.1… &lt;tibble&gt;       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00001007 -<span style="color: #BB0000;">13.8</span>  126.   6   troughton island  <span style="text-decoration: underline;">94</span>102 (126.1… &lt;tibble&gt;       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00001018 -<span style="color: #BB0000;">16.4</span>  126. 546   mount elizabeth   <span style="text-decoration: underline;">94</span>211 (126.1… &lt;tibble&gt;       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00001019 -<span style="color: #BB0000;">14.3</span>  127.  23   kalumburu         <span style="text-decoration: underline;">94</span>100 (126.6… &lt;tibble&gt;       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00001020 -<span style="color: #BB0000;">14.1</span>  126.  51   truscott          <span style="text-decoration: underline;">95</span>101 (126.3… &lt;tibble&gt;       9</span></code></pre></div>
 <p>One thing we hope to do with the cluster is to find the coordinates of the centroid. These are variables variant to the station but invariant to the cluster and it would be nice to have a function that structure each cluster as a row. <code><a href="../reference/switch_key.html">switch_key()</a></code> is the function that does this: it lets you to specify a new key, say <code>cluster</code> and nests all spatial variables variant to <code>cluster</code> into a column. Temporal observations from different stations while within the same cluster are bound in the nested column <code>ts</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
 <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   cluster [5]: nested form</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.53, -28.31, 153.21, -14.96]- check gap on long</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># bbox:     [135.87, -39.89, 150.23, -16]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># temporal: id [chr], wk [dbl], prcp [dbl]</span></span>
 <span class="co">#&gt;   cluster .val              ts                  </span>
 <span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1 <span style="color: #949494;">&lt;tibble [20 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [1,060 × 3]&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2 <span style="color: #949494;">&lt;tibble [15 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [795 × 3]&gt;</span>  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3 <span style="color: #949494;">&lt;tibble [13 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [689 × 3]&gt;</span>  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4 <span style="color: #949494;">&lt;tibble [13 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [689 × 3]&gt;</span>  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5 <span style="color: #949494;">&lt;tibble [28 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [1,484 × 3]&gt;</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1 <span style="color: #949494;">&lt;tibble [59 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [3,127 × 3]&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2 <span style="color: #949494;">&lt;tibble [22 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [1,166 × 3]&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3 <span style="color: #949494;">&lt;tibble [44 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [2,332 × 3]&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4 <span style="color: #949494;">&lt;tibble [34 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [1,802 × 3]&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5 <span style="color: #949494;">&lt;tibble [34 × 7]&gt;</span> <span style="color: #949494;">&lt;tibble [1,802 × 3]&gt;</span></span></code></pre></div>
 <p>This structure makes it easy to compute cluster level variable, although there are a few steps to calculate the centroid coordinates: we need to find the convex hull that wraps around the cluster, make it a polygon, find the centroid of the polygon and finally, extract the x and y coordinate of each centroid:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
@@ -156,15 +156,15 @@
          cent_lat <span class="op">=</span> <span class="fu">s2_y</span><span class="op">(</span><span class="va">centroid</span><span class="op">)</span><span class="op">)</span> 
 <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   cluster [5]: nested form</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.53, -28.31, 153.21, -14.96]- check gap on long</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># bbox:     [135.87, -39.89, 150.23, -16]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># temporal: id [chr], wk [dbl], prcp [dbl]</span></span>
 <span class="co">#&gt;   cluster .val     ts       chull                  ll_cluster centroid cent_long</span>
 <span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;POLYGON [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;s2_geo&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((119.7989 -23.4169, 119.… &lt;POINT …      116.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((145.3106 -14.9672, 141.… &lt;POINT …      143.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((146.0197 -18.2553, 146.… &lt;POINT …      147.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((136.8192 -15.7426, 131.… &lt;POINT …      133.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((152.7161 -24.1116, 150.… &lt;POINT …      151.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((148.4667 -37.6922, 147.… &lt;POINT …      146.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((145.5592 -16.3842, 144.… &lt;POINT …      146.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((141.2652 -34.0398, 139.… &lt;POINT …      139.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((150.229 -32.7244, 150.1… &lt;POINT …      148.</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5 &lt;tibble&gt; &lt;tibble&gt; &lt;int&gt;  ((143.9197 -35.7236, 143.… &lt;POINT …      142.</span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 1 more variable: cent_lat &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -192,11 +192,11 @@
 <span class="co"><span style="color: #949494;">#&gt; #   [s2_geography], cent_long [dbl], cent_lat [dbl]</span></span>
 <span class="co">#&gt;   cluster    wk  prcp cent_long cent_lat</span>
 <span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1     1  <span style="text-decoration: underline;">1</span>345      116.    -<span style="color: #BB0000;">23.6</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       1     2 <span style="text-decoration: underline;">12</span>626      116.    -<span style="color: #BB0000;">23.6</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       1     3 <span style="text-decoration: underline;">11</span>341      116.    -<span style="color: #BB0000;">23.6</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       1     4  <span style="text-decoration: underline;">7</span>905      116.    -<span style="color: #BB0000;">23.6</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       1     5  <span style="text-decoration: underline;">9</span>622      116.    -<span style="color: #BB0000;">23.6</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1     1 <span style="text-decoration: underline;">19</span>590      146.    -<span style="color: #BB0000;">37.6</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       1     2 <span style="text-decoration: underline;">30</span>525      146.    -<span style="color: #BB0000;">37.6</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       1     3 <span style="text-decoration: underline;">45</span>037      146.    -<span style="color: #BB0000;">37.6</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       1     4 <span style="text-decoration: underline;">34</span>806      146.    -<span style="color: #BB0000;">37.6</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       1     5 <span style="text-decoration: underline;">49</span>612      146.    -<span style="color: #BB0000;">37.6</span></span>
 
 <span class="fu"><a href="../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cluster_nested</span>, 
@@ -223,11 +223,11 @@
 <span class="co"><span style="color: #949494;">#&gt; #   [s2_lnglat], cluster [int]</span></span>
 <span class="co">#&gt;   id             wk  prcp cluster</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00001006     1  <span style="text-decoration: underline;">3</span>660      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00001006     2  <span style="text-decoration: underline;">1</span>766      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00001006     3  <span style="text-decoration: underline;">1</span>748      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00001006     4  <span style="text-decoration: underline;">4</span>614      16</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00001006     5  <span style="text-decoration: underline;">1</span>080      16</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00001006     1  <span style="text-decoration: underline;">3</span>660       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00001006     2  <span style="text-decoration: underline;">1</span>766       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00001006     3  <span style="text-decoration: underline;">1</span>748       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00001006     4  <span style="text-decoration: underline;">4</span>614       9</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00001006     5  <span style="text-decoration: underline;">1</span>080       9</span>
 
 <span class="va">station_long</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wk</span>, y <span class="op">=</span> <span class="va">prcp</span>, group <span class="op">=</span> <span class="va">id</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
