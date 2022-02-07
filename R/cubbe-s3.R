@@ -91,10 +91,9 @@ tbl_sum.cubble_df <- function(data) {
   key_n <- map_dbl(key, ~length(unique(key_data(data)[[.x]])))
 
   check <- check_coords(data)
-  signal <- check$msg
   bbox <- check$bbox
 
-  bbox_msg <- glue::glue("[{bbox}]{signal}")
+  bbox_msg <- glue::glue("[{bbox}]")
 
   if (form(data) == "nested"){
 
