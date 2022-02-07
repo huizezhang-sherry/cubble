@@ -14,7 +14,7 @@
 #' @param spatial_n_keep The number of matching to keep
 #' @param spatial_dist_max The maximum distance allowed between matched pair
 #' @param temporal_matching Wether to perform temporal matching
-#' @param temporal_var_to_match The variable used for temporal matching
+#' @param temporal_by The variable used for temporal matching
 #' @param temporal_n_highest The number of highest peak used for temporal matching
 #' @param temporal_independent The dataset used to construct the temporal window,
 #' need to be the name of either major or minor.
@@ -33,7 +33,7 @@ match_sites <- function(major,
                         spatial_n_keep = 1,
                         spatial_dist_max = 10,
                         temporal_matching = TRUE,
-                        temporal_var_to_match,
+                        temporal_by,
                         temporal_n_highest = 20,
                         temporal_independent,
                         temporal_window = 5,
@@ -58,7 +58,7 @@ match_sites <- function(major,
     out <- match_temporal(
       major_matched,
       minor_matched,
-      temporal_var_to_match = temporal_var_to_match,
+      temporal_by = temporal_by,
       temporal_n_highest = temporal_n_highest,
       temporal_independent = temporal_independent,
       temporal_window = temporal_window,
@@ -244,7 +244,7 @@ match_postprocessing <- function(major, minor, match_table) {
 #' @importFrom lubridate %within%
 match_temporal <- function(major,
                            minor,
-                           temporal_var_to_match,
+                           temporal_by,
                            temporal_n_highest = 20,
                            temporal_independent,
                            temporal_window = 5,
@@ -252,8 +252,8 @@ match_temporal <- function(major,
   is_cubble(major)
   is_cubble(minor)
 
-  major_var <- names(temporal_var_to_match)
-  minor_var <- unname(temporal_var_to_match)
+  major_var <- names(temporal_by)
+  minor_var <- unname(temporal_by)
 
   data <- dplyr::bind_rows(fix_data(major, major_var), fix_data(minor, minor_var))
   key <- key_vars(data)
