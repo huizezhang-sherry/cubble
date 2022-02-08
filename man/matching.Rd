@@ -14,7 +14,7 @@ match_sites(
   spatial_n_keep = 1,
   spatial_dist_max = 10,
   temporal_matching = TRUE,
-  temporal_var_to_match,
+  temporal_by,
   temporal_n_highest = 20,
   temporal_independent,
   temporal_window = 5,
@@ -34,7 +34,7 @@ match_postprocessing(major, minor, match_table)
 match_temporal(
   major,
   minor,
-  temporal_var_to_match,
+  temporal_by,
   temporal_n_highest = 20,
   temporal_independent,
   temporal_window = 5,
@@ -54,7 +54,7 @@ match_temporal(
 
 \item{temporal_matching}{Wether to perform temporal matching}
 
-\item{temporal_var_to_match}{The variable used for temporal matching}
+\item{temporal_by}{The variable used for temporal matching}
 
 \item{temporal_n_highest}{The number of highest peak used for temporal matching}
 

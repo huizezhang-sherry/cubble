@@ -1,5 +1,5 @@
 ---
-title: "1. details-on-cubble-design"
+title: "1. details on cubble design"
 ---
 
 ```{r, include = FALSE}
@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup echo = FALSE}
 library(cubble)
 library(dplyr)
 ```
