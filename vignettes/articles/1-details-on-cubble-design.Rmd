@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup echo = FALSE}
+```{r setup}
 library(cubble)
 library(dplyr)
 ```
