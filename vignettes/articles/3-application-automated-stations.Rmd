@@ -1,5 +1,5 @@
 ---
-title: "3. Application: Matching nearby stations"
+title: "3. Application: Matching"
 ---
 
 ```{r, include = FALSE}
@@ -19,15 +19,15 @@ library(sf)
 library(patchwork)
 ```
 
-One common type of task with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to pair the automated weater station with the closest traditional station to calibrate records, or we may want to investigate whether the rainfall will get translated to the river level. Some of these matches only concern the spatial dimension, while others, i.e. matching rainfall and river level, also require the temporal agreement.
+One common type of task with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to match the data from different data sources. Some of these matches only concern the spatial dimension, while others require temporal agreement.
 
-This vignette introduces how to spatially and spatio-temporally match between sites with the cubble structure with two examples. The first example pairs traditional weather stations with nearby automated stations in New South Wales, Australia. This exercise only concerns the matching based on spherical distance between stations. The next example pairs the river level recorded by the river gauges with the precipitation recorded by the nearby weather station in Victoria, Australia. 
+This vignette introduces how to spatially and spatio-temporally match sites with the cubble structure with two examples. The first example pairs traditional weather stations with nearby automated stations in New South Wales, Australia. This exercise only concerns the matching based on spherical distance between stations. The next example pairs the river level recorded by the river gauges with the precipitation recorded by the nearby weather station in Victoria, Australia. 
 
-# Example 1
+# Spatial matching
 
-In `weatherdata::climate_full`, New South Wales automated stations are suffixed with `aws` in its name. This information tells us the automated stations from the traditional one: 
+The figure below shows the location of traditional and automated weather station on the map of New South Wales: 
 
-```{r}
+```{r echo = FALSE}
 nsw_map <- ozmaps::abs_ste %>% filter(NAME == "New South Wales")  
 
 nsw <- weatherdata::climate_full %>%   
@@ -39,34 +39,35 @@ nsw <- weatherdata::climate_full %>%
   tamp() %>% 
   filter(!any(is.na(ts$tmax)))
  
-
 plot_map(nsw_map) +
   geom_point(data = nsw, 
              aes(x = long, y = lat, color = automated)) + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("New Sourth Wales") + 
-  theme_minimal() + 
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
-   coord_sf(xlim = c(141, 154))
+  coord_sf(xlim = c(141, 154))
 ```
 
-The color in the map shows whether a station is an automated one or not and some automated stations are actually pretty close to the traditional ones. We would love to know whether records in these nearby pairs align with each other.
- 
-## Theory 
- 
-The two workhorses for matching in a cubble are `match_spatial()` and `match_temporal()`. You can call `match_spatial()` for spatial matching only, or `match_sites()`, which houses both functions, for both spatial and temporal matching. `match_sites()` also has an argument `temporal_matching`, default to `TRUE`, for switching on/off the temporal matching, hence `match_spatial()` and `match_sites(..., temporal_matching = TRUE)` are equivalent. By design, all the arguments that control the temporal matching are prefixed with `temporal_`, so do the arguments for spatial matching. 
+In the map we can see some traditional and automated weather stations are close to each other. This can be useful information to cross validate recordings from different types of weather stations. 
 
-Here we will given more details on spatial matching and details on the temporal matching is in the *Theory* section of *Example 2*. A spatial matching requires two datasets: a `major` set and a `minor` set. Spatial matching calculates the spherical distance from *each* site in the `major` dataset to *every* site in the `minor` dataset using the Vincenty formula. 
+In cubble, `match_sites()` houses `match_spatial()` and `match_temporal()`. For a spatial-only matching, you can use `match_sites(temporal_matching = FALSE)` or simply `match_spatial()`.
 
-Once the distance is calculated, three arguments are available to refine the matching results: `spatial_single_match`, `spatial_n_keep`, `spatial_dist_max`.
-The order that these three arguments applied will slightly affect the results and in `cubble`, `spatial_n_keep`, default to 1,  is first applied to keep `n` site(s) for each major site, `spaital_dist_max`, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. `spatial_single_match` is lastly applied to resolve the scenario where site `a` (minor) is the closest match for both site `A` and `B` (major), 5km and 8km respectively, if `spatial_single_match = TRUE`, `a` will only be matched to the major site with the smaller distance, that is,  site `A` here.
+Any matching requires two datasets in the cubble and we call them `major` and `minor`. Major and minor dataset differs from how distance is calculated. Spatial matching calculates the spherical distance using the Vincenty formula and this distance is calculated from *each* site in the `major` dataset is to *every* site in the `minor` dataset. 
+
+Once the distance is calculated, three arguments are available to refine the matching results: 
+
+  - `spatial_n_keep`: Number of match each major site receive 
+  - `spatial_dist_max`: maximum distance allowed for a pair of matching
+  - `spatial_single_match`: Whether each minor site can only be matched to one major site
+
+The order that these three arguments applied will slightly affect the results in `cubble`. `spatial_n_keep`, default to 1,  is first applied to keep `n` site(s) for each major site, `spaital_dist_max`, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. `spatial_single_match` is lastly applied to resolve the scenario where site `a` (minor) is the closest match for both site `A` and `B` (major) with distance 5km and 8km. If `spatial_single_match = TRUE`, `a` will only be matched to the major site with the smaller distance, that is,  site `A` here.
   
-## Traditional vs. Automated stations   
-  
-Let's get back to the New South Wales stations - Here we construct the major site `auto` and minor `non_auto` by filtering on whether stations are automated or not. This works in the scenario for examining records from newly-installed automated stations to long-lasting traditional stations (for every newly-installed station, we want to find a nearby traditional one). We apply the spatial matching with `match_sites()` and turn off the temporal matching: 
+Let's get back to the weather stations.
+
+We first construct the major site `auto` and minor `non_auto` by filtering on whether stations are automated or not. Here we would like to find each station in `auto` a match in `non_auto`. Hence `auto` is the major dataset and `non_auto` is the minor in the `match_sites()`:
 
 ```{r}
+nsw
+
 auto <- nsw %>% filter(automated)
 non_auto <- nsw %>% filter(!automated)
 
@@ -112,13 +113,13 @@ ts %>%
   theme_bw()
 ```
 
-We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There's a constant gap in pair 9, which suggests the two stations need to be further calibrated.
+We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There's a constant gap in pair 9, which suggests the two stations may need to be further calibrated.
 
-# Example 2
+# Spatio-temporal matching
 
-The water level data comes from [Bureau of Meteorology](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full) and has a copy in `weatherdata`. Here we extract the water course level and add a column annotate this data of type `river`. For the rainfall data, we will still use the `weatherdata::climate_full`, filtering for Victorian stations in 2020 should be pretty familiar by now. Again, we first look at where these stations are on the map first:
+Bureau of Meteorology collects [water data](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full) from river gauges and this includes variables: electrical conductivity, turbidity, water course discharge, water course level, and water temperature. In particular, water level will interactive with precipitation from the climate data since rainfall will raise the water level in the river. Here is the location of available weather station and water gauges in Victoria:
 
-```{r}
+```{r echo = FALSE}
 river <- weatherdata::water %>% mutate(type = "river")
 
 climate <- weatherdata::climate_full %>% 
@@ -129,67 +130,68 @@ climate <- weatherdata::climate_full %>%
   mutate(type = "climate")
 
 vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste %>% filter(NAME == "Victoria"))  
+
 plot_map(vic_map) +
   geom_point(data = dplyr::bind_rows(river, climate), 
              aes(x = long, y = lat, color = type)) + 
-  scale_color_brewer(palette = "Dark2") +
-  theme_bw()
+  scale_color_brewer(palette = "Dark2")
 ```
 
-## Theory
-
-Temporal matching checks how spatially matched pairs align temporally. We use the following chart to illustrate how the temporal matching works:
+Here we provide more details on how temporal matching works in `cubble`. Suppose two locations have been matched spatially and temproal matching will be conducted on variable `A` and `a` in the plot below: . 
 
 ```{r echo = FALSE}
+library(tidyverse)
 set.seed(123)
 dt <- tibble(
   id = factor(c(rep("A", 31), rep("a", 31)), levels = c("A", "a")),
-  date = rep(1:31,2),
+  date = rep(1:31, 2),
   val = c(
-    c(rnorm(5), 10, rnorm(7), 5 ,rnorm(8), 7, rnorm(8)),
-    c(rnorm(6,sd = 0.5), 7, rnorm(7, sd = 0.5), rnorm(6, sd = 0.5), 
-      4, rnorm(5,sd = 0.5), 6, rnorm(4,sd = 0.5))
+    c(rnorm(5), 10, rnorm(7), 5, rnorm(8), 7, rnorm(8)),
+    c(
+      rnorm(6, sd = 0.5), 7, rnorm(7, sd = 0.5), rnorm(6, sd = 0.5),
+      4, rnorm(5, sd = 0.5), 6, rnorm(4, sd = 0.5)
+    )
   )
 ) %>% mutate(val = ifelse(val < 0, 0, val))
 
 circle <- tibble(
-  x = c(6, 14, 23, 7, 21, 27), 
-  y = c(10, 5, 7, 7, 4, 6), 
+  x = c(6, 14, 23, 7, 21, 27),
+  y = c(10, 5, 7, 7, 4, 6),
   id = factor(c(rep("A", 3), rep("a", 3)), levels = c("A", "a")),
-  xend = x + 5
-)
+  xend = x + 5,
+  match = factor(c("yes", "no", rep("yes", 2), "no", "yes"), levels = c("yes", "no"))
+) 
 
-errorbar <- bind_rows(circle %>% filter(id == "A"),
-                      circle %>% filter(id == "A") %>% mutate(id = "a")) %>% 
+errorbar <- bind_rows(
+  circle %>% filter(id == "A"),
+  circle %>% filter(id == "A") %>% mutate(id = "a")
+) %>%
   mutate(id = factor(id, c("A", "a")))
 
-fallin <- tibble(id = factor(rep("a", 2), c("A", "a")),
-                 x = c(7, 27),
-                 y = -0.5,
-                 label = "\U2714")
+ggplot() +
+  geom_rect(data = errorbar, aes(xmin = x, xmax = xend, ymin = 0, ymax = 10), fill = "grey90") +
+  geom_line(data = dt, aes(x = date, y = val, group = id), color = "black") +
+  geom_vline(data = circle %>% filter(id == "A"), 
+             aes(xintercept = x), linetype = "longdash", color = "grey10", lwd = 0.2) +
+  geom_point(data = circle, aes(x = x, y = y, color = match), size = 3) +
+  facet_wrap(vars(id), nrow = 2) +
+  scale_y_continuous(breaks = seq(0, 10, 2)) +
+  scale_x_continuous(breaks = seq(1, 31, 1)) +
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        legend.position = "bottom") +
+  labs(x = "Time", y = "Value")
 
-ggplot() + 
-  geom_line(data = dt, aes(x = date, y = val, group = id), color = "grey60") + 
-  geom_vline(data = circle, aes(xintercept = x), linetype = "longdash", color = "grey60") +
-  geom_errorbar(data = errorbar, aes(xmin = x, xmax = xend, y = -0.5), width = 0.5) +
-  geom_point(data = circle, aes(x= x, y=y ), color = "brown") +
-  geom_text(data = fallin, aes(x = x, y = y, label = label), color = "brown", size = 5) + 
-  facet_wrap(vars(id), nrow = 2) + 
-  scale_y_continuous(breaks = seq(0,10, 2)) + 
-  scale_x_continuous(breaks = seq(1, 31, 1)) + 
-  theme_bw() + 
-  theme(panel.grid = element_blank()) + 
-  labs(x = "Time", y ="Value")
 ```
 
-For each spatially matched pair, say `A` and `a`, we first find the largest `n` points in each series, colored in brown points here. Here we use the largest three but you can tune this number by `temporal_n_highest`. Then we construct the interval of the largest points from one series and see how many points, from the other series, fall into the intervals. The series used to construct the interval is controlled by `temporal_independent` and the window size by `temporal_window` with a default of 5. 
+We first find the `n` peaks in each series (3 peaks here). A variable needs to be specified in `temporal_independent` for construct an interval. Here we pick variable `A` and construct an interval with a default length of 5. The peaks in variable `a` are then tested against whether they fall into the any of the intervals constructed from `A`. In this illustration, there are 2 matches for these two variable The available tuning parameter in temporal matches are: 
 
-In this illustration, we construct the interval based on series `A` and two of the three peaks from `a` falls into this interval at Time 7 and 27. 
+ - `temporal_n_highest`: the number of peak used - 3 in the example above
+ - `temporal_window`: the length of the interval - 5 in the example above
+ - `temporal_min_match`: the minimum number of matched peak for a valid matched pair. To return all the pairs of the match, set this parameter to 0.
 
-## Rainfall translates into river level
-
-There's another mandatory argument that hasn't been introduced above: `temporal_by`. This argument controls the variable to match and it needs to appear in both the `major` and `minor` set. In the water level matching example, we match the variable `Water_course_level` from `river` to `prcp` from `climate`. Now we use `match_sites()` to first pair the weather stations with the river gauges spatially and then apply the temporal matching on `prcp`. We will construct the interval based on peaks in `climate` since we would expect a lag effect for precipitation to flow into the river and cause a raise in river level, hence `temporal_independent = climate`. We select the 30 highest peak from the series to construct the match by setting `temporal_n_highest = 30`. This is a tuning parameter and you can start with 10% of the points of one series (here we have daily data for a year, 10% is roughly 30 points). `temporal_min_match` filters out pairs don't have enough match and to return all the pairs, set `temporal_min_match` to `0`. 
-
+In the river level and precipitation example, `Water_course_level` in `river` will be matched to `prcp` in `climate`. This can be specified in `temporal_by`, an analogue to  the `by` syntax in `join`. The goal in this example is to see if precipitation will be reflected by the water level in the river and this puts precipitation `prcp`, as the independent. Given there is one year worth of data, the number of peak (`temporal_n_highest`) to consider is slightly raised from a default 20 to 30 and `temporal_min_match` is raised accordingly. 
 
 ```{r}
 res <- match_sites(river, climate,
@@ -197,11 +199,15 @@ res <- match_sites(river, climate,
                    temporal_independent = "prcp",
                    temporal_n_highest = 30,
                    temporal_min_match = 15)
+```
 
+The output from temporal matching is also a cubble with `n_match` for the number of matched temporal peaks (on top of the `dist` and `group` from spatial matching)： 
+
+```{r}
 res
 ```
 
-The output from temporal matching is also a cubble, with additional column `dist` and `group` inherent from spatial matching and `n_match` for the number of matched temporal peaks. Then you can use this output to plot the location of match: 
+We can look at the matched pair on the map:
 
 ```{r}
 plot_map(vic_map) +
@@ -210,13 +216,10 @@ plot_map(vic_map) +
   ggrepel::geom_label_repel(data = res %>% filter(type == "river"),
                             aes(x = long, y = lat, label = group)) + 
   scale_color_brewer(palette = "Dark2") + 
-  ggtitle("Victoria") + 
-  theme_minimal() + 
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+  ggtitle("Victoria") 
 ```
 
-Or to look at the series: 
+or to look at the series: 
 
 ```{r}
 res_long <- res %>% 
@@ -231,6 +234,9 @@ res_long %>%
   facet_wrap(vars(group)) + 
   scale_color_brewer(palette = "Dark2", guide = "none") + 
   theme_bw() + 
-  labs(x=  "week") + 
-  scale_x_date(date_labels = "%b")
+  labs(x=  "date") + 
+  scale_x_date(date_labels = "%b") + 
+  labs(x = "Week", y = "Precipitation/ water level")
 ```
+
+There are four pairs of matches - all locates in the middle Victoria and we can observe concurrent increase of precipitation and water level (precipitation and water level have been standardised between 0 and 1 to be displayed on the same scale).
