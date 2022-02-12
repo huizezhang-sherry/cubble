@@ -1,5 +1,5 @@
 ---
-title: "3. Application: Matching"
+title: "3. Application: matching"
 ---
 
 ```{r, include = FALSE}
@@ -12,11 +12,7 @@ knitr::opts_chunk$set(
 )
 library(cubble)
 library(dplyr)
-library(tidyr)
-library(stringr)
 library(ggplot2)
-library(sf)
-library(patchwork)
 ```
 
 One common type of task with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to match the data from different data sources. Some of these matches only concern the spatial dimension, while others require temporal agreement.
@@ -32,7 +28,7 @@ nsw_map <- ozmaps::abs_ste %>% filter(NAME == "New South Wales")
 
 nsw <- weatherdata::climate_full %>%   
   filter(between(stringr::str_sub(id, 7, 8), 46, 75)) %>%
-  mutate(automated = str_detect(name, "aws")) %>% 
+  mutate(automated = stringr::str_detect(name, "aws")) %>% 
   stretch(ts) %>%
   filter(lubridate::month(date) == 1,
          lubridate::year(date) == 2020) %>% 
@@ -140,7 +136,6 @@ plot_map(vic_map) +
 Here we provide more details on how temporal matching works in `cubble`. Suppose two locations have been matched spatially and temproal matching will be conducted on variable `A` and `a` in the plot below: . 
 
 ```{r echo = FALSE}
-library(tidyverse)
 set.seed(123)
 dt <- tibble(
   id = factor(c(rep("A", 31), rep("a", 31)), levels = c("A", "a")),
