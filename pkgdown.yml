@@ -2,10 +2,11 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  0-create-cubble-from-wild: 0-create-cubble-from-wild.html
-  1-details-on-cubble-design: 1-details-on-cubble-design.html
-  2-data-manip-with-cubble: 2-data-manip-with-cubble.html
-  3-application-automated-stations: 3-application-automated-stations.html
+  0-import: 0-import.html
+  1-cubble-design: 1-cubble-design.html
+  2-aggregation: 2-aggregation.html
+  3-matching: 3-matching.html
   4-spatial-temporal-aggregation: 4-spatial-temporal-aggregation.html
-last_built: 2022-02-08T03:55Z
+  cubble: cubble.html
+last_built: 2022-02-14T01:33Z
 

@@ -10,19 +10,22 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/0-create-cubble-from-wild.html</loc>
+    <loc>/articles/0-import.html</loc>
   </url>
   <url>
-    <loc>/articles/1-details-on-cubble-design.html</loc>
+    <loc>/articles/1-cubble-design.html</loc>
   </url>
   <url>
-    <loc>/articles/2-data-manip-with-cubble.html</loc>
+    <loc>/articles/2-aggregation.html</loc>
   </url>
   <url>
-    <loc>/articles/3-application-automated-stations.html</loc>
+    <loc>/articles/3-matching.html</loc>
   </url>
   <url>
     <loc>/articles/4-spatial-temporal-aggregation.html</loc>
+  </url>
+  <url>
+    <loc>/articles/cubble.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>

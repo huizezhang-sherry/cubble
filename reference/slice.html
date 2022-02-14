@@ -25,6 +25,9 @@ allow slicing from top and bottom, based on a variable, or in random."><!-- math
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
+  <a href="../articles/cubble.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -34,16 +37,16 @@ allow slicing from top and bottom, based on a variable, or in random."><!-- math
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/0-import.html">0. Import data as a cubble</a>
     </li>
     <li>
-      <a href="../articles/1-details-on-cubble-design.html">1. details on cubble design</a>
+      <a href="../articles/1-cubble-design.html">1. Details on cubble design</a>
     </li>
     <li>
-      <a href="../articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
+      <a href="../articles/2-aggregation.html">2. Application: hierarchical data structure</a>
     </li>
     <li>
-      <a href="../articles/3-application-automated-stations.html">3. Application: Matching nearby stations</a>
+      <a href="../articles/3-matching.html">3. Application: matching</a>
     </li>
     <li>
       <a href="../articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
@@ -170,20 +173,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">aus_climate</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [140.67, -41.15, 151.68, -30.21]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [142.56, -41.18, 151.18, -26.48]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long   elev name                       wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00055202 -<span style="color: #BB0000;">31.0</span>  150.  263.  gunnedah airport aws        <span style="text-decoration: underline;">95</span>740 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00072160 -<span style="color: #BB0000;">36.1</span>  147.  164.  albury airport aws          <span style="text-decoration: underline;">95</span>896 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00024048 -<span style="color: #BB0000;">34.2</span>  141.   31.5 renmark aero                <span style="text-decoration: underline;">95</span>687 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00066037 -<span style="color: #BB0000;">33.9</span>  151.    6   sydney airport amo          <span style="text-decoration: underline;">94</span>767 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00065103 -<span style="color: #BB0000;">33.4</span>  148.  230.  forbes airport aws          <span style="text-decoration: underline;">94</span>715 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00091259 -<span style="color: #BB0000;">41.1</span>  145.  344   luncheon hill (forestry)    <span style="text-decoration: underline;">95</span>956 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00082139 -<span style="color: #BB0000;">36.2</span>  148.  981   hunters hill                <span style="text-decoration: underline;">94</span>878 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00086077 -<span style="color: #BB0000;">38.0</span>  145.   12.1 moorabbin airport           <span style="text-decoration: underline;">94</span>870 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00069017 -<span style="color: #BB0000;">36.3</span>  150.   52   montague island lighthouse  <span style="text-decoration: underline;">94</span>939 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00056229 -<span style="color: #BB0000;">30.2</span>  152. <span style="text-decoration: underline;">1</span>332   guyra hospital              <span style="text-decoration: underline;">94</span>772 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                       wmo_id ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00091259 -<span style="color: #BB0000;">41.1</span>  145. 344   luncheon hill (forestry)    <span style="text-decoration: underline;">95</span>956 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00065068 -<span style="color: #BB0000;">33.1</span>  148. 323.  parkes airport aws          <span style="text-decoration: underline;">95</span>717 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00061363 -<span style="color: #BB0000;">32.0</span>  151. 221.  scone airport aws           <span style="text-decoration: underline;">95</span>758 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00091126 -<span style="color: #BB0000;">41.2</span>  146.   8   devonport airport           <span style="text-decoration: underline;">95</span>960 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00069017 -<span style="color: #BB0000;">36.3</span>  150.  52   montague island lighthouse  <span style="text-decoration: underline;">94</span>939 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00080128 -<span style="color: #BB0000;">36.3</span>  143. 132.  charlton                    <span style="text-decoration: underline;">94</span>839 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00047029 -<span style="color: #BB0000;">33.4</span>  143.  53   pooncarie mail agency       <span style="text-decoration: underline;">95</span>692 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00085279 -<span style="color: #BB0000;">37.9</span>  148.  49.4 bairnsdale airport          <span style="text-decoration: underline;">94</span>912 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00066037 -<span style="color: #BB0000;">33.9</span>  151.   6   sydney airport amo          <span style="text-decoration: underline;">94</span>767 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00043020 -<span style="color: #BB0000;">26.5</span>  148. 336.  mitchell post office        <span style="text-decoration: underline;">94</span>514 &lt;tibble&gt;</span>
 </code></pre></div>
     </div>
   </div>

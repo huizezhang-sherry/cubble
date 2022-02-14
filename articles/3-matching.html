@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3. Application: Matching nearby stations • cubble</title>
+<title>3. Application: matching • cubble</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="3. Application: Matching nearby stations">
+<script src="../pkgdown.js"></script><meta property="og:title" content="3. Application: matching">
 <meta property="og:description" content="cubble">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -40,6 +40,9 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
+  <a href="../articles/cubble.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -50,16 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/0-import.html">0. Import data as a cubble</a>
     </li>
     <li>
-      <a href="../articles/1-details-on-cubble-design.html">1. details on cubble design</a>
+      <a href="../articles/1-cubble-design.html">1. Details on cubble design</a>
     </li>
     <li>
-      <a href="../articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
+      <a href="../articles/2-aggregation.html">2. Application: hierarchical data structure</a>
     </li>
     <li>
-      <a href="../articles/3-application-automated-stations.html">3. Application: Matching nearby stations</a>
+      <a href="../articles/3-matching.html">3. Application: matching</a>
     </li>
     <li>
       <a href="../articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
@@ -77,67 +80,66 @@
 
       
 
-      </header><script src="3-application-automated-stations_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="3-matching_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>3. Application: Matching nearby stations</h1>
+      <h1 data-toc-skip>3. Application: matching</h1>
             
       
       
-      <div class="hidden name"><code>3-application-automated-stations.Rmd</code></div>
+      <div class="hidden name"><code>3-matching.Rmd</code></div>
 
     </div>
 
     
     
-<p>One common type of task with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to pair the automated weater station with the closest traditional station to calibrate records, or we may want to investigate whether the rainfall will get translated to the river level. Some of these matches only concern the spatial dimension, while others, i.e. matching rainfall and river level, also require the temporal agreement.</p>
-<p>This vignette introduces how to spatially and spatio-temporally match between sites with the cubble structure with two examples. The first example pairs traditional weather stations with nearby automated stations in New South Wales, Australia. This exercise only concerns the matching based on spherical distance between stations. The next example pairs the river level recorded by the river gauges with the precipitation recorded by the nearby weather station in Victoria, Australia.</p>
+<p>One common type of task with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to match the data from different data sources. Some of these matches only concern the spatial dimension, while others require temporal agreement.</p>
+<p>This vignette introduces how to spatially and spatio-temporally match sites with the cubble structure with two examples. The first example pairs traditional weather stations with nearby automated stations in New South Wales, Australia. This exercise only concerns the matching based on spherical distance between stations. The next example pairs the river level recorded by the river gauges with the precipitation recorded by the nearby weather station in Victoria, Australia.</p>
 <div class="section level2">
-<h2 id="example-1">Example 1<a class="anchor" aria-label="anchor" href="#example-1"></a>
+<h2 id="spatial-matching">Spatial matching<a class="anchor" aria-label="anchor" href="#spatial-matching"></a>
 </h2>
-<p>In <code>weatherdata::climate_full</code>, New South Wales automated stations are suffixed with <code>aws</code> in its name. This information tells us the automated stations from the traditional one:</p>
+<p>The figure below shows the location of traditional and automated weather station on the map of New South Wales:</p>
+<p><img src="3-matching_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
+<p>In the map we can see some traditional and automated weather stations are close to each other. This can be useful information to cross validate recordings from different types of weather stations.</p>
+<p>In cubble, <code><a href="../reference/matching.html">match_sites()</a></code> houses <code><a href="../reference/matching.html">match_spatial()</a></code> and <code><a href="../reference/matching.html">match_temporal()</a></code>. For a spatial-only matching, you can use <code>match_sites(temporal_matching = FALSE)</code> or simply <code><a href="../reference/matching.html">match_spatial()</a></code>.</p>
+<p>Any matching requires two datasets in the cubble and we call them <code>major</code> and <code>minor</code>. Major and minor dataset differs from how distance is calculated. Spatial matching calculates the spherical distance using the Vincenty formula and this distance is calculated from <em>each</em> site in the <code>major</code> dataset is to <em>every</em> site in the <code>minor</code> dataset.</p>
+<p>Once the distance is calculated, three arguments are available to refine the matching results:</p>
+<ul>
+<li>
+<code>spatial_n_keep</code>: Number of match each major site receive</li>
+<li>
+<code>spatial_dist_max</code>: maximum distance allowed for a pair of matching</li>
+<li>
+<code>spatial_single_match</code>: Whether each minor site can only be matched to one major site</li>
+</ul>
+<p>The order that these three arguments applied will slightly affect the results in <code>cubble</code>. <code>spatial_n_keep</code>, default to 1, is first applied to keep <code>n</code> site(s) for each major site, <code>spaital_dist_max</code>, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. <code>spatial_single_match</code> is lastly applied to resolve the scenario where site <code>a</code> (minor) is the closest match for both site <code>A</code> and <code>B</code> (major) with distance 5km and 8km. If <code>spatial_single_match = TRUE</code>, <code>a</code> will only be matched to the major site with the smaller distance, that is, site <code>A</code> here.</p>
+<p>Let’s get back to the weather stations.</p>
+<p>We first construct the major site <code>auto</code> and minor <code>non_auto</code> by filtering on whether stations are automated or not. Here we would like to find each station in <code>auto</code> a match in <code>non_auto</code>. Hence <code>auto</code> is the major dataset and <code>non_auto</code> is the minor in the <code><a href="../reference/matching.html">match_sites()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nsw_map</span> <span class="op">&lt;-</span> <span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">==</span> <span class="st">"New South Wales"</span><span class="op">)</span>  
+<code class="sourceCode R"><span class="va">nsw</span>
+<span class="co">#&gt; <span style="color: #949494;"># cubble:   id [111]: nested form</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># bbox:     [141.26, -37.27, 153.64, -28.63]</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
+<span class="co">#&gt;    id            lat  long  elev name                  wmo_id automated ts      </span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00046128 -<span style="color: #BB0000;">31.1</span>  142.  181  fowlers gap aws        <span style="text-decoration: underline;">94</span>686 TRUE      &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00047016 -<span style="color: #BB0000;">34.0</span>  141.   43  lake victoria storage  <span style="text-decoration: underline;">94</span>692 FALSE     &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00047019 -<span style="color: #BB0000;">32.4</span>  142.   61  menindee post office   <span style="text-decoration: underline;">94</span>694 FALSE     &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00047029 -<span style="color: #BB0000;">33.4</span>  143.   53  pooncarie mail agency  <span style="text-decoration: underline;">95</span>692 FALSE     &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00047048 -<span style="color: #BB0000;">32.0</span>  141.  281. broken hill airport …  <span style="text-decoration: underline;">94</span>691 TRUE      &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00048015 -<span style="color: #BB0000;">30.0</span>  147.  115  brewarrina hospital    <span style="text-decoration: underline;">95</span>512 FALSE     &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00048027 -<span style="color: #BB0000;">31.5</span>  146.  260  cobar mo               <span style="text-decoration: underline;">94</span>711 FALSE     &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00048079 -<span style="color: #BB0000;">29.7</span>  144.  108  wanaaring post office  <span style="text-decoration: underline;">94</span>497 FALSE     &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00048237 -<span style="color: #BB0000;">31.5</span>  146.  218  cobar airport aws      <span style="text-decoration: underline;">94</span>710 TRUE      &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00048243 -<span style="color: #BB0000;">29.4</span>  148.  154  lightning ridge visi…  <span style="text-decoration: underline;">94</span>498 FALSE     &lt;tibble&gt;</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 101 more rows</span></span>
 
-<span class="va">nsw</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>   
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="va">id</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fl">46</span>, <span class="fl">75</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>automated <span class="op">=</span> <span class="fu">str_detect</span><span class="op">(</span><span class="va">name</span>, <span class="st">"aws"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span>,
-         <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
- 
-
-<span class="fu"><a href="../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">nsw_map</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nsw</span>, 
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">automated</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"New Sourth Wales"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">154</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
-<p>The color in the map shows whether a station is an automated one or not and some automated stations are actually pretty close to the traditional ones. We would love to know whether records in these nearby pairs align with each other.</p>
-<div class="section level3">
-<h3 id="theory">Theory<a class="anchor" aria-label="anchor" href="#theory"></a>
-</h3>
-<p>The two workhorses for matching in a cubble are <code><a href="../reference/matching.html">match_spatial()</a></code> and <code><a href="../reference/matching.html">match_temporal()</a></code>. You can call <code><a href="../reference/matching.html">match_spatial()</a></code> for spatial matching only, or <code><a href="../reference/matching.html">match_sites()</a></code>, which houses both functions, for both spatial and temporal matching. <code><a href="../reference/matching.html">match_sites()</a></code> also has an argument <code>temporal_matching</code>, default to <code>TRUE</code>, for switching on/off the temporal matching, hence <code><a href="../reference/matching.html">match_spatial()</a></code> and <code>match_sites(..., temporal_matching = TRUE)</code> are equivalent. By design, all the arguments that control the temporal matching are prefixed with <code>temporal_</code>, so do the arguments for spatial matching.</p>
-<p>Here we will given more details on spatial matching and details on the temporal matching is in the <em>Theory</em> section of <em>Example 2</em>. A spatial matching requires two datasets: a <code>major</code> set and a <code>minor</code> set. Spatial matching calculates the spherical distance from <em>each</em> site in the <code>major</code> dataset to <em>every</em> site in the <code>minor</code> dataset using the Vincenty formula.</p>
-<p>Once the distance is calculated, three arguments are available to refine the matching results: <code>spatial_single_match</code>, <code>spatial_n_keep</code>, <code>spatial_dist_max</code>. The order that these three arguments applied will slightly affect the results and in <code>cubble</code>, <code>spatial_n_keep</code>, default to 1, is first applied to keep <code>n</code> site(s) for each major site, <code>spaital_dist_max</code>, default to 10, is then applied to filter out the pairs with distance larger than this maximum distance. <code>spatial_single_match</code> is lastly applied to resolve the scenario where site <code>a</code> (minor) is the closest match for both site <code>A</code> and <code>B</code> (major), 5km and 8km respectively, if <code>spatial_single_match = TRUE</code>, <code>a</code> will only be matched to the major site with the smaller distance, that is, site <code>A</code> here.</p>
-</div>
-<div class="section level3">
-<h3 id="traditional-vs--automated-stations">Traditional vs. Automated stations<a class="anchor" aria-label="anchor" href="#traditional-vs--automated-stations"></a>
-</h3>
-<p>Let’s get back to the New South Wales stations - Here we construct the major site <code>auto</code> and minor <code>non_auto</code> by filtering on whether stations are automated or not. This works in the scenario for examining records from newly-installed automated stations to long-lasting traditional stations (for every newly-installed station, we want to find a nearby traditional one). We apply the spatial matching with <code><a href="../reference/matching.html">match_sites()</a></code> and turn off the temporal matching:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">automated</span><span class="op">)</span>
+<span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">automated</span><span class="op">)</span>
 <span class="va">non_auto</span> <span class="op">&lt;-</span> <span class="va">nsw</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">automated</span><span class="op">)</span>
 
 <span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/matching.html">match_sites</a></span><span class="op">(</span><span class="va">auto</span>, <span class="va">non_auto</span>, temporal_matching <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </code></pre></div>
 <p>The result from the pairing is also a cubble with two additional columns: <code>dist</code> as the distance between the pair and <code>group</code> as the grouping index:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">matched</span> 
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   id [20]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [145.79, -36.11, 151.67, -30.52]</span></span>
@@ -165,7 +167,7 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">19</span> ASN00063291 -<span style="color: #BB0000;">33.4</span>  150.  744.  bathurs…  <span style="text-decoration: underline;">94</span>729 TRUE      &lt;tibble&gt;  9.30    10</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">20</span> ASN00063005 -<span style="color: #BB0000;">33.4</span>  150.  713   bathurs…  <span style="text-decoration: underline;">94</span>730 FALSE     &lt;tibble&gt;  9.30    10</span></code></pre></div>
 <p>Then we can create visualisation to see where these pairs are in the map:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">nsw_map</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">matched</span>, 
              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">automated</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
@@ -177,53 +179,37 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
         panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">154</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
+<p><img src="3-matching_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
 <p>or compare the series within the same pair (as an example here we only look at records in Jan 2020):</p>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
-<p>We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There’s a constant gap in pair 9, which suggests the two stations need to be further calibrated.</p>
-</div>
+<p><img src="3-matching_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
+<p>We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There’s a constant gap in pair 9, which suggests the two stations may need to be further calibrated.</p>
 </div>
 <div class="section level2">
-<h2 id="example-2">Example 2<a class="anchor" aria-label="anchor" href="#example-2"></a>
+<h2 id="spatio-temporal-matching">Spatio-temporal matching<a class="anchor" aria-label="anchor" href="#spatio-temporal-matching"></a>
 </h2>
-<p>The water level data comes from <a href="http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full" class="external-link">Bureau of Meteorology</a> and has a copy in <code>weatherdata</code>. Here we extract the water course level and add a column annotate this data of type <code>river</code>. For the rainfall data, we will still use the <code>weatherdata::climate_full</code>, filtering for Victorian stations in 2020 should be pretty familiar by now. Again, we first look at where these stations are on the map first:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">river</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">water</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"river"</span><span class="op">)</span>
-
-<span class="va">climate</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="va">id</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fl">76</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"climate"</span><span class="op">)</span>
-
-<span class="va">vic_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html" class="external-link">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">==</span> <span class="st">"Victoria"</span><span class="op">)</span><span class="op">)</span>  
-<span class="fu"><a href="../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">vic_map</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">river</span>, <span class="va">climate</span><span class="op">)</span>, 
-             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
-<div class="section level3">
-<h3 id="theory-1">Theory<a class="anchor" aria-label="anchor" href="#theory-1"></a>
-</h3>
-<p>Temporal matching checks how spatially matched pairs align temporally. We use the following chart to illustrate how the temporal matching works:</p>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
-<p>For each spatially matched pair, say <code>A</code> and <code>a</code>, we first find the largest <code>n</code> points in each series, colored in brown points here. Here we use the largest three but you can tune this number by <code>temporal_n_highest</code>. Then we construct the interval of the largest points from one series and see how many points, from the other series, fall into the intervals. The series used to construct the interval is controlled by <code>temporal_independent</code> and the window size by <code>temporal_window</code> with a default of 5.</p>
-<p>In this illustration, we construct the interval based on series <code>A</code> and two of the three peaks from <code>a</code> falls into this interval at Time 7 and 27.</p>
-</div>
-<div class="section level3">
-<h3 id="rainfall-translates-into-river-level">Rainfall translates into river level<a class="anchor" aria-label="anchor" href="#rainfall-translates-into-river-level"></a>
-</h3>
-<p>There’s another mandatory argument that hasn’t been introduced above: <code>temporal_by</code>. This argument controls the variable to match and it needs to appear in both the <code>major</code> and <code>minor</code> set. In the water level matching example, we match the variable <code>Water_course_level</code> from <code>river</code> to <code>prcp</code> from <code>climate</code>. Now we use <code><a href="../reference/matching.html">match_sites()</a></code> to first pair the weather stations with the river gauges spatially and then apply the temporal matching on <code>prcp</code>. We will construct the interval based on peaks in <code>climate</code> since we would expect a lag effect for precipitation to flow into the river and cause a raise in river level, hence <code>temporal_independent = climate</code>. We select the 30 highest peak from the series to construct the match by setting <code>temporal_n_highest = 30</code>. This is a tuning parameter and you can start with 10% of the points of one series (here we have daily data for a year, 10% is roughly 30 points). <code>temporal_min_match</code> filters out pairs don’t have enough match and to return all the pairs, set <code>temporal_min_match</code> to <code>0</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Bureau of Meteorology collects <a href="http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full" class="external-link">water data</a> from river gauges and this includes variables: electrical conductivity, turbidity, water course discharge, water course level, and water temperature. In particular, water level will interactive with precipitation from the climate data since rainfall will raise the water level in the river. Here is the location of available weather station and water gauges in Victoria:</p>
+<p><img src="3-matching_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
+<p>Here we provide more details on how temporal matching works in <code>cubble</code>. Suppose two locations have been matched spatially and temproal matching will be conducted on variable <code>A</code> and <code>a</code> in the plot below: .</p>
+<p><img src="3-matching_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
+<p>We first find the <code>n</code> peaks in each series (3 peaks here). A variable needs to be specified in <code>temporal_independent</code> for construct an interval. Here we pick variable <code>A</code> and construct an interval with a default length of 5. The peaks in variable <code>a</code> are then tested against whether they fall into the any of the intervals constructed from <code>A</code>. In this illustration, there are 2 matches for these two variable The available tuning parameter in temporal matches are:</p>
+<ul>
+<li>
+<code>temporal_n_highest</code>: the number of peak used - 3 in the example above</li>
+<li>
+<code>temporal_window</code>: the length of the interval - 5 in the example above</li>
+<li>
+<code>temporal_min_match</code>: the minimum number of matched peak for a valid matched pair. To return all the pairs of the match, set this parameter to 0.</li>
+</ul>
+<p>In the river level and precipitation example, <code>Water_course_level</code> in <code>river</code> will be matched to <code>prcp</code> in <code>climate</code>. This can be specified in <code>temporal_by</code>, an analogue to the <code>by</code> syntax in <code>join</code>. The goal in this example is to see if precipitation will be reflected by the water level in the river and this puts precipitation <code>prcp</code>, as the independent. Given there is one year worth of data, the number of peak (<code>temporal_n_highest</code>) to consider is slightly raised from a default 20 to 30 and <code>temporal_min_match</code> is raised accordingly.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/matching.html">match_sites</a></span><span class="op">(</span><span class="va">river</span>, <span class="va">climate</span>,
                    temporal_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Water_course_level"</span> <span class="op">=</span> <span class="st">"prcp"</span><span class="op">)</span>,
                    temporal_independent <span class="op">=</span> <span class="st">"prcp"</span>,
                    temporal_n_highest <span class="op">=</span> <span class="fl">30</span>,
-                   temporal_min_match <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
-
-<span class="va">res</span>
+                   temporal_min_match <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
+<p>The output from temporal matching is also a cubble with <code>n_match</code> for the number of matched temporal peaks (on top of the <code>dist</code> and <code>group</code> from spatial matching)：</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">res</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   id [8]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [144.52, -37.73, 146.06, -36.55]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], matched_var [dbl]</span></span>
@@ -237,21 +223,18 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ASN00086038 essendon airport    -<span style="color: #BB0000;">37.7</span>  145. clim…  6.17     6 &lt;tibble&gt;      19</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 406213      CAMPASPE RIVER @ R… -<span style="color: #BB0000;">37.0</span>  145. river  1.84     1 &lt;tibble&gt;      18</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">8</span> ASN00088051 redesdale           -<span style="color: #BB0000;">37.0</span>  145. clim…  1.84     1 &lt;tibble&gt;      18</span></code></pre></div>
-<p>The output from temporal matching is also a cubble, with additional column <code>dist</code> and <code>group</code> inherent from spatial matching and <code>n_match</code> for the number of matched temporal peaks. Then you can use this output to plot the location of match:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>We can look at the matched pair on the map:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">vic_map</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">res</span>, 
              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">res</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"river"</span><span class="op">)</span>,
                             <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, label <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
-        panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
-<p>Or to look at the series:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span> </code></pre></div>
+<p><img src="3-matching_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
+<p>or to look at the series:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res_long</span> <span class="op">&lt;-</span> <span class="va">res</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/cubble-verb.html">migrate</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">type</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
@@ -261,13 +244,14 @@
 <span class="va">res_long</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">prcp</span>, group <span class="op">=</span> <span class="va">type</span>,color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span>  <span class="st">"week"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b"</span><span class="op">)</span></code></pre></div>
-<p><img src="3-application-automated-stations_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
-</div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span>  <span class="st">"date"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Week"</span>, y <span class="op">=</span> <span class="st">"Precipitation/ water level"</span><span class="op">)</span></code></pre></div>
+<p><img src="3-matching_files/figure-html/unnamed-chunk-12-1.png" width="100%"></p>
+<p>There are four pairs of matches - all locates in the middle Victoria and we can observe concurrent increase of precipitation and water level (precipitation and water level have been standardised between 0 and 1 to be displayed on the same scale).</p>
 </div>
   </div>
 

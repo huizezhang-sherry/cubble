@@ -40,6 +40,9 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
+  <a href="../articles/cubble.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -50,16 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/0-create-cubble-from-wild.html">0. Creating a cubble from data in the wild</a>
+      <a href="../articles/0-import.html">0. Import data as a cubble</a>
     </li>
     <li>
-      <a href="../articles/1-details-on-cubble-design.html">1. details on cubble design</a>
+      <a href="../articles/1-cubble-design.html">1. Details on cubble design</a>
     </li>
     <li>
-      <a href="../articles/2-data-manip-with-cubble.html">2. Data manipulation with cubble</a>
+      <a href="../articles/2-aggregation.html">2. Application: hierarchical data structure</a>
     </li>
     <li>
-      <a href="../articles/3-application-automated-stations.html">3. Application: Matching nearby stations</a>
+      <a href="../articles/3-matching.html">3. Application: matching</a>
     </li>
     <li>
       <a href="../articles/4-spatial-temporal-aggregation.html">4. Application: Spatial and temporal aggregation</a>
@@ -77,25 +80,24 @@
 
       
 
-      </header><script src="2-data-manip-with-cubble_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="cubble_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>2. Data manipulation with cubble</h1>
             
       
       
-      <div class="hidden name"><code>2-data-manip-with-cubble.Rmd</code></div>
+      <div class="hidden name"><code>cubble.Rmd</code></div>
 
     </div>
 
     
     
-<p>This vignette introduces how to perform spatial and temporal manipulate in a cubble with dplyr verbs. We will illustrate with an example that compares the maximum temperature in two periods: 1971 - 1975 and 2016 - 2020 for stations in Victoria and New South Wales.</p>
+<p>Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset <code>weatherdata::historical_tmax</code> extracts the maximum temperature for 236 Australian stations from GHCN with starting from year 1969. <code>weatherdata::historical_tmax</code> is already in a cubble, with <code>id</code> as the key, <code>date</code> as the index, and <code>c(longitude, latitude)</code> as the coordinates. This vignette shows the basic manipulation of cubble in an example to compares the maximum temperature in two periods: 1971 - 1975 and 2016 - 2020 for weather stations in Victoria, Australia.</p>
 <div class="section level2">
 <h2 id="spatial-manipulation">Spatial manipulation<a class="anchor" aria-label="anchor" href="#spatial-manipulation"></a>
 </h2>
-<p>The historical maximum temperature data is available in a nested cubble as <code>weatherdata::historical_tmax</code>. The data have recording for all the stations from 1969 with the longest date back to 1859.</p>
-<p>Victoria and New South Wales stations can be subset by the station number: Australia GHCN station number starts with “ASN00” and followed by the <a href="http://www.bom.gov.au/climate/cdo/about/site-num.shtml" class="external-link">Bureau of Meteorology (BOM) station number</a>, where the 2nd and 3rd digit (7th and 8th in the GHCN number) define the state of the station. New South Wales stations start from 46 to 75 and Victoria stations follow from 76 to 90. Filtering Victoria and New South Wales stations is an operation in the spatial dimension and hence uses the nested form:</p>
+<p>Victoria stations can be subset by the station number: Australia GHCN station number starts with “ASN00” and followed by the <a href="http://www.bom.gov.au/climate/cdo/about/site-num.shtml" class="external-link">Bureau of Meteorology (BOM) station number</a>, where the 2nd and 3rd digit (7th and 8th in the GHCN number) define the state of the station. Victoria stations start from 76 to 90 and filtering Victoria stations is an operation in the spatial dimension. Hence we want to use the nested form:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">historical_tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="va">id</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fl">76</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span>
@@ -174,7 +176,7 @@
 <div class="section level2">
 <h2 id="back-to-spatial">Back to spatial<a class="anchor" aria-label="anchor" href="#back-to-spatial"></a>
 </h2>
-<p>A data quality issue with the <code>rnoaa</code> data is that while it records the first and last year recorded of each series without the period of missingness. For example, station <code>ASN00047048</code> starts it first record in 1957, pauses for a period from 1963 to 1990, and then resumes it recording till today. We would like to remove stations like this by examining whether the summarised time series has a total of 24 months. This is a station-wise operation and <code><a href="../reference/tamp.html">tamp()</a></code> can be used to convert the cubble back to the nested form:</p>
+<p>A data quality issue with the <code>rnoaa</code> data is that while it records the first and last year recorded of each series without the period of missingness. For example, station <code>ASN00085279</code> starts it first record in 1943, pauses for a period from 1946 to 1982, and then resumes it recording till today. We would like to remove stations like this by examining whether the summarised time series has a total of 24 months. This is a station-wise operation and <code><a href="../reference/tamp.html">tamp()</a></code> can be used to convert the cubble back to the nested form:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">==</span> <span class="fl">24</span><span class="op">)</span>
 <span class="va">tmax</span>
@@ -223,28 +225,24 @@
 <div class="section level2">
 <h2 id="glyph-map">Glyph map<a class="anchor" aria-label="anchor" href="#glyph-map"></a>
 </h2>
-<p>The <code>cubble</code> package also provides a <code>geom_glyph</code> interface to plot the glyph map. The geometry asks for <code>x_major</code>, <code>y_major</code>, <code>x_minor</code>, and <code>y_minor</code> as the required aesthetics:</p>
-<!-- , "New South Wales" -->
+<p>The <code>cubble</code> package also provides a <code><a href="../reference/glyph.html">geom_glyph()</a></code> interface to plot the glyph map. The geometry asks for <code>x_major</code>, <code>y_major</code>, <code>x_minor</code>, and <code>y_minor</code> as the required aesthetics:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nsw_vic</span> <span class="op">&lt;-</span> <span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">nsw_vic</span> <span class="op">&lt;-</span> <span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nsw_vic</span>, fill <span class="op">=</span> <span class="st">"transparent"</span>, color <span class="op">=</span> <span class="st">"grey"</span>, linetype <span class="op">=</span> <span class="st">"dotted"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="../reference/glyph.html">geom_glyph</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tmax</span>, 
              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x_major <span class="op">=</span> <span class="va">longitude</span>, x_minor <span class="op">=</span> <span class="va">month</span>, 
                  y_major <span class="op">=</span> <span class="va">latitude</span>, y_minor <span class="op">=</span> <span class="va">tmax</span>,
                  group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/interaction.html" class="external-link">interaction</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">group</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">group</span><span class="op">)</span>,
-             width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
+             width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">150</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Longitude"</span>, y <span class="op">=</span> <span class="st">"Latitude"</span><span class="op">)</span>
-
-<span class="va">p1</span></code></pre></div>
-<p><img src="2-data-manip-with-cubble_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
-<p>We see, on average, a higher maximum temperature in the recent years as compared to the first half of 1970s. This is observable in the beginning of the year in most of stations in New South Wales and end of the year in both New South Wales and Victoria. Maximum temperature during winter doesn’t seem to change much in these two periods.</p>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Longitude"</span>, y <span class="op">=</span> <span class="st">"Latitude"</span><span class="op">)</span></code></pre></div>
+<p><img src="cubble_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
+<p>Remember that Australia is in the southern hemisphere, so all temperature curves are in a U shape :)</p>
 </div>
   </div>
 
