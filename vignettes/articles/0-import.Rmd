@@ -6,7 +6,6 @@ title: "0. Import data as a cubble"
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>", 
-  cache = TRUE, 
   warning = FALSE,
   message = FALSE
 )
