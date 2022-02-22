@@ -32,7 +32,6 @@ stretch.cubble_df <- function(data, col, ...){
 
   data <- as_tibble(data)
   is_tsibble <- "tbl_ts" %in% map_chr(data$ts, ~class(.x)[1])
-  #cols <- syms(tidyselect::vars_select(names(data), !!enquo(cols)))
 
   if (quo_is_missing(col)){
     col <- sym(get_listcol(data))
@@ -49,11 +48,6 @@ stretch.cubble_df <- function(data, col, ...){
 
 
   out <- data %>% select(!!!key, !!col) %>% unnest(c(!!col))
-  # out <- map2_dfr(cols, key,
-  #                 ~unnest_with_rename(data = data,
-  #                                     .x, .y,
-  #                                     first_key = first_key,
-  #                                     col_tojoin1, col_tojoin2))
 
   spatial <- data %>% select(-!!col)
   if (".val" %in% colnames(spatial)) spatial <- spatial %>% unnest(.val
