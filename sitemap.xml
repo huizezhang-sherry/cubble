@@ -22,9 +22,6 @@
     <loc>/articles/3-matching.html</loc>
   </url>
   <url>
-    <loc>/articles/4-spatial-temporal-aggregation.html</loc>
-  </url>
-  <url>
     <loc>/articles/cubble.html</loc>
   </url>
   <url>
@@ -58,9 +55,6 @@
     <loc>/reference/cubble-verb.html</loc>
   </url>
   <url>
-    <loc>/reference/gen_grid.html</loc>
-  </url>
-  <url>
     <loc>/reference/get_centroid.html</loc>
   </url>
   <url>
@@ -71,9 +65,6 @@
   </url>
   <url>
     <loc>/reference/matching.html</loc>
-  </url>
-  <url>
-    <loc>/reference/missing.html</loc>
   </url>
   <url>
     <loc>/reference/nearby.html</loc>
