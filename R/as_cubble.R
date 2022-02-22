@@ -43,7 +43,7 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   coords <- enquo(coords)
   row_id <- key
 
-  coords <- names(data)[eval_select(coords, data)]
+  coords <- names(data)[tidyselect::eval_select(coords, data)]
   # - check lat between -90 to 90
   # - check long between -180 to 180?
   # - give it an attribution on the range? 0 to 360 or -180 to 180
@@ -90,7 +90,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
   # checks for key
   # checks for index
   # checks for coords
-  coords <- names(data)[eval_select(coords, data)]
+  coords <- names(data)[tidyselect::eval_select(coords, data)]
 
   # if (any(duplicated(data[[as_name(key)]]))){
   #   abort("Make sure each row identifies a key!")
@@ -143,7 +143,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
   # define dimension and grid
   dim_order <- c(length(long_raw), length(lat_raw) , length(time_raw), length(var$name))
   latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>%
-    dplyr::mutate(id = row_number())
+    dplyr::mutate(id = dplyr::row_number())
   mapping <- tidyr::expand_grid(var = var$name, time = time_raw) %>%
     tidyr::expand_grid(latlong_grid)
 

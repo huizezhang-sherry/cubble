@@ -167,25 +167,4 @@ rename.cubble_df <- function(.data, ...){
   dplyr_reconstruct(out, .data)
 }
 
-unnest_cubble <- function(data, ..., tsibble_key = NULL){
-
-  if ("tbl_ts" %in% class(data$ts[[1]])){
-
-    tsibble_index <- index(data$ts[[1]])
-    tsibble_key <- enquo(tsibble_key)
-    if (quo_is_null(tsibble_key)) tsibble_key <- sym(key_vars(data))
-    data <- data %>%
-      mutate(ts = list(as_tibble(ts))) %>%
-      as_tibble()
-
-    unnested <- data %>% unnest(...)
-
-    out <- unnested %>% as_tsibble(index = tsibble_index, key = !!tsibble_key)
-
-  } else{
-    out <- data %>% as_tibble() %>% unnest(...)
-  }
-
-  out
-}
 

@@ -21,25 +21,3 @@ test_missing <- function(quo, var){
     cli::cli_abort("Variable {.code var} is missing for creating a cubble")
   }
 }
-
-get_listcol <- function(data){
-  col_type <- map(data, class)
-  n <- names(data)[col_type == "list"]
-
-  if (length(n) >= 2) {
-    cli::cli_abort("Please select the list column that contains the time series. ")
-  }
-
-  n
-}
-
-test_list <- function(data, col){
-  col <- enquo(col)
-  idx <- tidyselect::eval_select(col, data)
-  class_vec <- map_chr(as_tibble(data), ~class(.x)[1])
-  res <- class_vec[idx]
-  if (res != "list") {
-    cli::cli_abort("The column to stretch need to be a list-column")
-  }
-
-}

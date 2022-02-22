@@ -51,3 +51,18 @@ find_invariant <- function(data, key) {
 
   list(variant = variant, invariant = invariant)
 }
+
+
+get_listcol <- function(data){
+
+  out <- names(data)[which(names(data) == "ts")]
+  if (class(data[[out]]) == "list") return(out)
+
+  # if the list column is not named ts, detect the list-column
+  out <- names(data)[map(data, class) == "list"]
+  if (length(out) == 1){
+    return(out)
+  }else{
+    cli::cli_abort("Can't determine the list column, please specify it")
+  }
+}
