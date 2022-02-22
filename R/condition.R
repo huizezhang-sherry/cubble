@@ -1,19 +1,22 @@
 test_cubble <- function(data) {
-  if (!is_cubble(data)) cli::cli_abort("data supplied needs to be a cubble object!")
-}
-
-test_leaves <- function(data) {
-  if (!is_leaves(data)) cli::cli_abort("data supplied needs to be leaves of a cubble!")
+  if (!is_cubble(data))
+    cli::cli_abort("The function requires the data to be a cubble.
+                   Use {.fn as_cubble} with proper {.code key}, {.code index}, and {.code coords}
+                   to turn the data into a cubble.")
 }
 
 test_long <- function(data){
   test_cubble(data)
-  if (form(data) != "long") cli::cli_abort("data is not in the long form")
+  if (form(data) != "long")
+    cli::cli_abort("The function requires a long cubble.
+                   Use {.fn stretch} to turn a cubble into a long one.")
 }
 
 test_nested <- function(data){
   test_cubble(data)
-  if (form(data) != "nested") cli::cli_abort("data is not in the nested form")
+  if (form(data) != "nested")
+    cli::cli_abort("The function requires a nested cubble.
+                   Use {.fn tamp} to turn a cubble into a nested one.")
 }
 
 test_missing <- function(quo, var){

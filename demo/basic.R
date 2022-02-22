@@ -1,6 +1,7 @@
 library(cubble)
 
-# basic stretch
+# stretch
+# basic
 cb <- climate_flat %>%
   as_cubble(key = id, index = date, coords = c(long, lat))
 cb %>% stretch()
@@ -17,3 +18,29 @@ cb_tsibble <- climate_flat %>%
   tsibble::as_tsibble(key = id, index = date) %>%
   as_cubble(coords = c(long, lat))
 cb_tsibble %>% stretch()
+
+# tamp
+# basic
+cb <- climate_flat %>%
+  as_cubble(key = id, index = date, coords = c(long, lat)) %>%
+  stretch()
+cb %>% tamp()
+
+cb %>%
+  group_by(month = lubridate::month(date)) %>%
+  tamp()
+
+# tamp a hierarchical: Hierarchical with more than one key
+cb_hier <- climate_flat %>%
+  as_cubble(key = id, index = date, coords = c(long, lat)) %>%
+  mutate(cluster = sample(1:3, 1)) %>%
+  switch_key(cluster) %>%
+  stretch()
+cb_hier %>% tamp()
+
+# tamp a tsibble-cubble
+cb_tsibble <- climate_flat %>%
+  tsibble::as_tsibble(key = id, index = date) %>%
+  as_cubble(coords = c(long, lat)) %>%
+  stretch()
+cb_tsibble %>% tamp()

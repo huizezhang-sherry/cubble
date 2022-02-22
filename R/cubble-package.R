@@ -3,9 +3,10 @@
 #' @importFrom dplyr new_rowwise_df new_grouped_df group_data
 #' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr nest unnest
-#' @importFrom rlang .data quo_is_missing
+#' @importFrom rlang .data quo_is_missing sym as_name
 #' @importFrom purrr map_dfr map2_dfr
 #' @importFrom cli cli_abort
+#' @importFrom tsibble index as_tsibble
 #' @aliases cubble-package
 #' @keywords internal
 "_PACKAGE"

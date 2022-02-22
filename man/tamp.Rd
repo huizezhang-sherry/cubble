@@ -2,33 +2,23 @@
 % Please edit documentation in R/core-tamp.R
 \name{tamp}
 \alias{tamp}
-\title{Formulate or switch an object into a cubble in the nested form}
+\title{Switch an cubble object from the long form into the nested form}
 \usage{
-tamp(data, key)
+tamp(data)
 }
 \arguments{
-\item{data}{the data to be converted into a cubble object}
-
-\item{key}{the spatio identifier. Key can be automatically detected for a cubble object}
+\item{data}{a long cubble object}
 }
 \description{
-Create a cubble object or switch an existing cubble object into the nested form
-}
-\details{
-\itemize{
-\item For an object that is not \code{cubble_df}, \code{tamp()} will initialise a cubble object upon
-providing a \code{group} variable.
-\item For an existing \code{cubble} in the long form, \code{tamp()}
-switches the object back to the nested form. This form is easier to computing
-group-specific variables.
-}
+\code{tamp()} turns a long cubble back into a nest cubble and can be seen as
+the inverse operation of \code{stretch()}.
+The nested cubble identifies each row by \code{key} and is suitable
+for operations whose output doesn't involve a time index.
 }
 \examples{
-# switch to the nested form from the long form
-aus_climate \%>\%
-  stretch() \%>\%
-  tamp()
-}
-\seealso{
-Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}
+cb_long <- climate_flat \%>\%
+  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\%
+  stretch()
+
+cb_long \%>\% tamp()
 }

@@ -1,18 +1,17 @@
-#' Switch a cubble object into a long form
+#' Switch a cubble object from the nested form into the long form
 #'
 #' `stretch()` switches a cubble object into a long cubble, suitable for temporal operations.
-#' The long cubble uses the combination of `key` and `index` identifies each row and
-#' arrange each `key` as a separate group.
-#' @param data a cubble object
-#' @param col the list column to be stretched
+#' The long cubble uses the combination of `key` and `index` to identify each row and
+#' arranges each `key` as a separate group.
+#' @param data a nested cubble object
+#' @param col the list column to be stretched, `col` is required to be specified
+#' if there are more than one list column and the list column name is not `ts`
 #'
 #' @examples
 #' climate_flat %>%
 #'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
 #'   stretch()
-#'
 #' @export
-#' @seealso Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
 stretch <- function(data, col) {
   test_cubble(data)
   UseMethod("stretch")
@@ -20,6 +19,8 @@ stretch <- function(data, col) {
 
 #' @export
 stretch.cubble_df <- function(data, col){
+  test_nested(data)
+
   key <- syms(key_vars(data))
   index <- index(data)
   coords <- coords(data)

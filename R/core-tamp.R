@@ -1,69 +1,44 @@
-#' Formulate or switch an object into a cubble in the nested form
+#' Switch an cubble object from the long form into the nested form
 #'
-#' Create a cubble object or switch an existing cubble object into the nested form
+#' `tamp()` turns a long cubble back into a nest cubble and can be seen as
+#' the inverse operation of \code{stretch()}.
+#' The nested cubble identifies each row by `key` and is suitable
+#' for operations whose output doesn't involve a time index.
 #'
-#' @details
-#' * For an object that is not `cubble_df`, `tamp()` will initialise a cubble object upon
-#' providing a `group` variable.
-#'
-#' * For an existing `cubble` in the long form, `tamp()`
-#' switches the object back to the nested form. This form is easier to computing
-#' group-specific variables.
-#'
-#' @param data the data to be converted into a cubble object
-#' @param key the spatio identifier. Key can be automatically detected for a cubble object
+#' @param data a long cubble object
 #' @examples
-#' # switch to the nested form from the long form
-#' aus_climate %>%
-#'   stretch() %>%
-#'   tamp()
+#' cb_long <- climate_flat %>%
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
+#'   stretch()
+#'
+#' cb_long %>% tamp()
 #' @export
-#' @seealso Other cubble verbs include \code{\link{stretch}} and \code{\link{migrate}}
-tamp <- function(data, key) {
+tamp <- function(data) {
+  test_cubble(data)
   UseMethod("tamp")
 }
 
-#' @importFrom tsibble index as_tsibble
+
 #' @export
-tamp.cubble_df <- function(data, key) {
-  test_cubble(data)
+tamp.cubble_df <- function(data) {
+  test_long(data)
 
   # will only keep the first grouping variable if more than one
-  key <- enquo(key)
-  if (quo_is_missing(key)){
-    key <- key_vars(data)
-    if (length(key) > 1) key <- key[1]
-    key <- quo(!!sym(key))
-  }
-
-  # compute metadata again if change to a different key
-  # all_vars <- find_invariant(data, !!key)
-  # if (as_name(key) %in% key_vars(data)){
-  #
-  # } else{
-  #   leaves_data <- new_leaves(data, !!key)
-  # }
+  key <- rlang::sym(key_vars(data))
+  if (length(key) > 1) key <- key[1]
   spatial <- spatial(data)
-  tvars <- colnames(data)[colnames(data) != as_name(key)]
+  # also sort out double keys
+  tvars <- colnames(data)[colnames(data) != rlang::as_name(key)]
   tvars <- tvars[!tvars %in% colnames(spatial)]
 
-  if (form(data) != "long"){
-    cli::cli_abort("{.fn tamp} requires data to be in long form.")
-  }
-
-  suppressMessages(
   out <- tibble::as_tibble(data) %>%
-    left_join(spatial) %>%
-    tidyr::nest(ts = c(tvars)) %>%
-    dplyr::rowwise()
-  )
+    dplyr::left_join(spatial, by = rlang::as_name(key))
 
   if ("tbl_ts" %in% class(data)){
-    out <- out %>% mutate(ts = list(as_tsibble(.data$ts, index = tsibble::index(data))))
+    out <- out %>%
+      tsibble::as_tsibble(key = key_vars(data), index = index(data))
   }
 
-  new_cubble(out,
-             key = as_name(key), index = index(data), coords = coords(data),
-             row_id = row_id(data), spatial = NULL, form = "nested")
+  as_cubble(out,key = !!key, index = !!index(data), coords = coords(data))
 }
 

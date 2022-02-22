@@ -2,26 +2,23 @@
 % Please edit documentation in R/core-stretch.R
 \name{stretch}
 \alias{stretch}
-\title{Switch a cubble object into a long form}
+\title{Switch a cubble object from the nested form into the long form}
 \usage{
 stretch(data, col)
 }
 \arguments{
-\item{data}{a cubble object}
+\item{data}{a nested cubble object}
 
-\item{col}{the list column to be stretched}
+\item{col}{the list column to be stretched, \code{col} is required to be specified
+if there are more than one list column and the list column name is not \code{ts}}
 }
 \description{
 \code{stretch()} switches a cubble object into a long cubble, suitable for temporal operations.
-The long cubble uses the combination of \code{key} and \code{index} identifies each row and
-arrange each \code{key} as a separate group.
+The long cubble uses the combination of \code{key} and \code{index} to identify each row and
+arranges each \code{key} as a separate group.
 }
 \examples{
 climate_flat \%>\%
   as_cubble(key = id, index = date, coords = c(long, lat)) \%>\%
   stretch()
-
-}
-\seealso{
-Other cubble verbs include \code{\link{tamp}} and \code{\link{migrate}}
 }
