@@ -46,7 +46,8 @@ usethis::use_data(aus_climate, overwrite = TRUE)
 climate_flat <- aus_climate %>%
   head(5) %>%
   unnest() %>%
-  ungroup()
+  ungroup() %>%
+  filter(lubridate::month(date) == 1)
 
 usethis::use_data(climate_flat, overwrite = TRUE)
 

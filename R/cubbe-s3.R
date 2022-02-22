@@ -17,17 +17,32 @@ cubble <- function(..., key, index, coords) {
 }
 
 new_cubble <- function(data, key, index, coords, spatial, form, row_id, tsibble_attr = NULL) {
-  #browser()
-  key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
+
+  if (length(key) == 2){
+    # key_lvl <- key_level(data, key)
+    # row_id <- key[which(key_lvl != nrow(data))]
+    # cur_key <- key[which(key_lvl == nrow(data))]
+    # if (".val" %in% names(data)){
+    #   data <- data %>% tidyr::unnest(.val)
+    # }
+    if (form == "nested"){
+      key_data <- data %>% tidyr::unnest(.val) %>% dplyr::grouped_df(key) %>% group_data()
+    } else{
+      key_data <- data %>% dplyr::grouped_df(key) %>% group_data()
+    }
+
+  } else{
+    key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
+  }
 
   all_cols <- names(data)
 
-  if (form == "nested"){
-    unique_key <- unique(data[[key]]) %>% length()
-    if (unique_key != nrow(data) & !is.null(row_id(data))){
-      data <- data %>% ungroup() %>% rearrange_index(key = key, old_key = row_id)
-    }
-  }
+  # if (form == "nested"){
+  #   unique_key <- unique(data[[key]]) %>% length()
+  #   if (unique_key != nrow(data) & !is.null(row_id(data))){
+  #     data <- data %>% ungroup() %>% rearrange_index(key = key, old_key = row_id)
+  #   }
+  # }
 
   if (length(coords) == 1){
       others <- all_cols[!all_cols %in% c(key, coords, "ts")]
@@ -36,7 +51,7 @@ new_cubble <- function(data, key, index, coords, spatial, form, row_id, tsibble_
   }
 
   attr <- list(x = data,
-               groups = key_data, index = index, row_id = row_id,
+               groups = key_data, index = index,
                spatial = spatial, coords = coords, form = form,
                class = "cubble_df") %>%
     Filter(f = length)

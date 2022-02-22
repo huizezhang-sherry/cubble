@@ -24,6 +24,7 @@ cb_tsibble %>% stretch()
 cb <- climate_flat %>%
   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
   stretch()
+
 cb %>% tamp()
 
 cb %>%
@@ -31,11 +32,13 @@ cb %>%
   tamp()
 
 # tamp a hierarchical: Hierarchical with more than one key
+set.seed(1234)
 cb_hier <- climate_flat %>%
   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
   mutate(cluster = sample(1:3, 1)) %>%
   switch_key(cluster) %>%
   stretch()
+
 cb_hier %>% tamp()
 
 # tamp a tsibble-cubble
@@ -44,3 +47,7 @@ cb_tsibble <- climate_flat %>%
   as_cubble(coords = c(long, lat)) %>%
   stretch()
 cb_tsibble %>% tamp()
+
+
+
+

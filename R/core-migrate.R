@@ -27,11 +27,8 @@
 migrate <- function(data, ...){
   dots <- enquos(..., .named = TRUE)
   test_cubble(data)
+  test_long(data)
   sp <- spatial(data)
-
-  if (form(data) != "long"){
-    cli::cli_abort("{.fn migrate} should be used on the long form.")
-  }
 
   in_spatial <- map_lgl(names(dots), ~.x %in% names(sp))
   if (!all(in_spatial)){
@@ -45,7 +42,7 @@ migrate <- function(data, ...){
   if (nrow(out) != nrow(data)){
     var <- names(dots)
     cli::cli_alert_warning(
-      "The key and  migrated variable{?s} {.field {var}} are not one-to-one."
+      "The key and migrated variable{?s} {.field {var}} are not one-to-one."
     )
   }
   out

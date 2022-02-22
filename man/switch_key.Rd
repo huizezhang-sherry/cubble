@@ -7,33 +7,30 @@
 switch_key(data, key)
 }
 \arguments{
-\item{data}{a cubble}
+\item{data}{a cubble object, can be either long or nested cubble}
 
 \item{key}{the new key}
 }
 \description{
-Switch to a different key of a cubble
+\code{switch_key()} allows you select a new variable in the data to become the key.
+This can be used to create hierarchical data where one variable is nested in another.
 }
 \examples{
 library(ggplot2)
 library(dplyr)
-# create a data with hierarchical structure:
-# id (station) is nested in country, country is nested in continent
-long <- world_climate \%>\%
-  stretch() \%>\%
-  migrate(country, continent) \%>\%
-  filter(lubridate::year(date) == 2020)
+# create an artificial cluster for stations
+set.seed(1234)
+cb <- climate_flat \%>\%
+  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\%
+  mutate(cluster = sample(1:3, 1))
 
-# switch the key from id to country to aggregate on country
-country_wise <- long \%>\%
-  switch_key(country) \%>\%
-  group_by(date) \%>\%
-  summarise(tmax = mean(tmax, na.rm = TRUE))
+# switch the key to cluster
+cb_hier <- cb \%>\% switch_key(cluster)
 
-# plot the aggregated maximum temperature for each country
-country_wise \%>\%
-  ggplot(aes(x = date, y = tmax, group = country)) +
+# visualise the clustered series
+cb_long <- cb_hier \%>\% stretch()
+cb_long \%>\%
+  ggplot(aes(x = date, y = tmax, group = id)) +
   geom_line() +
-  facet_wrap(vars(country)) +
-  scale_x_date(date_labels = "\%b")
+  facet_wrap(vars(cluster), ncol = 1)
 }

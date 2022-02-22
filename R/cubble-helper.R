@@ -66,3 +66,8 @@ get_listcol <- function(data){
     cli::cli_abort("Can't determine the list column, please specify it")
   }
 }
+
+
+key_level <- function(data, key){
+   map_dbl(key, ~unique(data[[.x]]) %>% length)
+}

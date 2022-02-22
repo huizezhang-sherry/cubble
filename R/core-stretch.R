@@ -22,6 +22,11 @@ stretch.cubble_df <- function(data, col){
   test_nested(data)
 
   key <- syms(key_vars(data))
+  if (length(key) == 2){
+    cur_key <- key[key %in% names(data)]
+  } else{
+    cur_key <- key[[1]]
+  }
   index <- index(data)
   coords <- coords(data)
   row_id <- row_id(data)
@@ -33,17 +38,17 @@ stretch.cubble_df <- function(data, col){
 
   # unnest the temporal variables
   if (is_tsibble) data$ts <- map(data$ts, tibble::as_tibble)
-  out <- data %>% dplyr::select(!!!key, !!col) %>% tidyr::unnest(c(!!col))
+  out <- data %>% dplyr::select(!!!cur_key, !!col) %>% tidyr::unnest(c(!!col))
 
   # organise spatial variables into `spatial`
   spatial <- data %>% select(-!!col)
-  if (".val" %in% colnames(spatial)) spatial <- spatial %>% tidyr::unnest(.val)
+  if (".val" %in% colnames(spatial)) spatial <- spatial %>% tidyr::unnest(.data$.val)
 
   if (is_tsibble){
-    out <- out %>% tsibble::as_tsibble(key = !!key[[1]], index = index)
+    out <- out %>% tsibble::as_tsibble(key = !!cur_key, index = index)
   }
 
   new_cubble(out,
              key = map_chr(key, as_name), index = index, coords = coords,
-             row_id = row_id, spatial = spatial, form = "long")
+             spatial = spatial, form = "long")
 }

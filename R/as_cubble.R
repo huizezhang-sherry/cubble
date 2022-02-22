@@ -41,8 +41,6 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
     index <- enquo(index)
   }
   coords <- enquo(coords)
-  row_id <- key
-
   coords <- names(data)[tidyselect::eval_select(coords, data)]
   # - check lat between -90 to 90
   # - check long between -180 to 180?
