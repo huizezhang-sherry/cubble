@@ -2,36 +2,31 @@
 % Please edit documentation in R/core-migrate.R
 \name{migrate}
 \alias{migrate}
-\title{Move item-wise variables into long form}
+\title{Move spatial variables into the long form}
 \usage{
 migrate(data, ...)
 }
 \arguments{
-\item{data}{a long form tibble object}
+\item{data}{a long cubble object}
 
-\item{...}{variables in metadata to included into the long form}
+\item{...}{spatial variables to move into the long form}
 }
 \description{
-Move item-wise variables into long form
-}
-\details{
-Some spatio-temporal visualisations, i.e. a glyph map, require both item-wise
-and time-wise variables to create the plot. \code{migrate()} moves item-wise variables
-into the long form before creating the visualisation.
+Some spatio-temporal transformation, i.e. glyph maps, uses both spatial
+and temporal variables. \code{migrate()} allows you to temporarily moves spatial
+variables into the long form for these transformations.
 }
 \examples{
-library(ggplot2)
-library(dplyr)
-dt <- aus_climate \%>\%
-  stretch() \%>\%
-  migrate(lat, long) \%>\%
-  filter(lubridate::month(date) == 2 ) \%>\%
-  mutate(yday = lubridate::yday(date)) \%>\%
-  select(-date)
+cb <- climate_flat \%>\%
+  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\%
+  stretch()
 
-state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-plot_map(state_map) +
-  geom_glyph(data = dt,
-             aes(x_major = long, x_minor = yday,
-                 y_major = lat, y_minor = tmax))
+# migrate long and lat
+cb_mig <- cb \%>\% migrate(long, lat)
+
+# migration is not memorised by cubble:
+# if you switch to the nested cubble and then switch back,
+# long and lat will not be preserved
+cb_mig \%>\% tamp() \%>\% stretch()
+
 }

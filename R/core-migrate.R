@@ -1,27 +1,24 @@
-#' Move item-wise variables into long form
+#' Move spatial variables into the long form
 #'
-#' @details
-#' Some spatio-temporal visualisations, i.e. a glyph map, require both item-wise
-#' and time-wise variables to create the plot. `migrate()` moves item-wise variables
-#' into the long form before creating the visualisation.
+#' Some spatio-temporal transformation, i.e. glyph maps, uses both spatial
+#' and temporal variables. `migrate()` allows you to temporarily moves spatial
+#' variables into the long form for these transformations.
 #'
-#' @param data a long form tibble object
-#' @param ... variables in metadata to included into the long form
+#' @param data a long cubble object
+#' @param ... spatial variables to move into the long form
 #' @examples
-#' library(ggplot2)
-#' library(dplyr)
-#' dt <- aus_climate %>%
-#'   stretch() %>%
-#'   migrate(lat, long) %>%
-#'   filter(lubridate::month(date) == 2 ) %>%
-#'   mutate(yday = lubridate::yday(date)) %>%
-#'   select(-date)
+#' cb <- climate_flat %>%
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
+#'   stretch()
 #'
-#' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-#' plot_map(state_map) +
-#'   geom_glyph(data = dt,
-#'              aes(x_major = long, x_minor = yday,
-#'                  y_major = lat, y_minor = tmax))
+#' # migrate long and lat
+#' cb_mig <- cb %>% migrate(long, lat)
+#'
+#' # migration is not memorised by cubble:
+#' # if you switch to the nested cubble and then switch back,
+#' # long and lat will not be preserved
+#' cb_mig %>% tamp() %>% stretch()
+#'
 #' @export
 #' @rdname cubble-verb
 migrate <- function(data, ...){
@@ -29,15 +26,16 @@ migrate <- function(data, ...){
   test_cubble(data)
   test_long(data)
   sp <- spatial(data)
+  key <- key_vars(data)
 
   in_spatial <- map_lgl(names(dots), ~.x %in% names(sp))
   if (!all(in_spatial)){
     cli::cli_inform(
-      "{.code {names(dots)[!in_spatial]}} does not exist in spaital stem. No migration")
+      "{.code {names(dots)[!in_spatial]}} does not exist as a spaital variable. No migration")
   }
 
-  to_join <- sp %>% select(key_vars(data)[1], names(dots)[in_spatial]) %>% dplyr::distinct()
-  out <- suppressMessages(data %>% left_join(to_join))
+  to_join <- sp %>% select(key_vars(data), names(dots)[in_spatial]) %>% dplyr::distinct()
+  out <- data %>% left_join(to_join, by = key)
 
   if (nrow(out) != nrow(data)){
     var <- names(dots)
