@@ -148,11 +148,11 @@
 <code class="sourceCode R"><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span>month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,
            group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2015</span>,
-                                    <span class="st">"2016 ~ 2020"</span>,<span class="st">"1971 ~ 1975"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+                                    <span class="st">"2016 ~ 2020"</span>,<span class="st">"1971 ~ 1975"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">tmax</span>
-<span class="co">#&gt; <span style="color: #949494;"># cubble:  date, id [24]: long form</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># cubble:  month, group, id [24]: long form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:    [142, -39.13, 149.92, -34.23]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># spatial: latitude [dbl], longitude [dbl], elevation [dbl], name [chr], wmo_id</span></span>
 <span class="co"><span style="color: #949494;">#&gt; #   [dbl], element [chr], first_year [int], last_year [int], id1 [chr]</span></span>
@@ -201,7 +201,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/cubble-verb.html">migrate</a></span><span class="op">(</span><span class="va">latitude</span>, <span class="va">longitude</span><span class="op">)</span>
 <span class="va">tmax</span>
-<span class="co">#&gt; <span style="color: #949494;"># cubble:  date, id [22]: long form</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># cubble:  month, group, id [22]: long form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:    [142, -39.13, 149.92, -34.23]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># spatial: latitude [dbl], longitude [dbl], elevation [dbl], name [chr], wmo_id</span></span>
 <span class="co"><span style="color: #949494;">#&gt; #   [dbl], element [chr], first_year [int], last_year [int], id1 [chr]</span></span>

@@ -101,6 +101,17 @@ into the long form before creating the visualisation.</p>
 <span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>yday <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/day.html" class="external-link">yday</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">date</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> Please use `!!` instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   # Bad:</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   dplyr::select(data, !!!enquo(x))</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   # Good:</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   dplyr::select(data, !!enquo(x))    # Unquote single quosure</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">state_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html" class="external-link">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span>, keep <span class="op">=</span> <span class="fl">2e-3</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="plot_map.html">plot_map</a></span><span class="op">(</span><span class="va">state_map</span><span class="op">)</span> <span class="op">+</span></span>
