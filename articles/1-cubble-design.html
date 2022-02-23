@@ -91,7 +91,7 @@
     
     
 <p>This vignette provides some details on the cubble class. Here is a diagram that summarises the attributes associated with a nested and long cubble:</p>
-<p><img src="cluster-diagram/cubble-design.png" width="958"></p>
+<p><img src="cluster-diagram/cubble-design.png" width="960"></p>
 <p>Here the attributes can be divided into four categories:</p>
 <ul>
 <li>
@@ -99,7 +99,7 @@
 <li>
 <code>groups</code> is inherient from <code>rowwise_df</code> or <code>grouped_df</code> a nested or long cubble is built,</li>
 <li>
-<code>index</code>, <code>row_id</code>, <code>coords</code>, and <code>form</code> are <code>cubble</code> specific attributes, and</li>
+<code>index</code>, <code>coords</code>, and <code>form</code> are <code>cubble</code> specific attributes, and</li>
 <li>
 <code>spatial</code> is a special attribute that only the long cubble has</li>
 </ul>
@@ -151,7 +151,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $form</span>
 <span class="co">#&gt; [1] "nested"</span></code></pre></div>
-<p>In this example, four stations are recorded at four time points: 1st to 4th Jan 2020. The <code>key</code> specified is mapped to the <code>groups</code> while <code>index</code> and <code>coords</code> are stored as the variable name in a cubble. <code>row_id</code> is an attribute that records the lowest level of spatial unit. This attribute will be the same as <code>key</code> most of the time but a useful piece of information to record later in the hierarchical data structure.</p>
+<p>In this example, four stations are recorded at four time points: 1st to 4th Jan 2020. The <code>key</code> specified is mapped to the <code>groups</code> while <code>index</code> and <code>coords</code> are stored as the variable name in a cubble. This attribute will be the same as <code>key</code> most of the time but a useful piece of information to record later in the hierarchical data structure.</p>
 <p>The <code>rowwise_df</code> class uses a <code>group</code> attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">climate_flat</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
@@ -252,7 +252,7 @@
 <span class="co">#&gt; $form</span>
 <span class="co">#&gt; [1] "long"</span></code></pre></div>
 <p>The <code>spatial</code> attribute records the time-invariant variables in the data, so that when switch back to the nested form, these variables won’t get lost.</p>
-<p>Apart from the usual <code>%@%</code> extraction of attributes, <code><a href="../reference/attributes.html">index()</a></code>, <code><a href="../reference/attributes.html">key_vars()</a></code>, <code><a href="../reference/attributes.html">key_data()</a></code>, <code><a href="../reference/attributes.html">coords()</a></code>, <code><a href="../reference/attributes.html">row_id()</a></code>, and <code><a href="../reference/attributes.html">spatial()</a></code> can be used to extract the relevant component in both forms:</p>
+<p>Apart from the usual <code>%@%</code> extraction of attributes, <code><a href="../reference/attributes.html">index()</a></code>, <code><a href="../reference/attributes.html">key_vars()</a></code>, <code><a href="../reference/attributes.html">key_data()</a></code>, <code><a href="../reference/attributes.html">coords()</a></code>, <code>row_id()</code>, and <code><a href="../reference/attributes.html">spatial()</a></code> can be used to extract the relevant component in both forms:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/attributes.html">key_vars</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span>
 <span class="co">#&gt; [1] "id"</span>
