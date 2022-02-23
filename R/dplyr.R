@@ -138,7 +138,7 @@ group_by.cubble_df <- function(data, ...){
   out <- groups$data
 
   new_cubble(out,
-             key = key, index = index, coords = coords(data),
+             key = c(key, index), index = index, coords = coords(data),
              row_id = row_id(data), spatial = spatial(data), form = determine_form(data))
 }
 

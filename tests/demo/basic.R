@@ -4,7 +4,7 @@ library(cubble)
 # basic
 cb <- climate_flat %>%
   as_cubble(key = id, index = date, coords = c(long, lat))
-cb %>% stretch()
+tmp <- cb %>% stretch()
 
 # stretch a hierarchical
 cb_hier <- climate_flat %>%

@@ -28,6 +28,19 @@ ggplot() +
 
 This is a lot of stations to look at for one climate variable and they can't all fit into a glyph map. What we can do is to group stations into clusters and look at the aggregated series in the glyph map. In this vignette, I will introduce how to perform aggregation using a hierarchical data structure in cubble. 
 
+First, let's summarise the daily data into weekly sum for each station:
+
+```{r}
+station_long <- weatherdata::climate_full %>% 
+  stretch(ts) %>% 
+  mutate(wk = lubridate::week(date)) %>% 
+  group_by(wk) %>% 
+  summarise(prcp = sum(prcp, na.rm = TRUE)) %>% 
+  migrate(cluster)
+
+station_long
+```
+
 First we need to assign each station a cluster number. Here we use a simple kmean algorithm based on the distance matrix to create 20 clusters. This creates `station_nested` as a station level nested cubble with a cluster column indicating the group each station belongs to.
 
 ```{r echo = FALSE}
@@ -35,7 +48,8 @@ coords <- cbind(weatherdata::climate_full$long, weatherdata::climate_full$lat)
 dist_raw <- geosphere::distm(coords, coords)
 
 set.seed(123)
-station_nested <- weatherdata::climate_full %>% 
+station_nested <- station_long %>% 
+  tamp() %>% 
   strip_rowwise() %>% 
   mutate(cluster = kmeans(dist_raw,centers = 20, nstart = 500)$cluster)
 ```
@@ -74,19 +88,9 @@ knitr::include_graphics("cluster-diagram/cluster-diagram.png")
 With these data, we can make a glyph map to understand the precipitation pattern in Australia:
 
 ```{r echo = FALSE}
-station_long <- station_nested %>% 
-  stretch(ts) %>% 
-  mutate(wk = lubridate::week(date)) %>% 
-  group_by(wk) %>% 
-  summarise(prcp = sum(prcp, na.rm = TRUE)) %>% 
-  migrate(cluster)
-
 cluster_long <- cluster_nested %>% 
-  stretch(ts) %>% 
-  mutate(wk = lubridate::week(date)) %>% 
-  group_by(id, wk) %>% 
-  summarise(prcp = sum(prcp, na.rm = TRUE)) %>% 
-  ungroup(id) %>% 
+  stretch() %>% 
+  group_by(wk) %>% 
   summarise(prcp = mean(prcp, na.rm = TRUE)) %>% 
   migrate(cent_long, cent_lat)
 

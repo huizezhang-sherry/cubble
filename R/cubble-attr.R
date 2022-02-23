@@ -95,7 +95,8 @@ new_spatial <- function(data){
 #' @rdname attributes
 key_vars <- function(data){
   names <- names2(key_data(data))
-  names[names != ".rows"]
+  index <- index(data)
+  names[!names %in% c(".rows", index)]
 }
 
 #' @export

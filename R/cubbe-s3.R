@@ -18,22 +18,13 @@ cubble <- function(..., key, index, coords) {
 
 new_cubble <- function(data, key, index, coords, spatial, form, row_id, tsibble_attr = NULL) {
 
-  if (length(key) == 2){
-    # key_lvl <- key_level(data, key)
-    # row_id <- key[which(key_lvl != nrow(data))]
-    # cur_key <- key[which(key_lvl == nrow(data))]
-    # if (".val" %in% names(data)){
-    #   data <- data %>% tidyr::unnest(.val)
-    # }
-    if (form == "nested"){
-      key_data <- data %>% tidyr::unnest(.val) %>% dplyr::grouped_df(key) %>% group_data()
-    } else{
-      key_data <- data %>% dplyr::grouped_df(key) %>% group_data()
-    }
-
+  if (form == "nested" & ".val" %in% names(data)){
+    group_dt <- data %>% tidyr::unnest(.val)
   } else{
-    key_data <- group_data(dplyr::grouped_df(data, vars = unlist(map(key, as_name))))
+    group_dt <- data
   }
+
+  key_data <- group_dt %>% dplyr::grouped_df(key) %>% group_data()
 
   all_cols <- names(data)
 

@@ -51,7 +51,7 @@ We would also like to summarise the daily recording into monthly to smooth the m
 tmax <- tmax %>%
   group_by(month = lubridate::month(date),
            group = as.factor(ifelse(lubridate::year(date) > 2015,
-                                    "2016 ~ 2020","1971 ~ 1975"))) %>%
+                                    "2016 ~ 2020","1971 ~ 1975"))) %>% 
   summarise(tmax = mean(tmax, na.rm = TRUE))
 
 tmax

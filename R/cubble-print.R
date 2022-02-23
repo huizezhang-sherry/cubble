@@ -40,7 +40,7 @@ tbl_sum.cubble_df <- function(data) {
   if(form(data) == "nested"){
     msg <- glue::glue("{key} [{key_n}]: nested form")
   } else if(form(data) == "long"){
-    index <- index(data)
+    index <- index(data) %>% paste0(collapse = ", ")
     msg <- glue::glue("{index}, {key} [{key_n}]: long form")
   }
 

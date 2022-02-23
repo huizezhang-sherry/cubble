@@ -26,11 +26,4 @@ cb <- climate_flat \%>\%
 
 # switch the key to cluster
 cb_hier <- cb \%>\% switch_key(cluster)
-
-# visualise the clustered series
-cb_long <- cb_hier \%>\% stretch()
-cb_long \%>\%
-  ggplot(aes(x = date, y = tmax, group = id)) +
-  geom_line() +
-  facet_wrap(vars(cluster), ncol = 1)
 }

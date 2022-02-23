@@ -22,7 +22,7 @@ switch_key <- function(data, key){
   test_cubble(data)
   new_key <- as_name(enquo(key))
   cur_key <-  key_vars(data)
-  key <- c(new_key, cur_key)
+  key <- unique(c(new_key, cur_key))
   index <- index(data)
   coords <- coords(data)
 
@@ -59,7 +59,7 @@ arrange_temporal <- function(data, key){
   if (new_key == upper_key){
     ts_df <- data %>% dplyr::select(!!key,.data$ts) %>% tibble::as_tibble()
   } else if (new_key == lower_key){
-    ts_df <- map_dfr(data$ts, rbind)
+    ts_df <- data %>% dplyr::select(new_key, .data$ts) %>% tidyr::unnest(.data$ts)
   }
 
   # split ts column as per the new group
