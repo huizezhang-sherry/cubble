@@ -9,7 +9,6 @@
 \alias{coord_x}
 \alias{coord_y}
 \alias{index}
-\alias{row_id}
 \title{Functions to extract cubble attributes}
 \usage{
 form(data)
@@ -27,8 +26,6 @@ coord_x(data)
 coord_y(data)
 
 index(data)
-
-row_id(data)
 }
 \arguments{
 \item{data}{an cubble object}

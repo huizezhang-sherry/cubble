@@ -29,7 +29,6 @@ stretch.cubble_df <- function(data, col){
   }
   index <- index(data)
   coords <- coords(data)
-  row_id <- row_id(data)
   data <- as_tibble(data)
   is_tsibble <- "tbl_ts" %in% map_chr(data$ts, ~class(.x)[1])
 

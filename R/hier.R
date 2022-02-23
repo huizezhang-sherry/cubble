@@ -29,7 +29,7 @@ switch_key <- function(data, key){
   orig_form <- form(data)
   if (orig_form == "long") data <- data %>% tamp()
 
-  if (".val" %in% names(data)) data <- data %>% tidyr::unnest(.val)
+  if (".val" %in% names(data)) data <- data %>% tidyr::unnest(.data$.val)
 
   if (!new_key %in% names(data)){
     cli::cli_abort("{.field {key_upper}} does not exist in the data!")
@@ -123,7 +123,7 @@ rename_key <- function(data, ...){
 
   new_cubble(out,
              key = names(list(...)), index = index(data), coords = coords(data),
-             row_id = row_id(data), spatial = spatial(data), form = determine_form(data))
+             spatial = spatial(data), form = determine_form(data))
 }
 
 
@@ -166,7 +166,6 @@ get_centroid <- function(data){
     key = key,
     index = index(data),
     coords = coords,
-    row_id = row_id(data),
     spatial = NULL,
     form = "nested"
   )

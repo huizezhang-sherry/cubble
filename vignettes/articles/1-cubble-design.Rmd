@@ -26,7 +26,7 @@ Here the attributes can be divided into four categories:
   
   - `class`, `row.names`, `names` are attributes inherient from a `tibble` class,
   - `groups` is inherient from `rowwise_df` or `grouped_df` a nested or long cubble is built,
-  - `index`, `row_id`, `coords`, and `form` are `cubble` specific attributes, and
+  - `index`, `coords`, and `form` are `cubble` specific attributes, and
   - `spatial` is a special attribute that only the long cubble has
   
 Now we look into these attributes through two examples, one for nested cubble and one for long cubble:
@@ -43,7 +43,7 @@ nested
 attributes(nested)
 ```
 
-In this example, four stations are recorded at four time points: 1st to 4th Jan 2020. The `key` specified is mapped to the `groups` while `index` and `coords` are stored as the variable name in a cubble. `row_id` is an attribute that records the lowest level of spatial unit. This attribute will be the same as `key` most of the time but a useful piece of information to record later in the hierarchical data structure.
+In this example, four stations are recorded at four time points: 1st to 4th Jan 2020. The `key` specified is mapped to the `groups` while `index` and `coords` are stored as the variable name in a cubble. This attribute will be the same as `key` most of the time but a useful piece of information to record later in the hierarchical data structure.
 
 The `rowwise_df` class uses a `group` attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by: 
 

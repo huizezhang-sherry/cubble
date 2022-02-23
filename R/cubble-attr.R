@@ -129,9 +129,3 @@ coord_y <- function(data){
 index <- function(data){
   data %@% "index"
 }
-
-#' @export
-#' @rdname attributes
-row_id <- function(data){
-  data %@% "row_id"
-}

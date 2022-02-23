@@ -51,7 +51,7 @@ tamp.cubble_df <- function(data) {
 
 
   if ("tbl_ts" %in% class(data)){
-    out <- out %>% mutate(ts = map(ts, ~tsibble::as_tsibble(.x, index = index)))
+    out <- out %>% mutate(ts = map(.data$ts, ~tsibble::as_tsibble(.x, index = index)))
   }
 
   new_cubble(out,

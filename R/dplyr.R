@@ -26,7 +26,7 @@ dplyr_col_modify.cubble_df <- function(data, cols) {
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             row_id = row_id(data), spatial = spatial, form = determine_form(out),
+             spatial = spatial, form = determine_form(out),
              tsibble_attr = tsibble_attr)
 }
 
@@ -49,7 +49,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   }
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             row_id = row_id(data), spatial = spatial, form = determine_form(out))
+             spatial = spatial, form = determine_form(out))
 }
 
 #' @export
@@ -72,8 +72,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 
   new_cubble(data,
              key = key, index = index(template), coords = coords(template),
-             row_id = row_id(template), spatial = spatial,
-             form = determine_form(template))
+             spatial = spatial, form = determine_form(template))
 }
 
 #' @export
@@ -84,7 +83,6 @@ summarise.cubble_df <- function(data, ...){
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),
-             row_id = row_id(data),
              spatial = spatial, form = determine_form(out))
 }
 
@@ -139,7 +137,7 @@ group_by.cubble_df <- function(data, ...){
 
   new_cubble(out,
              key = c(key, index), index = index, coords = coords(data),
-             row_id = row_id(data), spatial = spatial(data), form = determine_form(data))
+             spatial = spatial(data), form = determine_form(data))
 }
 
 #' @export
@@ -160,7 +158,7 @@ ungroup.cubble_df <- function(data, ...){
 
   new_cubble(data,
              key = updated_group_var, index = index(data), coords = coords(data),
-             row_id = row_id(data), spatial = spatial(data), form = determine_form(data))
+             spatial = spatial(data), form = determine_form(data))
 }
 
 #' @export

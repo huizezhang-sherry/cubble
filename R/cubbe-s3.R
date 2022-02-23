@@ -12,11 +12,11 @@ cubble <- function(..., key, index, coords) {
   key <- enquo(key)
   new_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
-             row_id = row_id, spatial = NULL, form = "nested")
+             spatial = NULL, form = "nested")
 
 }
 
-new_cubble <- function(data, key, index, coords, spatial, form, row_id, tsibble_attr = NULL) {
+new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL){
 
   if (form == "nested" & ".val" %in% names(data)){
     group_dt <- data %>% tidyr::unnest(.val)
@@ -143,6 +143,17 @@ new_cubble <- function(data, key, index, coords, spatial, form, row_id, tsibble_
 
   new_cubble(out,
              key = as_name(new_key), index = index(data), coords = c(new_long, new_lat),
-             row_id = row_id(data), spatial = spatial, form = determine_form(out))
+             spatial = spatial, form = determine_form(out))
 
+}
+
+
+`[[.cubble_df` <- function(x){
+  browser()
+  NextMethod()
+}
+
+`[[<-.cubble_df` <- function(x){
+  browser()
+  NextMethod()
 }

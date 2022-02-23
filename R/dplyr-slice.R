@@ -6,11 +6,10 @@ slice_factory <- function(f, ...){
     index <- index(data)
     coords <- coords(data)
     data <- tibble::as_tibble(data)
-    row_id <- row_id(data)
     out <- NextMethod()
 
     new_cubble(out,
-               key = key , index = index , coords = coords, row_id = row_id,
+               key = key , index = index , coords = coords,
                spatial = spatial, form = determine_form(data))
   }
 }
@@ -30,6 +29,7 @@ slice_factory <- function(f, ...){
 #' aus_climate %>% slice_tail(n = 50)
 #'
 #' # slice based on the max/ min of a variable
+#'
 #' aus_climate %>% slice_max(elev, n = 10)
 #' aus_climate %>% slice_min(lat, n = 10)
 #'
