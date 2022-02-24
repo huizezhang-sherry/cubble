@@ -45,9 +45,12 @@ stretch.cubble_df <- function(data, col){
 
   if (is_tsibble){
     out <- out %>% tsibble::as_tsibble(key = !!cur_key, index = index)
+    tsibble_attr <- attributes(out)
   }
 
   new_cubble(out,
              key = map_chr(key, as_name), index = index, coords = coords,
-             spatial = spatial, form = "long")
+             spatial = spatial,
+             #tsibble_attr = tsibble_attr,
+             form = "long")
 }

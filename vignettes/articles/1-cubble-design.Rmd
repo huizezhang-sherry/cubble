@@ -73,7 +73,7 @@ attributes(long)
 
 The `spatial` attribute records the time-invariant variables in the data, so that when switch back to the nested form, these variables won't get lost. 
 
-Apart from the usual `%@%` extraction of attributes, `index()`, `key_vars()`, `key_data()`, `coords()`, `row_id()`, and `spatial()` can be used to extract the relevant component in both forms:
+Apart from the usual `%@%` extraction of attributes, `index()`, `key_vars()`, `key_data()`, `coords()`, and `spatial()` can be used to extract the relevant component in both forms:
 
 ```{r}
 key_vars(long)

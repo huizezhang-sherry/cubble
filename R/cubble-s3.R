@@ -109,15 +109,9 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
   }
 
   out <- data
-
-  if(!is.null(i)){
-    out <- vec_slice(data, i)
-  }
-
+  if(!is.null(i)) out <- vec_slice(data, i)
   if(!is.null(j)){
     out <- vctrs::vec_data(out)
-    # check column includes key, index, and coords
-
     out <- out[,unlist(j)]
   }
 
@@ -127,33 +121,17 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 
 #' @export
 `names<-.cubble_df` <- function(x, value){
-
-  out <- data <- x
-  out %@% "names" <- value
-
-  key_idx <- which(names(data) == key_vars(data)[1])
-  new_key <- sym(names(out)[key_idx])
-  long_idx <- which(names(data) == coord_x(data))
-  new_long <- names(out)[long_idx]
-  lat_idx <- which(names(data) == coord_y(data))
-  new_lat <- names(out)[lat_idx]
-
-  #leaves_data <- new_leaves(out, !!new_key)
-  spatial = spatial(out)
-
-  new_cubble(out,
-             key = as_name(new_key), index = index(data), coords = c(new_long, new_lat),
-             spatial = spatial, form = determine_form(out))
-
+  out <- NextMethod()
+  dplyr_reconstruct(out, x)
 }
 
 
 `[[.cubble_df` <- function(x){
-  browser()
-  NextMethod()
+  out <- NextMethod()
+  dplyr_reconstruct(out, x)
 }
 
 `[[<-.cubble_df` <- function(x){
-  browser()
-  NextMethod()
+  out <- NextMethod()
+  dplyr_reconstruct(out, x)
 }

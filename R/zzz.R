@@ -5,7 +5,6 @@
 
   #s3_register("tsibble::index_by", "cubble_df")
   s3_register("dplyr::summarise", "cubble_df")
-  s3_register("dplyr::left_join", "cubble_df")
   s3_register("dplyr::ungroup", "cubble_df")
   s3_register("dplyr::group_by", "cubble_df")
   s3_register("dplyr::select", "cubble_df")

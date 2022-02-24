@@ -35,6 +35,7 @@ aus_climate \%>\% slice_head(n = 50)
 aus_climate \%>\% slice_tail(n = 50)
 
 # slice based on the max/ min of a variable
+
 aus_climate \%>\% slice_max(elev, n = 10)
 aus_climate \%>\% slice_min(lat, n = 10)
 
