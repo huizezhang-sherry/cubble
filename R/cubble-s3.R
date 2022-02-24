@@ -131,7 +131,7 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
   dplyr_reconstruct(out, x)
 }
 
-`[[<-.cubble_df` <- function(x){
+`[[<-.cubble_df` <- function(x, value){
   out <- NextMethod()
   dplyr_reconstruct(out, x)
 }
