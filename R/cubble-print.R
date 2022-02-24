@@ -12,7 +12,7 @@ tbl_sum.cubble_df <- function(data) {
 
   bbox_msg <- glue::glue("[{bbox}]")
 
-  if (form(data) == "nested"){
+  if (is_nested(data)){
 
     if (length(data$ts) > 10000){
       var_names <- names(data$ts[[1]])
@@ -25,7 +25,7 @@ tbl_sum.cubble_df <- function(data) {
     }
 
 
-  } else if (form(data) == "long"){
+  } else if (is_long(data)){
 
     sp <- spatial(data)
     all <- map(sp, tibble::type_sum)
@@ -37,9 +37,9 @@ tbl_sum.cubble_df <- function(data) {
   var_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
 
   size <- tibble::size_sum(data)
-  if(form(data) == "nested"){
+  if(is_nested(data)){
     msg <- glue::glue("{key} [{key_n}]: nested form")
-  } else if(form(data) == "long"){
+  } else if(is_long(data)){
     index <- index(data) %>% paste0(collapse = ", ")
     msg <- glue::glue("{index}, {key} [{key_n}]: long form")
   }
@@ -48,9 +48,9 @@ tbl_sum.cubble_df <- function(data) {
     msg <- glue::glue("{msg} [tsibble]")
   }
 
-  if (form(data) == "nested"){
+  if (is_nested(data)) {
     c("cubble" = msg, "bbox" = bbox_msg, "temporal" = var_msg)
-  } else{
+  } else if (is_long(data)) {
     c("cubble" = msg, "bbox" = bbox_msg, "spatial" = var_msg)
   }
 

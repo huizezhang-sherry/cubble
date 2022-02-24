@@ -74,3 +74,24 @@ get_listcol <- function(data){
 key_level <- function(data, key){
    map_dbl(key, ~unique(data[[.x]]) %>% length)
 }
+
+tsibble_from_cubble <- function(data){
+  test_cubble(data)
+  long <- is_long(data) && "tbl_ts" %in% class(data)
+  nested <- is_nested(data) && "tbl_ts" %in% unlist(map(data$ts[1], class))
+
+  long | nested
+}
+
+
+all_cubble_cols <- function(data){
+  test_cubble(data)
+
+  if (is_long(data)) {
+    unique(c(names(spatial(data)), names(data)))
+    } else if (is_nested(data)){
+    unique(c(names(data), names(data[["ts"]][[1]])))
+  }
+}
+
+

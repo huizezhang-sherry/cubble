@@ -2,6 +2,8 @@
 % Please edit documentation in R/cubble-attr.R
 \name{form}
 \alias{form}
+\alias{is_long}
+\alias{is_nested}
 \alias{spatial}
 \alias{key_vars}
 \alias{key_data}
@@ -12,6 +14,10 @@
 \title{Functions to extract cubble attributes}
 \usage{
 form(data)
+
+is_long(data)
+
+is_nested(data)
 
 spatial(data)
 
