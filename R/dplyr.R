@@ -2,32 +2,14 @@
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
 
-
-  key <- key_vars(data)
-
   if ("tbl_ts" %in% class(data)){
     out <- dplyr_col_modify(tsibble::as_tsibble(tibble::as_tibble(data), key = !!key), cols)
   } else{
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }
 
-  # if ("tbl_ts" %in% class(out$ts[[1]])){
-  #   class(out) <- c(class(out), "tbl_ts")
-  #   dt <- out$ts[[1]]
-  #   tsibble_attr <- list(index = dt %@% "index",
-  #                        index2 = dt %@% "index2",
-  #                        interval = dt %@% "interval",
-  #                        key = dt %@% "key")
-  #
-  # }
-  # update leaves
-  # long form shouldn't make change on the meta but list-col form may (i.e. mutate)
-  spatial <- new_spatial(data)
-
-  new_cubble(out,
-             key = key, index = index(data), coords = coords(data),
-             spatial = spatial, form = determine_form(out),
-             tsibble_attr = tsibble_attr)
+  # TODO: deal with ts??
+  dplyr_reconstruct(out, data)
 }
 
 #' @export
@@ -35,50 +17,63 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 
   out <- vec_slice(data, i)
   key <- key_vars(data)
-
-  spatial <- new_spatial(data)
-
-  if (determine_form(data) == "long"){
+  # update spatial as subsetting will change the number of row
+  if (is_long(data)){
     keep <- unique(out[[key]])
-    spatial <- spatial %>% filter(!!sym(key) %in% keep)
-
+    spatial <- spatial(data) %>% filter(!!sym(key) %in% keep)
   }
+
+  # TODO: update coords
+
+  # TODO: update index - same reason
+
+
 
   if ("tbl_ts" %in% class(data)){
     out <- tsibble::build_tsibble(out, key = key_vars(data)[1])
   }
-  new_cubble(out,
-             key = key, index = index(data), coords = coords(data),
-             spatial = spatial, form = determine_form(out))
+
+  dplyr_reconstruct(out, data)
 }
 
 #' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
 
-  form <- determine_form(template)
-  key <- key_vars(template)[1]
+  if (cubble_can_reconstrcut(data, template)){
+    new_cubble(data,
+               key = key_vars(template), index = index(template),
+               coords = coords(template), spatial = spatial(template),
+               form = form(template))
+  } else{
+    # otherwise become a tibble
+    x <- vctrs::new_data_frame(data)
+    tibble::new_tibble(x, nrow = nrow(x))
+  }
 
-  # if (form == "long"){
-  #   leaves_data <-  leaves(template)
-  # } else{
-  #   data_var <- data[, find_invariant(data, !!key)$invariant] %>% names()
-  #   old_leaves <- leaves(template) %>% names()
-  #   new_leaves <- data_var[data_var %in% old_leaves]
-  #   cols <- unique(c(key, new_leaves))
-  #   leaves_data <- leaves(template)[cols]
-  # }
-  spatial <- new_spatial(template)
+}
 
+cubble_can_reconstrcut <- function(data, to){
 
-  new_cubble(data,
-             key = key, index = index(template), coords = coords(template),
-             spatial = spatial, form = determine_form(template))
+  has_key <- has_index <- FALSE
+
+  # have key
+  has_key <- key_vars(to) %in% names(data)
+
+  # have index
+  if (is_long(to)){
+    has_index <- index(to) %in% names(data)
+  } else if (is_nested(to)){
+    has_index <- index(to) %in% names(data[["ts"]][[1]])
+  }
+
+  has_key && has_index
+
 }
 
 #' @export
 summarise.cubble_df <- function(data, ...){
   key <- key_vars(data)
-  spatial <- new_spatial(data)
+  spatial <- spatial(data)
   out <- NextMethod("summarise")
 
   new_cubble(out,
@@ -86,38 +81,6 @@ summarise.cubble_df <- function(data, ...){
              spatial = spatial, form = determine_form(out))
 }
 
-#' @export
-left_join.cubble_df <- function(data1, data2, by = NULL, ...){
-
-  if (!is_cubble(data1)){
-    abort("data1 needs to be a cubble object")
-  }
-
-  if (form(data1) == "long" && any(by == key_vars(data1))){
-    inform("Joining variable(s) being invariant to the group variable ...")
-  }
-
-  if (is_null(by)){
-    by <- intersect(names(data1), names(data2))
-  }
-  out <- NextMethod("left_join")
-
-
-  if (is_cubble(data2)){
-    # key <- c(key_vars(data1), key_vars(data2))
-    # index <- index(data1)
-    # coords <- list(coords(data1), coords(data2))
-    # leaves <- list(leaves(data1), leaves(data2))
-    #
-    # out <- new_cubble(out,
-    #            key = key, index = index, coords = coords,
-    #            leaves = leaves, form = determine_form(out))
-  } else{
-    out <- dplyr_reconstruct(out, data1)
-  }
-
-  out
-}
 
 #' @export
 select.cubble_df <- function(data, ...){
