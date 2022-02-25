@@ -22,7 +22,7 @@ aus_stations <- ghcnd_stations() %>%
 aus_climate_raw <- aus_stations %>%
   rowwise() %>%
   mutate(ts = list(meteo_pull_monitors(monitors = id, var = c("PRCP", "TMAX", "TMIN"),
-                                       date_min = "2016-01-01",
+                                       date_min = "2020-01-01",
                                        date_max = "2020-12-31") %>%
                      select(-id))) %>%
   rename(lat = latitude, long = longitude, elev = elevation)
@@ -30,31 +30,24 @@ aus_climate_raw <- aus_stations %>%
 aus_climate_cubble <- aus_climate_raw %>%
   cubble::as_cubble(index = date, key = id, coords = c(long, lat))
 
-# subset stations that don't have missing and records in 2020
-aus_climate <- aus_climate_cubble %>%
-  stretch() %>%
-  filter(lubridate::year(date) == 2020) %>%
-  mutate(tmax = tmax/10, tmin = tmin/ 10) %>%
-  tamp() %>%
-  add_missing_prct(prcp:tmin) %>%
-  filter(prcp_missing == 0, tmax_missing == 0, tmin_missing == 0) %>%
-  select(-contains("missing"))
-
-usethis::use_data(aus_climate, overwrite = TRUE)
-
 ############################################################
-climate_flat <- aus_climate %>%
-  head(5) %>%
-  unnest() %>%
-  ungroup() %>%
-  filter(lubridate::month(date) == 1)
-
-usethis::use_data(climate_flat, overwrite = TRUE)
+climate_aus <- aus_climate_cubble %>%
+  stretch() %>%
+  mutate(tmax = tmax/10, tmin = tmin/ 10)%>%
+  tamp()
+usethis::use_data(climate_aus, overwrite = TRUE)
 
 ############################################################
 set.seed(123)
-climate_missing <- aus_climate_cubble %>%
-  slice_sample(n = 50)
+climate_subset <- climate_aus %>%
+  slice_sample(n = 30)
+usethis::use_data(climate_subset, overwrite = TRUE)
 
-usethis::use_data(climate_missing, overwrite = TRUE)
+############################################################
+id_vec <- c("ASN00009021", "ASN00010311", "ASN00010614", "ASN00014015", "ASN00015131")
+climate_flat <- climate_aus %>%
+  filter(id %in% id_vec) %>%
+  unnest() %>%
+  ungroup()
+usethis::use_data(climate_flat, overwrite = TRUE)
 

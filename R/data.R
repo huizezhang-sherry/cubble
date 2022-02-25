@@ -1,9 +1,8 @@
 #' Australia climate data
 #'
-#' One year worth (2020) of climate data recorded  in 72 stations across Australia.
-#' The data is computed from National Oceanic and Atmospheric Administration (NOAA) using the `rnoaa` package.
-#'
-#' @format A cubble object with 5 station-related variables and 3 time-related variables (PRCP, TMAX, and TMIN), nested in the `ts` column
+#' Daily measure on precipitation (prcp) maximum temperature (tmax), and
+#' minimum temperature (tmin) in 2020 for 639 stations.
+#' @format A cubble object
 #' \describe{
 #'   \item{id}{station id}
 #'   \item{lat}{latitude of the station}
@@ -14,67 +13,74 @@
 #'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 #' }
 #' @examples
-#' library(rmapshaper)
-#' library(sf)
 #' library(ggplot2)
-#' state_map <- ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-#' plot_map(state_map) +
-#'   geom_point(data = aus_climate, aes(x = long, y = lat))
-"aus_climate"
+#' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+#' ggplot2::ggplot() +
+#'   ggplot2::geom_sf(data = state_map,
+#'                    ggplot2::aes(geometry = .data$geometry),
+#'                    color = "grey", linetype = "dotted") +
+#'   ggplot2::geom_point(data = climate_aus,
+#'                       ggplot2::aes(x = long, y = lat)) +
+#'   ggplot2::theme_bw()
+#' @seealso climate_subset climate_flat
+"climate_aus"
 
-#' Australia climate data (tibble)
+
+#' Australia climate data
 #'
-#' A minimal 2020 climate dataset recorded in 5 stations in a tibble format. This data is used to
-#' show how to create a cubble object from tibble.
-#' @format A tibble object with 1830 rows and 10 columns
+#' Daily measure on precipitation (prcp) maximum temperature (tmax), and
+#' minimum temperature (tmin) in 2020 for 30 stations.
+#' @format A cubble object
 #' \describe{
 #'   \item{id}{station id}
 #'   \item{lat}{latitude of the station}
 #'   \item{long}{longitude of the station}
 #'   \item{elev}{elevation of the station}
+#'   \item{name}{station name}
+#'   \item{wmo_id}{the world meterological organisation (WMO) station number}
+#'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
+#' }
+#' @examples
+#' library(ggplot2)
+#' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+#' ggplot2::ggplot() +
+#'   ggplot2::geom_sf(data = state_map,
+#'                    ggplot2::aes(geometry = .data$geometry),
+#'                    color = "grey", linetype = "dotted") +
+#'   ggplot2::geom_point(data = climate_subset,
+#'                       ggplot2::aes(x = long, y = lat)) +
+#'   ggplot2::theme_bw()
+#' @seealso climate_aus climate_flat
+"climate_subset"
+
+
+#' Australia climate data
+#' Daily measure on precipitation (prcp) maximum temperature (tmax), and
+#' minimum temperature (tmin) in 2020 for 5 stations.
+#'
+#' @format A tibble object with 155 rows and 10 columns
+#' \describe{
+#'   \item{id}{station id}
+#'   \item{lat}{latitude of the station}
+#'   \item{long}{longitude of the station}
+#'   \item{elev}{elevation of the station}
+#'   \item{name}{station name}
+#'   \item{wmo_id}{the world meterological organisation (WMO) station number}
+#'   \item{date}{the date that prcp, tmax, and tmin recorded}
 #'   \item{prcp}{precipitation}
 #'   \item{tmax}{maximum temperature}
 #'   \item{tmin}{minimum temperature}
 #' }
+#' @seealso climate_aus climate_subset
+#' @examples
+#' library(ggplot2)
+#' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+#' ggplot2::ggplot() +
+#'  ggplot2::geom_sf(data = state_map,
+#'                   ggplot2::aes(geometry = .data$geometry),
+#'                   color = "grey", linetype = "dotted") +
+#'    ggplot2::geom_point(data = climate_aus,
+#'                        ggplot2::aes(x = long, y = lat)) +
+#'    ggplot2::theme_bw()
 "climate_flat"
 
-#' Worldwide climate data
-#'
-#' The dataset contains weather data from WMO and GSN stations in
-#' the United States, Australia, Austria, Spain, France, and China.
-#'
-#' @format A tibble object with 177 rows and 9 columns
-#' \describe{
-#'   \item{id}{station id}
-#'   \item{lat}{latitude of the station}
-#'   \item{long}{longitude of the station}
-#'   \item{elev}{elevation of the station}
-#'   \item{name}{name of the station}
-#'   \item{wmo_id}{the World Meterological Organisation (WMO) station number}
-#'   \item{country}{country name}
-#'   \item{continent}{continent name}
-#'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
-#' }
-#' @examples
-#' \dontrun{
-#' library(ggplot2)
-#' map <- sf::st_as_sf(rnaturalearth::ne_countries(scale = "medium", returnclass = "sf"))
-#' plot_map(map) +
-#'   geom_point(data = world_climate, aes(x = long, y = lat))
-#' }
-#'
-"world_climate"
-
-#' Climate data with missing value
-#'
-#' @format a cubble object with 50 rows and 7 columns
-#' \describe{
-#'   \item{station}{station id}
-#'   \item{lat}{latitude of the station}
-#'   \item{long}{longitude of the station}
-#'   \item{elev}{elevation of the station}
-#'   \item{name}{station name}
-#'   \item{wmo_id}{the world meterological organisation (WMO) station number}
-#'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
-#' }
-"climate_missing"

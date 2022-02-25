@@ -6,6 +6,7 @@
 \alias{slice_min.cubble_df}
 \alias{slice_max.cubble_df}
 \alias{slice_sample.cubble_df}
+\alias{slice_nearby}
 \title{Slicing a cubble}
 \usage{
 \method{slice_head}{cubble_df}(data, ...)
@@ -17,11 +18,17 @@
 \method{slice_max}{cubble_df}(data, ...)
 
 \method{slice_sample}{cubble_df}(data, ...)
+
+slice_nearby(data, ..., buffer = 1, n = 5)
 }
 \arguments{
-\item{data}{a cubble object to slice}
+\item{data}{the data}
 
-\item{...}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
+\item{...}{conditions to filter for the selected data}
+
+\item{buffer}{the buffer added to the bounding box for slicing}
+
+\item{n}{the number of nearby points to sample}
 }
 \description{
 Slicing can be useful when the number of site is too large to be all visualised in a
@@ -31,14 +38,14 @@ allow slicing from top and bottom, based on a variable, or in random.
 \examples{
 # slice the first 50 stations from the top/ bottom
 library(dplyr)
-aus_climate \%>\% slice_head(n = 50)
-aus_climate \%>\% slice_tail(n = 50)
+climate_aus \%>\% slice_head(n = 50)
+climate_aus \%>\% slice_tail(n = 50)
 
 # slice based on the max/ min of a variable
 
-aus_climate \%>\% slice_max(elev, n = 10)
-aus_climate \%>\% slice_min(lat, n = 10)
+climate_aus \%>\% slice_max(elev, n = 10)
+climate_aus \%>\% slice_min(lat, n = 10)
 
 # random sample
-aus_climate \%>\% slice_sample(n = 10)
+climate_aus \%>\% slice_sample(n = 10)
 }

@@ -4,10 +4,10 @@
 #' @examples
 #' library(dplyr)
 #' # row number is not properly added since each row is a separate group
-#' aus_climate %>% mutate(.id = row_number())
+#' climate_aus %>% mutate(.id = row_number())
 #'
 #' # proper id after removing the grouping structure
-#' aus_climate %>% strip_rowwise() %>% mutate(.id = row_number())
+#' climate_aus %>% strip_rowwise() %>% mutate(.id = row_number())
 #'
 #' @export
 strip_rowwise <- function(data){

@@ -3,14 +3,19 @@
 \docType{data}
 \name{climate_flat}
 \alias{climate_flat}
-\title{Australia climate data (tibble)}
+\title{Australia climate data
+Daily measure on precipitation (prcp) maximum temperature (tmax), and
+minimum temperature (tmin) in 2020 for 5 stations.}
 \format{
-A tibble object with 1830 rows and 10 columns
+A tibble object with 155 rows and 10 columns
 \describe{
 \item{id}{station id}
 \item{lat}{latitude of the station}
 \item{long}{longitude of the station}
 \item{elev}{elevation of the station}
+\item{name}{station name}
+\item{wmo_id}{the world meterological organisation (WMO) station number}
+\item{date}{the date that prcp, tmax, and tmin recorded}
 \item{prcp}{precipitation}
 \item{tmax}{maximum temperature}
 \item{tmin}{minimum temperature}
@@ -20,7 +25,22 @@ A tibble object with 1830 rows and 10 columns
 climate_flat
 }
 \description{
-A minimal 2020 climate dataset recorded in 5 stations in a tibble format. This data is used to
-show how to create a cubble object from tibble.
+Australia climate data
+Daily measure on precipitation (prcp) maximum temperature (tmax), and
+minimum temperature (tmin) in 2020 for 5 stations.
+}
+\examples{
+library(ggplot2)
+state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+ggplot2::ggplot() +
+ ggplot2::geom_sf(data = state_map,
+                  ggplot2::aes(geometry = .data$geometry),
+                  color = "grey", linetype = "dotted") +
+   ggplot2::geom_point(data = climate_aus,
+                       ggplot2::aes(x = long, y = lat)) +
+   ggplot2::theme_bw()
+}
+\seealso{
+climate_aus climate_subset
 }
 \keyword{datasets}

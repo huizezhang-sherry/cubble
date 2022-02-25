@@ -49,13 +49,13 @@ are also preserved and can be accessed via the relevant functions in the tsibble
 }
 \examples{
 # extract attributes of a cubble object
-form(aus_climate)
-spatial(aus_climate) \%>\% head(5)
-key_data(aus_climate) \%>\% head(5)
-key_vars(aus_climate)
-index(aus_climate)
-coords(aus_climate)
-coord_x(aus_climate)
-coord_y(aus_climate)
+form(climate_aus)
+spatial(climate_aus) \%>\% head(5)
+key_data(climate_aus) \%>\% head(5)
+key_vars(climate_aus)
+index(climate_aus)
+coords(climate_aus)
+coord_x(climate_aus)
+coord_y(climate_aus)
 
 }

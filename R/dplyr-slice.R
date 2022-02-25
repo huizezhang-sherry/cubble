@@ -25,16 +25,16 @@ slice_factory <- function(f, ...){
 #' @examples
 #' # slice the first 50 stations from the top/ bottom
 #' library(dplyr)
-#' aus_climate %>% slice_head(n = 50)
-#' aus_climate %>% slice_tail(n = 50)
+#' climate_aus %>% slice_head(n = 50)
+#' climate_aus %>% slice_tail(n = 50)
 #'
 #' # slice based on the max/ min of a variable
 #'
-#' aus_climate %>% slice_max(elev, n = 10)
-#' aus_climate %>% slice_min(lat, n = 10)
+#' climate_aus %>% slice_max(elev, n = 10)
+#' climate_aus %>% slice_min(lat, n = 10)
 #'
 #' # random sample
-#' aus_climate %>% slice_sample(n = 10)
+#' climate_aus %>% slice_sample(n = 10)
 #' @importFrom dplyr slice_head slice_tail slice_min slice_max slice_sample
 #' @rdname slice
 #' @export
@@ -60,7 +60,7 @@ slice_sample.cubble_df <- slice_factory("slice_sample")
 #' @param ... conditions to filter for the selected data
 #' @param buffer the buffer added to the bounding box for slicing
 #' @param n the number of nearby points to sample
-#' @rdname nearby
+#' @rdname slice
 #' @export
 slice_nearby <- function(data, ..., buffer = 1, n = 5){
 
@@ -111,44 +111,5 @@ slice_nearby <- function(data, ..., buffer = 1, n = 5){
 
   out
 
-
-}
-
-#' Autoplot for viewing the nearby points sampled
-#' @param data a data object output from \code{slice_nearby()}
-#' @param map a map object as the background, default to the Australia country map
-#' @param origin the original dataset supplied to \code{slice_nearby()}
-#' @examples
-#' slice_nearby(aus_climate, name == "melbourne airport") %>%
-#'    view_nearby(origin = aus_climate,
-#'                map = ozmaps::abs_ste %>% dplyr::filter(NAME == "Victoria"))
-#' @export
-#' @rdname nearby
-view_nearby <- function(data, origin, map = NULL) {
-  if (!"type" %in% colnames(data)) {
-    cli::cli_abort("Data needs to have the {.field type} column outputted from `slice_nearby`!")
-  }
-
-  if (is.null(map)) {
-    map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-  }
-
-  bbx <- attr(data, "bbox")
-  all <- origin %>%
-    filter(dplyr::between(.data$lat, bbx[3], bbx[4]),
-           dplyr::between(.data$long, bbx[[1]], bbx[[2]]))
-
-  plot_map(map_data = map) +
-    ggplot2::geom_point(data = all,
-                        ggplot2::aes(x = .data$long, y = .data$lat),
-                        color = "grey") +
-    ggplot2::geom_point(data = data,
-                        ggplot2::aes(x = .data$long, y = .data$lat,
-                                     color = .data$type)) +
-    ggplot2::geom_rect(data = data,
-                       ggplot2::aes(xmin = bbx[1], xmax = bbx[2],
-                                    ymin = bbx[3], ymax = bbx[4]),
-                       linetype = "dashed", fill = "transparent", color = "black") +
-    ggplot2::scale_color_brewer(palette = "Dark2")
 
 }
