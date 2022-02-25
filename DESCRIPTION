@@ -16,6 +16,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
     cli,
+    clipr,
     dplyr (>= 1.0.7.9000),
     geosphere,
     glue,
@@ -30,6 +31,7 @@ Imports:
     s2,
     sf,
     stringr,
+    styler,
     tibble,
     tidyr,
     tidyselect,

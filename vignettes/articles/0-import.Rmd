@@ -35,7 +35,7 @@ latlon_ref <- tibble::tibble(id = c("sydney", "melbourne"),
                          lat = c(-33.8675, -37.8136),
                          long = c(151.2070, 144.9631))
 
-master_list <- aus_climate %>% 
+master_list <- climate_aus %>% 
    as_tibble() %>% 
    select(id, lat, long, elev, name, wmo_id)
 
@@ -84,44 +84,6 @@ sydmel_climate <- raw %>%
 
 sydmel_climate
 ```
-
-
-<!-- # Before you go -->
-
-<!-- Let's look at these stations on the map: -->
-
-<!-- ```{r fig.width=10, fig.height=5, echo = FALSE} -->
-<!-- syd_map <- absmapsdata::sa42016  %>% filter(gcc_name_2016 == "Greater Sydney") -->
-<!-- mel_map <- absmapsdata::sa42016  %>% filter(gcc_name_2016 == "Greater Melbourne") -->
-
-<!-- syd_station <- sydmel_climate %>% filter(city == "sydney") -->
-<!-- mel_station <- sydmel_climate %>% filter(city == "melbourne") -->
-
-<!-- p1 <-  plot_map(syd_map) + -->
-<!--   ggrepel::geom_label_repel( -->
-<!--     data = syd_station,  -->
-<!--     aes(x = long, y = lat, label = name), -->
-<!--     max.iter = 1e7, min.segment.length = 0.01, box.padding = 0.5) +  -->
-<!--   geom_point(data = syd_station, aes(x = long, y = lat)) +  -->
-<!--   theme_minimal() +  -->
-<!--   theme(panel.grid.major = element_blank(), -->
-<!--         panel.grid.minor = element_blank()) +  -->
-<!--   ggtitle("Sydney") -->
-
-<!-- p2 <- plot_map(mel_map) + -->
-<!--   ggrepel::geom_label_repel( -->
-<!--     data = mel_station,   -->
-<!--     aes(x = long, y = lat, label = name),  -->
-<!--     max.iter = 1e7, min.segment.length = 0.1) +  -->
-<!--   geom_point(data = mel_station, aes(x = long, y = lat)) +  -->
-<!--   theme_minimal() +  -->
-<!--   theme(panel.grid.major = element_blank(), -->
-<!--         panel.grid.minor = element_blank()) +  -->
-<!--   ggtitle("Melbourne") -->
-
-<!-- p1 | p2 -->
-<!-- ``` -->
-
 
 # A cubble from tsibble
 

@@ -11,12 +11,17 @@ plot_map(map_data, point_data, print_code = FALSE)
 
 \item{point_data}{a cubble object to plot the site}
 
-\item{print_code}{whether to print out the ggplot2 code}
+\item{print_code}{whether to print out the ggplot2 code, default to FALSE}
 }
 \description{
-A quick plotting function with some default aesthetic and theme settings for
-maps. To add more customisation on the plot, set \code{print_code = TRUE},
-and modify in the relevant places.
+\code{plot_map} allows you to quickly create a ggplot with your base map
+and cubble object, with some default aesthetic and theme settings.
+}
+\details{
+It should generally be used to quickly create some prototype maps. To make
+further modification on the map, set \code{print_code = TRUE}. This will print
+the code in the console as well as write it into the clipboard (so you can
+directly paste it into your script).
 }
 \examples{
 library(ggplot2)

@@ -24,7 +24,9 @@ This vignette introduces how to spatially and spatio-temporally match sites with
 The figure below shows the location of traditional and automated weather station on the map of New South Wales: 
 
 ```{r echo = FALSE}
-nsw_map <- ozmaps::abs_ste %>% filter(NAME == "New South Wales")  
+nsw_map <- ozmaps::abs_ste %>% 
+  filter(NAME == "New South Wales") %>% 
+  rmapshaper::ms_simplify(keep = 1e-2)
 
 nsw <- weatherdata::climate_full %>%   
   filter(between(stringr::str_sub(id, 7, 8), 46, 75)) %>%
@@ -35,9 +37,12 @@ nsw <- weatherdata::climate_full %>%
   tamp() %>% 
   filter(!any(is.na(ts$tmax)))
  
-plot_map(nsw_map) +
-  geom_point(data = nsw, 
-             aes(x = long, y = lat, color = automated)) + 
+ggplot2::ggplot() +
+  ggplot2::geom_sf(data = nsw_map, color = "grey", linetype = "dotted") +
+  ggplot2::geom_point(data = nsw, ggplot2::aes(x = long, y = lat, color = automated)) +
+  ggplot2::theme_bw() +
+  ggplot2::theme(legend.position = "bottom") +
+  ggplot2::labs(x = "Longitude", y = "Latitude") + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("New Sourth Wales") + 
   coord_sf(xlim = c(141, 154))
@@ -79,11 +84,13 @@ matched
 Then we can create visualisation to see where these pairs are in the map:
 
 ```{r}
-plot_map(nsw_map) +
+ggplot() + 
+  geom_sf(data = nsw_map) + 
   geom_point(data = matched, 
              aes(x = long, y = lat, color = automated)) + 
-  ggrepel::geom_label_repel(data = matched %>% filter(automated),
-                            aes(x = long, y = lat, label = group)) + 
+  ggrepel::geom_label_repel(
+    data = matched %>% filter(automated),
+    aes(x = long, y = lat, label = group)) + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("New South Wales") + 
   theme_minimal() + 
@@ -127,9 +134,13 @@ climate <- weatherdata::climate_full %>%
 
 vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste %>% filter(NAME == "Victoria"))  
 
-plot_map(vic_map) +
+ggplot() + 
+  geom_sf(data = vic_map) + 
   geom_point(data = dplyr::bind_rows(river, climate), 
              aes(x = long, y = lat, color = type)) + 
+  ggplot2::theme_bw() +
+  ggplot2::theme(legend.position = "bottom") +
+  ggplot2::labs(x = "Longitude", y = "Latitude") + 
   scale_color_brewer(palette = "Dark2")
 ```
 
@@ -205,12 +216,16 @@ res
 We can look at the matched pair on the map:
 
 ```{r}
-plot_map(vic_map) +
+ggplot() + 
+  geom_sf(data = vic_map) + 
   geom_point(data = res, 
              aes(x = long, y = lat, color = type)) + 
   ggrepel::geom_label_repel(data = res %>% filter(type == "river"),
                             aes(x = long, y = lat, label = group)) + 
   scale_color_brewer(palette = "Dark2") + 
+  ggplot2::theme_bw() +
+  ggplot2::theme(legend.position = "bottom") +
+  ggplot2::labs(x = "Longitude", y = "Latitude") + 
   ggtitle("Victoria") 
 ```
 
