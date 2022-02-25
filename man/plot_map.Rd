@@ -4,27 +4,26 @@
 \alias{plot_map}
 \title{A quick plot of map}
 \usage{
-plot_map(map_data, ...)
+plot_map(map_data, point_data, print_code = FALSE)
 }
 \arguments{
-\item{map_data}{the dataset contains the map to be plotted}
+\item{map_data}{the dataset contains the map object, an sf object}
 
-\item{...}{other arguments to be passed into \code{geom_sf()}}
+\item{point_data}{a cubble object to plot the site}
+
+\item{print_code}{whether to print out the ggplot2 code}
 }
 \description{
-A quick initiate of a ggplot2 object for map with some default aesthetic setting
-to save some typing for create a map.
+A quick plotting function with some default aesthetic and theme settings for
+maps. To add more customisation on the plot, set \code{print_code = TRUE},
+and modify in the relevant places.
 }
 \examples{
-library(rmapshaper)
 library(ggplot2)
-library(dplyr)
+state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+# a quick plot
+plot_map(state_map, climate_aus)
 
-vic_map <- ozmaps::abs_ste \%>\% filter(NAME == "Victoria")
-plot_map(vic_map)
-
-# Victoria stations
-victoria <- aus_climate \%>\% filter(stringr::str_detect(id, "ASN0008"))
-plot_map(vic_map) +
-   geom_point(data = victoria, aes(x = long, y = lat))
+# print out the ggplot2 code of the map
+plot_map(state_map, climate_aus, print_code = TRUE)
 }
