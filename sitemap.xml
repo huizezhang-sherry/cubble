@@ -37,13 +37,13 @@
     <loc>/reference/attributes.html</loc>
   </url>
   <url>
-    <loc>/reference/aus_climate.html</loc>
+    <loc>/reference/climate_aus.html</loc>
   </url>
   <url>
     <loc>/reference/climate_flat.html</loc>
   </url>
   <url>
-    <loc>/reference/climate_missing.html</loc>
+    <loc>/reference/climate_subset.html</loc>
   </url>
   <url>
     <loc>/reference/cubble-class.html</loc>
@@ -67,7 +67,7 @@
     <loc>/reference/matching.html</loc>
   </url>
   <url>
-    <loc>/reference/nearby.html</loc>
+    <loc>/reference/missing.html</loc>
   </url>
   <url>
     <loc>/reference/netcdf.html</loc>
@@ -95,8 +95,5 @@
   </url>
   <url>
     <loc>/reference/tamp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/world_climate.html</loc>
   </url>
 </urlset>
