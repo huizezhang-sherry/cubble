@@ -26,15 +26,16 @@
 plot_map <- function(map_data, point_data, print_code = FALSE){
 
   is_sf <- inherits(map_data, "sf")
-  c <- deparse(substitute(map_data))
+  map <- deparse(substitute(map_data))
+  point <- deparse(substitute(point_data))
   if (!is_sf) cli::cli_abort("Require an sf object as the base map")
   x <- coord_x(point_data)
   y <- coord_y(point_data)
 
   if (print_code){
     cli::cli_inform("Press {.kbd Ctrl/Cmd + V} to directly paste the code from the clipboard")
-    p <- unlist(body(make_plot))[[2]]
-    clip(p)
+    codes <- whisker::whisker.render(plot_string)
+    clip(codes)
   }
 
   make_plot(map_data, point_data, x, y)
@@ -42,7 +43,6 @@ plot_map <- function(map_data, point_data, print_code = FALSE){
 
 
 make_plot <- function(map_data, point_data, long, lat){
-
   ggplot2::ggplot() +
     ggplot2::geom_sf(data = map_data,
                      ggplot2::aes(geometry = geometry),
@@ -55,10 +55,20 @@ make_plot <- function(map_data, point_data, long, lat){
 
 }
 
+plot_string <- 'ggplot2::ggplot() +
+    ggplot2::geom_sf(data = {{map}},
+                     ggplot2::aes(geometry = geometry),
+                     color = "grey", linetype = "dotted") +
+    ggplot2::geom_point(data = {{point}},
+                        ggplot2::aes(x = long, y = lat)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(legend.position = "bottom") +
+    ggplot2::labs(x = "Longitude", y = "Latitude")'
+
 
 clip <- function(obj){
 
-  obj <- styler::style_text(deparse(obj), scope = "tokens")
+  obj <- styler::style_text(obj, scope = "tokens")
   available <- clipr::clipr_available()
   if (available) clipr::write_clip(content = obj)
 }
