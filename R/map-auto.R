@@ -23,6 +23,7 @@
 #' @export
 #' @importFrom clipr clipr_available write_clip
 #' @importFrom styler style_text
+#' @importFrom whisker whisker.render
 plot_map <- function(map_data, point_data, print_code = FALSE){
 
   is_sf <- inherits(map_data, "sf")
@@ -43,27 +44,29 @@ plot_map <- function(map_data, point_data, print_code = FALSE){
 
 
 make_plot <- function(map_data, point_data, long, lat){
+
+  long <- sym(eval(long))
+  lat <- sym(eval(lat))
+
   ggplot2::ggplot() +
     ggplot2::geom_sf(data = map_data,
                      ggplot2::aes(geometry = geometry),
                      color = "grey", linetype = "dotted") +
     ggplot2::geom_point(data = point_data,
-                        ggplot2::aes(x = long, y = lat)) +
+                        ggplot2::aes(x =!!long , y = !!lat)) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::labs(x = "Longitude", y = "Latitude")
 
 }
 
-plot_string <- 'ggplot2::ggplot() +
-    ggplot2::geom_sf(data = {{map}},
-                     ggplot2::aes(geometry = geometry),
-                     color = "grey", linetype = "dotted") +
-    ggplot2::geom_point(data = {{point}},
-                        ggplot2::aes(x = long, y = lat)) +
-    ggplot2::theme_bw() +
-    ggplot2::theme(legend.position = "bottom") +
-    ggplot2::labs(x = "Longitude", y = "Latitude")'
+plot_string <- 'ggplot() +
+    geom_sf(data = {{map}}, aes(geometry = geometry),
+            color = "grey", linetype = "dotted") +
+    geom_point(data = {{point}}, aes(x = {{x}}, y = {{y}})) +
+    theme_bw() +
+    theme(legend.position = "bottom") +
+    labs(x = "Longitude", y = "Latitude")'
 
 
 clip <- function(obj){

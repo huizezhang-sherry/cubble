@@ -36,7 +36,8 @@ Imports:
     tidyr,
     tidyselect,
     tsibble,
-    vctrs
+    vctrs,
+    whisker
 Suggests: 
     rmarkdown,
     knitr,
