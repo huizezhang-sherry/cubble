@@ -31,7 +31,7 @@ allow slicing from top and bottom, based on a variable, or in random."><!-- math
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -185,20 +185,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">climate_aus</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [132.14, -42.89, 149.84, -11.15]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [115.64, -43.21, 151.35, -17.94]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long   elev name                         wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00073007 -<span style="color: #BB0000;">35.0</span>  149.  390   burrinjuck dam                <span style="text-decoration: underline;">94</span>909 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00091293 -<span style="color: #BB0000;">41.1</span>  147.    3   low head                      <span style="text-decoration: underline;">95</span>964 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00014153 -<span style="color: #BB0000;">11.2</span>  132.    5   black point                   <span style="text-decoration: underline;">94</span>134 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00094029 -<span style="color: #BB0000;">42.9</span>  147.   50.5 hobart (ellerslie road)       <span style="text-decoration: underline;">94</span>970 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00097085 -<span style="color: #BB0000;">41.8</span>  146. <span style="text-decoration: underline;">1</span>120.  mount read                    <span style="text-decoration: underline;">95</span>952 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00054038 -<span style="color: #BB0000;">30.3</span>  150.  229   narrabri airport aws          <span style="text-decoration: underline;">95</span>734 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00048027 -<span style="color: #BB0000;">31.5</span>  146.  260   cobar mo                      <span style="text-decoration: underline;">94</span>711 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00024024 -<span style="color: #BB0000;">34.4</span>  141.   30.1 loxton research centre        <span style="text-decoration: underline;">94</span>682 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00085296 -<span style="color: #BB0000;">37.7</span>  147.  480   mount moornapa                <span style="text-decoration: underline;">95</span>913 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00064008 -<span style="color: #BB0000;">31.3</span>  149.  505   coonabarabran (namoi street)  <span style="text-decoration: underline;">94</span>728 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                           wmo_id ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00017099 -<span style="color: #BB0000;">30.3</span>  139. 318   arkaroola                       <span style="text-decoration: underline;">94</span>676 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00009965 -<span style="color: #BB0000;">33.4</span>  116.   5.2 bunbury                         <span style="text-decoration: underline;">94</span>604 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00094191 -<span style="color: #BB0000;">43.2</span>  147. 831   hartz mountain (keoghs pimple)  <span style="text-decoration: underline;">94</span>977 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00090182 -<span style="color: #BB0000;">37.6</span>  141. 131.  casterton                       <span style="text-decoration: underline;">95</span>825 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00055136 -<span style="color: #BB0000;">31.0</span>  151. 910   woolbrook (danglemah road)      <span style="text-decoration: underline;">94</span>792 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00003003 -<span style="color: #BB0000;">17.9</span>  122.   7.4 broome airport                  <span style="text-decoration: underline;">94</span>203 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00062101 -<span style="color: #BB0000;">32.6</span>  150. 471   mudgee airport aws              <span style="text-decoration: underline;">94</span>727 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00032078 -<span style="color: #BB0000;">18.6</span>  146.  11.8 ingham composite                <span style="text-decoration: underline;">95</span>291 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00002012 -<span style="color: #BB0000;">18.2</span>  128. 422   halls creek airport             <span style="text-decoration: underline;">94</span>212 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00068242 -<span style="color: #BB0000;">34.7</span>  151.  15.5 kiama (bombo headland)          <span style="text-decoration: underline;">95</span>749 &lt;tibble&gt;</span>
 </code></pre></div>
     </div>
   </div>
