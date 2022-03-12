@@ -85,19 +85,21 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="co"># S3 method for cubble_df</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="fu">slice_nearby</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, buffer <span class="op">=</span> <span class="fl">1</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+<span class="fu">slice_nearby</span><span class="op">(</span><span class="va">data</span>, <span class="va">coord</span>, buffer <span class="op">=</span> <span class="cn">NA</span>, n <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
-<dd><p>the data</p></dd>
+<dd><p>a cubble object to slice</p></dd>
 <dt>...</dt>
-<dd><p>conditions to filter for the selected data</p></dd>
+<dd><p>other arguments passed to the <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice()</a></code></p></dd>
+<dt>coord</dt>
+<dd><p>the coordinate of used to slice nearby locations</p></dd>
 <dt>buffer</dt>
-<dd><p>the buffer added to the bounding box for slicing</p></dd>
+<dd><p>the buffer added to the coordinate for slicing</p></dd>
 <dt>n</dt>
-<dd><p>the number of nearby points to sample</p></dd>
+<dd><p>the number of nearby points to slice, based on distance</p></dd>
 </dl></div>
 
     <div id="ref-examples">
@@ -185,20 +187,47 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">climate_aus</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [115.64, -43.21, 151.35, -17.94]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [115.71, -42.2, 153.09, -18.68]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                           wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00017099 -<span style="color: #BB0000;">30.3</span>  139. 318   arkaroola                       <span style="text-decoration: underline;">94</span>676 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00009965 -<span style="color: #BB0000;">33.4</span>  116.   5.2 bunbury                         <span style="text-decoration: underline;">94</span>604 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00094191 -<span style="color: #BB0000;">43.2</span>  147. 831   hartz mountain (keoghs pimple)  <span style="text-decoration: underline;">94</span>977 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00090182 -<span style="color: #BB0000;">37.6</span>  141. 131.  casterton                       <span style="text-decoration: underline;">95</span>825 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00055136 -<span style="color: #BB0000;">31.0</span>  151. 910   woolbrook (danglemah road)      <span style="text-decoration: underline;">94</span>792 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00003003 -<span style="color: #BB0000;">17.9</span>  122.   7.4 broome airport                  <span style="text-decoration: underline;">94</span>203 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00062101 -<span style="color: #BB0000;">32.6</span>  150. 471   mudgee airport aws              <span style="text-decoration: underline;">94</span>727 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00032078 -<span style="color: #BB0000;">18.6</span>  146.  11.8 ingham composite                <span style="text-decoration: underline;">95</span>291 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00002012 -<span style="color: #BB0000;">18.2</span>  128. 422   halls creek airport             <span style="text-decoration: underline;">94</span>212 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00068242 -<span style="color: #BB0000;">34.7</span>  151.  15.5 kiama (bombo headland)          <span style="text-decoration: underline;">95</span>749 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                wmo_id ts                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00098017 -<span style="color: #BB0000;">39.9</span>  144.  37   king island airport  <span style="text-decoration: underline;">94</span>850 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00022015 -<span style="color: #BB0000;">34.3</span>  138.   2   price                <span style="text-decoration: underline;">95</span>669 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00022823 -<span style="color: #BB0000;">35.8</span>  137. 158   cape borda           <span style="text-decoration: underline;">95</span>805 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00040856 -<span style="color: #BB0000;">25.9</span>  153.  14.4 rainbow beach        <span style="text-decoration: underline;">94</span>564 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00009977 -<span style="color: #BB0000;">32.5</span>  116.   3   mandurah             <span style="text-decoration: underline;">94</span>605 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00083090 -<span style="color: #BB0000;">37.1</span>  148. 690.  omeo                 <span style="text-decoration: underline;">94</span>908 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00010612 -<span style="color: #BB0000;">32.1</span>  118. 276   narembeen            <span style="text-decoration: underline;">95</span>626 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00009741 -<span style="color: #BB0000;">34.9</span>  118.  68   albany airport       <span style="text-decoration: underline;">94</span>802 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00003030 -<span style="color: #BB0000;">18.7</span>  122.  11   bidyadanga           <span style="text-decoration: underline;">94</span>202 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00097000 -<span style="color: #BB0000;">42.2</span>  145.  19.3 cape sorell          <span style="text-decoration: underline;">94</span>974 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># slice locations within 1 degree of (130E, 25S)</span></span>
+<span class="r-in"><span class="fu">slice_nearby</span><span class="op">(</span><span class="va">climate_aus</span>, coord <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">130</span>, <span class="op">-</span><span class="fl">25</span><span class="op">)</span>, buffer <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [6]: nested form</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [128.3, -26.27, 132.18, -23.27]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id            lat  long  elev name                        wmo_id ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ASN00013017 -<span style="color: #BB0000;">25.0</span>  128.  598  giles meteorological office  <span style="text-decoration: underline;">94</span>461 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ASN00015511 -<span style="color: #BB0000;">25.3</span>  132.  490. curtin springs               <span style="text-decoration: underline;">94</span>463 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ASN00015635 -<span style="color: #BB0000;">25.2</span>  131.  492  yulara aero                  <span style="text-decoration: underline;">94</span>462 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ASN00015652 -<span style="color: #BB0000;">24.3</span>  132.  614  watarrka                     <span style="text-decoration: underline;">94</span>323 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> ASN00015664 -<span style="color: #BB0000;">23.3</span>  129.  454. walungurru                   <span style="text-decoration: underline;">94</span>321 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> ASN00016097 -<span style="color: #BB0000;">26.3</span>  132.  703. ernabella (pukatja)          <span style="text-decoration: underline;">94</span>474 &lt;tibble&gt;</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># slice 5 closest location to (130E, 25S)</span></span>
+<span class="r-in"><span class="fu">slice_nearby</span><span class="op">(</span><span class="va">climate_aus</span>, coord <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">130</span>, <span class="op">-</span><span class="fl">25</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [128.3, -25.32, 131.76, -23.27]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id            lat  long  elev name      wmo_id ts       long_ref lat_ref  dist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ASN00015635 -<span style="color: #BB0000;">25.2</span>  131.  492  yulara a…  <span style="text-decoration: underline;">94</span>462 &lt;tibble&gt;      130     -<span style="color: #BB0000;">25</span>  100.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ASN00013017 -<span style="color: #BB0000;">25.0</span>  128.  598  giles me…  <span style="text-decoration: underline;">94</span>461 &lt;tibble&gt;      130     -<span style="color: #BB0000;">25</span>  171.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ASN00015652 -<span style="color: #BB0000;">24.3</span>  132.  614  watarrka   <span style="text-decoration: underline;">94</span>323 &lt;tibble&gt;      130     -<span style="color: #BB0000;">25</span>  175.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ASN00015511 -<span style="color: #BB0000;">25.3</span>  132.  490. curtin s…  <span style="text-decoration: underline;">94</span>463 &lt;tibble&gt;      130     -<span style="color: #BB0000;">25</span>  180.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> ASN00015664 -<span style="color: #BB0000;">23.3</span>  129.  454. walungur…  <span style="text-decoration: underline;">94</span>321 &lt;tibble&gt;      130     -<span style="color: #BB0000;">25</span>  202.</span>
 </code></pre></div>
     </div>
   </div>
