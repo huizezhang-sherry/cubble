@@ -163,14 +163,13 @@ match_spatial <- function(major,
 }
 
 calc_dist <- function(data, coords1, coords2) {
-
   coords1 <- eval_tidy(enquo(coords1), data)
   coords2 <- eval_tidy(enquo(coords2), data)
 
-  long1 <- sym(coords1[1])
-  lat1 <- sym(coords1[2])
-  long2 <- sym(coords2[1])
-  lat2 <- sym(coords2[2])
+  long1 <- coords1[[1]]
+  lat1 <- coords1[[2]]
+  long2 <- coords2[[1]]
+  lat2 <- coords2[[2]]
 
   dt <- data %>%
     tibble::as_tibble() %>%

@@ -22,7 +22,7 @@
 slice_nearby(data, coord, buffer = NA, n = NA)
 }
 \arguments{
-\item{data}{the data}
+\item{data}{a cubble object to slice}
 
 \item{...}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
 
@@ -51,8 +51,8 @@ climate_aus \%>\% slice_min(lat, n = 10)
 # random sample
 climate_aus \%>\% slice_sample(n = 10)
 
-# slice locations within 1 degree to (130E, 25S)
-slice_nearby(climate_aus, coord = c(130, -25), buffer = 1)
+# slice locations within 1 degree of (130E, 25S)
+slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
 
 # slice 5 closest location to (130E, 25S)
 slice_nearby(climate_aus, coord = c(130, -25), n = 5)

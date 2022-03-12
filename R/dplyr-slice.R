@@ -92,7 +92,8 @@ slice_nearby <- function(data, coord, buffer = NA, n = NA){
   if (!is.na(n)){
     out <- data %>%
       mutate(long_ref = coord[1], lat_ref = coord[2]) %>%
-      calc_dist(coords1 = coords(data), coords2 = c("long_ref", "lat_ref")) %>%
+      calc_dist(coords1 = as.list(coords(climate_aus)) %>% syms(),
+                coords2 = list(long_ref = sym("long_ref"), lat_ref = sym("lat_ref"))) %>%
       slice_min(dist, n = n)
   }
 
