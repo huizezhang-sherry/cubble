@@ -56,58 +56,45 @@ slice_max.cubble_df <- slice_factory("slice_max")
 #' @export
 slice_sample.cubble_df <- slice_factory("slice_sample")
 
-#' @param data the data
-#' @param ... conditions to filter for the selected data
-#' @param buffer the buffer added to the bounding box for slicing
-#' @param n the number of nearby points to sample
+#' @param coord the coordinate of used to slice nearby locations
+#' @param buffer the buffer added to the coordinate for slicing
+#' @param n the number of nearby points to slice, based on distance
 #' @rdname slice
+#' @examples
+#'
+#' # slice locations within 1 degree of (130E, 25S)
+#' slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
+#'
+#' # slice 5 closest location to (130E, 25S)
+#' slice_nearby(climate_aus, coord = c(130, -25), n = 5)
 #' @export
-slice_nearby <- function(data, ..., buffer = 1, n = 5){
+slice_nearby <- function(data, coord, buffer = NA, n = NA){
 
-  if (form(data) != "nested") {
-    cli::cli_abort("slicing should be performed in the nested form on the grouping variable")
+  test_cubble(data)
+  if (form(data) == "long") data <- data %>% tamp()
+
+  if (length(coord) != 2){
+    cli::cli_abort("{.val coord needs to be in the format of {.code c(LONG, LAT)}}")
   }
 
-  dots <- enquos(...)
+  if (!is.na(buffer)){
+    lat_min <- coord[2] - buffer
+    lat_max <- coord[2] + buffer
+    long_min <-  coord[1] - buffer
+    long_max <-  coord[1] + buffer
 
-  idx <- map(dots, ~ eval_tidy(.x, data))
-  target <- vec_slice(data, Reduce("&", idx))
-  target <- dplyr_reconstruct(target, data)
-
-  if (nrow(target) == 0) {
-    cli::cli_abort(
-      "No candidate fulfill the condition(s),
-          try {.code data %>% filter(...)} on the condition to diagnose"
-    )
-  }
-
-  lat_min <-  min(target$lat) - buffer
-  lat_max <- max(target$lat) + buffer
-  long_min <-  min(target$long) - buffer
-  long_max <-  max(target$long) + buffer
-
-  target_var <- key_data(target) %>% dplyr::pull(!!key_vars(data))
-
-  cand <-
-    data %>% filter(
+    out <- data %>% filter(
       dplyr::between(.data$lat, lat_min, lat_max),
-      dplyr::between(.data$long, long_min, long_max),
-      !(!!sym(key_vars(data)) %in% target_var)
+      dplyr::between(.data$long, long_min, long_max)
     )
-
-  cli::cli_inform("The bounding box gives {.code nrow(cand)} candidates")
-
-  if (n > nrow(cand)) {
-    cli::cli_inform("Number of element to sample is larger than the candidate.
-           All candidates are selected")
   }
 
-  out <- rbind(
-    target %>% mutate(type = "selected"),
-    cand %>% slice_sample(n = n) %>% mutate(type = "sampled")
-  )
-  out <- dplyr_reconstruct(out, data)
-  attr(out, "bbox") <- c(long_min, long_max, lat_min, lat_max)
+  if (!is.na(n)){
+    out <- data %>%
+      mutate(long_ref = coord[1], lat_ref = coord[2]) %>%
+      calc_dist(coords1 = coords(data), coords2 = c("long_ref", "lat_ref")) %>%
+      slice_min(dist, n = n)
+  }
 
   out
 

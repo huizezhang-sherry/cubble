@@ -163,24 +163,34 @@ match_spatial <- function(major,
 }
 
 calc_dist <- function(data, coords1, coords2) {
+
+  coords1 <- eval_tidy(enquo(coords1), data)
+  coords2 <- eval_tidy(enquo(coords2), data)
+
+  long1 <- sym(coords1[1])
+  lat1 <- sym(coords1[2])
+  long2 <- sym(coords2[1])
+  lat2 <- sym(coords2[2])
+
   dt <- data %>%
-    summarise(dplyr::across(.cols = c(!!!coords1, !!!coords2),
+    tibble::as_tibble() %>%
+    dplyr::summarise(dplyr::across(.cols = c(!!!coords1, !!!coords2),
                             to_radian)) %>%
-    mutate(
-      d_long = abs(.data$long - .data$long_ref),
-      d_lat = abs(.data$lat - .data$lat_ref),
-      a = (cos(.data$lat_ref) * sin(.data$d_long)) ^ 2 +
+    dplyr::mutate(
+      d_long = abs(!!long1 - !!long2),
+      d_lat = abs(!!lat1 - !!lat2),
+      a = (cos(!!lat2) * sin(.data$d_long)) ^ 2 +
         (
-          cos(.data$lat) * sin(.data$lat_ref) -
-            sin(.data$lat) * cos(.data$lat_ref) * cos(.data$d_long)
+          cos(!!lat1) * sin(!!lat2) -
+            sin(!!lat1) * cos(!!lat2) * cos(.data$d_long)
         ) ^ 2,
-      denom = sin(.data$lat) * sin(.data$lat_ref) +
-        cos(.data$lat) * cos(.data$lat_ref) * cos(.data$d_long),
+      denom = sin(!!lat1) * sin(!!lat2) +
+        cos(!!lat1) * cos(!!lat2) * cos(.data$d_long),
       d = 6371 * atan(sqrt(.data$a) / .data$denom)
     )
 
   data %>%
-    mutate(dist = dt$d)
+    dplyr::bind_cols(dist = dt$d)
 
 }
 

@@ -19,16 +19,18 @@
 
 \method{slice_sample}{cubble_df}(data, ...)
 
-slice_nearby(data, ..., buffer = 1, n = 5)
+slice_nearby(data, coord, buffer = NA, n = NA)
 }
 \arguments{
 \item{data}{the data}
 
-\item{...}{conditions to filter for the selected data}
+\item{...}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
 
-\item{buffer}{the buffer added to the bounding box for slicing}
+\item{coord}{the coordinate of used to slice nearby locations}
 
-\item{n}{the number of nearby points to sample}
+\item{buffer}{the buffer added to the coordinate for slicing}
+
+\item{n}{the number of nearby points to slice, based on distance}
 }
 \description{
 Slicing can be useful when the number of site is too large to be all visualised in a
@@ -48,4 +50,10 @@ climate_aus \%>\% slice_min(lat, n = 10)
 
 # random sample
 climate_aus \%>\% slice_sample(n = 10)
+
+# slice locations within 1 degree to (130E, 25S)
+slice_nearby(climate_aus, coord = c(130, -25), buffer = 1)
+
+# slice 5 closest location to (130E, 25S)
+slice_nearby(climate_aus, coord = c(130, -25), n = 5)
 }
