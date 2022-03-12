@@ -61,9 +61,9 @@ make_plot <- function(map_data, point_data, long, lat){
 }
 
 plot_string <- 'ggplot() +
-    geom_sf(data = {{map}}, aes(geometry = geometry),
+    geom_sf(data = {{{map}}}, aes(geometry = geometry),
             color = "grey", linetype = "dotted") +
-    geom_point(data = {{point}}, aes(x = {{x}}, y = {{y}})) +
+    geom_point(data = {{{point}}}, aes(x = {{x}}, y = {{y}})) +
     theme_bw() +
     theme(legend.position = "bottom") +
     labs(x = "Longitude", y = "Latitude")'
