@@ -42,11 +42,12 @@ coordinates that defines the site, `coords`.
 ``` r
 library(cubble)
 library(dplyr)
+#> Warning: package 'dplyr' was built under R version 4.1.2
 nested <- climate_flat %>% 
   as_cubble(key = id, index = date, coords = c(long, lat))
 nested
 #> # cubble:   id [5]: nested form
-#> # bbox:     [115.97, -32.94, 133.55, -12.42]- check gap on long and lat
+#> # bbox:     [115.97, -32.94, 133.55, -12.42]
 #> # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
 #>   id            lat  long  elev name           wmo_id ts                
 #>   <chr>       <dbl> <dbl> <dbl> <chr>           <dbl> <list>            
@@ -65,9 +66,20 @@ long form cubble is for operations whose output is cross-identified by
 long <- nested %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1)
+#> Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
+#> Please use `!!` instead.
+#> 
+#>   # Bad:
+#>   dplyr::select(data, !!!enquo(x))
+#> 
+#>   # Good:
+#>   dplyr::select(data, !!enquo(x))    # Unquote single quosure
+#>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
+#> 
+#> This warning is displayed once per session.
 long
 #> # cubble:  date, id [5]: long form
-#> # bbox:    [115.97, -32.94, 133.55, -12.42]- check gap on long and lat
+#> # bbox:    [115.97, -32.94, 133.55, -12.42]
 #> # spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]
 #>    id          date        prcp  tmax  tmin
 #>    <chr>       <date>     <dbl> <dbl> <dbl>
@@ -93,7 +105,7 @@ long %>%
   tamp() %>% 
   mutate(avg_max = mean(ts$tmax, na.rm = TRUE))
 #> # cubble:   id [5]: nested form
-#> # bbox:     [115.97, -32.94, 133.55, -12.42]- check gap on long and lat
+#> # bbox:     [115.97, -32.94, 133.55, -12.42]
 #> # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
 #>   id            lat  long  elev name           wmo_id ts                avg_max
 #>   <chr>       <dbl> <dbl> <dbl> <chr>           <dbl> <list>              <dbl>
@@ -103,3 +115,9 @@ long %>%
 #> 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120 <tibble [31 × 4]>    32.8
 #> 5 ASN00015131 -17.6  134. 220   elliott         94236 <tibble [31 × 4]>    38.5
 ```
+
+## Naming
+
+Cubble stands for “cubical tibble” and you can think of multivariate
+spatio-temporal data as a *cube* with three axes: variable, location,
+and time.

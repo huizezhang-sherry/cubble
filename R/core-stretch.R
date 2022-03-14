@@ -37,7 +37,7 @@ stretch.cubble_df <- function(data, col){
 
   # unnest the temporal variables
   if (is_tsibble) data$ts <- map(data$ts, tibble::as_tibble)
-  out <- data %>% dplyr::select(!!!cur_key, !!col) %>% tidyr::unnest(c(!!col))
+  out <- data %>% dplyr::select(!!cur_key, !!col) %>% tidyr::unnest(c(!!col))
 
   # organise spatial variables into `spatial`
   spatial <- data %>% select(-!!col)

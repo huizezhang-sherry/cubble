@@ -65,3 +65,7 @@ long %>%
   mutate(avg_max = mean(ts$tmax, na.rm = TRUE))
 ```
 
+
+## Naming
+
+Cubble stands for "cubical tibble" and you can think of multivariate spatio-temporal data as a *cube* with three axes: variable, location, and time. 

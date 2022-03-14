@@ -23,13 +23,9 @@ Imports:
     lubridate,
     magrittr,
     ncdf4,
-    patchwork,
     pillar,
-    plotly,
     purrr,
     rlang (>= 0.4.11.9001),
-    s2,
-    sf,
     stringr,
     styler,
     tibble,
@@ -57,7 +53,10 @@ Suggests:
     weatherdata,
     ggimg,
     here,
-    ggforce
+    patchwork,
+    ggforce,
+    s2,
+    sf
 Remotes:
     tidyverse/dplyr,
     r-lib/rlang,
