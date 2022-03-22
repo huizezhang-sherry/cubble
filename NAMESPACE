@@ -2,6 +2,7 @@
 
 S3method("[",cubble_df)
 S3method("names<-",cubble_df)
+S3method(as_cubble,list)
 S3method(as_cubble,ncdf4)
 S3method(as_cubble,rowwise_df)
 S3method(as_cubble,tbl_df)

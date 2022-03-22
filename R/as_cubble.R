@@ -12,6 +12,13 @@
 #' # If the data is in a tibble:
 #' climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
 #'
+#' # If the spatial and temporal information are in two separate tables:
+#' library(dplyr)
+#' spatial <- climate_flat %>% select(id:wmo_id) %>% distinct()
+#' temporal <- climate_flat %>% select(id, date: tmin) %>% filter(id != "ASN00009021")
+#' as_cubble(data = list(spatial = spatial, temporal = temporal),
+#'           key = id, index = date, coords = c(long, lat))
+#'
 #' # If the data is already in a rowwise_df:
 #' dt <- climate_flat %>%
 #'   tidyr::nest(ts = date:tmin) %>%
@@ -28,6 +35,57 @@
 #' dt <- as_cubble(raw, vars = c("q", "z"))
 as_cubble <- function(data, key, index, coords, ...) {
   UseMethod("as_cubble")
+}
+
+#' @rdname cubble-class
+#' @export
+as_cubble.list <- function(data, key, index, coords, ...){
+  key <- enquo(key)
+  index <- enquo(index)
+  coords <- enquo(coords)
+
+  test_missing(quo = key, var = "key")
+  test_missing(quo = index, var = "index")
+  test_missing(quo = coords, var = "coords")
+
+  if (length(data) > 2){
+    cli::cli_abort("Currently cubble can only take two element for the list input.")
+  }
+  # now specific list(spatial = ..., temporal = ...)
+  spatial <- data$spatial
+  temporal <- data$temporal
+
+
+  var_names <- map(data, colnames) %>% unlist()
+  common <- var_names %>% duplicated()
+  shared <- unname(var_names[common])
+
+  if (length(shared) == 0){
+    cli::cli_abort("Inputs data in the list need to have at least one shared column.")
+  }
+
+  #temporal <- temporal %>% tidyr::nest(ts = -shared)
+
+  spatial_key_lvl <- spatial[[as_name(key)]]
+  temporal_key_lvl <- temporal[[as_name(key)]]
+  only_spatial <- setdiff(spatial_key_lvl, temporal_key_lvl)
+  only_temporal <- setdiff(temporal_key_lvl, spatial_key_lvl)
+
+  if (length(only_temporal) != 0){
+    cli::cli_alert_warning("Some sites in the temporal table don't have corresponding spatial information")
+  }
+
+  if (length(only_spatial) != 0){
+    cli::cli_alert_warning("Some sites in the spatial table don't have corresponding temporal information")
+  }
+
+  ts <- temporal
+  out <- spatial %>% dplyr::nest_join(ts, by = shared)
+  coords <- names(out)[tidyselect::eval_select(coords, out)]
+
+  new_cubble(out,
+             key = as_name(key), index = as_name(index), coords = coords,
+             spatial = NULL, form = "nested")
 }
 
 #' @rdname cubble-class

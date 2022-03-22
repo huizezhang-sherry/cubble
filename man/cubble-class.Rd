@@ -2,6 +2,7 @@
 % Please edit documentation in R/as_cubble.R, R/cubble-print.R, R/cubble-s3.R
 \name{as_cubble}
 \alias{as_cubble}
+\alias{as_cubble.list}
 \alias{as_cubble.tbl_df}
 \alias{as_cubble.rowwise_df}
 \alias{tbl_sum.cubble_df}
@@ -10,6 +11,8 @@
 \title{Constructor for the cubble class}
 \usage{
 as_cubble(data, key, index, coords, ...)
+
+\method{as_cubble}{list}(data, key, index, coords, ...)
 
 \method{as_cubble}{tbl_df}(data, key, index, coords, ...)
 
@@ -44,6 +47,13 @@ Constructor for the cubble class
 
 # If the data is in a tibble:
 climate_flat \%>\% as_cubble(key = id, index = date, coords = c(long, lat))
+
+# If the spatial and temporal information are in two separate tables:
+library(dplyr)
+spatial <- climate_flat \%>\% select(id:wmo_id) \%>\% distinct()
+temporal <- climate_flat \%>\% select(id, date: tmin) \%>\% filter(id != "ASN00009021")
+as_cubble(data = list(spatial = spatial, temporal = temporal),
+          key = id, index = date, coords = c(long, lat))
 
 # If the data is already in a rowwise_df:
 dt <- climate_flat \%>\%

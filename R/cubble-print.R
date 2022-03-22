@@ -13,8 +13,9 @@ tbl_sum.cubble_df <- function(data) {
   bbox_msg <- glue::glue("[{bbox}]")
 
   if (is_nested(data)){
-    var_names <- names(data$ts[[1]])
-    ts <- data$ts[[1]]
+    ts_size <- map_dbl(data$ts, vec_size) != 0
+    var_names <- names(data$ts[ts_size][[1]])
+    ts <- data$ts[ts_size][[1]]
     var_type <- map(ts, tibble::type_sum)
 
   } else if (is_long(data)){
