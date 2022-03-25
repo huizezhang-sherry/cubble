@@ -64,6 +64,12 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
     attr <- c(attr, tsibble_attr)
   }
 
+  if ("sf" %in% class(data)){
+    sf_attr <- attributes(data)
+    attr$class <- c(attr$class, "sf")
+    attr <- c(attr, sf_column = list(sf_attr$sf_column), agr = list(sf_attr$agr))
+  }
+
 
   if (form == "nested"){
     names(attr)[1] <- "data"
@@ -111,7 +117,7 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
   out <- data
   if(!is.null(i)) out <- vec_slice(data, i)
   if(!is.null(j)){
-    out <- vctrs::vec_data(out)
+    out <- tibble::as_tibble(out)
     out <- out[,unlist(j)]
   }
 
