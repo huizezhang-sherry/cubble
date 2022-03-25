@@ -86,17 +86,6 @@ variables into the long form for these transformations.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Please use `!!` instead.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   # Bad:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   dplyr::select(data, !!!enquo(x))</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   # Good:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   dplyr::select(data, !!enquo(x))    # Unquote single quosure</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># migrate long and lat</span></span>
 <span class="r-in"><span class="va">cb_mig</span> <span class="op">&lt;-</span> <span class="va">cb</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">migrate</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span></span>

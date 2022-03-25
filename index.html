@@ -103,11 +103,12 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">cubble</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.1.2</span>
 <span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 <span class="va">nested</span>
 <span class="co">#&gt; # cubble:   id [5]: nested form</span>
-<span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]- check gap on long and lat</span>
+<span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]</span>
 <span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                </span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;            </span>
@@ -121,9 +122,20 @@
 <code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
+<span class="co">#&gt; Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.</span>
+<span class="co">#&gt; Please use `!!` instead.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   # Bad:</span>
+<span class="co">#&gt;   dplyr::select(data, !!!enquo(x))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   # Good:</span>
+<span class="co">#&gt;   dplyr::select(data, !!enquo(x))    # Unquote single quosure</span>
+<span class="co">#&gt;   dplyr::select(data, !!!enquos(x))  # Splice list of quosures</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; This warning is displayed once per session.</span>
 <span class="va">long</span>
 <span class="co">#&gt; # cubble:  date, id [5]: long form</span>
-<span class="co">#&gt; # bbox:    [115.97, -32.94, 133.55, -12.42]- check gap on long and lat</span>
+<span class="co">#&gt; # bbox:    [115.97, -32.94, 133.55, -12.42]</span>
 <span class="co">#&gt; # spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span>
 <span class="co">#&gt;    id          date        prcp  tmax  tmin</span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
@@ -144,7 +156,7 @@
   <span class="fu"><a href="reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>avg_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # cubble:   id [5]: nested form</span>
-<span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]- check gap on long and lat</span>
+<span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]</span>
 <span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                avg_max</span>
 <span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;list&gt;              &lt;dbl&gt;</span>
@@ -153,6 +165,11 @@
 <span class="co">#&gt; 3 ASN00010614 -32.9  117. 338   narrogin        94627 &lt;tibble [31 × 4]&gt;    31.4</span>
 <span class="co">#&gt; 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120 &lt;tibble [31 × 4]&gt;    32.8</span>
 <span class="co">#&gt; 5 ASN00015131 -17.6  134. 220   elliott         94236 &lt;tibble [31 × 4]&gt;    38.5</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="naming">Naming<a class="anchor" aria-label="anchor" href="#naming"></a>
+</h2>
+<p>Cubble stands for “cubical tibble” and you can think of multivariate spatio-temporal data as a <em>cube</em> with three axes: variable, location, and time.</p>
 </div>
 </div>
   </div>
