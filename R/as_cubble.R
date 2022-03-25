@@ -39,7 +39,8 @@ as_cubble <- function(data, key, index, coords, ...) {
 
 #' @rdname cubble-class
 #' @export
-as_cubble.list <- function(data, key, index, coords, ...){
+as_cubble.list <- function(data, key, index, coords,
+                           output = "all", ...){
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -47,6 +48,10 @@ as_cubble.list <- function(data, key, index, coords, ...){
   test_missing(quo = key, var = "key")
   test_missing(quo = index, var = "index")
   test_missing(quo = coords, var = "coords")
+
+  if (!output %in% c("all", "unmatch")){
+    cli::cli_abort('Please choose one of the two outputs: "all" and "unmatch"')
+  }
 
   if (length(data) > 2){
     cli::cli_abort("Currently cubble can only take two element for the list input.")
@@ -64,19 +69,50 @@ as_cubble.list <- function(data, key, index, coords, ...){
     cli::cli_abort("Inputs data in the list need to have at least one shared column.")
   }
 
-  #temporal <- temporal %>% tidyr::nest(ts = -shared)
-
   spatial_key_lvl <- spatial[[as_name(key)]]
   temporal_key_lvl <- temporal[[as_name(key)]]
   only_spatial <- setdiff(spatial_key_lvl, temporal_key_lvl)
   only_temporal <- setdiff(temporal_key_lvl, spatial_key_lvl)
+  unmatch_t <- length(only_temporal) != 0
+  unmatch_s <- length(only_spatial) != 0
 
-  if (length(only_temporal) != 0){
-    cli::cli_alert_warning("Some sites in the temporal table don't have corresponding spatial information")
+  if (output == "all"){
+    if (unmatch_t){
+      cli::cli_alert_warning("Some sites in the temporal table don't have corresponding spatial information")
+    }
+
+    if (unmatch_s){
+      cli::cli_alert_warning("Some sites in the spatial table don't have corresponding temporal information")
+    }
+
+    if (unmatch_s | unmatch_t)
+    cli::cli_alert_warning('Use argument {.code output = "unmatch"} to check on the unmatched key')
   }
 
-  if (length(only_spatial) != 0){
-    cli::cli_alert_warning("Some sites in the spatial table don't have corresponding temporal information")
+  if (output == "unmatch" && (unmatch_t| unmatch_s)){
+    temporal <- temporal %>%
+      dplyr::filter({{key}} %in% only_temporal) %>%
+      dplyr::pull({{key}}) %>%
+      unique()
+
+    spatial <- spatial %>%
+      dplyr::filter({{key}} %in% only_spatial) %>%
+      dplyr::pull({{key}}) %>%
+      unique()
+
+
+    t <- gsub("\\s\\(.+\\)", "", temporal)
+    s <- gsub("\\s\\(.+\\)", "", spatial)
+    t_idx <- grep(paste0(s, collapse = "|"), t)
+    s_idx <- grep(paste0(t, collapse = "|"), s)
+
+    correction <- tibble::tibble(
+      spatial = sort(spatial[s_idx]),
+      temporal = sort(temporal[t_idx]))
+
+    others <- list(temporal = temporal[-t_idx],
+                   spatial = spatial[-s_idx])
+    return(list(paired = correction, others = others))
   }
 
   ts <- temporal
