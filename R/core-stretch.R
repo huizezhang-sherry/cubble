@@ -23,7 +23,7 @@ stretch.cubble_df <- function(data, col){
 
   key <- syms(key_vars(data))
   if (length(key) == 2){
-    cur_key <- key[key %in% names(data)]
+    cur_key <- key[key %in% names(data)][[1]]
   } else{
     cur_key <- key[[1]]
   }
