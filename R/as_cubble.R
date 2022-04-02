@@ -47,7 +47,7 @@ as_cubble.list <- function(data, key, index, coords,
 
   test_missing(quo = key, var = "key")
   test_missing(quo = index, var = "index")
-  test_missing(quo = coords, var = "coords")
+  #test_missing(quo = coords, var = "coords")
 
   if (!output %in% c("all", "unmatch")){
     cli::cli_abort('Please choose one of the two outputs: "all" and "unmatch"')
@@ -100,18 +100,24 @@ as_cubble.list <- function(data, key, index, coords,
       dplyr::pull({{key}}) %>%
       unique()
 
-
     t <- gsub("\\s\\(.+\\)", "", temporal)
     s <- gsub("\\s\\(.+\\)", "", spatial)
     t_idx <- grep(paste0(s, collapse = "|"), t)
     s_idx <- grep(paste0(t, collapse = "|"), s)
 
-    correction <- tibble::tibble(
-      spatial = sort(spatial[s_idx]),
-      temporal = sort(temporal[t_idx]))
+    if (length(t_idx) == 0 | length(s_idx) == 0){
+      correction <- tibble::tibble()
+      others <- list(temporal = temporal, spatial = spatial)
+    } else{
+      correction <- tibble::tibble(
+        spatial = sort(spatial[s_idx]),
+        temporal = sort(temporal[t_idx]))
 
-    others <- list(temporal = temporal[-t_idx],
-                   spatial = spatial[-s_idx])
+      others <- list(temporal = temporal[-t_idx],
+                     spatial = spatial[-s_idx])
+    }
+
+
     return(list(paired = correction, others = others))
   }
 
