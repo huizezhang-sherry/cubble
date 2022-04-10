@@ -5,6 +5,7 @@
 #' @param key the spatial identifier
 #' @param index the time identifier
 #' @param coords the coordinates that characterise the spatial dimension
+#' @param output either "all" or "unmatch", whether to output all or a list of unmatched summary
 #' @rdname cubble-class
 #' @export
 cubble <- function(..., key, index, coords) {
@@ -132,7 +133,7 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 }
 
 
-`[[.cubble_df` <- function(x){
+`[[.cubble_df` <- function(x, value){
   out <- NextMethod()
   dplyr_reconstruct(out, x)
 }
