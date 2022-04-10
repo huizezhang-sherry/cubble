@@ -16,6 +16,7 @@ switch_key(data, key)
 This can be used to create hierarchical data where one variable is nested in another.
 }
 \examples{
+library(ggplot2)
 library(dplyr)
 # create an artificial cluster for stations
 set.seed(1234)
