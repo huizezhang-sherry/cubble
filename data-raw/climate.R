@@ -51,3 +51,9 @@ climate_flat <- climate_aus %>%
   ungroup()
 usethis::use_data(climate_flat, overwrite = TRUE)
 
+############################################################
+stations <- climate_aus %>% select(id: wmo_id)
+usethis::use_data(stations, overwrite = TRUE)
+
+climate <- climate_aus %>% stretch() %>% as_tibble()
+usethis::use_data(climate, overwrite = TRUE)

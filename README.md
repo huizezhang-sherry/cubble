@@ -66,17 +66,6 @@ long form cubble is for operations whose output is cross-identified by
 long <- nested %>% 
   stretch() %>% 
   filter(lubridate::month(date) == 1)
-#> Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.
-#> Please use `!!` instead.
-#> 
-#>   # Bad:
-#>   dplyr::select(data, !!!enquo(x))
-#> 
-#>   # Good:
-#>   dplyr::select(data, !!enquo(x))    # Unquote single quosure
-#>   dplyr::select(data, !!!enquos(x))  # Splice list of quosures
-#> 
-#> This warning is displayed once per session.
 long
 #> # cubble:  date, id [5]: long form
 #> # bbox:    [115.97, -32.94, 133.55, -12.42]
