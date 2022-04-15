@@ -4,10 +4,10 @@
 #' @examples
 #' library(dplyr)
 #' # row number is not properly added since each row is a separate group
-#' climate_aus %>% mutate(.id = row_number())
+#' climate_aus |> mutate(.id = row_number())
 #'
 #' # proper id after removing the grouping structure
-#' climate_aus %>% strip_rowwise() %>% mutate(.id = row_number())
+#' climate_aus |> strip_rowwise() |> mutate(.id = row_number())
 #'
 #' @export
 strip_rowwise <- function(data){
@@ -72,7 +72,7 @@ get_listcol <- function(data){
 
 
 key_level <- function(data, key){
-   map_dbl(key, ~unique(data[[.x]]) %>% length)
+   map_dbl(key, ~unique(data[[.x]]) |> length())
 }
 
 tsibble_from_cubble <- function(data){

@@ -50,8 +50,8 @@ are also preserved and can be accessed via the relevant functions in the tsibble
 \examples{
 # extract attributes of a cubble object
 form(climate_aus)
-spatial(climate_aus) \%>\% head(5)
-key_data(climate_aus) \%>\% head(5)
+spatial(climate_aus) |> head(5)
+key_data(climate_aus) |> head(5)
 key_vars(climate_aus)
 index(climate_aus)
 coords(climate_aus)

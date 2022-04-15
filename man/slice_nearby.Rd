@@ -4,14 +4,16 @@
 \alias{slice_nearby}
 \title{Location-based slicing}
 \usage{
-slice_nearby(data, coords, buffer, n)
+slice_nearby(data, coord, buffer, n)
 }
 \arguments{
+\item{data}{the data to slice}
+
+\item{coord}{the coordinate of used to slice nearby locations}
+
 \item{buffer}{the buffer added to the coordinate for slicing}
 
 \item{n}{the number of nearby points to slice, based on distance}
-
-\item{coord}{the coordinate of used to slice nearby locations}
 }
 \description{
 Location-based slicing

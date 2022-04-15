@@ -25,16 +25,16 @@ slice_factory <- function(f, ...){
 #' @examples
 #' # slice the first 50 stations from the top/ bottom
 #' library(dplyr)
-#' climate_aus %>% slice_head(n = 50)
-#' climate_aus %>% slice_tail(n = 50)
+#' climate_aus |> slice_head(n = 50)
+#' climate_aus |> slice_tail(n = 50)
 #'
 #' # slice based on the max/ min of a variable
 #'
-#' climate_aus %>% slice_max(elev, n = 10)
-#' climate_aus %>% slice_min(lat, n = 10)
+#' climate_aus |> slice_max(elev, n = 10)
+#' climate_aus |> slice_min(lat, n = 10)
 #'
 #' # random sample
-#' climate_aus %>% slice_sample(n = 10)
+#' climate_aus |> slice_sample(n = 10)
 #' @importFrom dplyr slice_head slice_tail slice_min slice_max slice_sample
 #' @rdname slice
 #' @export
@@ -77,7 +77,7 @@ slice_nearby <- function(data, coord, buffer, n){
 slice_nearby.cubble_df <- function(data, coord, buffer = NA, n = NA){
 
   test_cubble(data)
-  if (form(data) == "long") data <- data %>% face_spatial()
+  if (form(data) == "long") data <- data |> face_spatial()
 
   if (length(coord) != 2){
     cli::cli_abort("{.val coord needs to be in the format of {.code c(LONG, LAT)}}")
@@ -89,17 +89,17 @@ slice_nearby.cubble_df <- function(data, coord, buffer = NA, n = NA){
     long_min <-  coord[1] - buffer
     long_max <-  coord[1] + buffer
 
-    out <- data %>% filter(
+    out <- data |> filter(
       dplyr::between(.data$lat, lat_min, lat_max),
       dplyr::between(.data$long, long_min, long_max)
     )
   }
 
   if (!is.na(n)){
-    out <- data %>%
-      mutate(long_ref = coord[1], lat_ref = coord[2]) %>%
-      calc_dist(coords1 = as.list(coords(data)) %>% syms(),
-                coords2 = list(long_ref = sym("long_ref"), lat_ref = sym("lat_ref"))) %>%
+    out <- data |>
+      mutate(long_ref = coord[1], lat_ref = coord[2]) |>
+      calc_dist(coords1 = as.list(coords(data)) |> syms(),
+                coords2 = list(long_ref = sym("long_ref"), lat_ref = sym("lat_ref"))) |>
       slice_min(.data$dist, n = n)
   }
 

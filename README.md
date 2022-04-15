@@ -43,7 +43,7 @@ coordinates that defines the site, `coords`.
 library(cubble)
 library(dplyr)
 #> Warning: package 'dplyr' was built under R version 4.1.2
-nested <- climate_flat %>% 
+nested <- climate_flat |> 
   as_cubble(key = id, index = date, coords = c(long, lat))
 nested
 #> # cubble:   id [5]: nested form
@@ -64,8 +64,8 @@ cross-identified by `key` and `index`, for example, filtering January
 records:
 
 ``` r
-long <- nested %>% 
-  face_temporal() %>% 
+long <- nested |> 
+  face_temporal() |> 
   filter(lubridate::month(date) == 1)
 long
 #> # cubble:  date, id [5]: long form
@@ -91,8 +91,8 @@ nested form is for operations whose output is only identified by the
 `key`, for example, mutating the average maximum temperature in January:
 
 ``` r
-long %>% 
-  face_spatial() %>% 
+long |> 
+  face_spatial() |> 
   mutate(avg_max = mean(ts$tmax, na.rm = TRUE))
 #> # cubble:   id [5]: nested form
 #> # bbox:     [115.97, -32.94, 133.55, -12.42]

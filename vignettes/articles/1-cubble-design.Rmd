@@ -36,8 +36,8 @@ Now we look into these attributes through two examples, one for nested cubble an
 A nested cubble is built on top of a `rowwise_df`, which comes with the `groups` attributes, as well as the usual `names`, `row.names`, and `class`. Note that the `class` attribute contains the history class that a `rowwise_df` is built upon: `tbl_df`, `tbl` and `data.frame`. This is an example of the attributes for a nested cubble: 
 
 ```{r}
-nested <- climate_flat %>% 
-  filter(date %in% as.Date(c("2020-01-01", "2020-01-02", "2020-01-03", "2020-01-04"))) %>% 
+nested <- climate_flat |> 
+  filter(date %in% as.Date(c("2020-01-01", "2020-01-02", "2020-01-03", "2020-01-04"))) |> 
   as_cubble(key = id, index = date, coords = c(long, lat))
 nested
 attributes(nested)
@@ -48,16 +48,16 @@ In this example, four stations are recorded at four time points: 1st to 4th Jan 
 The `rowwise_df` class uses a `group` attributes to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by: 
 
 ```{r}
-climate_flat %>%
-  as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
+climate_flat |>
+  as_cubble(key = id, index = date, coords = c(long, lat)) |> 
   mutate(rain = sum(ts$prcp != 0, na.rm = TRUE))
 ```
 
 which matches the basic mutate style of calculation, so it is easier to remember than the `purrr` style syntax: 
 
 ```{r}
-climate_flat %>% 
-  tidyr::nest(c(date, prcp, tmax, tmin)) %>% 
+climate_flat |> 
+  tidyr::nest(c(date, prcp, tmax, tmin)) |> 
   mutate(rain = purrr::map_dbl(data, ~sum(.x$prcp != 0, na.rm= TRUE)))
 ```
 
@@ -66,7 +66,7 @@ climate_flat %>%
 A long form cubble is built from the `grouped_df` class where observations from the same site forms a group. Below prints a long cubble along with its attributes:
 
 ```{r}
-long <- nested %>% face_temporal()
+long <- nested |> face_temporal()
 long
 attributes(long)
 ```

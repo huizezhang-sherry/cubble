@@ -43,7 +43,7 @@ remotes::install_github("huizezhang-sherry/cubble")
 ```{r}
 library(cubble)
 library(dplyr)
-nested <- climate_flat %>% 
+nested <- climate_flat |> 
   as_cubble(key = id, index = date, coords = c(long, lat))
 nested
 ```
@@ -51,8 +51,8 @@ nested
 `face_temporal()` switches a cubble from the nested form to the long form. The long form cubble is for operations whose output is cross-identified by `key` and `index`, for example, filtering January records:
 
 ```{r}
-long <- nested %>% 
-  face_temporal() %>% 
+long <- nested |> 
+  face_temporal() |> 
   filter(lubridate::month(date) == 1)
 long
 ```
@@ -60,8 +60,8 @@ long
 `face_spatial()` switches the long cubble back to the nested cubble. The nested form is for operations whose output is only identified by the `key`, for example, mutating the average maximum temperature in January:
 
 ```{r}
-long %>% 
-  face_spatial() %>% 
+long |> 
+  face_spatial() |> 
   mutate(avg_max = mean(ts$tmax, na.rm = TRUE))
 ```
 

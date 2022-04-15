@@ -36,20 +36,20 @@ latlon_ref <- tibble::tibble(id = c("sydney", "melbourne"),
                          lat = c(-33.8675, -37.8136),
                          long = c(151.2070, 144.9631))
 
-master_list <- climate_aus %>% 
-   as_tibble() %>% 
+master_list <- climate_aus |> 
+   as_tibble() |> 
    select(id, lat, long, elev, name, wmo_id)
 
 calc_dist <- function(df_ref, df, n = 5){
   long_ref <- df_ref$long
   lat_ref <- df_ref$lat
   
-  df %>% 
+  df |> 
     mutate(long_ref = long_ref,
            lat_ref=  lat_ref,
-           dist = rnoaa::meteo_spherical_distance(lat, long,lat_ref, long_ref)) %>% 
-    slice_min(dist, n = n) %>% 
-    mutate(city = df_ref$id) %>% 
+           dist = rnoaa::meteo_spherical_distance(lat, long,lat_ref, long_ref)) |> 
+    slice_min(dist, n = n) |> 
+    mutate(city = df_ref$id) |> 
     select(-long_ref, -lat_ref)
 }
 
@@ -64,8 +64,8 @@ stations
 Temporal variables can be queried by `rnoaa::meteo_pull_monitors()` with the date range and variable supplied. Here we turn the `stations` data into a rowwise data frame and then query the climate variables as a list-column, `ts`:  
 
 ```{r}
-raw <- stations %>% 
-  rowwise() %>% 
+raw <- stations |> 
+  rowwise() |> 
   mutate(ts = list(rnoaa::meteo_pull_monitors(id, 
                                        date_min = "2020-01-01", 
                                        date_max = "2020-12-31",
@@ -80,7 +80,7 @@ A cubble can then be created by supplying:
   - `coords` to identify the spatial coordinates of each station.
 
 ```{r}
-sydmel_climate <- raw %>% 
+sydmel_climate <- raw |> 
   as_cubble(key = id, index = date, coords = c(long, lat))
 
 sydmel_climate
@@ -91,13 +91,13 @@ sydmel_climate
 If you have already got a `tsibble` object, with key and index registered, only `coords` needs to be specified to createa a cubble:
 
 ```{r echo = FALSE}
-dt <- climate_flat %>% 
+dt <- climate_flat |> 
   tsibble::as_tsibble(key = id, index = date)
 ```
 
 ```{r}
 dt
-dt %>% as_cubble(coords = c(long, lat))
+dt |> as_cubble(coords = c(long, lat))
 ```
 
 Notice here each element of the list-column `ts` is of class `tbl_ts` and you are free to apply your favourite function on the tsibble class :)
@@ -108,7 +108,7 @@ Sometimes, you may get the spatial and temporal data from different sources and 
 
 ```{r echo = FALSE}
 stations_small <- stations[1:5, ]
-climate_small <- climate %>% filter(id %in% stations_small$id)
+climate_small <- climate |> filter(id %in% stations_small$id)
 ```
 
 ```{r}

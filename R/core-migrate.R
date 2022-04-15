@@ -7,17 +7,17 @@
 #' @param data a long cubble object
 #' @param ... spatial variables to move into the long form
 #' @examples
-#' cb <- climate_flat %>%
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
+#' cb <- climate_flat |>
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) |>
 #'   face_temporal()
 #'
 #' # migrate long and lat
-#' cb_mig <- cb %>% migrate(long, lat)
+#' cb_mig <- cb |> migrate(long, lat)
 #'
 #' # migration is not memorised by cubble:
 #' # if you switch to the nested cubble and then switch back,
 #' # long and lat will not be preserved
-#' cb_mig %>% face_spatial() %>% face_temporal()
+#' cb_mig |> face_spatial() |> face_temporal()
 #'
 #' @export
 #' @rdname cubble-verb
@@ -34,8 +34,8 @@ migrate <- function(data, ...){
       "{.code {names(dots)[!in_spatial]}} does not exist as a spaital variable. No migration")
   }
 
-  to_join <- sp %>% select(key_vars(data), names(dots)[in_spatial]) %>% dplyr::distinct()
-  out <- data %>% left_join(to_join, by = key)
+  to_join <- sp |> select(key_vars(data), names(dots)[in_spatial]) |> dplyr::distinct()
+  out <- data |> left_join(to_join, by = key)
 
   if (nrow(out) != nrow(data)){
     var <- names(dots)

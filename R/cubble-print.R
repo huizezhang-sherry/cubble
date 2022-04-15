@@ -32,7 +32,7 @@ tbl_sum.cubble_df <- function(data) {
   if(is_nested(data)){
     msg <- glue::glue("{key} [{key_n}]: nested form")
   } else if(is_long(data)){
-    index <- index(data) %>% paste0(collapse = ", ")
+    index <- index(data) |> paste0(collapse = ", ")
     msg <- glue::glue("{index}, {key} [{key_n}]: long form")
   }
 
@@ -61,7 +61,7 @@ check_coords <- function(data, long_tol = 10, lat_tol = 10){
 
   if (form(data) == "nested"){
     dt <- as_tibble(data)
-    if (".val" %in% names(dt)) dt <- dt %>% unnest(.data$.val)
+    if (".val" %in% names(dt)) dt <- dt |> unnest(.data$.val)
 
 
   } else if (form(data) == "long"){

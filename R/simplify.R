@@ -36,20 +36,20 @@ get_areapoints <- function(data, geom, area){
   }
 
   if (quo_is_missing(area)) {
-    data <- data %>% dplyr::mutate(area = as.numeric(sf::st_area({{geom}})))
+    data <- data |> dplyr::mutate(area = as.numeric(sf::st_area({{geom}})))
     area <- sym("area")
   }
 
-  data <- data %>% filter(!sf::st_is_empty({{geom}}))
+  data <- data |> filter(!sf::st_is_empty({{geom}}))
 
-  points <- data %>%
-    sf::st_coordinates({{geom}}) %>%
-    tibble::as_tibble() %>%
-    dplyr::count(.data$L3) %>%
-    dplyr::rename(n_points = .data$n) %>%
+  points <- data |>
+    sf::st_coordinates({{geom}}) |>
+    tibble::as_tibble() |>
+    dplyr::count(.data$L3) |>
+    dplyr::rename(n_points = .data$n) |>
     dplyr::pull(.data$n_points)
 
-  out <- data %>% dplyr::bind_cols(n_points = .data$points)
+  out <- data |> dplyr::bind_cols(n_points = .data$points)
 
   attr(out, "area") <- area
   out
@@ -66,7 +66,7 @@ label_sf <- function(data, point_threshold = 0.9, area_threshold = 0.9){
   point_qunt <- stats::quantile(data[["n_points"]], prob = point_threshold)
   area_qunt <- stats::quantile(data[[area]], prob = area_threshold)
 
-  data %>%
+  data |>
     mutate(crumb = ifelse(!!area < area_qunt & .data$n_points < point_qunt, TRUE, FALSE))
 
 }

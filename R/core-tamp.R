@@ -7,11 +7,11 @@
 #'
 #' @param data a long cubble object
 #' @examples
-#' cb_long <- climate_flat %>%
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
+#' cb_long <- climate_flat |>
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) |>
 #'   face_temporal()
 #'
-#' cb_long %>% face_spatial()
+#' cb_long |> face_spatial()
 #' @export
 face_spatial <- function(data) {
   test_cubble(data)
@@ -34,24 +34,24 @@ face_spatial.cubble_df <- function(data) {
     tvars <- colnames(data)[colnames(data) != key_name]
     tvars <- tvars[!tvars %in% colnames(spatial)]
 
-    migrated_var <- intersect(names(data), names(spatial)) %>%
+    migrated_var <- intersect(names(data), names(spatial)) |>
       setdiff(key_name)
 
-    temporal <- tibble::as_tibble(data) %>%
-      dplyr::select(-migrated_var) %>%
+    temporal <- tibble::as_tibble(data) |>
+      dplyr::select(-migrated_var) |>
       tidyr::nest(ts = -key_name)
 
-    out <- spatial %>% dplyr::left_join(temporal, by = key_name)
+    out <- spatial |> dplyr::left_join(temporal, by = key_name)
 
   } else if (length(key) == 2){
-    spatial <- spatial %>% tidyr::nest(.val = -key_name[1])
-    temporal <- as_tibble(data) %>% tidyr::nest(ts = -key_name[1])
+    spatial <- spatial |> tidyr::nest(.val = -key_name[1])
+    temporal <- as_tibble(data) |> tidyr::nest(ts = -key_name[1])
     out <- left_join(spatial, temporal, by = key_name[1])
   }
 
 
   if ("tbl_ts" %in% class(data)){
-    out <- out %>% mutate(ts = map(.data$ts, ~tsibble::as_tsibble(.x, index = index)))
+    out <- out |> mutate(ts = map(.data$ts, ~tsibble::as_tsibble(.x, index = index)))
   }
 
   new_cubble(out,

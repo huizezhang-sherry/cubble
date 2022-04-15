@@ -20,32 +20,32 @@ cubble <- function(..., key, index, coords) {
 new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL){
 
   if (form == "nested" & ".val" %in% names(data)){
-    group_dt <- data %>% tidyr::unnest(.data$.val)
+    group_dt <- data |> tidyr::unnest(.data$.val)
   } else{
     group_dt <- data
   }
 
-  key_data <- group_dt %>% dplyr::grouped_df(key) %>% group_data()
+  key_data <- group_dt |> dplyr::grouped_df(key) |> group_data()
 
   all_cols <- names(data)
 
   # if (form == "nested"){
-  #   unique_key <- unique(data[[key]]) %>% length()
+  #   unique_key <- unique(data[[key]]) |> length()
   #   if (unique_key != nrow(data) & !is.null(row_id(data))){
-  #     data <- data %>% ungroup() %>% rearrange_index(key = key, old_key = row_id)
+  #     data <- data |> ungroup() |> rearrange_index(key = key, old_key = row_id)
   #   }
   # }
 
   if (length(coords) == 1){
       others <- all_cols[!all_cols %in% c(key, coords, "ts")]
       ordered <- c(key, coords, others, "ts")
-      data <- data %>% select(ordered)
+      data <- data |> select(ordered)
   }
 
   attr <- list(x = data,
                groups = key_data, index = index,
                spatial = spatial, coords = coords, form = form,
-               class = "cubble_df") %>%
+               class = "cubble_df") |>
     Filter(f = length)
 
   # check column ts present,
