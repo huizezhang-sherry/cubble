@@ -1,4 +1,4 @@
-#' Simplify map object (polygon and multipolygon)
+#' Find (multi)polygons with small area
 #'
 #' @param data An sf object
 #' @param geom The geometry column

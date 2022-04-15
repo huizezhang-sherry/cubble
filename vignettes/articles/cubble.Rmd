@@ -98,4 +98,4 @@ ggplot() +
 
 ```
 
-Remember that Australia is in the southern hemisphere, so all temperature curves are in a U shape :)
+Remember that Australia is in the southern hemisphere, so the temperature curves are in U shapes :)

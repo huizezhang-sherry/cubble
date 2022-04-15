@@ -3,7 +3,7 @@
 \docType{data}
 \name{climate_subset}
 \alias{climate_subset}
-\title{Australia climate data}
+\title{Australia climate data - 30 stations}
 \format{
 A cubble object
 \describe{

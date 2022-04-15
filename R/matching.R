@@ -286,7 +286,7 @@ match_temporal <- function(major,
 
   ngroup <- unique(dt$group)
 
-  out <- map_dfr(1:length(ngroup),
+  out <- map(1:length(ngroup),
                  ~ {
                    group_id = ngroup[.x]
 
@@ -294,7 +294,7 @@ match_temporal <- function(major,
                                          group_id = group_id,
                                          independent = temporal_independent,
                                          window = temporal_window)
-                 })
+                 }) %>% dplyr::bind_rows()
 
   good <- out %>%
     dplyr::arrange(-.data$n_match) %>%

@@ -1,4 +1,4 @@
-#' Australia climate data
+#' Australia climate data - 639 stations
 #'
 #' Daily measure on precipitation (prcp) maximum temperature (tmax), and
 #' minimum temperature (tmin) in 2020 for 639 stations. \code{stations} and
@@ -35,7 +35,7 @@
 "climate"
 
 
-#' Australia climate data
+#' Australia climate data - 30 stations
 #'
 #' Daily measure on precipitation (prcp) maximum temperature (tmax), and
 #' minimum temperature (tmin) in 2020 for 30 stations.
@@ -63,7 +63,8 @@
 "climate_subset"
 
 
-#' Australia climate data
+#' Australia climate data - 5 stations
+#'
 #' Daily measure on precipitation (prcp) maximum temperature (tmax), and
 #' minimum temperature (tmin) in 2020 for 5 stations.
 #'

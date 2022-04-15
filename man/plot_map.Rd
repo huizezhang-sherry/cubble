@@ -2,7 +2,7 @@
 % Please edit documentation in R/map-auto.R
 \name{plot_map}
 \alias{plot_map}
-\title{A quick plot of map}
+\title{A quick plot of sites on an underlying map}
 \usage{
 plot_map(map_data, point_data, print_code = FALSE)
 }

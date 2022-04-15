@@ -3,9 +3,7 @@
 \docType{data}
 \name{climate_flat}
 \alias{climate_flat}
-\title{Australia climate data
-Daily measure on precipitation (prcp) maximum temperature (tmax), and
-minimum temperature (tmin) in 2020 for 5 stations.}
+\title{Australia climate data - 5 stations}
 \format{
 A tibble object with 155 rows and 10 columns
 \describe{
@@ -25,7 +23,6 @@ A tibble object with 155 rows and 10 columns
 climate_flat
 }
 \description{
-Australia climate data
 Daily measure on precipitation (prcp) maximum temperature (tmax), and
 minimum temperature (tmin) in 2020 for 5 stations.
 }

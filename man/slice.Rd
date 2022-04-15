@@ -6,7 +6,6 @@
 \alias{slice_min.cubble_df}
 \alias{slice_max.cubble_df}
 \alias{slice_sample.cubble_df}
-\alias{slice_nearby}
 \title{Slicing a cubble}
 \usage{
 \method{slice_head}{cubble_df}(data, ...)
@@ -18,19 +17,11 @@
 \method{slice_max}{cubble_df}(data, ...)
 
 \method{slice_sample}{cubble_df}(data, ...)
-
-slice_nearby(data, coord, buffer = NA, n = NA)
 }
 \arguments{
 \item{data}{a cubble object to slice}
 
 \item{...}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
-
-\item{coord}{the coordinate of used to slice nearby locations}
-
-\item{buffer}{the buffer added to the coordinate for slicing}
-
-\item{n}{the number of nearby points to slice, based on distance}
 }
 \description{
 Slicing can be useful when the number of site is too large to be all visualised in a
@@ -50,10 +41,4 @@ climate_aus \%>\% slice_min(lat, n = 10)
 
 # random sample
 climate_aus \%>\% slice_sample(n = 10)
-
-# slice locations within 1 degree of (130E, 25S)
-slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
-
-# slice 5 closest location to (130E, 25S)
-slice_nearby(climate_aus, coord = c(130, -25), n = 5)
 }

@@ -5,7 +5,7 @@
 \alias{climate_aus}
 \alias{stations}
 \alias{climate}
-\title{Australia climate data}
+\title{Australia climate data - 639 stations}
 \format{
 An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
 

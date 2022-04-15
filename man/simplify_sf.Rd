@@ -2,7 +2,7 @@
 % Please edit documentation in R/simplify.R
 \name{simplify_sf}
 \alias{simplify_sf}
-\title{Simplify map object (polygon and multipolygon)}
+\title{Find (multi)polygons with small area}
 \usage{
 simplify_sf(data, geom, area, point_threshold = 0.9, area_threshold = 0.9)
 }
@@ -21,5 +21,5 @@ simplify_sf(data, geom, area, point_threshold = 0.9, area_threshold = 0.9)
 An sf object
 }
 \description{
-Simplify map object (polygon and multipolygon)
+Find (multi)polygons with small area
 }

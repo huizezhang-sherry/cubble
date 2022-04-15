@@ -56,19 +56,25 @@ slice_max.cubble_df <- slice_factory("slice_max")
 #' @export
 slice_sample.cubble_df <- slice_factory("slice_sample")
 
+#' Location-based slicing
+#' @param data the data to slice
 #' @param coord the coordinate of used to slice nearby locations
 #' @param buffer the buffer added to the coordinate for slicing
 #' @param n the number of nearby points to slice, based on distance
-#' @rdname slice
 #' @examples
-#'
+
 #' # slice locations within 1 degree of (130E, 25S)
 #' slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
 #'
-#' # slice 5 closest location to (130E, 25S)
+#' # slice the 5 closest location to (130E, 25S)
 #' slice_nearby(climate_aus, coord = c(130, -25), n = 5)
 #' @export
-slice_nearby <- function(data, coord, buffer = NA, n = NA){
+slice_nearby <- function(data, coord, buffer, n){
+  UseMethod("slice_nearby")
+}
+
+#' @export
+slice_nearby.cubble_df <- function(data, coord, buffer = NA, n = NA){
 
   test_cubble(data)
   if (form(data) == "long") data <- data %>% face_spatial()

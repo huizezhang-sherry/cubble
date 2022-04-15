@@ -16,23 +16,27 @@ reference:
 - title: "Data quality check"
 - contents:
   - starts_with("add")
-- title: "Data manipulation"
+- title: "Reshape cubble"
 - contents:
-  - face_spatial
   - face_temporal
+  - face_spatial
+- title: "Wrangle cubble"
+- contents:
   - migrate
   - strip_rowwise
   - switch_key
   - rename_key
   - get_centroid
   - match_sites
-  - contains("index")
-  - contains("slice")
-- title: "Visualising spatial-temporal data"
+  - slice_nearby
+  - simplify_sf
+- title: "Visualisation with cubble"
 - contents:
-  - gen_grid
   - plot_map
   - geom_glyph
+- title: "Interface to tour"
+- contents:
+  - contains("prep")
 - title: "In-built data"
 - contents:
   - contains("climate")

@@ -1,4 +1,4 @@
-#' Switch a cubble object from the nested form into the long form
+#' Switch a cubble object into the long form
 #'
 #' `face_temporal()` switches a cubble object into a long cubble, suitable for temporal operations.
 #' The long cubble uses the combination of `key` and `index` to identify each row and

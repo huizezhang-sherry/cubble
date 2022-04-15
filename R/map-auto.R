@@ -1,4 +1,4 @@
-#' A quick plot of map
+#' A quick plot of sites on an underlying map
 #'
 #' \code{plot_map} allows you to quickly create a ggplot with your base map
 #' and cubble object, with some default aesthetic and theme settings.

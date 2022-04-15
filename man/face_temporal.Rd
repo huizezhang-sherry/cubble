@@ -2,7 +2,7 @@
 % Please edit documentation in R/core-stretch.R
 \name{face_temporal}
 \alias{face_temporal}
-\title{Switch a cubble object from the nested form into the long form}
+\title{Switch a cubble object into the long form}
 \usage{
 face_temporal(data, col)
 }

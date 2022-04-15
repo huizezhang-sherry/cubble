@@ -63,7 +63,7 @@ climate_flat %>%
 
 ## Long cubble
 
-A long form cubble is built from a `grouped_df`, instead of `rowwise_df`. `grouped_df` records  all the timesface_spatials from the same site in the same group. Below prints the attributes of a long cubble:
+A long form cubble is built from the `grouped_df` class where observations from the same site forms a group. Below prints a long cubble along with its attributes:
 
 ```{r}
 long <- nested %>% face_temporal()
@@ -73,7 +73,9 @@ attributes(long)
 
 The `spatial` attribute records the time-invariant variables in the data, so that when switch back to the nested form, these variables won't get lost. 
 
-Apart from the usual `%@%` extraction of attributes, `index()`, `key_vars()`, `key_data()`, `coords()`, and `spatial()` can be used to extract the relevant component in both forms:
+# Access cubble attributes
+
+Apart from the usual `%@%` or `attr(DATA, "ATTRIBUTE")` to extract class attributes, cubble provides functions with the corresponding attribute name for easier extraction: `index()`, `key_vars()`, `key_data()`, `coords()`, and `spatial()` can be used to extract the relevant component in both forms:
 
 ```{r}
 key_vars(long)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/core-tamp.R
 \name{face_spatial}
 \alias{face_spatial}
-\title{Switch an cubble object from the long form into the nested form}
+\title{Switch a cubble object into the nested form}
 \usage{
 face_spatial(data)
 }

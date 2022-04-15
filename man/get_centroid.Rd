@@ -2,7 +2,7 @@
 % Please edit documentation in R/hier.R
 \name{get_centroid}
 \alias{get_centroid}
-\title{Title}
+\title{Find the centroid of cubble}
 \usage{
 get_centroid(data)
 }

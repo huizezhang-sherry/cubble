@@ -1,4 +1,4 @@
-#' Switch an cubble object from the long form into the nested form
+#' Switch a cubble object into the nested form
 #'
 #' `face_spatial()` turns a long cubble back into a nest cubble and can be seen as
 #' the inverse operation of \code{face_temporal()}.

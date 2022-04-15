@@ -8,7 +8,7 @@
 \alias{tbl_sum.cubble_df}
 \alias{is_cubble}
 \alias{cubble}
-\title{Constructor for the cubble class}
+\title{The constructor for the cubble class}
 \usage{
 as_cubble(data, key, index, coords, ...)
 
@@ -38,7 +38,7 @@ cubble(..., key, index, coords)
 \item{output}{either "all" or "unmatch", whether to output all or a list of unmatched summary}
 }
 \description{
-Constructor for the cubble class
+The constructor for the cubble class
 }
 \examples{
 # Declaimer: to make the examples easier, here we first `climate_flat` into
