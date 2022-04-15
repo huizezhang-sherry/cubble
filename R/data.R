@@ -1,8 +1,10 @@
 #' Australia climate data
 #'
 #' Daily measure on precipitation (prcp) maximum temperature (tmax), and
-#' minimum temperature (tmin) in 2020 for 639 stations.
-#' @format A cubble object
+#' minimum temperature (tmin) in 2020 for 639 stations. \code{stations} and
+#' \code{climate} are the separate spatial and temporal objects while
+#' \code{climate_aus} is the combined cubble object.
+#' @details
 #' \describe{
 #'   \item{id}{station id}
 #'   \item{lat}{latitude of the station}
@@ -23,7 +25,14 @@
 #'                       ggplot2::aes(x = long, y = lat)) +
 #'   ggplot2::theme_bw()
 #' @seealso climate_subset climate_flat
+#' @rdname climate_aus
 "climate_aus"
+
+#'@rdname climate_aus
+"stations"
+
+#'@rdname climate_aus
+"climate"
 
 
 #' Australia climate data
