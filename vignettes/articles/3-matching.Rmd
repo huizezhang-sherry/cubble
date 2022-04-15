@@ -31,10 +31,10 @@ nsw_map <- ozmaps::abs_ste %>%
 nsw <- weatherdata::climate_full %>%   
   filter(between(stringr::str_sub(id, 7, 8), 46, 75)) %>%
   mutate(automated = stringr::str_detect(name, "aws")) %>% 
-  stretch(ts) %>%
+  face_temporal(ts) %>%
   filter(lubridate::month(date) == 1,
          lubridate::year(date) == 2020) %>% 
-  tamp() %>% 
+  face_spatial() %>% 
   filter(!any(is.na(ts$tmax)))
  
 ggplot2::ggplot() +
@@ -104,7 +104,7 @@ or compare the series within the same pair (as an example here we only look at r
 ```{r echo = FALSE}
 ts <- matched %>%
   switch_key(group) %>% 
-  stretch(ts) %>%
+  face_temporal(ts) %>%
   migrate(id, automated) 
 
 ts %>%
@@ -127,9 +127,9 @@ river <- weatherdata::water %>% mutate(type = "river")
 
 climate <- weatherdata::climate_full %>% 
   filter(between(stringr::str_sub(id, 7, 8), 76, 90)) %>% 
-  stretch() %>% 
+  face_temporal() %>% 
   filter(lubridate::year(date) == 2020) %>% 
-  tamp() %>% 
+  face_spatial() %>% 
   mutate(type = "climate")
 
 vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste %>% filter(NAME == "Victoria"))  
@@ -233,7 +233,7 @@ or to look at the series:
 
 ```{r}
 res_long <- res %>% 
-  stretch(ts) %>% 
+  face_temporal(ts) %>% 
   migrate(group, type) %>% 
   rename(prcp = matched_var) %>% 
   mutate(prcp = (prcp - min(prcp, na.rm = TRUE))/ (max(prcp, na.rm = TRUE) - min(prcp, na.rm = TRUE))) 

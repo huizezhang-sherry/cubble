@@ -16,10 +16,10 @@ add_missing_prct <- function(data, ...){
   key <- key_vars(data)
 
   exprs <- expr(...)
-  vars <- tidyselect::eval_select(exprs, data %>% stretch())
+  vars <- tidyselect::eval_select(exprs, data %>% face_temporal())
 
   # add_missing_prct should be called only in nested form
-  var_names <- data %>% stretch() %>% names()
+  var_names <- data %>% face_temporal() %>% names()
 
   if (!all(names(vars) %in% var_names)){
     bad_vars <- vars[which(!vars %in% var_names )]

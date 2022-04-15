@@ -32,9 +32,9 @@ aus_climate_cubble <- aus_climate_raw %>%
 
 ############################################################
 climate_aus <- aus_climate_cubble %>%
-  stretch() %>%
+  face_temporal() %>%
   mutate(tmax = tmax/10, tmin = tmin/ 10)%>%
-  tamp()
+  face_spatial()
 usethis::use_data(climate_aus, overwrite = TRUE)
 
 ############################################################
@@ -55,5 +55,5 @@ usethis::use_data(climate_flat, overwrite = TRUE)
 stations <- climate_aus %>% select(id: wmo_id)
 usethis::use_data(stations, overwrite = TRUE)
 
-climate <- climate_aus %>% stretch() %>% as_tibble()
+climate <- climate_aus %>% face_temporal() %>% as_tibble()
 usethis::use_data(climate, overwrite = TRUE)

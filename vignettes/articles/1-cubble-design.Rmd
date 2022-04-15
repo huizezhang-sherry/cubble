@@ -63,10 +63,10 @@ climate_flat %>%
 
 ## Long cubble
 
-A long form cubble is built from a `grouped_df`, instead of `rowwise_df`. `grouped_df` records  all the timestamps from the same site in the same group. Below prints the attributes of a long cubble:
+A long form cubble is built from a `grouped_df`, instead of `rowwise_df`. `grouped_df` records  all the timesface_spatials from the same site in the same group. Below prints the attributes of a long cubble:
 
 ```{r}
-long <- nested %>% stretch()
+long <- nested %>% face_temporal()
 long
 attributes(long)
 ```

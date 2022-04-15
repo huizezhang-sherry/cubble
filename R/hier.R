@@ -27,7 +27,7 @@ switch_key <- function(data, key){
   coords <- coords(data)
 
   orig_form <- form(data)
-  if (orig_form == "long") data <- data %>% tamp()
+  if (orig_form == "long") data <- data %>% face_spatial()
 
   if (".val" %in% names(data)) data <- data %>% tidyr::unnest(.data$.val)
 
@@ -41,7 +41,7 @@ switch_key <- function(data, key){
     out, key = key, index = index, coords = coords,
     spatial = NULL, form = "nested")
 
-  if (orig_form == "long") out_cubble <- out_cubble %>% stretch(.data$ts)
+  if (orig_form == "long") out_cubble <- out_cubble %>% face_temporal(.data$ts)
 
   out_cubble
 }

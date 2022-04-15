@@ -1,7 +1,7 @@
 #' Switch an cubble object from the long form into the nested form
 #'
-#' `tamp()` turns a long cubble back into a nest cubble and can be seen as
-#' the inverse operation of \code{stretch()}.
+#' `face_spatial()` turns a long cubble back into a nest cubble and can be seen as
+#' the inverse operation of \code{face_temporal()}.
 #' The nested cubble identifies each row by `key` and is suitable
 #' for operations whose output doesn't involve a time index.
 #'
@@ -9,18 +9,18 @@
 #' @examples
 #' cb_long <- climate_flat %>%
 #'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
-#'   stretch()
+#'   face_temporal()
 #'
-#' cb_long %>% tamp()
+#' cb_long %>% face_spatial()
 #' @export
-tamp <- function(data) {
+face_spatial <- function(data) {
   test_cubble(data)
-  UseMethod("tamp")
+  UseMethod("face_spatial")
 }
 
 
 #' @export
-tamp.cubble_df <- function(data) {
+face_spatial.cubble_df <- function(data) {
   test_long(data)
 
   # will only keep the first grouping variable if more than one

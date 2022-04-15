@@ -71,7 +71,7 @@ slice_sample.cubble_df <- slice_factory("slice_sample")
 slice_nearby <- function(data, coord, buffer = NA, n = NA){
 
   test_cubble(data)
-  if (form(data) == "long") data <- data %>% tamp()
+  if (form(data) == "long") data <- data %>% face_spatial()
 
   if (length(coord) != 2){
     cli::cli_abort("{.val coord needs to be in the format of {.code c(LONG, LAT)}}")

@@ -277,7 +277,7 @@ match_temporal <- function(major,
 
 
   dt <- data %>%
-    stretch() %>%
+    face_temporal() %>%
     migrate(group) %>%
     dplyr::mutate(lag = dplyr::lag(matched_var),
                   diff = .data$lag-matched_var) %>%
@@ -320,17 +320,17 @@ match_temporal <- function(major,
 fix_data <- function(data, chosen_var){
   test_cubble(data)
   data %>%
-    stretch() %>%
+    face_temporal() %>%
     dplyr::select(key_vars(data), index(data), chosen_var) %>%
     dplyr::rename(matched_var = chosen_var) %>%
-    tamp()
+    face_spatial()
 }
 
 match_temporal_single <- function(data, group_id,
                                   independent, window = 5) {
   data_long <- data %>% dplyr::filter(.data$group == group_id)
   data_nested <-
-    data %>% tamp() %>% dplyr::filter(.data$group == group_id)
+    data %>% face_spatial() %>% dplyr::filter(.data$group == group_id)
 
   if (independent == "major") {
     major_id <- data_nested$id[1]

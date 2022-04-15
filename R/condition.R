@@ -9,14 +9,14 @@ test_long <- function(data){
   test_cubble(data)
   if (form(data) != "long")
     cli::cli_abort("The function requires a long cubble.
-                   Use {.fn stretch} to turn a cubble into a long one.")
+                   Use {.fn face_temporal} to turn a cubble into a long one.")
 }
 
 test_nested <- function(data){
   test_cubble(data)
   if (form(data) != "nested")
     cli::cli_abort("The function requires a nested cubble.
-                   Use {.fn tamp} to turn a cubble into a nested one.")
+                   Use {.fn face_spatial} to turn a cubble into a nested one.")
 }
 
 test_missing <- function(quo, var){

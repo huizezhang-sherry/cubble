@@ -15,7 +15,7 @@ prep_edges <- function(data, edges_col, color_col){
 prep_edges.cubble_df <- function(data, edges_col, color_col = NULL){
 
   test_cubble(data)
-  if (is_nested(data)) data <- data %>% stretch()
+  if (is_nested(data)) data <- data %>% face_temporal()
   id <- key_vars(data)
   edges_col <- enquo(edges_col)
   col_col <- enquo(color_col)

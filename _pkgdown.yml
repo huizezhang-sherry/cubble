@@ -18,8 +18,8 @@ reference:
   - starts_with("add")
 - title: "Data manipulation"
 - contents:
-  - tamp
-  - stretch
+  - face_spatial
+  - face_temporal
   - migrate
   - strip_rowwise
   - switch_key

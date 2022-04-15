@@ -58,13 +58,14 @@ nested
 #> 5 ASN00015131 -17.6  134. 220   elliott         94236 <tibble [366 × 4]>
 ```
 
-`stretch()` switches a cubble from the nested form to the long form. The
-long form cubble is for operations whose output is cross-identified by
-`key` and `index`, for example, filtering January records:
+`face_temporal()` switches a cubble from the nested form to the long
+form. The long form cubble is for operations whose output is
+cross-identified by `key` and `index`, for example, filtering January
+records:
 
 ``` r
 long <- nested %>% 
-  stretch() %>% 
+  face_temporal() %>% 
   filter(lubridate::month(date) == 1)
 long
 #> # cubble:  date, id [5]: long form
@@ -85,13 +86,13 @@ long
 #> # … with 145 more rows
 ```
 
-`tamp()` switches the long cubble back to the nested cubble. The nested
-form is for operations whose output is only identified by the `key`, for
-example, mutating the average maximum temperature in January:
+`face_spatial()` switches the long cubble back to the nested cubble. The
+nested form is for operations whose output is only identified by the
+`key`, for example, mutating the average maximum temperature in January:
 
 ``` r
 long %>% 
-  tamp() %>% 
+  face_spatial() %>% 
   mutate(avg_max = mean(ts$tmax, na.rm = TRUE))
 #> # cubble:   id [5]: nested form
 #> # bbox:     [115.97, -32.94, 133.55, -12.42]
@@ -105,8 +106,15 @@ long %>%
 #> 5 ASN00015131 -17.6  134. 220   elliott         94236 <tibble [31 × 4]>    38.5
 ```
 
-## Naming
+## Misc
 
-Cubble stands for “cubical tibble” and you can think of multivariate
-spatio-temporal data as a *cube* with three axes: variable, location,
-and time.
+- **Naming**: Cubble stands for “cubical tibble” and you can think of
+multivariate spatio-temporal data as a *cube* with three axes: variable,
+location, and time.
+
+- **weatherdata**: Some examples use larger climate data, which are stored
+in the `weatherdata` repo, you can download the repo with
+
+``` r
+remotes::install_github("huizezhang-sherry/weatherdata")
+```

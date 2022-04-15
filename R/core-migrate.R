@@ -9,7 +9,7 @@
 #' @examples
 #' cb <- climate_flat %>%
 #'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
-#'   stretch()
+#'   face_temporal()
 #'
 #' # migrate long and lat
 #' cb_mig <- cb %>% migrate(long, lat)
@@ -17,7 +17,7 @@
 #' # migration is not memorised by cubble:
 #' # if you switch to the nested cubble and then switch back,
 #' # long and lat will not be preserved
-#' cb_mig %>% tamp() %>% stretch()
+#' cb_mig %>% face_spatial() %>% face_temporal()
 #'
 #' @export
 #' @rdname cubble-verb

@@ -32,7 +32,7 @@ First, let's summarise the daily data into weekly sum for each station:
 
 ```{r}
 station_long <- weatherdata::climate_full %>% 
-  stretch(ts) %>% 
+  face_temporal(ts) %>% 
   mutate(wk = lubridate::week(date)) %>% 
   group_by(wk) %>% 
   summarise(prcp = sum(prcp, na.rm = TRUE)) %>% 
@@ -49,7 +49,7 @@ dist_raw <- geosphere::distm(coords, coords)
 
 set.seed(123)
 station_nested <- station_long %>% 
-  tamp() %>% 
+  face_spatial() %>% 
   strip_rowwise() %>% 
   mutate(cluster = kmeans(dist_raw,centers = 20, nstart = 500)$cluster)
 ```
@@ -72,10 +72,10 @@ cluster_nested <- cluster_nested %>% get_centroid()
 cluster_nested
 ```
 
-You can also use `stretch()` to get the cluster level long cubble:
+You can also use `face_temporal()` to get the cluster level long cubble:
 
 ```{r}
-cluster_long <- cluster_nested %>% stretch(ts)
+cluster_long <- cluster_nested %>% face_temporal(ts)
 cluster_long
 ```
 
@@ -89,7 +89,7 @@ With these data, we can make a glyph map to understand the precipitation pattern
 
 ```{r echo = FALSE}
 cluster_long <- cluster_nested %>% 
-  stretch() %>% 
+  face_temporal() %>% 
   group_by(wk) %>% 
   summarise(prcp = mean(prcp, na.rm = TRUE)) %>% 
   migrate(cent_long, cent_lat)
