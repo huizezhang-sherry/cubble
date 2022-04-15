@@ -133,6 +133,7 @@ rename_key <- function(data, ...){
 #' @param data a cubble data object
 #'
 #' @importFrom geosphere centroid
+#' @importFrom grDevices chull
 #' @export
 #'
 get_centroid <- function(data){
@@ -151,14 +152,14 @@ get_centroid <- function(data){
 
   out <- data %>%
     as_tibble() %>%
-    rowwise() %>%
-    mutate(chull = list(chull(.val[[coords[1]]],
-                              .val[[coords[2]]])),
-           hull = list(.val[chull,]),
-           cent = list(geosphere::centroid(.val[chull,coords])),
-           cent_long = as.numeric(cent[,1]),
-           cent_lat = as.numeric(cent[,2])) %>%
-    select(-chull, -cent)
+    dplyr::rowwise() %>%
+    mutate(chull = list(grDevices::chull(.data$.val[[coords[1]]],
+                                         .data$.val[[coords[2]]])),
+           hull = list(.data$.val[.data$chull,]),
+           cent = list(geosphere::centroid(.data$.val[.data$chull,coords])),
+           cent_long = as.numeric(.data$cent[,1]),
+           cent_lat = as.numeric(.data$cent[,2])) %>%
+    select(-.data$chull, -.data$cent)
 
 
   new_cubble(

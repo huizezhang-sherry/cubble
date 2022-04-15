@@ -3,7 +3,7 @@
 dplyr_col_modify.cubble_df <- function(data, cols) {
 
   if ("tbl_ts" %in% class(data)){
-    out <- dplyr_col_modify(tsibble::as_tsibble(tibble::as_tibble(data), key = !!key), cols)
+    out <- dplyr_col_modify(tsibble::as_tsibble(tibble::as_tibble(data), key = key_vars(data)), cols)
   } else{
     out <- dplyr_col_modify(tibble::as_tibble(data), cols)
   }

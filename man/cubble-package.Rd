@@ -8,6 +8,14 @@
 \description{
 A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/huizezhang-sherry/cubble}
+  \item Report bugs at \url{https://github.com/huizezhang-sherry/cubble/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: H. Sherry Zhang \email{huize.zhang@monash.edu} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID})
 

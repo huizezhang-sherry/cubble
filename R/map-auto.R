@@ -50,7 +50,7 @@ make_plot <- function(map_data, point_data, long, lat){
 
   ggplot2::ggplot() +
     ggplot2::geom_sf(data = map_data,
-                     ggplot2::aes(geometry = geometry),
+                     ggplot2::aes(geometry = .data$geometry),
                      color = "grey", linetype = "dotted") +
     ggplot2::geom_point(data = point_data,
                         ggplot2::aes(x =!!long , y = !!lat)) +

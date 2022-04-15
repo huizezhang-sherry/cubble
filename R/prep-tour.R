@@ -31,13 +31,13 @@ prep_edges.cubble_df <- function(data, edges_col, color_col = NULL){
     tibble::as_tibble() %>%
     dplyr::mutate(
       from = dplyr::row_number(),
-      to = dplyr::lead(from),
-      id_lead = dplyr::lead(id),
-      to = ifelse(id == id_lead, to, NA)) %>%
-    dplyr::filter(!is.na(to))
+      to = dplyr::lead(.data$from),
+      id_lead = dplyr::lead(.data$id),
+      to = ifelse(id == .data$id_lead, .data$to, NA)) %>%
+    dplyr::filter(!is.na(.data$to))
 
   edges <- raw %>%
-    dplyr::select(from, to) %>%
+    dplyr::select(.data$from, .data$to) %>%
     as.matrix()
 
   edges_col <- find_col(raw, !!edges_col)

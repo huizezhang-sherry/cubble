@@ -22,22 +22,22 @@ cubble_cast <- function(x, to, ..., x_arg = "", to_arg = ""){
 }
 
 cubble_ptype2 <- function(x, y, ..., x_arg = "", to_arg = ""){
-  out <- vctrs::tib_ptype2(x, to, ..., x_arg = "", to_arg = "")
+  out <- vctrs::tib_ptype2(x, y, ..., x_arg = "", to_arg = "")
 
-  if (!compatible_to_combine(x, to)){
+  if (!compatible_to_combine(x, y)){
     vctrs::stop_incompatible_cast(
-      x, to,
+      x, y,
       x_arg = x_arg,
       to_arg = to_arg,
       details = "Incompatible objects: check your key, index, and coords"
     )
   }
 
-  key <- key_vars(x) %||% key_vars(to)
-  index <- index(x) %||% index(to)
-  coords <- coords(x) %||% coords(to)
-  spatial <- spatial(x) %||% spatial(to)
-  form <- form(x) %||% form(to)
+  key <- key_vars(x) %||% key_vars(y)
+  index <- index(x) %||% index(y)
+  coords <- coords(x) %||% coords(y)
+  spatial <- spatial(x) %||% spatial(y)
+  form <- form(x) %||% form(y)
   new_cubble(out,
              key = key, index = index, coords = coords,
              spatial = spatial, form = form)

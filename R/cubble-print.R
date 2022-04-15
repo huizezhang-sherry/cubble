@@ -61,7 +61,7 @@ check_coords <- function(data, long_tol = 10, lat_tol = 10){
 
   if (form(data) == "nested"){
     dt <- as_tibble(data)
-    if (".val" %in% names(dt)) dt <- dt %>% unnest(.val)
+    if (".val" %in% names(dt)) dt <- dt %>% unnest(.data$.val)
 
 
   } else if (form(data) == "long"){
@@ -71,8 +71,8 @@ check_coords <- function(data, long_tol = 10, lat_tol = 10){
   long <- sort(dt[[coords(data)[1]]])
   lat <- sort(dt[[coords(data)[2]]])
 
-  long_diff <- long - lag(long)
-  lat_diff <- lat - lag(lat)
+  long_diff <- long - dplyr::lag(long)
+  lat_diff <- lat - dplyr::lag(lat)
 
   detect_long_gap <- any(long_diff > long_tol, na.rm = TRUE)
   detect_lat_gap <- any(lat_diff > lat_tol, na.rm = TRUE)

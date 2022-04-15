@@ -249,9 +249,9 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
     as.data.frame.table() %>%
     as_tibble() %>%
     dplyr::bind_cols(mapping) %>%
-    dplyr::select(id, long, lat, time, var, Freq) %>%
-    dplyr::arrange(id) %>%
-    tidyr::pivot_wider(names_from = var, values_from = Freq)
+    dplyr::select(.data$id, .data$long, .data$lat, .data$time, .data$var, .data$Freq) %>%
+    dplyr::arrange(.data$id) %>%
+    tidyr::pivot_wider(names_from = .data$var, values_from = .data$Freq)
 
   key <- "id"
   all_vars <- find_invariant(data, !!key)

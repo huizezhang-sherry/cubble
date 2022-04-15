@@ -45,11 +45,11 @@ get_areapoints <- function(data, geom, area){
   points <- data %>%
     sf::st_coordinates({{geom}}) %>%
     tibble::as_tibble() %>%
-    dplyr::count(L3) %>%
-    dplyr::rename(n_points = n) %>%
-    dplyr::pull(n_points)
+    dplyr::count(.data$L3) %>%
+    dplyr::rename(n_points = .data$n) %>%
+    dplyr::pull(.data$n_points)
 
-  out <- data %>% dplyr::bind_cols(n_points = points)
+  out <- data %>% dplyr::bind_cols(n_points = .data$points)
 
   attr(out, "area") <- area
   out
@@ -63,10 +63,10 @@ label_sf <- function(data, point_threshold = 0.9, area_threshold = 0.9){
   }
 
   area <- attr(data, "area")
-  point_qunt <- quantile(data[["n_points"]], prob = point_threshold)
-  area_qunt <- quantile(data[[area]], prob = area_threshold)
+  point_qunt <- stats::quantile(data[["n_points"]], prob = point_threshold)
+  area_qunt <- stats::quantile(data[[area]], prob = area_threshold)
 
   data %>%
-    mutate(crumb = ifelse(!!area < area_qunt & n_points < point_qunt, TRUE, FALSE))
+    mutate(crumb = ifelse(!!area < area_qunt & .data$n_points < point_qunt, TRUE, FALSE))
 
 }

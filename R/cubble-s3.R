@@ -20,7 +20,7 @@ cubble <- function(..., key, index, coords) {
 new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL){
 
   if (form == "nested" & ".val" %in% names(data)){
-    group_dt <- data %>% tidyr::unnest(.val)
+    group_dt <- data %>% tidyr::unnest(.data$.val)
   } else{
     group_dt <- data
   }

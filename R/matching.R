@@ -52,8 +52,8 @@ match_sites <- function(major,
     major_id <- key_data(major) %>% dplyr::pull(!!key_vars(major))
     minor_id <- key_data(minor) %>% dplyr::pull(!!key_vars(minor))
 
-    major_matched <- out %>% filter(id %in% major_id)
-    minor_matched <- out %>% filter(id %in% minor_id)
+    major_matched <- out %>% filter(.data$id %in% major_id)
+    minor_matched <- out %>% filter(.data$id %in% minor_id)
 
     out <- match_temporal(
       major_matched,
@@ -112,21 +112,21 @@ match_spatial <- function(major,
     tidyr::unnest(minor) %>%
     calc_dist(coords_mj, coords_mn) %>%
     dplyr::group_by(!!sym(key_mj)) %>%
-    dplyr::slice_min(dist, n = spatial_n_keep) %>%
+    dplyr::slice_min(.data$dist, n = spatial_n_keep) %>%
     dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$dist) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(dist <= spatial_dist_max)
+    dplyr::filter(.data$dist <= spatial_dist_max)
 
   if (spatial_single_match) {
     temp <- out %>%
       dplyr::mutate(dup = duplicated(!!sym(key_mn)))
 
     prob_sites <- temp %>%
-      dplyr::filter(dup) %>%
+      dplyr::filter(.data$dup) %>%
       dplyr::pull(!!sym(key_mn))
 
     if (length(prob_sites) != 0){
-      good <- temp %>% dplyr::filter(!dup) %>% dplyr::pull(!!sym(key_mn))
+      good <- temp %>% dplyr::filter(!.data$dup) %>% dplyr::pull(!!sym(key_mn))
       good_sites <- good[!good %in% prob_sites]
 
       cli::cli_inform(
@@ -137,18 +137,18 @@ match_spatial <- function(major,
       dup_fixed <- out %>%
         dplyr::filter(!!sym(key_mn) %in% prob_sites) %>%
         dplyr::group_by(!!sym(key_mn)) %>%
-        dplyr::filter(dist == min(dist))
+        dplyr::filter(.data$dist == min(.data$dist))
 
       out <- temp %>%
         dplyr::filter(!!sym(key_mn) %in% good_sites) %>%
         dplyr::bind_rows(dup_fixed) %>%
-        dplyr::select(-dup)
+        dplyr::select(-.data$dup)
     }
 
   }
 
   out <- out %>%
-    arrange(dist) %>%
+    arrange(.data$dist) %>%
     mutate(group = dplyr::row_number())
 
   if (any(stringr::str_detect(coords_mj[[1]], "ref"))) {
@@ -206,8 +206,8 @@ match_postprocessing <- function(major, minor, match_table) {
   major_key <- key_vars(major)
   minor_key <- key_vars(minor)
 
-  matched_major <- match_table %>% select(1, dist, .data$group)
-  matched_minor <- match_table %>% select(2, dist,  .data$group)
+  matched_major <- match_table %>% select(1, .data$dist, .data$group)
+  matched_minor <- match_table %>% select(2, .data$dist,  .data$group)
 
   major_key2 <- colnames(matched_major)[1]
   minor_key2 <- colnames(matched_minor)[1]
@@ -243,7 +243,7 @@ match_postprocessing <- function(major, minor, match_table) {
     dplyr::select(common_var) %>%
     dplyr::bind_rows(joined_minor %>%
                        dplyr::select(common_var)) %>%
-    dplyr::arrange(dist)
+    dplyr::arrange(.data$dist)
 
   out
 }
@@ -278,9 +278,9 @@ match_temporal <- function(major,
 
   dt <- data %>%
     face_temporal() %>%
-    migrate(group) %>%
-    dplyr::mutate(lag = dplyr::lag(matched_var),
-                  diff = .data$lag-matched_var) %>%
+    migrate(.data$group) %>%
+    dplyr::mutate(lag = dplyr::lag(.data$matched_var),
+                  diff = .data$lag-.data$matched_var) %>%
     dplyr::top_n(n = temporal_n_highest, wt = diff) %>%
     dplyr::arrange(!!sym(index(data)), .by_group = TRUE)
 
@@ -300,10 +300,10 @@ match_temporal <- function(major,
     dplyr::arrange(-.data$n_match) %>%
     dplyr::filter(.data$n_match >= temporal_min_match) %>%
     as_tibble() %>%
-    select(!!sym(key), group, n_match)
+    select(!!sym(key), .data$group, .data$n_match)
 
   good_groups <- good %>%
-    dplyr::pull(group) %>%
+    dplyr::pull(.data$group) %>%
     unique()
 
   good_n_match <- good %>%
