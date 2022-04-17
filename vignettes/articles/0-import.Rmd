@@ -102,23 +102,18 @@ Notice here each element of the list-column `ts` is of class `tbl_ts` and you ar
 
 Sometimes, you may get the spatial and temporal data from different sources and they live in two separate tables with a linking variable:
 
-```{r echo = FALSE}
-stations_small <- stations[1:5, ]
-climate_small <- climate |> filter(id %in% stations_small$id)
-```
-
 ```{r}
 # a spatial sheet
-stations_small
+cubble::stations
 
 # a temporal sheet
-climate_small
+cubble::climate
 ```
 
 When created out of separate tables, `as_cubble()` will check on the match of linking variable in the spatial and temporal table. 
 
 ```{r}
-as_cubble(list(spatial = stations_small, temporal = climate_small),
+as_cubble(list(spatial = cubble::stations, temporal = cubble::climate),
           key = id, index = date, coords = c(long, lat))
 ```
 

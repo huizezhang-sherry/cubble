@@ -11,7 +11,7 @@
 #'   \item{long}{longitude of the station}
 #'   \item{elev}{elevation of the station}
 #'   \item{name}{station name}
-#'   \item{wmo_id}{the world meterological organisation (WMO) station number}
+#'   \item{wmo_id}{the world meteorological organisation (WMO) station number}
 #'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 #' }
 #' @examples
@@ -25,15 +25,7 @@
 #'                       ggplot2::aes(x = long, y = lat)) +
 #'   ggplot2::theme_bw()
 #' @seealso climate_subset climate_flat
-#' @rdname climate_aus
 "climate_aus"
-
-#'@rdname climate_aus
-"stations"
-
-#'@rdname climate_aus
-"climate"
-
 
 #' Australia climate data - 30 stations
 #'
@@ -46,7 +38,7 @@
 #'   \item{long}{longitude of the station}
 #'   \item{elev}{elevation of the station}
 #'   \item{name}{station name}
-#'   \item{wmo_id}{the world meterological organisation (WMO) station number}
+#'   \item{wmo_id}{the world meteorological organisation (WMO) station number}
 #'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 #' }
 #' @examples
@@ -75,13 +67,14 @@
 #'   \item{long}{longitude of the station}
 #'   \item{elev}{elevation of the station}
 #'   \item{name}{station name}
-#'   \item{wmo_id}{the world meterological organisation (WMO) station number}
+#'   \item{wmo_id}{the world meteorological organisation (WMO) station number}
 #'   \item{date}{the date that prcp, tmax, and tmin recorded}
 #'   \item{prcp}{precipitation}
 #'   \item{tmax}{maximum temperature}
 #'   \item{tmin}{minimum temperature}
 #' }
 #' @seealso climate_aus climate_subset
+#' @rdname climate_flat
 #' @examples
 #' library(ggplot2)
 #' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
@@ -94,3 +87,20 @@
 #'    ggplot2::theme_bw()
 "climate_flat"
 
+#'@rdname climate_flat
+"stations"
+
+#'@rdname climate_flat
+"climate"
+
+
+
+#' Australia river data
+"river"
+
+
+#' Daily precipitation data from 2016 to 2020
+"prcp_aus"
+
+#' Victoria and Tasmania daily maximum temperature for 1970 - 1975 and 2016 - 2020
+"tmax_hist"

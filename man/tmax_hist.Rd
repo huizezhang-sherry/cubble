@@ -3,14 +3,14 @@
 \docType{data}
 \name{tmax_hist}
 \alias{tmax_hist}
-\title{Australia daily maximum temperature in period 1970 - 1975 and 2016 - 2020}
+\title{Victoria and Tasmania daily maximum temperature for 1970 - 1975 and 2016 - 2020}
 \format{
-An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 236 rows and 7 columns.
+An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 39 rows and 7 columns.
 }
 \usage{
 tmax_hist
 }
 \description{
-Australia daily maximum temperature in period 1970 - 1975 and 2016 - 2020
+Victoria and Tasmania daily maximum temperature for 1970 - 1975 and 2016 - 2020
 }
 \keyword{datasets}

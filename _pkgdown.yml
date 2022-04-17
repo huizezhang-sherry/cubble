@@ -8,11 +8,9 @@ reference:
   - cubble
   - as_cubble
   - is_cubble
-  - tbl_sum
 - title: "Extract cubble attributes"
 - contents:
   - key_data
-  - new_leaves
 - title: "Data quality check"
 - contents:
   - starts_with("add")
@@ -29,7 +27,7 @@ reference:
   - get_centroid
   - match_sites
   - slice_nearby
-  - slice_head
+  - slice_head.cubble_df
   - simplify_sf
 - title: "Visualisation with cubble"
 - contents:
@@ -46,5 +44,4 @@ reference:
   - river
 - title: "Misc"
 - contents:
-  - new_spatial
   - extract_var

@@ -26,6 +26,7 @@ tmax_hist <- historical_tmax |>
   face_temporal() |>
   filter(between(lubridate::year(date), 1970, 1975) | lubridate::year(date) > 2015) |>
   face_spatial() |>
-  select(-c(element:id1))
+  select(-c(element:id1)) |>
+  filter(stringr::str_sub(id, 7, 8) >= 76)
 
 usethis::use_data(tmax_hist, overwrite = TRUE,  compress = "gzip")

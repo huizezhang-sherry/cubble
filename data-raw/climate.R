@@ -52,8 +52,8 @@ climate_flat <- climate_aus |>
 usethis::use_data(climate_flat, overwrite = TRUE)
 
 ############################################################
-stations <- climate_aus |> select(id: wmo_id)
+stations <- climate_flat |> select(id: wmo_id) |> distinct()
 usethis::use_data(stations, overwrite = TRUE)
 
-climate <- climate_aus |> face_temporal() |> as_tibble()
+climate <- climate_flat |> select(id, date: tmin)
 usethis::use_data(climate, overwrite = TRUE)
