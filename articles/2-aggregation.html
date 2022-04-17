@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -66,8 +66,18 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/huizezhang-sherry/cubble/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -83,30 +93,30 @@
       <h1 data-toc-skip>2. Application: hierarchical data structure</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/vignettes/articles/2-aggregation.Rmd" class="external-link"><code>vignettes/articles/2-aggregation.Rmd</code></a></small>
       <div class="hidden name"><code>2-aggregation.Rmd</code></div>
 
     </div>
 
     
     
-<p>Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. <code>weatherdata::climate_full</code> extracts daily precipitation and maximum/ minimum temperature from GHCN for 639 stations in Australia from 2016 to 2020. This is where these stations locate in an Australia map:</p>
+<p>Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. <code>prcp_aus</code> extracts daily precipitation and minimum temperature from GHCN for 639 stations in Australia from 2016 to 2020. This is where these stations locate in an Australia map:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">state_map</span> <span class="op">&lt;-</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html" class="external-link">ms_simplify</a></span><span class="op">(</span><span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span>, keep <span class="op">=</span> <span class="fl">2e-3</span><span class="op">)</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">state_map</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>,
           color <span class="op">=</span> <span class="st">"grey80"</span>, alpha <span class="op">=</span> <span class="fl">0.4</span>, linetype <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> , <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">prcp_aus</span> , <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="2-aggregation_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 <p>This is a lot of stations to look at for one climate variable and they can’t all fit into a glyph map. What we can do is to group stations into clusters and look at the aggregated series in the glyph map. In this vignette, I will introduce how to perform aggregation using a hierarchical data structure in cubble.</p>
 <p>First, let’s summarise the daily data into weekly sum for each station:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">station_long</span> <span class="op">&lt;-</span> <span class="fu">weatherdata</span><span class="fu">::</span><span class="va">climate_full</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>wk <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/week.html" class="external-link">week</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">wk</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">prcp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+<code class="sourceCode R"><span class="va">station_long</span> <span class="op">&lt;-</span> <span class="va">prcp_aus</span> |&gt; 
+  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> |&gt; 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>wk <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/week.html" class="external-link">week</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> |&gt; 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">wk</span><span class="op">)</span> |&gt; 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>prcp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">prcp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> |&gt; 
   <span class="fu"><a href="../reference/cubble-verb.html">migrate</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
 
 <span class="va">station_long</span>
@@ -147,8 +157,8 @@
 <span class="co">#&gt; <span style="color: #949494;"># … with 629 more rows</span></span></code></pre></div>
 <p>To create a group level cubble, use <code><a href="../reference/switch_key.html">switch_key()</a></code> with the new key variable, <code>cluster</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
-<span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> |&gt; <span class="fu"><a href="../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
+<span class="va">cluster_nested</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   cluster [5]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.53, -35.03, 136.83, -11.04]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># temporal: id [chr], wk [dbl], prcp [dbl]</span></span>
@@ -161,7 +171,7 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">5</span>      20 <span style="color: #949494;">&lt;tibble [61 × 6]&gt;</span> <span style="color: #949494;">&lt;tibble [3,233 × 3]&gt;</span></span></code></pre></div>
 <p>The resulted <code>cluster_nested</code> now has <code>cluster</code> as the key and all the station level time invariant variables are nested inside <code>.val</code>. Currently, there is no cluster level time invariant variables and we can add the centroid of each cluster by <code><a href="../reference/get_centroid.html">get_centroid()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/get_centroid.html">get_centroid</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> |&gt; <span class="fu"><a href="../reference/get_centroid.html">get_centroid</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">cluster_nested</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   cluster [20]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.53, -43.66, 153.64, -10.05]</span></span>
@@ -188,9 +198,9 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">18</span>       8 <span style="color: #949494;">&lt;tibble [55 × 6]&gt;</span> <span style="color: #949494;">&lt;tibble [2,915 × 3]&gt;</span> &lt;tibble&gt;      148.    -<span style="color: #BB0000;">35.3</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">19</span>      11 <span style="color: #949494;">&lt;tibble [53 × 6]&gt;</span> <span style="color: #949494;">&lt;tibble [2,809 × 3]&gt;</span> &lt;tibble&gt;      145.    -<span style="color: #BB0000;">37.8</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">20</span>       7 <span style="color: #949494;">&lt;tibble [49 × 6]&gt;</span> <span style="color: #949494;">&lt;tibble [2,571 × 3]&gt;</span> &lt;tibble&gt;      147.    -<span style="color: #BB0000;">41.8</span></span></code></pre></div>
-<p>You can also use <code><a href="../reference/stretch.html">stretch()</a></code> to get the cluster level long cubble:</p>
+<p>You can also use <code><a href="../reference/face_temporal.html">face_temporal()</a></code> to get the cluster level long cubble:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cluster_long</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/stretch.html">stretch</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">cluster_long</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> |&gt; <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span>
 <span class="va">cluster_long</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:  wk, cluster [20]: long form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:    [113.53, -43.66, 153.64, -10.05]</span></span>
@@ -219,7 +229,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">state_map</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>,
           color <span class="op">=</span> <span class="st">"grey80"</span>, alpha <span class="op">=</span> <span class="fl">0.4</span>, linetype <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">station_nested</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">ggforce</span><span class="fu">::</span><span class="fu"><a href="https://ggforce.data-imaginist.com/reference/geom_mark_hull.html" class="external-link">geom_mark_hull</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">hull</span><span class="op">)</span>,
+  <span class="fu">ggforce</span><span class="fu">::</span><span class="fu"><a href="https://ggforce.data-imaginist.com/reference/geom_mark_hull.html" class="external-link">geom_mark_hull</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cluster_nested</span> |&gt; <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">hull</span><span class="op">)</span>,
                           expand <span class="op">=</span> <span class="fl">0</span>, radius <span class="op">=</span> <span class="fl">0</span>,
                           <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>

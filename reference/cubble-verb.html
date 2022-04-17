@@ -19,7 +19,7 @@ variables into the long form for these transformations."><!-- mathjax --><script
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -49,7 +49,16 @@ variables into the long form for these transformations."><!-- mathjax --><script
       <a href="../articles/3-matching.html">3. Application: matching</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/huizezhang-sherry/cubble/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +68,7 @@ variables into the long form for these transformations."><!-- mathjax --><script
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Move spatial variables into the long form</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/R/core-migrate.R" class="external-link"><code>R/core-migrate.R</code></a></small>
     <div class="hidden name"><code>cubble-verb.Rd</code></div>
     </div>
 
@@ -83,17 +92,17 @@ variables into the long form for these transformations.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> |&gt;</span>
+<span class="r-in">  <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># migrate long and lat</span></span>
-<span class="r-in"><span class="va">cb_mig</span> <span class="op">&lt;-</span> <span class="va">cb</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">migrate</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">cb_mig</span> <span class="op">&lt;-</span> <span class="va">cb</span> |&gt; <span class="fu">migrate</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># migration is not memorised by cubble:</span></span>
 <span class="r-in"><span class="co"># if you switch to the nested cubble and then switch back,</span></span>
 <span class="r-in"><span class="co"># long and lat will not be preserved</span></span>
-<span class="r-in"><span class="va">cb_mig</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">cb_mig</span> |&gt; <span class="fu"><a href="face_spatial.html">face_spatial</a></span><span class="op">(</span><span class="op">)</span> |&gt; <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:    [115.97, -32.94, 133.55, -12.42]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span>

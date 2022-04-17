@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -47,7 +47,16 @@
       <a href="../articles/3-matching.html">3. Application: matching</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/huizezhang-sherry/cubble/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -57,7 +66,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Functions to extract cubble attributes</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/R/cubble-attr.R" class="external-link"><code>R/cubble-attr.R</code></a></small>
     <div class="hidden name"><code>attributes.Rd</code></div>
     </div>
 
@@ -106,7 +115,7 @@ are also preserved and can be accessed via the relevant functions in the tsibble
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># extract attributes of a cubble object</span></span>
 <span class="r-in"><span class="fu">form</span><span class="op">(</span><span class="va">climate_aus</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nested"</span>
-<span class="r-in"><span class="fu">spatial</span><span class="op">(</span><span class="va">climate_aus</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">spatial</span><span class="op">(</span><span class="va">climate_aus</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id            lat  long  elev name             wmo_id</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -115,7 +124,7 @@ are also preserved and can be accessed via the relevant functions in the tsibble
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ASN00001018 -<span style="color: #BB0000;">16.4</span>  126. 546   mount elizabeth   <span style="text-decoration: underline;">94</span>211</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ASN00001019 -<span style="color: #BB0000;">14.3</span>  127.  23   kalumburu         <span style="text-decoration: underline;">94</span>100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> ASN00001020 -<span style="color: #BB0000;">14.1</span>  126.  51   truscott          <span style="text-decoration: underline;">95</span>101</span>
-<span class="r-in"><span class="fu">key_data</span><span class="op">(</span><span class="va">climate_aus</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">key_data</span><span class="op">(</span><span class="va">climate_aus</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id                .rows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span>

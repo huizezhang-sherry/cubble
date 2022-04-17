@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -47,7 +47,16 @@
       <a href="../articles/3-matching.html">3. Application: matching</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/huizezhang-sherry/cubble/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -57,7 +66,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Compute missing summary</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/R/missing.R" class="external-link"><code>R/missing.R</code></a></small>
     <div class="hidden name"><code>missing.Rd</code></div>
     </div>
 
@@ -84,7 +93,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">climate_aus</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">add_missing_prct</span><span class="op">(</span><span class="va">prcp</span><span class="op">:</span><span class="va">tmin</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">climate_aus</span> |&gt; <span class="fu">add_missing_prct</span><span class="op">(</span><span class="va">prcp</span><span class="op">:</span><span class="va">tmin</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [639]: nested form</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [113.53, -43.66, 153.64, -10.05]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>

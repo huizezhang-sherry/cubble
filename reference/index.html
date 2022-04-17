@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -47,7 +47,16 @@
       <a href="../articles/3-matching.html">3. Application: matching</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/huizezhang-sherry/cubble/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -66,7 +75,7 @@
       </tr></tbody><tbody><tr><td>
           <p><code><a href="cubble-class.html">as_cubble()</a></code> <code><a href="cubble-class.html">tbl_sum(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="cubble-class.html">is_cubble()</a></code> <code><a href="cubble-class.html">cubble()</a></code> </p>
         </td>
-        <td><p>Constructor for the cubble class</p></td>
+        <td><p>The constructor for the cubble class</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="extract-cubble-attributes">Extract cubble attributes <a href="#extract-cubble-attributes" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
@@ -84,18 +93,22 @@
         </td>
         <td><p>Compute missing summary</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="data-manipulation">Data manipulation <a href="#data-manipulation" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="reshape-cubble">Reshape cubble <a href="#reshape-cubble" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="tamp.html">tamp()</a></code> </p>
+          <p><code><a href="face_temporal.html">face_temporal()</a></code> </p>
         </td>
-        <td><p>Switch an cubble object from the long form into the nested form</p></td>
+        <td><p>Switch a cubble object into the long form</p></td>
       </tr><tr><td>
-          <p><code><a href="stretch.html">stretch()</a></code> </p>
+          <p><code><a href="face_spatial.html">face_spatial()</a></code> </p>
         </td>
-        <td><p>Switch a cubble object from the nested form into the long form</p></td>
-      </tr><tr><td>
+        <td><p>Switch a cubble object into the nested form</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="wrangle-cubble">Wrangle cubble <a href="#wrangle-cubble" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
           <p><code><a href="cubble-verb.html">migrate()</a></code> </p>
         </td>
         <td><p>Move spatial variables into the long form</p></td>
@@ -114,49 +127,71 @@
       </tr><tr><td>
           <p><code><a href="get_centroid.html">get_centroid()</a></code> </p>
         </td>
-        <td><p>Title</p></td>
+        <td><p>Find the centroid of cubble</p></td>
       </tr><tr><td>
           <p><code><a href="matching.html">match_sites()</a></code> <code><a href="matching.html">match_spatial()</a></code> <code><a href="matching.html">match_postprocessing()</a></code> <code><a href="matching.html">match_temporal()</a></code> </p>
         </td>
         <td><p>Matching sites from two data sources</p></td>
       </tr><tr><td>
-          <p><code><a href="attributes.html">form()</a></code> <code><a href="attributes.html">is_long()</a></code> <code><a href="attributes.html">is_nested()</a></code> <code><a href="attributes.html">spatial()</a></code> <code><a href="attributes.html">key_vars()</a></code> <code><a href="attributes.html">key_data()</a></code> <code><a href="attributes.html">coords()</a></code> <code><a href="attributes.html">coord_x()</a></code> <code><a href="attributes.html">coord_y()</a></code> <code><a href="attributes.html">index()</a></code> </p>
+          <p><code><a href="slice_nearby.html">slice_nearby()</a></code> </p>
         </td>
-        <td><p>Functions to extract cubble attributes</p></td>
+        <td><p>Location-based slicing</p></td>
       </tr><tr><td>
-          <p><code><a href="slice.html">slice_head(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_tail(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_min(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_max(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_sample(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_nearby()</a></code> </p>
+          <p><code><a href="slice.html">slice_head(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_tail(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_min(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_max(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="slice.html">slice_sample(<i>&lt;cubble_df&gt;</i>)</a></code> </p>
         </td>
         <td><p>Slicing a cubble</p></td>
+      </tr><tr><td>
+          <p><code><a href="simplify_sf.html">simplify_sf()</a></code> </p>
+        </td>
+        <td><p>Find (multi)polygons with small area</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="visualising-spatial-temporal-data">Visualising spatial-temporal data <a href="#visualising-spatial-temporal-data" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="visualisation-with-cubble">Visualisation with cubble <a href="#visualisation-with-cubble" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="plot_map.html">plot_map()</a></code> </p>
         </td>
-        <td><p>A quick plot of map</p></td>
+        <td><p>A quick plot of sites on an underlying map</p></td>
       </tr><tr><td>
           <p><code><a href="glyph.html">geom_glyph()</a></code> <code><a href="glyph.html">geom_glyph_line()</a></code> <code><a href="glyph.html">geom_glyph_box()</a></code> </p>
         </td>
         <td><p>Create glyph map with ggplot2</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="interface-to-tour">Interface to tour <a href="#interface-to-tour" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="prep-tour.html">prep_edges()</a></code> <code><a href="prep-tour.html">prep_data()</a></code> </p>
+        </td>
+        <td><p>A function to prepare edges data for tour display</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="in-built-data">In-built data <a href="#in-built-data" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="climate_aus.html">climate_aus</a></code> </p>
+          <p><code><a href="climate_aus.html">climate_aus</a></code> <code><a href="climate_aus.html">stations</a></code> <code><a href="climate_aus.html">climate</a></code> </p>
         </td>
-        <td><p>Australia climate data</p></td>
+        <td><p>Australia climate data - 639 stations</p></td>
       </tr><tr><td>
           <p><code><a href="climate_flat.html">climate_flat</a></code> </p>
         </td>
-        <td><p>Australia climate data
-Daily measure on precipitation (prcp) maximum temperature (tmax), and
-minimum temperature (tmin) in 2020 for 5 stations.</p></td>
+        <td><p>Australia climate data - 5 stations</p></td>
       </tr><tr><td>
           <p><code><a href="climate_subset.html">climate_subset</a></code> </p>
         </td>
-        <td><p>Australia climate data</p></td>
+        <td><p>Australia climate data - 30 stations</p></td>
+      </tr><tr><td>
+          <p><code><a href="tmax_hist.html">tmax_hist</a></code> </p>
+        </td>
+        <td><p>Victoria and Tasmania daily maximum temperature for 1970 - 1975 and 2016 - 2020</p></td>
+      </tr><tr><td>
+          <p><code><a href="prcp_aus.html">prcp_aus</a></code> </p>
+        </td>
+        <td><p>Daily precipitation data from 2016 to 2020</p></td>
+      </tr><tr><td>
+          <p><code><a href="river.html">river</a></code> </p>
+        </td>
+        <td><p>Australia river data</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="misc">Misc <a href="#misc" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>

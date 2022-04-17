@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -66,8 +66,18 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/huizezhang-sherry/cubble/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -101,10 +111,10 @@
 </h2>
 <p><code><a href="reference/cubble-class.html">as_cubble()</a></code> creates a cubble in the nested form by supplying the spatial identifier, <code>key</code>, temporal identifier, <code>index</code>, and the spatial coordinates that defines the site, <code>coords</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">cubble</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/huizezhang-sherry/cubble" class="external-link">cubble</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.1.2</span>
-<span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+<span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> |&gt; 
   <span class="fu"><a href="reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 <span class="va">nested</span>
 <span class="co">#&gt; # cubble:   id [5]: nested form</span>
@@ -117,22 +127,11 @@
 <span class="co">#&gt; 3 ASN00010614 -32.9  117. 338   narrogin        94627 &lt;tibble [366 × 4]&gt;</span>
 <span class="co">#&gt; 4 ASN00014015 -12.4  131.  30.4 darwin airport  94120 &lt;tibble [366 × 4]&gt;</span>
 <span class="co">#&gt; 5 ASN00015131 -17.6  134. 220   elliott         94236 &lt;tibble [366 × 4]&gt;</span></code></pre></div>
-<p><code><a href="reference/stretch.html">stretch()</a></code> switches a cubble from the nested form to the long form. The long form cubble is for operations whose output is cross-identified by <code>key</code> and <code>index</code>, for example, filtering January records:</p>
+<p><code><a href="reference/face_temporal.html">face_temporal()</a></code> switches a cubble from the nested form to the long form. The long form cubble is for operations whose output is cross-identified by <code>key</code> and <code>index</code>, for example, filtering January records:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="reference/stretch.html">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+<code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> |&gt; 
+  <span class="fu"><a href="reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> |&gt; 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co">#&gt; Warning: Unquoting language objects with `!!!` is deprecated as of rlang 0.4.0.</span>
-<span class="co">#&gt; Please use `!!` instead.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   # Bad:</span>
-<span class="co">#&gt;   dplyr::select(data, !!!enquo(x))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   # Good:</span>
-<span class="co">#&gt;   dplyr::select(data, !!enquo(x))    # Unquote single quosure</span>
-<span class="co">#&gt;   dplyr::select(data, !!!enquos(x))  # Splice list of quosures</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; This warning is displayed once per session.</span>
 <span class="va">long</span>
 <span class="co">#&gt; # cubble:  date, id [5]: long form</span>
 <span class="co">#&gt; # bbox:    [115.97, -32.94, 133.55, -12.42]</span>
@@ -150,10 +149,10 @@
 <span class="co">#&gt;  9 ASN00009021 2020-01-09     0  28.7  17.3</span>
 <span class="co">#&gt; 10 ASN00009021 2020-01-10     0  32.6  15.8</span>
 <span class="co">#&gt; # … with 145 more rows</span></code></pre></div>
-<p><code><a href="reference/tamp.html">tamp()</a></code> switches the long cubble back to the nested cubble. The nested form is for operations whose output is only identified by the <code>key</code>, for example, mutating the average maximum temperature in January:</p>
+<p><code><a href="reference/face_spatial.html">face_spatial()</a></code> switches the long cubble back to the nested cubble. The nested form is for operations whose output is only identified by the <code>key</code>, for example, mutating the average maximum temperature in January:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">long</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="reference/tamp.html">tamp</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+<code class="sourceCode R"><span class="va">long</span> |&gt; 
+  <span class="fu"><a href="reference/face_spatial.html">face_spatial</a></span><span class="op">(</span><span class="op">)</span> |&gt; 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>avg_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # cubble:   id [5]: nested form</span>
 <span class="co">#&gt; # bbox:     [115.97, -32.94, 133.55, -12.42]</span>
@@ -167,15 +166,26 @@
 <span class="co">#&gt; 5 ASN00015131 -17.6  134. 220   elliott         94236 &lt;tibble [31 × 4]&gt;    38.5</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="naming">Naming<a class="anchor" aria-label="anchor" href="#naming"></a>
+<h2 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a>
 </h2>
-<p>Cubble stands for “cubical tibble” and you can think of multivariate spatio-temporal data as a <em>cube</em> with three axes: variable, location, and time.</p>
+<ul>
+<li>
+<strong>Naming</strong>: Cubble stands for “cubical tibble” and you can think of multivariate spatio-temporal data as a <em>cube</em> with three axes: variable, location, and time.</li>
+</ul>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/huizezhang-sherry/cubble/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/huizezhang-sherry/cubble/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
