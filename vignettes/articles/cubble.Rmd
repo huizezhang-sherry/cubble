@@ -63,10 +63,10 @@ tmax
 
 # The final step
 
-In the glyph map we are about to create, the four variables (major and minor axis for x and y) need to be in the same table. In cubble, you can move time invariant variable into the long form with `migrate()`:
+In the glyph map we are about to create, the four variables (major and minor axis for x and y) need to be in the same table. In cubble, you can move time invariant variable into the long form with `unfold()`:
 
 ```{r}
-tmax <- tmax |> face_temporal() |> migrate(latitude, longitude)
+tmax <- tmax |> face_temporal() |> unfold(latitude, longitude)
 tmax
 ```
 

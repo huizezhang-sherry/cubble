@@ -34,11 +34,11 @@ face_spatial.cubble_df <- function(data) {
     tvars <- colnames(data)[colnames(data) != key_name]
     tvars <- tvars[!tvars %in% colnames(spatial)]
 
-    migrated_var <- intersect(names(data), names(spatial)) |>
+    unfoldd_var <- intersect(names(data), names(spatial)) |>
       setdiff(key_name)
 
     temporal <- tibble::as_tibble(data) |>
-      dplyr::select(-migrated_var) |>
+      dplyr::select(-unfoldd_var) |>
       tidyr::nest(ts = -key_name)
 
     out <- spatial |> dplyr::left_join(temporal, by = key_name)

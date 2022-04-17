@@ -21,10 +21,10 @@ prep_edges.cubble_df <- function(data, edges_col, color_col = NULL){
   col_col <- enquo(color_col)
 
   if (quo_name(edges_col) %in% colnames(spatial(data))){
-    data <- data |> migrate(!!edges_col)
+    data <- data |> unfold(!!edges_col)
   }
   if (quo_name(col_col) %in% colnames(spatial(data))){
-    data <- data |> migrate(!!col_col)
+    data <- data |> unfold(!!col_col)
   }
 
   raw <-  data |>

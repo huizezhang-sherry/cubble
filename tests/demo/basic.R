@@ -52,13 +52,13 @@ cb_tsibble |> face_spatial()
 
 ####################################################################
 ####################################################################
-# migrate
+# unfold
 cb <- climate_flat |>
   as_cubble(key = id, index = date, coords = c(long, lat)) |>
   face_temporal()
 
-# migrate long and lat
-cb_mig <- cb |> migrate(long, lat)
+# unfold long and lat
+cb_mig <- cb |> unfold(long, lat)
 
 # migration is not memorised by cubble:
 # if you switch to the nested cubble and then switch back,
@@ -66,7 +66,7 @@ cb_mig <- cb |> migrate(long, lat)
 cb_mig |> face_spatial() |> face_temporal()
 cb |>
   group_by(month = lubridate::month(date)) |>
-  migrate(long, lat)
+  unfold(long, lat)
 
 # face_spatial a hierarchical: Hierarchical with more than one key
 set.seed(1234)
@@ -75,7 +75,7 @@ cb_hier <- climate_flat |>
   mutate(cluster = sample(1:3, 1)) |>
   switch_key(cluster) |>
   face_temporal()
-cb_hier |> migrate(long, lat)
+cb_hier |> unfold(long, lat)
 
 
 # face_spatial a tsibble-cubble
@@ -83,6 +83,6 @@ cb_tsibble <- climate_flat |>
   tsibble::as_tsibble(key = id, index = date) |>
   as_cubble(coords = c(long, lat)) |>
   face_temporal()
-cb_tsibble |> migrate(long, lat)
+cb_tsibble |> unfold(long, lat)
 
 

@@ -278,7 +278,7 @@ match_temporal <- function(major,
 
   dt <- data |>
     face_temporal() |>
-    migrate(.data$group) |>
+    unfold(.data$group) |>
     dplyr::mutate(lag = dplyr::lag(.data$matched_var),
                   diff = .data$lag-.data$matched_var) |>
     dplyr::top_n(n = temporal_n_highest, wt = diff) |>

@@ -1,7 +1,7 @@
 #' Move spatial variables into the long form
 #'
 #' Some spatio-temporal transformation, i.e. glyph maps, uses both spatial
-#' and temporal variables. `migrate()` allows you to temporarily moves spatial
+#' and temporal variables. `unfold()` allows you to temporarily moves spatial
 #' variables into the long form for these transformations.
 #'
 #' @param data a long cubble object
@@ -11,8 +11,8 @@
 #'   as_cubble(key = id, index = date, coords = c(long, lat)) |>
 #'   face_temporal()
 #'
-#' # migrate long and lat
-#' cb_mig <- cb |> migrate(long, lat)
+#' # unfold long and lat
+#' cb_mig <- cb |> unfold(long, lat)
 #'
 #' # migration is not memorised by cubble:
 #' # if you switch to the nested cubble and then switch back,
@@ -21,7 +21,7 @@
 #'
 #' @export
 #' @rdname cubble-verb
-migrate <- function(data, ...){
+unfold <- function(data, ...){
   dots <- enquos(..., .named = TRUE)
   test_cubble(data)
   test_long(data)
@@ -40,7 +40,7 @@ migrate <- function(data, ...){
   if (nrow(out) != nrow(data)){
     var <- names(dots)
     cli::cli_alert_warning(
-      "The key and migrated variable{?s} {.field {var}} are not one-to-one."
+      "The key and unfoldd variable{?s} {.field {var}} are not one-to-one."
     )
   }
   out

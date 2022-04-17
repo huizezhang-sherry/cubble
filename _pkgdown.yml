@@ -20,7 +20,7 @@ reference:
   - face_spatial
 - title: "Wrangle cubble"
 - contents:
-  - migrate
+  - unfold
   - strip_rowwise
   - switch_key
   - rename_key

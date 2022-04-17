@@ -41,7 +41,7 @@ station_long <- prcp_aus |>
   mutate(wk = lubridate::week(date)) |> 
   group_by(wk) |> 
   summarise(prcp = sum(prcp, na.rm = TRUE)) |> 
-  migrate(cluster)
+  unfold(cluster)
 
 station_long
 ```
@@ -97,7 +97,7 @@ cluster_long <- cluster_nested |>
   face_temporal() |> 
   group_by(wk) |> 
   summarise(prcp = mean(prcp, na.rm = TRUE)) |> 
-  migrate(cent_long, cent_lat)
+  unfold(cent_long, cent_lat)
 
 state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 
