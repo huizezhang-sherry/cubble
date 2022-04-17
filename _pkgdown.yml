@@ -29,6 +29,7 @@ reference:
   - get_centroid
   - match_sites
   - slice_nearby
+  - slice_head
   - simplify_sf
 - title: "Visualisation with cubble"
 - contents:
@@ -40,6 +41,9 @@ reference:
 - title: "In-built data"
 - contents:
   - contains("climate")
+  - tmax_hist
+  - prcp_aus
+  - river
 - title: "Misc"
 - contents:
   - new_spatial

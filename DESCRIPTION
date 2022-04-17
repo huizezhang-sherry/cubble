@@ -1,6 +1,6 @@
 Package: cubble
 Title: A Vector Spatio-Temporal Data Structure for Data Analysis
-Version: 0.0.1.0000
+Version: 0.0.1
 Authors@R: c(
     person("H. Sherry","Zhang", email = "huize.zhang@monash.edu", role = c("aut","cre"), comment = c(ORCID = "0000-0002-7122-1463")),
     person("Dianne", "Cook", email = "dicook@monash.edu", role = "aut", comment = c(ORCID = "0000-0002-3813-7155")),
@@ -10,6 +10,7 @@ Authors@R: c(
     )
 Description: A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables.
 License: MIT + file LICENSE
+Language: au
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -17,14 +18,14 @@ RoxygenNote: 7.1.2
 Imports: 
     cli,
     clipr,
-    dplyr (>= 1.0.7.9000),
+    dplyr,
     geosphere,
     ggplot2,
     glue,
     lubridate,
     ncdf4,
     pillar,
-    rlang (>= 0.4.11.9001),
+    rlang,
     sf,
     stringr,
     styler,
@@ -37,29 +38,13 @@ Imports:
 Suggests: 
     rmarkdown,
     knitr,
-    ggmap,
-    forcats,
     testthat (>= 3.0.0),
     rmapshaper,
     ozmaps,
     GGally,
     rnoaa,
     ggrepel,
-    geofacet,
-    rnaturalearth,
-    rnaturalearthdata,
-    absmapsdata,
-    weatherdata,
-    ggimg,
-    here,
-    patchwork,
-    ggforce,
-    s2
-Remotes:
-    tidyverse/dplyr,
-    r-lib/rlang,
-    huizezhang-sherry/weatherdata,
-    wfmackey/absmapsdata
+    ggforce
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)

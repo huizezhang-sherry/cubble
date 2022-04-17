@@ -30,7 +30,7 @@
 #' dt |> as_cubble(coords = c(long, lat))
 #'
 #' # If the data is in netcdf:
-#' path <- system.file("ncdf/era5-pressure.nc", package = "weatherdata")
+#' path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
 #' raw <- ncdf4::nc_open(path)
 #' dt <- as_cubble(raw, vars = c("q", "z"))
 as_cubble <- function(data, key, index, coords, ...) {

@@ -11,11 +11,7 @@ knitr::opts_chunk$set(
 )
 
 library(cubble)
-library(rnoaa)
 library(dplyr)
-library(patchwork)
-library(ggplot2)
-library(sf)
 ```
 
 This article shows you how to create a cubble from data in the wild. You should have already seen an example of constructing a cubble from a tibble in the README page and here are more examples that construct a cubble from:  
@@ -69,7 +65,7 @@ raw <- stations |>
   mutate(ts = list(rnoaa::meteo_pull_monitors(id, 
                                        date_min = "2020-01-01", 
                                        date_max = "2020-12-31",
-                                       var = c("PRCP", "TMAX", "TMIN")))) 
+                                       var = c("PRCP", "TMAX", "TMIN")) |> select(-id))) 
 raw
 ```
 
@@ -88,7 +84,7 @@ sydmel_climate
 
 # A cubble from tsibble
 
-If you have already got a `tsibble` object, with key and index registered, only `coords` needs to be specified to createa a cubble:
+If you have already got a `tsibble` object, with key and index registered, only `coords` needs to be specified to create a cubble:
 
 ```{r echo = FALSE}
 dt <- climate_flat |> 
@@ -119,12 +115,15 @@ stations_small
 climate_small
 ```
 
-When created out of separate tables, `as_cubble()` will check on the match of linking variable in the spatial and temporal table. Messages will emit to notify the unmatched if detected. This would be useful to catch some sites with only spatial/ temporal information and the slight mismatch in character linking variable, i.e. Kingston (C) (Vic.) vs. Kingston (C)
+When created out of separate tables, `as_cubble()` will check on the match of linking variable in the spatial and temporal table. 
 
 ```{r}
 as_cubble(list(spatial = stations_small, temporal = climate_small),
           key = id, index = date, coords = c(long, lat))
 ```
+
+Messages will emit to notify the unmatched, if detected. This would be useful to catch some sites with only spatial/ temporal information and the slight mismatch in character linking variable.
+
 
 # A cubble from NetCDF data
 
@@ -138,7 +137,7 @@ NetCDF data has two main components:
 Attributes are usually associated with dimension and variable in the NetCDF format data. A few packages in R exists for manipulating NetCDF data and this includes a high-level R interface: `ncdf4`, a low-level interface that calls C interface: `RNetCDF`, and a tidyverse implementation: `tidync`. Here let's take a look at a NetCDF data: 
 
 ```{r}
-path <- system.file("ncdf/era5-pressure.nc", package = "weatherdata")
+path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
 raw <- ncdf4::nc_open(path)
 raw
 ```

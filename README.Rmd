@@ -69,10 +69,3 @@ long |>
 ## Misc
 
 - **Naming**: Cubble stands for "cubical tibble" and you can think of multivariate spatio-temporal data as a *cube* with three axes: variable, location, and time. 
-
-- **weatherdata**: Some examples use larger climate data from NOAA, which are stored in the `weatherdata` repo. You can install it with:
-
-``` r
-remotes::install_github("huizezhang-sherry/weatherdata")
-```
-

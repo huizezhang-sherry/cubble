@@ -15,14 +15,14 @@ library(cubble)
 library(ggplot2)
 ```
 
-Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. `weatherdata::climate_full` extracts daily precipitation and maximum/ minimum temperature from GHCN for 639 stations in Australia from 2016 to 2020. This is where these stations locate in an Australia map: 
+Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. `prcp_aus` extracts daily precipitation and minimum temperature from GHCN for 639 stations in Australia from 2016 to 2020. This is where these stations locate in an Australia map: 
 
 ```{r}
 state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 ggplot() + 
   geom_sf(data = state_map, inherit.aes = FALSE,
           color = "grey80", alpha = 0.4, linetype = 3) +
-  geom_point(data = weatherdata::climate_full , aes(x = long, y = lat)) + 
+  geom_point(data = prcp_aus , aes(x = long, y = lat)) + 
   theme_void()
 ```
 
@@ -31,7 +31,7 @@ This is a lot of stations to look at for one climate variable and they can't all
 First, let's summarise the daily data into weekly sum for each station:
 
 ```{r}
-station_long <- weatherdata::climate_full |> 
+station_long <- prcp_aus |> 
   face_temporal(ts) |> 
   mutate(wk = lubridate::week(date)) |> 
   group_by(wk) |> 
@@ -44,7 +44,7 @@ station_long
 First we need to assign each station a cluster number. Here we use a simple kmean algorithm based on the distance matrix to create 20 clusters. This creates `station_nested` as a station level nested cubble with a cluster column indicating the group each station belongs to.
 
 ```{r echo = FALSE}
-coords <- cbind(weatherdata::climate_full$long, weatherdata::climate_full$lat)
+coords <- cbind(prcp_aus$long, prcp_aus$lat)
 dist_raw <- geosphere::distm(coords, coords)
 
 set.seed(123)

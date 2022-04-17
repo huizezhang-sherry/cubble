@@ -21,21 +21,22 @@ This vignette introduces how to spatially and spatio-temporally match sites with
 
 # Spatial matching
 
-The figure below shows the location of traditional and automated weather station on the map of New South Wales: 
+Again we will start with `prcp_aus` to look at precipitation and focus on New South Wales stations since that is where most automated stations are implemented. The figure below shows the location of traditional and automated weather station on the map:
 
-```{r echo = FALSE}
+```{r}
 nsw_map <- ozmaps::abs_ste |> 
   filter(NAME == "New South Wales") |> 
   rmapshaper::ms_simplify(keep = 1e-2)
 
-nsw <- weatherdata::climate_full |>   
+nsw <- prcp_aus |>   
+  # subset for New South Wales stations
   filter(between(stringr::str_sub(id, 7, 8), 46, 75)) |>
   mutate(automated = stringr::str_detect(name, "aws")) |> 
   face_temporal(ts) |>
   filter(lubridate::month(date) == 1,
          lubridate::year(date) == 2020) |> 
   face_spatial() |> 
-  filter(!any(is.na(ts$tmax)))
+  filter(!any(is.na(ts$prcp)))
  
 ggplot2::ggplot() +
   ggplot2::geom_sf(data = nsw_map, color = "grey", linetype = "dotted") +
@@ -67,8 +68,6 @@ Let's get back to the weather stations.
 We first construct the major site `auto` and minor `non_auto` by filtering on whether stations are automated or not. Here we would like to find each station in `auto` a match in `non_auto`. Hence `auto` is the major dataset and `non_auto` is the minor in the `match_sites()`:
 
 ```{r}
-nsw
-
 auto <- nsw |> filter(automated)
 non_auto <- nsw |> filter(!automated)
 
@@ -108,7 +107,7 @@ ts <- matched |>
   migrate(id, automated) 
 
 ts |>
-  ggplot(aes(x = date, y = tmax, color = automated, group = id)) +
+  ggplot(aes(x = date, y = prcp, color = automated, group = id)) +
   geom_line() +
   facet_wrap(vars(group)) +
   scale_color_brewer(palette = "Dark2") + 
@@ -116,16 +115,17 @@ ts |>
   theme_bw()
 ```
 
-We can see that in general the maximum temperatures recorded in traditional and automated stations from our pairs are matched. There's a constant gap in pair 9, which suggests the two stations may need to be further calibrated.
+We can see that in general the peaks of precipitation recorded by traditional and automated stations from our pairs are matched, while the exact read may need to be further calibrated.
 
 # Spatio-temporal matching
 
 Bureau of Meteorology collects [water data](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full) from river gauges and this includes variables: electrical conductivity, turbidity, water course discharge, water course level, and water temperature. In particular, water level will interactive with precipitation from the climate data since rainfall will raise the water level in the river. Here is the location of available weather station and water gauges in Victoria:
 
 ```{r echo = FALSE}
-river <- weatherdata::water |> mutate(type = "river")
+river <- river |> mutate(type = "river")
 
-climate <- weatherdata::climate_full |> 
+vic <- prcp_aus |> 
+  # subset for Victoria stations
   filter(between(stringr::str_sub(id, 7, 8), 76, 90)) |> 
   face_temporal() |> 
   filter(lubridate::year(date) == 2020) |> 
@@ -136,7 +136,7 @@ vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste |> filter(NAME == "Victoria")
 
 ggplot() + 
   geom_sf(data = vic_map) + 
-  geom_point(data = dplyr::bind_rows(river, climate), 
+  geom_point(data = dplyr::bind_rows(river, vic), 
              aes(x = long, y = lat, color = type)) + 
   ggplot2::theme_bw() +
   ggplot2::theme(legend.position = "bottom") +
@@ -200,7 +200,7 @@ We first find the `n` peaks in each series (3 peaks here). A variable needs to b
 In the river level and precipitation example, `Water_course_level` in `river` will be matched to `prcp` in `climate`. This can be specified in `temporal_by`, an analogue to  the `by` syntax in `join`. The goal in this example is to see if precipitation will be reflected by the water level in the river and this puts precipitation `prcp`, as the independent. Given there is one year worth of data, the number of peak (`temporal_n_highest`) to consider is slightly raised from a default 20 to 30 and `temporal_min_match` is raised accordingly. 
 
 ```{r}
-res <- match_sites(river, climate,
+res <- match_sites(river, vic,
                    temporal_by = c("Water_course_level" = "prcp"),
                    temporal_independent = "prcp",
                    temporal_n_highest = 30,
