@@ -188,9 +188,9 @@
 <div class="section level2">
 <h2 id="the-final-step">The final step<a class="anchor" aria-label="anchor" href="#the-final-step"></a>
 </h2>
-<p>In the glyph map we are about to create, the four variables (major and minor axis for x and y) need to be in the same table. In cubble, you can move time invariant variable into the long form with <code><a href="../reference/cubble-verb.html">migrate()</a></code>:</p>
+<p>In the glyph map we are about to create, the four variables (major and minor axis for x and y) need to be in the same table. In cubble, you can move time invariant variable into the long form with <code><a href="../reference/cubble-verb.html">unfold()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> |&gt; <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> |&gt; <span class="fu"><a href="../reference/cubble-verb.html">migrate</a></span><span class="op">(</span><span class="va">latitude</span>, <span class="va">longitude</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> |&gt; <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> |&gt; <span class="fu"><a href="../reference/cubble-verb.html">unfold</a></span><span class="op">(</span><span class="va">latitude</span>, <span class="va">longitude</span><span class="op">)</span>
 <span class="va">tmax</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:  month, group, id [22]: long form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:    [142, -39.13, 149.92, -34.23]</span></span>
