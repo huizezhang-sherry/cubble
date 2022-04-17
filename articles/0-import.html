@@ -53,6 +53,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/aaa.html">aaa</a>
+    </li>
+    <li>
       <a href="../articles/0-import.html">0. Import data as a cubble</a>
     </li>
     <li>
@@ -221,7 +224,7 @@
 <p>Sometimes, you may get the spatial and temporal data from different sources and they live in two separate tables with a linking variable:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># a spatial sheet</span>
-<span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_aus.html">stations</a></span>
+<span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_flat.html">stations</a></span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 639 × 6</span></span>
 <span class="co">#&gt;    id            lat  long  elev name                wmo_id</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -238,7 +241,7 @@
 <span class="co">#&gt; <span style="color: #949494;"># … with 629 more rows</span></span>
 
 <span class="co"># a temporal sheet</span>
-<span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_aus.html">climate</a></span>
+<span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_flat.html">climate</a></span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,830 × 5</span></span>
 <span class="co">#&gt;    id          date        prcp  tmax  tmin</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -255,7 +258,7 @@
 <span class="co">#&gt; <span style="color: #949494;"># … with 1,820 more rows</span></span></code></pre></div>
 <p>When created out of separate tables, <code><a href="../reference/cubble-class.html">as_cubble()</a></code> will check on the match of linking variable in the spatial and temporal table.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_aus.html">stations</a></span>, temporal <span class="op">=</span> <span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_aus.html">climate</a></span><span class="op">)</span>,
+<code class="sourceCode R"><span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_flat.html">stations</a></span>, temporal <span class="op">=</span> <span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_flat.html">climate</a></span><span class="op">)</span>,
           key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   id [639]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.53, -43.66, 153.64, -10.05]</span></span>

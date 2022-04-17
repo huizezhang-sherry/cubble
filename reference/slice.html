@@ -37,6 +37,9 @@ allow slicing from top and bottom, based on a variable, or in random."><!-- math
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/aaa.html">aaa</a>
+    </li>
+    <li>
       <a href="../articles/0-import.html">0. Import data as a cubble</a>
     </li>
     <li>
@@ -180,20 +183,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">climate_aus</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [114.09, -43.05, 153.64, -22.24]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [129.38, -41.06, 149.74, -12.42]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                        wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00009518 -<span style="color: #BB0000;">34.4</span>  115.  13   cape leeuwin                 <span style="text-decoration: underline;">94</span>601 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00090171 -<span style="color: #BB0000;">38.3</span>  141.  80.9 portland (cashmore airport)  <span style="text-decoration: underline;">94</span>828 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00097083 -<span style="color: #BB0000;">43.0</span>  146. 408   scotts peak dam              <span style="text-decoration: underline;">95</span>958 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00068242 -<span style="color: #BB0000;">34.7</span>  151.  15.5 kiama (bombo headland)       <span style="text-decoration: underline;">95</span>749 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00040861 -<span style="color: #BB0000;">26.6</span>  153.   3.3 maroochydore aero            <span style="text-decoration: underline;">94</span>569 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00047019 -<span style="color: #BB0000;">32.4</span>  142.  61   menindee post office         <span style="text-decoration: underline;">94</span>694 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00058216 -<span style="color: #BB0000;">28.6</span>  154.  95   byron bay (cape byron aws)   <span style="text-decoration: underline;">94</span>599 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00005007 -<span style="color: #BB0000;">22.2</span>  114.   5   learmonth airport            <span style="text-decoration: underline;">94</span>302 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00023885 -<span style="color: #BB0000;">35.2</span>  139.  55   noarlunga                    <span style="text-decoration: underline;">94</span>808 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00055136 -<span style="color: #BB0000;">31.0</span>  151. 910   woolbrook (danglemah road)   <span style="text-decoration: underline;">94</span>792 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                    wmo_id ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00047048 -<span style="color: #BB0000;">32.0</span>  141. 281.  broken hill airport aws  <span style="text-decoration: underline;">94</span>691 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00070330 -<span style="color: #BB0000;">34.8</span>  150. 640   goulburn airport aws     <span style="text-decoration: underline;">95</span>716 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00084084 -<span style="color: #BB0000;">37.6</span>  150.  22   mallacoota               <span style="text-decoration: underline;">94</span>935 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00015664 -<span style="color: #BB0000;">23.3</span>  129. 454.  walungurru               <span style="text-decoration: underline;">94</span>321 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00086282 -<span style="color: #BB0000;">37.7</span>  145. 113.  melbourne airport        <span style="text-decoration: underline;">94</span>866 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00091293 -<span style="color: #BB0000;">41.1</span>  147.   3   low head                 <span style="text-decoration: underline;">95</span>964 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00019017 -<span style="color: #BB0000;">31.9</span>  138. 315   hawker                   <span style="text-decoration: underline;">94</span>673 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00090015 -<span style="color: #BB0000;">38.9</span>  144.  82   cape otway lighthouse    <span style="text-decoration: underline;">94</span>842 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00031010 -<span style="color: #BB0000;">16.9</span>  146.   2   cairns post office       <span style="text-decoration: underline;">94</span>287 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport           <span style="text-decoration: underline;">94</span>120 &lt;tibble&gt;</span>
 </code></pre></div>
     </div>
   </div>
