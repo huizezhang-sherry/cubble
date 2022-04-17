@@ -4,7 +4,7 @@
 #' The long cubble uses the combination of `key` and `index` to identify each row and
 #' arranges each `key` as a separate group.
 #' @param data a nested cubble object
-#' @param col the list column to be face_temporaled, `col` is required to be specified
+#' @param col the list column to be expanded, `col` is required to be specified
 #' if there are more than one list column and the list column name is not `ts`
 #'
 #' @examples

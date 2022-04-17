@@ -9,7 +9,7 @@ face_temporal(data, col)
 \arguments{
 \item{data}{a nested cubble object}
 
-\item{col}{the list column to be face_temporaled, \code{col} is required to be specified
+\item{col}{the list column to be expanded, \code{col} is required to be specified
 if there are more than one list column and the list column name is not \code{ts}}
 }
 \description{

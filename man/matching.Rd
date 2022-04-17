@@ -52,7 +52,7 @@ match_temporal(
 
 \item{spatial_dist_max}{The maximum distance allowed between matched pair}
 
-\item{temporal_matching}{Wether to perform temporal matching}
+\item{temporal_matching}{Whether to perform temporal matching}
 
 \item{temporal_by}{The variable used for temporal matching}
 

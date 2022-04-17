@@ -12,7 +12,7 @@ A cubble object
 \item{long}{longitude of the station}
 \item{elev}{elevation of the station}
 \item{name}{station name}
-\item{wmo_id}{the world meterological organisation (WMO) station number}
+\item{wmo_id}{the world meteorological organisation (WMO) station number}
 \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 }
 }

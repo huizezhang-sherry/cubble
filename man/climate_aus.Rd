@@ -3,22 +3,12 @@
 \docType{data}
 \name{climate_aus}
 \alias{climate_aus}
-\alias{stations}
-\alias{climate}
 \title{Australia climate data - 639 stations}
 \format{
 An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 639 rows and 6 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 230760 rows and 5 columns.
 }
 \usage{
 climate_aus
-
-stations
-
-climate
 }
 \description{
 Daily measure on precipitation (prcp) maximum temperature (tmax), and
@@ -33,7 +23,7 @@ minimum temperature (tmin) in 2020 for 639 stations. \code{stations} and
 \item{long}{longitude of the station}
 \item{elev}{elevation of the station}
 \item{name}{station name}
-\item{wmo_id}{the world meterological organisation (WMO) station number}
+\item{wmo_id}{the world meteorological organisation (WMO) station number}
 \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 }
 }

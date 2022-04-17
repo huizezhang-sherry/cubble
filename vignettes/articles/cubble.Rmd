@@ -1,5 +1,10 @@
 ---
 title: "2. Data manipulation with cubble"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cubble}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

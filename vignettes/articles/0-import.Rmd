@@ -1,5 +1,10 @@
 ---
 title: "0. Import data as a cubble"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{import}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

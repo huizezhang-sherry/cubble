@@ -3,6 +3,8 @@
 \docType{data}
 \name{climate_flat}
 \alias{climate_flat}
+\alias{stations}
+\alias{climate}
 \title{Australia climate data - 5 stations}
 \format{
 A tibble object with 155 rows and 10 columns
@@ -12,15 +14,23 @@ A tibble object with 155 rows and 10 columns
 \item{long}{longitude of the station}
 \item{elev}{elevation of the station}
 \item{name}{station name}
-\item{wmo_id}{the world meterological organisation (WMO) station number}
+\item{wmo_id}{the world meteorological organisation (WMO) station number}
 \item{date}{the date that prcp, tmax, and tmin recorded}
 \item{prcp}{precipitation}
 \item{tmax}{maximum temperature}
 \item{tmin}{minimum temperature}
 }
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 639 rows and 6 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1830 rows and 5 columns.
 }
 \usage{
 climate_flat
+
+stations
+
+climate
 }
 \description{
 Daily measure on precipitation (prcp) maximum temperature (tmax), and

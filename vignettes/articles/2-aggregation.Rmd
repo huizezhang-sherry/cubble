@@ -1,5 +1,10 @@
 ---
 title: "2. Application: hierarchical data structure"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{aggregation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

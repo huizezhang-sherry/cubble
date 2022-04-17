@@ -1,5 +1,10 @@
 ---
 title: "1. Details on cubble design"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{design}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

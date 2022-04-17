@@ -13,7 +13,7 @@
 #' @param spatial_single_match Whether each observation in the minor dataset is only allowed to to be matched once, default to `TRUE`
 #' @param spatial_n_keep The number of matching to keep
 #' @param spatial_dist_max The maximum distance allowed between matched pair
-#' @param temporal_matching Wether to perform temporal matching
+#' @param temporal_matching Whether to perform temporal matching
 #' @param temporal_by The variable used for temporal matching
 #' @param temporal_n_highest The number of highest peak used for temporal matching
 #' @param temporal_independent The dataset used to construct the temporal window,

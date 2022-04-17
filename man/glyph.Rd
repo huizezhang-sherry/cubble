@@ -126,6 +126,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 Create glyph map with ggplot2
 }
 \examples{
+\dontrun{
 library(ggplot2)
 # basic glyph map with reference line and box---------------
 ggplot(data = GGally::nasa,
@@ -156,5 +157,6 @@ ggplot() +
                  y_major = lat, y_minor = surftemp),
                  width = rel(0.8), height = 1) +
    theme_bw()
+}
 
 }
