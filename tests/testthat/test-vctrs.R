@@ -1,5 +1,5 @@
 test_that("combine two cubbles", {
-  cb1 <- climate_flat |> as_cubble(key = id, index = date, coords = c(long, lat))
+  cb1 <- climate_flat %>%  as_cubble(key = id, index = date, coords = c(long, lat))
   cb2 <- climate_aus[6:10, ]
   out <- dplyr::bind_rows(cb1, cb2)
 
@@ -9,8 +9,8 @@ test_that("combine two cubbles", {
 
 
 test_that("combine a cubble and a tibble",{
-  cb <- climate_flat |> as_cubble(key = id, index = date, coords = c(long, lat))
-  tb <- climate_aus[6:10,] |> as_tibble()
+  cb <- climate_flat %>%  as_cubble(key = id, index = date, coords = c(long, lat))
+  tb <- climate_aus[6:10,] %>%  as_tibble()
   out <- dplyr::bind_rows(cb, tb)
 
   expect_equal(is_cubble(out), TRUE)
@@ -18,7 +18,7 @@ test_that("combine a cubble and a tibble",{
 })
 
 test_that("bind columns of a cubble and a tibble",{
-  cb <- climate_flat |>
+  cb <- climate_flat %>% 
     as_cubble(key = id, index = date, coords = c(long, lat))
   elev <- cb$elev
   cb$elev <- NULL

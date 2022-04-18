@@ -8,8 +8,8 @@
 #' if there are more than one list column and the list column name is not `ts`
 #'
 #' @examples
-#' climate_flat |>
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) |>
+#' climate_flat %>% 
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
 #'   face_temporal()
 #' @export
 face_temporal <- function(data, col) {
@@ -37,14 +37,14 @@ face_temporal.cubble_df <- function(data, col){
 
   # unnest the temporal variables
   if (is_tsibble) data$ts <- map(data$ts, tibble::as_tibble)
-  out <- data |> dplyr::select(!!cur_key, !!col) |> tidyr::unnest(c(!!col))
+  out <- data %>%  dplyr::select(!!cur_key, !!col) %>%  tidyr::unnest(c(!!col))
 
   # organise spatial variables into `spatial`
-  spatial <- data |> select(-!!col)
-  if (".val" %in% colnames(spatial)) spatial <- spatial |> tidyr::unnest(.data$.val)
+  spatial <- data %>%  select(-!!col)
+  if (".val" %in% colnames(spatial)) spatial <- spatial %>%  tidyr::unnest(.data$.val)
 
   if (is_tsibble){
-    out <- out |> tsibble::as_tsibble(key = !!cur_key, index = index)
+    out <- out %>%  tsibble::as_tsibble(key = !!cur_key, index = index)
     tsibble_attr <- attributes(out)
   }
 

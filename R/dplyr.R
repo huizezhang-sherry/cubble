@@ -20,7 +20,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   # update spatial as subsetting will change the number of row
   if (is_long(data)){
     keep <- unique(out[[key]])
-    spatial <- spatial(data) |> filter(!!sym(key) %in% keep)
+    spatial <- spatial(data) %>%  filter(!!sym(key) %in% keep)
   }
 
   # TODO: update coords
@@ -127,7 +127,7 @@ ungroup.cubble_df <- function(data, ...){
 
 #' @export
 rename.cubble_df <- function(.data, ...){
-  out <- .data |> as_tibble() |> rename(...)
+  out <- .data %>%  as_tibble() %>%  rename(...)
   dplyr_reconstruct(out, .data)
 }
 

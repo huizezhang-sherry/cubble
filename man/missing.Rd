@@ -20,5 +20,5 @@ Compute missing summary
 }
 }
 \examples{
-climate_aus |> add_missing_prct(prcp:tmin)
+climate_aus \%>\%  add_missing_prct(prcp:tmin)
 }

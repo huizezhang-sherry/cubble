@@ -18,7 +18,7 @@ The long cubble uses the combination of \code{key} and \code{index} to identify 
 arranges each \code{key} as a separate group.
 }
 \examples{
-climate_flat |>
-  as_cubble(key = id, index = date, coords = c(long, lat)) |>
+climate_flat \%>\% 
+  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\% 
   face_temporal()
 }

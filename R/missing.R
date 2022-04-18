@@ -6,7 +6,7 @@
 #' @param data a cubble object
 #' @param ... variables to compute percentage missing (support tidyselect)
 #' @examples
-#' climate_aus |> add_missing_prct(prcp:tmin)
+#' climate_aus %>%  add_missing_prct(prcp:tmin)
 #' @rdname missing
 #' @importFrom tidyselect eval_select
 #' @export
@@ -16,10 +16,10 @@ add_missing_prct <- function(data, ...){
   key <- key_vars(data)
 
   exprs <- expr(...)
-  vars <- tidyselect::eval_select(exprs, data |> face_temporal())
+  vars <- tidyselect::eval_select(exprs, data %>%  face_temporal())
 
   # add_missing_prct should be called only in nested form
-  var_names <- data |> face_temporal() |> names()
+  var_names <- data %>%  face_temporal() %>%  names()
 
   if (!all(names(vars) %in% var_names)){
     bad_vars <- vars[which(!vars %in% var_names )]
@@ -29,7 +29,7 @@ add_missing_prct <- function(data, ...){
 
   calls <- map(names(vars),  ~quo(sum(is.na(ts[[.x]]))/length(ts[[.x]])))
   names(calls) <- glue::glue("{names(vars)}_missing")
-  out <- data |> mutate(missing = list(map(calls, ~eval(.x)))) |> tidyr::unnest_wider(missing)
+  out <- data %>%  mutate(missing = list(map(calls, ~eval(.x)))) %>%  tidyr::unnest_wider(missing)
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),

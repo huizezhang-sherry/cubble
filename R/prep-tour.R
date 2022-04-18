@@ -15,29 +15,29 @@ prep_edges <- function(data, edges_col, color_col){
 prep_edges.cubble_df <- function(data, edges_col, color_col = NULL){
 
   test_cubble(data)
-  if (is_nested(data)) data <- data |> face_temporal()
+  if (is_nested(data)) data <- data %>%  face_temporal()
   id <- key_vars(data)
   edges_col <- enquo(edges_col)
   col_col <- enquo(color_col)
 
   if (quo_name(edges_col) %in% colnames(spatial(data))){
-    data <- data |> unfold(!!edges_col)
+    data <- data %>%  unfold(!!edges_col)
   }
   if (quo_name(col_col) %in% colnames(spatial(data))){
-    data <- data |> unfold(!!col_col)
+    data <- data %>%  unfold(!!col_col)
   }
 
-  raw <-  data |>
-    tibble::as_tibble() |>
+  raw <-  data %>% 
+    tibble::as_tibble() %>% 
     dplyr::mutate(
       from = dplyr::row_number(),
       to = dplyr::lead(.data$from),
       id_lead = dplyr::lead(.data$id),
-      to = ifelse(id == .data$id_lead, .data$to, NA)) |>
+      to = ifelse(id == .data$id_lead, .data$to, NA)) %>% 
     dplyr::filter(!is.na(.data$to))
 
-  edges <- raw |>
-    dplyr::select(.data$from, .data$to) |>
+  edges <- raw %>% 
+    dplyr::select(.data$from, .data$to) %>% 
     as.matrix()
 
   edges_col <- find_col(raw, !!edges_col)
@@ -58,7 +58,7 @@ find_col <- function(data, col){
   col <- enquo(col)
   col_name <- quo_name(col)
   if (col_name %in% colnames(data)){
-    res <- data |> dplyr::pull(!!col)
+    res <- data %>%  dplyr::pull(!!col)
   } else{
     cli::cli_abort("Column {.code col} is not in the data, please check.")
   }
@@ -83,5 +83,5 @@ prep_data.cubble_df <- function(data, cols = NULL){
     cols <- map_chr(data, class) == "numeric"
   }
 
-  data |> tibble::as_tibble() |> select(!!cols) |> as.matrix()
+  data %>%  tibble::as_tibble() %>%  select(!!cols) %>%  as.matrix()
 }
