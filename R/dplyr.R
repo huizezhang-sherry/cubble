@@ -39,6 +39,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 #' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
 
+
   if (cubble_can_reconstrcut(data, template)){
     new_cubble(data,
                key = key_vars(template), index = index(template),
@@ -53,17 +54,16 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 }
 
 cubble_can_reconstrcut <- function(data, to){
-
   has_key <- has_index <- FALSE
 
   # have key
-  has_key <- key_vars(to) %in% names(data)
+  has_key <- any(key_vars(to) %in% names(data))
 
   # have index
   if (is_long(to)){
-    has_index <- index(to) %in% names(data)
+    has_index <- any(index(to) %in% names(data))
   } else if (is_nested(to)){
-    has_index <- index(to) %in% names(data[["ts"]][[1]])
+    has_index <- any(index(to) %in% names(data[["ts"]][[1]]))
   }
 
   has_key && has_index
@@ -91,9 +91,10 @@ select.cubble_df <- function(data, ...){
 
 
 #' @export
+#' @importFrom dplyr group_by_prepare
 group_by.cubble_df <- function(data, ...){
   key <- key_vars(data)
-  groups <- dplyr:::group_by_prepare(data, ..., .add = TRUE, caller_env = caller_env())
+  groups <- dplyr::group_by_prepare(data, ..., .add = TRUE, caller_env = caller_env())
   group_var <- groups$group_names
   index <- setdiff(group_var,key)
   out <- groups$data

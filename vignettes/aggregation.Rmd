@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{aggregation}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
 ---
 
 ```{r, include = FALSE}
@@ -40,8 +40,7 @@ station_long <- prcp_aus |>
   face_temporal(ts) |> 
   mutate(wk = lubridate::week(date)) |> 
   group_by(wk) |> 
-  summarise(prcp = sum(prcp, na.rm = TRUE)) |> 
-  unfold(cluster)
+  summarise(prcp = sum(prcp, na.rm = TRUE))
 
 station_long
 ```

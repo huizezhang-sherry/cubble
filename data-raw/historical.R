@@ -25,6 +25,9 @@ historical_tmax <- cand %>%
 tmax_hist <- historical_tmax |>
   face_temporal() |>
   filter(between(lubridate::year(date), 1970, 1975) | lubridate::year(date) > 2015) |>
+  mutate(yearmonth = tsibble::yearmonth(date)) |>
+  group_by(yearmonth) |>
+  summarise(tmax = mean(tmax, na.rm = TRUE)) |>
   face_spatial() |>
   select(-c(element:id1)) |>
   filter(stringr::str_sub(id, 7, 8) >= 76)

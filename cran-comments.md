@@ -1,7 +1,8 @@
-## R CMD check results
+── R CMD check results ─────────────────────────────────── cubble 0.1.0 ────
+Duration: 2m 3.1s
 
-0 errors | 0 warnings | 1 note
+0 errors ✓ | 0 warnings ✓ | 0 notes ✓
+
+R CMD check succeeded
 
 * This is a new release.
-* The note is relates to the use of `dplyr:::group_by_prepare`. Cubble implements a customised `group_by()` methods 
-and uses this function to implement dplyr backends.

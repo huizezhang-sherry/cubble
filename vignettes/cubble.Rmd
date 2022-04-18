@@ -24,7 +24,7 @@ library(ggplot2)
 ```
 
 
-Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset `tmax_hist` extracts the maximum temperature for `r nrow(tmax_hist)` Australian stations in the period 1970 - 1975 and 2016 - 2020 from the full Australian historical records starting from year 1969. `tmax_hist` is already in a cubble, with `id` as the key, `date` as the index, and `c(longitude, latitude)` as the coordinates. This vignette shows the basic manipulation of cubble in an example to compares the maximum temperature in these two periods for weather stations in Victoria, Australia.
+Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset `tmax_hist` extracts the maximum temperature for `r nrow(tmax_hist)` Australian stations in the period 1970 - 1975 and 2016 - 2020 from the full Australian historical records starting from year 1969. `tmax_hist` is already in a cubble, with `id` as the key, `yearmonth` as the index, and `c(longitude, latitude)` as the coordinates. This vignette shows the basic manipulation of cubble in an example to compares the maximum temperature in these two periods for weather stations in Victoria, Australia.
 
 # Spatial manipulation 
 
@@ -44,9 +44,9 @@ We would also like to summarise the daily recording into monthly to smooth the m
 ```{r}
 tmax <- tmax |>
   face_temporal() |>
-  group_by(month = lubridate::month(date),
-           group = as.factor(ifelse(lubridate::year(date) > 2015,
-                                    "2016 ~ 2020","1971 ~ 1975"))) |> 
+  group_by(
+    month = lubridate::month(yearmonth),
+    group = as.factor(ifelse(lubridate::year(yearmonth) > 2015, "2016 ~ 2020","1971 ~ 1975"))) |> 
   summarise(tmax = mean(tmax, na.rm = TRUE))
 
 tmax

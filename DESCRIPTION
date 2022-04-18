@@ -44,7 +44,8 @@ Suggests:
     GGally,
     rnoaa,
     ggrepel,
-    ggforce
+    ggforce,
+    purrr
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
