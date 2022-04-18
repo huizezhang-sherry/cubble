@@ -119,10 +119,10 @@
 </h3>
 <p>A nested cubble is built on top of a <code>rowwise_df</code>, which comes with the <code>groups</code> attributes, as well as the usual <code>names</code>, <code>row.names</code>, and <code>class</code>. Note that the <code>class</code> attribute contains the history class that a <code>rowwise_df</code> is built upon: <code>tbl_df</code>, <code>tbl</code> and <code>data.frame</code>. This is an example of the attributes for a nested cubble:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_small</span> <span class="op">&lt;-</span>  <span class="va">climate_flat</span> |&gt; 
+<code class="sourceCode R"><span class="va">climate_small</span> <span class="op">&lt;-</span>  <span class="va">climate_flat</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-01-01"</span>, <span class="st">"2020-01-02"</span>, <span class="st">"2020-01-03"</span>, <span class="st">"2020-01-04"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
 
-<span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_small</span>|&gt; 
+<span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_small</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
   <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 <span class="va">nested</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>
@@ -166,7 +166,7 @@
 <p>In this example, four stations are recorded at four time points: 1st to 4th Jan 2020. The <code>key</code> specified is mapped to the <code>groups</code> while <code>index</code> and <code>coords</code> are stored as the variable name in a cubble. This attribute will be the same as <code>key</code> most of the time but a useful piece of information to record later in the hierarchical data structure.</p>
 <p>The <code>rowwise_df</code> class uses a <code>group</code> attribute to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nested</span> |&gt; 
+<code class="sourceCode R"><span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span>
@@ -180,8 +180,8 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     3</span></code></pre></div>
 <p>which matches the basic mutate style of calculation, so it is easier to remember than the <code>purrr</code> style syntax:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_small</span> |&gt; 
-  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">prcp</span>, <span class="va">tmax</span>, <span class="va">tmin</span><span class="op">)</span><span class="op">)</span> |&gt; 
+<code class="sourceCode R"><span class="va">climate_small</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
+  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">prcp</span>, <span class="va">tmax</span>, <span class="va">tmin</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm<span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 8</span></span>
 <span class="co">#&gt;   id            lat  long  elev name           wmo_id data              rain</span>
@@ -197,7 +197,7 @@
 </h3>
 <p>A long form cubble is built from the <code>grouped_df</code> class where observations from the same site forms a group. Below prints a long cubble along with its attributes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> |&gt; <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">long</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:    [115.97, -32.94, 133.55, -12.42]</span></span>

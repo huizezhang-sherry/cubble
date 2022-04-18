@@ -130,12 +130,12 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00086077 -<span style="color: #BB0000;">38.0</span>  145.  12.1 moorabbin airport            <span style="text-decoration: underline;">94</span>870 21.9   melb…</span></code></pre></div>
 <p>Temporal variables can be queried by <code><a href="https://docs.ropensci.org/rnoaa/reference/meteo_pull_monitors.html" class="external-link">rnoaa::meteo_pull_monitors()</a></code> with the date range and variable supplied. Here we turn the <code>stations</code> data into a rowwise data frame and then query the climate variables as a list-column, <code>ts</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">raw</span> <span class="op">&lt;-</span> <span class="va">stations</span> |&gt; 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> |&gt; 
+<code class="sourceCode R"><span class="va">raw</span> <span class="op">&lt;-</span> <span class="va">stations</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">rnoaa</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/rnoaa/reference/meteo_pull_monitors.html" class="external-link">meteo_pull_monitors</a></span><span class="op">(</span><span class="va">id</span>, 
                                        date_min <span class="op">=</span> <span class="st">"2020-01-01"</span>, 
                                        date_max <span class="op">=</span> <span class="st">"2020-12-31"</span>,
-                                       var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRCP"</span>, <span class="st">"TMAX"</span>, <span class="st">"TMIN"</span><span class="op">)</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
+                                       var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRCP"</span>, <span class="st">"TMAX"</span>, <span class="st">"TMIN"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
 <span class="va">raw</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 9</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span>
@@ -161,7 +161,7 @@
 <code>coords</code> to identify the spatial coordinates of each station.</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sydmel_climate</span> <span class="op">&lt;-</span> <span class="va">raw</span> |&gt; 
+<code class="sourceCode R"><span class="va">sydmel_climate</span> <span class="op">&lt;-</span> <span class="va">raw</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
   <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">sydmel_climate</span>
@@ -202,7 +202,7 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airp…  <span style="text-decoration: underline;">94</span>610 2020-01-09     0  28.7  17.3</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airp…  <span style="text-decoration: underline;">94</span>610 2020-01-10     0  32.6  15.8</span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 1,820 more rows</span></span>
-<span class="va">dt</span> |&gt; <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
+<span class="va">dt</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
