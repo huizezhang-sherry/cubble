@@ -53,16 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/0-import.html">0. Import data as a cubble</a>
+      <a href="../articles/aggregation.html">2. Application: hierarchical data structure</a>
     </li>
     <li>
-      <a href="../articles/1-cubble-design.html">1. Details on cubble design</a>
+      <a href="../articles/cubble-design.html">1. Details on cubble design</a>
     </li>
     <li>
-      <a href="../articles/2-aggregation.html">2. Application: hierarchical data structure</a>
+      <a href="../articles/import.html">0. Import data as a cubble</a>
     </li>
     <li>
-      <a href="../articles/3-matching.html">3. Application: matching</a>
+      <a href="../articles/matching.html">3. Application: matching</a>
     </li>
   </ul>
 </li>
@@ -93,14 +93,14 @@
       <h1 data-toc-skip>2. Data manipulation with cubble</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/vignettes/articles/cubble.Rmd" class="external-link"><code>vignettes/articles/cubble.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/vignettes/cubble.Rmd" class="external-link"><code>vignettes/cubble.Rmd</code></a></small>
       <div class="hidden name"><code>cubble.Rmd</code></div>
 
     </div>
 
     
     
-<p>Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset <code>tmax_hist</code> extracts the maximum temperature for 39 Australian stations in the period 1970 - 1975 and 2016 - 2020 from the full Australian historical records starting from year 1969. <code>tmax_hist</code> is already in a cubble, with <code>id</code> as the key, <code>date</code> as the index, and <code>c(longitude, latitude)</code> as the coordinates. This vignette shows the basic manipulation of cubble in an example to compares the maximum temperature in these two periods for weather stations in Victoria, Australia.</p>
+<p>Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset <code>tmax_hist</code> extracts the maximum temperature for 39 Australian stations in the period 1970 - 1975 and 2016 - 2020 from the full Australian historical records starting from year 1969. <code>tmax_hist</code> is already in a cubble, with <code>id</code> as the key, <code>yearmonth</code> as the index, and <code>c(longitude, latitude)</code> as the coordinates. This vignette shows the basic manipulation of cubble in an example to compares the maximum temperature in these two periods for weather stations in Victoria, Australia.</p>
 <div class="section level2">
 <h2 id="spatial-manipulation">Spatial manipulation<a class="anchor" aria-label="anchor" href="#spatial-manipulation"></a>
 </h2>
@@ -112,7 +112,7 @@
 <span class="va">tmax</span>
 <span class="co">#&gt; <span style="color: #949494;"># cubble:   id [24]: nested form</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># bbox:     [142, -39.13, 149.92, -34.23]</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], tmax [dbl]</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># temporal: yearmonth [mth], tmax [dbl]</span></span>
 <span class="co">#&gt;    id          latitude longitude elevation name                 wmo_id ts      </span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031    -<span style="color: #BB0000;">34.2</span>      142.      50   mildura airport       <span style="text-decoration: underline;">94</span>693 &lt;tibble&gt;</span>
@@ -134,9 +134,9 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> |&gt;
   <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> |&gt;
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span>month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,
-           group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2015</span>,
-                                    <span class="st">"2016 ~ 2020"</span>,<span class="st">"1971 ~ 1975"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> |&gt; 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span>
+    month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">yearmonth</span><span class="op">)</span>,
+    group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">yearmonth</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2015</span>, <span class="st">"2016 ~ 2020"</span>,<span class="st">"1971 ~ 1975"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> |&gt; 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">tmax</span>

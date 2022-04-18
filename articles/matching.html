@@ -53,16 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/0-import.html">0. Import data as a cubble</a>
+      <a href="../articles/aggregation.html">2. Application: hierarchical data structure</a>
     </li>
     <li>
-      <a href="../articles/1-cubble-design.html">1. Details on cubble design</a>
+      <a href="../articles/cubble-design.html">1. Details on cubble design</a>
     </li>
     <li>
-      <a href="../articles/2-aggregation.html">2. Application: hierarchical data structure</a>
+      <a href="../articles/import.html">0. Import data as a cubble</a>
     </li>
     <li>
-      <a href="../articles/3-matching.html">3. Application: matching</a>
+      <a href="../articles/matching.html">3. Application: matching</a>
     </li>
   </ul>
 </li>
@@ -87,14 +87,14 @@
 
       
 
-      </header><script src="3-matching_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="matching_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>3. Application: matching</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/vignettes/articles/3-matching.Rmd" class="external-link"><code>vignettes/articles/3-matching.Rmd</code></a></small>
-      <div class="hidden name"><code>3-matching.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/vignettes/matching.Rmd" class="external-link"><code>vignettes/matching.Rmd</code></a></small>
+      <div class="hidden name"><code>matching.Rmd</code></div>
 
     </div>
 
@@ -130,7 +130,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"New Sourth Wales"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">154</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="3-matching_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
+<p><img src="matching_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 <p>In the map we can see some traditional and automated weather stations are close to each other. This can be useful information to cross validate recordings from different types of weather stations.</p>
 <p>In cubble, <code><a href="../reference/matching.html">match_sites()</a></code> houses <code><a href="../reference/matching.html">match_spatial()</a></code> and <code><a href="../reference/matching.html">match_temporal()</a></code>. For a spatial-only matching, you can use <code>match_sites(temporal_matching = FALSE)</code> or simply <code><a href="../reference/matching.html">match_spatial()</a></code>.</p>
 <p>Any matching requires two datasets in the cubble and we call them <code>major</code> and <code>minor</code>. Major and minor dataset differs from how distance is calculated. Spatial matching calculates the spherical distance using the Vincenty formula and this distance is calculated from <em>each</em> site in the <code>major</code> dataset is to <em>every</em> site in the <code>minor</code> dataset.</p>
@@ -192,18 +192,18 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
         panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">141</span>, <span class="fl">154</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="3-matching_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
+<p><img src="matching_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
 <p>or compare the series within the same pair (as an example here we only look at records in Jan 2020):</p>
-<p><img src="3-matching_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
+<p><img src="matching_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
 <p>We can see that in general the peaks of precipitation recorded by traditional and automated stations from our pairs are matched, while the exact read may need to be further calibrated.</p>
 </div>
 <div class="section level2">
 <h2 id="spatio-temporal-matching">Spatio-temporal matching<a class="anchor" aria-label="anchor" href="#spatio-temporal-matching"></a>
 </h2>
 <p>Bureau of Meteorology collects <a href="http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full" class="external-link">water data</a> from river gauges and this includes variables: electrical conductivity, turbidity, water course discharge, water course level, and water temperature. In particular, water level will interactive with precipitation from the climate data since rainfall will raise the water level in the river. Here is the location of available weather station and water gauges in Victoria:</p>
-<p><img src="3-matching_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
+<p><img src="matching_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 <p>Here we provide more details on how temporal matching works in <code>cubble</code>. Suppose two locations have been matched spatially and temproal matching will be conducted on variable <code>A</code> and <code>a</code> in the plot below: .</p>
-<p><img src="3-matching_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
+<p><img src="matching_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
 <p>We first find the <code>n</code> peaks in each series (3 peaks here). A variable needs to be specified in <code>temporal_independent</code> for construct an interval. Here we pick variable <code>A</code> and construct an interval with a default length of 5. The peaks in variable <code>a</code> are then tested against whether they fall into the any of the intervals constructed from <code>A</code>. In this illustration, there are 2 matches for these two variable The available tuning parameter in temporal matches are:</p>
 <ul>
 <li>
@@ -249,7 +249,7 @@
   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Longitude"</span>, y <span class="op">=</span> <span class="st">"Latitude"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span> </code></pre></div>
-<p><img src="3-matching_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
+<p><img src="matching_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
 <p>or to look at the series:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res_long</span> <span class="op">&lt;-</span> <span class="va">res</span> |&gt; 
@@ -267,7 +267,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x<span class="op">=</span>  <span class="st">"date"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Week"</span>, y <span class="op">=</span> <span class="st">"Precipitation/ water level"</span><span class="op">)</span></code></pre></div>
-<p><img src="3-matching_files/figure-html/unnamed-chunk-12-1.png" width="100%"></p>
+<p><img src="matching_files/figure-html/unnamed-chunk-12-1.png" width="100%"></p>
 <p>There are four pairs of matches - all locates in the middle Victoria and we can observe concurrent increase of precipitation and water level (precipitation and water level have been standardised between 0 and 1 to be displayed on the same scale).</p>
 </div>
   </div>

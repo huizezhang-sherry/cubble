@@ -37,16 +37,16 @@ allow slicing from top and bottom, based on a variable, or in random."><!-- math
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/0-import.html">0. Import data as a cubble</a>
+      <a href="../articles/aggregation.html">2. Application: hierarchical data structure</a>
     </li>
     <li>
-      <a href="../articles/1-cubble-design.html">1. Details on cubble design</a>
+      <a href="../articles/cubble-design.html">1. Details on cubble design</a>
     </li>
     <li>
-      <a href="../articles/2-aggregation.html">2. Application: hierarchical data structure</a>
+      <a href="../articles/import.html">0. Import data as a cubble</a>
     </li>
     <li>
-      <a href="../articles/3-matching.html">3. Application: matching</a>
+      <a href="../articles/matching.html">3. Application: matching</a>
     </li>
   </ul></li>
 <li>
@@ -180,20 +180,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">climate_aus</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [116.03, -42.9, 149.9, -19.61]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [116.14, -41.34, 150.15, -12.05]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long   elev name                        wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00033002 -<span style="color: #BB0000;">19.6</span>  147.   10   ayr dpi research stn         <span style="text-decoration: underline;">95</span>295 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00051161 -<span style="color: #BB0000;">31.0</span>  148.  181.  coonamble airport aws        <span style="text-decoration: underline;">95</span>718 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00094087 -<span style="color: #BB0000;">42.9</span>  147. <span style="text-decoration: underline;">1</span>260.  mount wellington             <span style="text-decoration: underline;">95</span>979 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00069147 -<span style="color: #BB0000;">36.9</span>  150.    1.5 merimbula airport aws        <span style="text-decoration: underline;">95</span>929 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00009500 -<span style="color: #BB0000;">35.0</span>  118.    3   albany                       <span style="text-decoration: underline;">94</span>801 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00091293 -<span style="color: #BB0000;">41.1</span>  147.    3   low head                     <span style="text-decoration: underline;">95</span>964 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00080128 -<span style="color: #BB0000;">36.3</span>  143.  132.  charlton                     <span style="text-decoration: underline;">94</span>839 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00096071 -<span style="color: #BB0000;">42.1</span>  146.  742   lake st clair national park  <span style="text-decoration: underline;">94</span>976 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00015135 -<span style="color: #BB0000;">19.6</span>  134.  376.  tennant creek airport        <span style="text-decoration: underline;">94</span>238 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00009871 -<span style="color: #BB0000;">34.8</span>  116.    4.5 windy harbour                <span style="text-decoration: underline;">94</span>640 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long   elev name                wmo_id ts                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00092120 -<span style="color: #BB0000;">41.3</span>  148.   48   st helens aerodrome  <span style="text-decoration: underline;">95</span>981 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00085291 -<span style="color: #BB0000;">37.8</span>  146. <span style="text-decoration: underline;">1</span>561   mount baw baw        <span style="text-decoration: underline;">95</span>901 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00083090 -<span style="color: #BB0000;">37.1</span>  148.  690.  omeo                 <span style="text-decoration: underline;">94</span>908 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00036031 -<span style="color: #BB0000;">23.4</span>  144.  192.  longreach aero       <span style="text-decoration: underline;">94</span>346 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00009573 -<span style="color: #BB0000;">34.3</span>  116.  287.  manjimup             <span style="text-decoration: underline;">94</span>617 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00037039 -<span style="color: #BB0000;">22.4</span>  143.  192.  winton airport       <span style="text-decoration: underline;">94</span>342 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00069148 -<span style="color: #BB0000;">35.9</span>  150.    4   moruya airport aws   <span style="text-decoration: underline;">95</span>937 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00011053 -<span style="color: #BB0000;">32.2</span>  128.    3.1 red rocks point      <span style="text-decoration: underline;">94</span>644 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00014405 -<span style="color: #BB0000;">12.1</span>  134.   28.1 maningrida aero      <span style="text-decoration: underline;">95</span>142 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00003057 -<span style="color: #BB0000;">16.5</span>  123.    7   cygnet bay           <span style="text-decoration: underline;">94</span>201 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

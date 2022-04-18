@@ -2,10 +2,10 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  0-import: 0-import.html
-  1-cubble-design: 1-cubble-design.html
-  2-aggregation: 2-aggregation.html
-  3-matching: 3-matching.html
+  aggregation: aggregation.html
+  cubble-design: cubble-design.html
   cubble: cubble.html
-last_built: 2022-04-17T05:32Z
+  import: import.html
+  matching: matching.html
+last_built: 2022-04-18T12:42Z
 

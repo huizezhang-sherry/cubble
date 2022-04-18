@@ -10,22 +10,22 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/0-import.html</loc>
+    <loc>/articles/aggregation.html</loc>
   </url>
   <url>
-    <loc>/articles/1-cubble-design.html</loc>
-  </url>
-  <url>
-    <loc>/articles/2-aggregation.html</loc>
-  </url>
-  <url>
-    <loc>/articles/3-matching.html</loc>
+    <loc>/articles/cubble-design.html</loc>
   </url>
   <url>
     <loc>/articles/cubble.html</loc>
   </url>
   <url>
+    <loc>/articles/import.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>/articles/matching.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
