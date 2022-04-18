@@ -9,6 +9,9 @@ strip_rowwise(data)
 \arguments{
 \item{data}{a cubble object}
 }
+\value{
+a cubble object
+}
 \description{
 Remove the rowwise grouping of a cubble
 }
@@ -19,5 +22,4 @@ climate_aus |> mutate(.id = row_number())
 
 # proper id after removing the grouping structure
 climate_aus |> strip_rowwise() |> mutate(.id = row_number())
-
 }

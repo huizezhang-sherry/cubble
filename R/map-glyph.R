@@ -19,6 +19,7 @@
 #' @export
 #' @rdname glyph
 #' @examples
+#' @return a ggplot object
 #' \dontrun{
 #' library(ggplot2)
 #' # basic glyph map with reference line and box---------------
@@ -222,16 +223,16 @@ glyph_data_setup <- function(data, params){
   }
 
   if (!is_null(params$x_scale) & !identical(params$x_scale, "identity")){
-    data <- data %>% 
+    data <- data %>%
       dplyr::mutate(x_minor = rlang::exec(unique(params$x_scale), .data$x_minor))
   }
 
   if (!is_null(params$y_scale) & !identical(params$y_scale, "identity")){
-    data <- data %>% 
+    data <- data %>%
       dplyr::mutate(y_minor = rlang::exec(unique(params$y_scale), .data$y_minor))
   }
 
-  data <- data %>% 
+  data <- data %>%
     dplyr::mutate(
       polar = params$polar,
       width = ifelse(!is.rel(params$width), unclass(params$width),
@@ -245,14 +246,14 @@ glyph_data_setup <- function(data, params){
     theta <- 2 * pi * rescale01(data$x_minor)
     r <- rescale01(data$y_minor)
 
-    data <- data %>% 
+    data <- data %>%
       dplyr::mutate(x = .data$x_major + .data$width / 2 * r * sin(theta),
-                    y = .data$y_major + .data$height / 2 * r * cos(theta)) %>% 
+                    y = .data$y_major + .data$height / 2 * r * cos(theta)) %>%
       dplyr::arrange(.data$x_major, .data$x_minor)
 
   } else {
     if (isTRUE(params$global_rescale)) data <- data %>%  dplyr::ungroup()
-    data <- data %>% 
+    data <- data %>%
       dplyr::mutate(x = .data$x_major + rescale11(.data$x_minor) * .data$width / 2,
                     y = .data$y_major + rescale11(.data$y_minor) * .data$height / 2)
   }
@@ -272,10 +273,10 @@ calc_ref_line <- function(data, params){
       y = .data$y_major + .data$height / 4 * cos(theta)
     )
   } else{
-    ref_line <- ref_line %>% 
+    ref_line <- ref_line %>%
       dplyr::mutate(group = .data$group,
                     x = .data$x_major + .data$width/ 2,
-                    y = .data$y_major) %>% 
+                    y = .data$y_major) %>%
       rbind(ref_line %>%  dplyr::mutate(group = .data$group,
                                        x = .data$x_major - .data$width / 2,
                                        y = .data$y_major))
@@ -286,7 +287,7 @@ calc_ref_line <- function(data, params){
 
 
 calc_ref_box <- function(data, params){
-  ref_box <- data %>% 
+  ref_box <- data %>%
     dplyr::mutate(xmin = .data$x_major - .data$width / 2,
                    xmax = .data$x_major + .data$width / 2,
                    ymin = .data$y_major - .data$height / 2,

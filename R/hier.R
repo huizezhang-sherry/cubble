@@ -10,8 +10,8 @@
 #' library(dplyr)
 #' # create an artificial cluster for stations
 #' set.seed(1234)
-#' cb <- climate_flat %>% 
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
+#' cb <- climate_flat %>%
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
 #'   mutate(cluster = sample(1:3, 1))
 #'
 #' # switch the key to cluster
@@ -63,14 +63,14 @@ arrange_temporal <- function(data, key){
   }
 
   # split ts column as per the new group
-  out_ts <- vctrs::vec_split(ts_df %>%  select(-new_key), ts_df[,new_key]) %>% 
-    tibble::as_tibble() %>% 
+  out_ts <- vctrs::vec_split(ts_df %>%  select(-new_key), ts_df[,new_key]) %>%
+    tibble::as_tibble() %>%
     tidyr::unpack(key)
 
   ## finalising
   if (new_key == upper_key){
-    out_ts <- out_ts %>% 
-      dplyr::mutate(ts = map(.data$val, ~tidyr::unchop(.x, .data$ts) %>%  tidyr::unpack(.data$ts))) %>% 
+    out_ts <- out_ts %>%
+      dplyr::mutate(ts = map(.data$val, ~tidyr::unchop(.x, .data$ts) %>%  tidyr::unpack(.data$ts))) %>%
       dplyr::select(-.data$val)
   } else if (new_key ==lower_key){
     out_ts <- out_ts %>%  dplyr::rename(ts = .data$val)
@@ -94,15 +94,15 @@ arrange_spatial <- function(temporal_res){
 
   # organising spatial variables into the new group
   if(nrow(data) > nrow(ts)){
-    out <- vctrs::vec_split(data[,other_cols], data[,inv$invariant]) %>% 
-      tibble::as_tibble() %>% 
-      rename(.val = .data$val) %>% 
+    out <- vctrs::vec_split(data[,other_cols], data[,inv$invariant]) %>%
+      tibble::as_tibble() %>%
+      rename(.val = .data$val) %>%
       tidyr::unpack(key) # vec_split names the split column as "key"
   } else {
     out <- data
   }
 
-  out <- out %>% 
+  out <- out %>%
     dplyr::left_join(ts, by = new_key) |>
     dplyr::arrange(!!new_key)
   out <- out[c(new_key, setdiff(names(out), new_key))]
@@ -117,6 +117,7 @@ arrange_spatial <- function(temporal_res){
 #' @param ... argument passed to \code{rename}: NEW = OLD
 #'
 #' @export
+#' @return a cubble object
 rename_key <- function(data, ...){
   test_cubble(data)
   out <- data |> as_tibble() |> rename(...)
@@ -135,7 +136,7 @@ rename_key <- function(data, ...){
 #' @importFrom geosphere centroid
 #' @importFrom grDevices chull
 #' @export
-#'
+#' @return a cubble object
 get_centroid <- function(data){
   test_cubble(data)
 

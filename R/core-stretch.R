@@ -6,10 +6,10 @@
 #' @param data a nested cubble object
 #' @param col the list column to be expanded, `col` is required to be specified
 #' if there are more than one list column and the list column name is not `ts`
-#'
+#' @return a cubble object in the nested form
 #' @examples
-#' climate_flat %>% 
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
+#' climate_flat %>%
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
 #'   face_temporal()
 #' @export
 face_temporal <- function(data, col) {

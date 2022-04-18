@@ -37,6 +37,15 @@ cubble(..., key, index, coords)
 
 \item{output}{either "all" or "unmatch", whether to output all or a list of unmatched summary}
 }
+\value{
+a cubble object
+
+a cubble object
+
+a TRUE/FALSE predicate
+
+a cubble object
+}
 \description{
 The constructor for the cubble class
 }
@@ -58,8 +67,8 @@ as_cubble(data = list(spatial = spatial, temporal = temporal),
           key = id, index = date, coords = c(long, lat))
 
 # If the data is already in a rowwise_df:
-dt <- climate_flat \%>\% 
-  tidyr::nest(ts = date:tmin) \%>\% 
+dt <- climate_flat \%>\%
+  tidyr::nest(ts = date:tmin) \%>\%
   dplyr::rowwise()
 dt \%>\%  as_cubble(key = id, index = date, coords = c(long, lat))
 

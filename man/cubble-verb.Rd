@@ -11,6 +11,9 @@ unfold(data, ...)
 
 \item{...}{spatial variables to move into the long form}
 }
+\value{
+a cubble object in the long form
+}
 \description{
 Some spatio-temporal transformation, i.e. glyph maps, uses both spatial
 and temporal variables. \code{unfold()} allows you to temporarily moves spatial
@@ -24,7 +27,7 @@ cb <- climate_flat |>
 # unfold long and lat
 cb_mig <- cb |> unfold(long, lat)
 
-# migration is not memorised by cubble:
+# unfold is not memorised by cubble:
 # if you switch to the nested cubble and then switch back,
 # long and lat will not be preserved
 cb_mig |> face_spatial() |> face_temporal()

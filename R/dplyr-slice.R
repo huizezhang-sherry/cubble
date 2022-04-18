@@ -37,6 +37,7 @@ slice_factory <- function(f, ...){
 #' climate_aus |> slice_sample(n = 10)
 #' @importFrom dplyr slice_head slice_tail slice_min slice_max slice_sample
 #' @rdname slice
+#' @return a cubble object
 #' @export
 slice_head.cubble_df <- slice_factory("slice_head", group = FALSE)
 
@@ -69,6 +70,7 @@ slice_sample.cubble_df <- slice_factory("slice_sample")
 #' # slice the 5 closest location to (130E, 25S)
 #' slice_nearby(climate_aus, coord = c(130, -25), n = 5)
 #' @export
+#' @return a cubble object
 slice_nearby <- function(data, coord, buffer, n){
   UseMethod("slice_nearby")
 }

@@ -24,6 +24,9 @@ prep_data(data, cols)
 
 \item{cols}{the numerical column selected for a tour}
 }
+\value{
+a list of edge linkage, edge color, and point color
+}
 \description{
 A function to prepare edges data for tour display
 }

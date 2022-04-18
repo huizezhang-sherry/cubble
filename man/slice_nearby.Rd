@@ -15,6 +15,9 @@ slice_nearby(data, coord, buffer, n)
 
 \item{n}{the number of nearby points to slice, based on distance}
 }
+\value{
+a cubble object
+}
 \description{
 Location-based slicing
 }

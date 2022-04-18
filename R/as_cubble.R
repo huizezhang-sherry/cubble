@@ -2,6 +2,7 @@
 #' @importFrom tidyr unchop
 #' @importFrom tsibble key_vars index
 #' @export
+#' @return a cubble object
 #' @examples
 #' # Declaimer: to make the examples easier, here we first `climate_flat` into
 #' # different classes and show how they can be casted into a cubble. This is to
@@ -20,8 +21,8 @@
 #'           key = id, index = date, coords = c(long, lat))
 #'
 #' # If the data is already in a rowwise_df:
-#' dt <- climate_flat %>% 
-#'   tidyr::nest(ts = date:tmin) %>% 
+#' dt <- climate_flat %>%
+#'   tidyr::nest(ts = date:tmin) %>%
 #'   dplyr::rowwise()
 #' dt %>%  as_cubble(key = id, index = date, coords = c(long, lat))
 #'
@@ -90,14 +91,14 @@ as_cubble.list <- function(data, key, index, coords,
   }
 
   if (output == "unmatch" && (unmatch_t| unmatch_s)){
-    temporal <- temporal %>% 
-      dplyr::filter({{key}} %in% only_temporal) %>% 
-      dplyr::pull({{key}}) %>% 
+    temporal <- temporal %>%
+      dplyr::filter({{key}} %in% only_temporal) %>%
+      dplyr::pull({{key}}) %>%
       unique()
 
-    spatial <- spatial %>% 
-      dplyr::filter({{key}} %in% only_spatial) %>% 
-      dplyr::pull({{key}}) %>% 
+    spatial <- spatial %>%
+      dplyr::filter({{key}} %in% only_spatial) %>%
+      dplyr::pull({{key}}) %>%
       unique()
 
     t <- gsub("\\s\\(.+\\)", "", temporal)
@@ -153,8 +154,8 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   if (length(listcol_var) == 0){
     all_vars <- find_invariant(data, !!key)
 
-    out <- data %>% 
-      tidyr::nest(ts = c(!!!all_vars$variant)) %>% 
+    out <- data %>%
+      tidyr::nest(ts = c(!!!all_vars$variant)) %>%
       dplyr::rowwise()
 
   } else{
@@ -204,7 +205,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
   } else{
     nested_names <- Reduce(union, map(data[[as_name(list_col)]], names))
     if (any(nested_names == as_name(key))){
-      data <- data %>% 
+      data <- data %>%
         mutate(!!list_col := list(!!ensym(list_col) %>%  select(-!!key)))
     }
   }
@@ -239,25 +240,25 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
 
   # define dimension and grid
   dim_order <- c(length(long_raw), length(lat_raw) , length(time_raw), length(var$name))
-  latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>% 
+  latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>%
     dplyr::mutate(id = dplyr::row_number())
-  mapping <- tidyr::expand_grid(var = var$name, time = time_raw) %>% 
+  mapping <- tidyr::expand_grid(var = var$name, time = time_raw) %>%
     tidyr::expand_grid(latlong_grid)
 
   # restructure data into flat
-  data <- array(unlist(raw_data), dim = dim_order) %>% 
-    as.data.frame.table() %>% 
-    as_tibble() %>% 
-    dplyr::bind_cols(mapping) %>% 
-    dplyr::select(.data$id, .data$long, .data$lat, .data$time, .data$var, .data$Freq) %>% 
-    dplyr::arrange(.data$id) %>% 
+  data <- array(unlist(raw_data), dim = dim_order) %>%
+    as.data.frame.table() %>%
+    as_tibble() %>%
+    dplyr::bind_cols(mapping) %>%
+    dplyr::select(.data$id, .data$long, .data$lat, .data$time, .data$var, .data$Freq) %>%
+    dplyr::arrange(.data$id) %>%
     tidyr::pivot_wider(names_from = .data$var, values_from = .data$Freq)
 
   key <- "id"
   all_vars <- find_invariant(data, !!key)
 
-  out <- data %>% 
-    tidyr::nest(ts = c(!!!all_vars$variant)) %>% 
+  out <- data %>%
+    tidyr::nest(ts = c(!!!all_vars$variant)) %>%
     dplyr::rowwise()
 
   new_cubble(out,

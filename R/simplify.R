@@ -9,7 +9,7 @@
 #' @return An sf object
 #' @importFrom sf st_area st_coordinates st_is_empty
 #' @export
-#'
+#' @return the data object with additional column `crumb` indicating whether the area is a "small crumb"
 simplify_sf <- function(data, geom, area, point_threshold = 0.9, area_threshold = 0.9){
 
   geom <- enquo(geom)

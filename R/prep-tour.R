@@ -6,6 +6,7 @@
 #' @param cols the numerical column selected for a tour
 #' @rdname prep-tour
 #' @export
+#' @return a list of edge linkage, edge color, and point color
 prep_edges <- function(data, edges_col, color_col){
   UseMethod("prep_edges")
 }
@@ -27,17 +28,17 @@ prep_edges.cubble_df <- function(data, edges_col, color_col = NULL){
     data <- data %>%  unfold(!!col_col)
   }
 
-  raw <-  data %>% 
-    tibble::as_tibble() %>% 
+  raw <-  data %>%
+    tibble::as_tibble() %>%
     dplyr::mutate(
       from = dplyr::row_number(),
       to = dplyr::lead(.data$from),
       id_lead = dplyr::lead(.data$id),
-      to = ifelse(id == .data$id_lead, .data$to, NA)) %>% 
+      to = ifelse(id == .data$id_lead, .data$to, NA)) %>%
     dplyr::filter(!is.na(.data$to))
 
-  edges <- raw %>% 
-    dplyr::select(.data$from, .data$to) %>% 
+  edges <- raw %>%
+    dplyr::select(.data$from, .data$to) %>%
     as.matrix()
 
   edges_col <- find_col(raw, !!edges_col)

@@ -7,6 +7,7 @@
 #' @param coords the coordinates that characterise the spatial dimension
 #' @param output either "all" or "unmatch", whether to output all or a list of unmatched summary
 #' @rdname cubble-class
+#' @return a cubble object
 #' @export
 cubble <- function(..., key, index, coords) {
   data <- tibble::tibble(!!!list2(...))

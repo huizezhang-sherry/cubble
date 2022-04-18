@@ -17,6 +17,9 @@ extract_time(data)
 
 \item{vars}{variables to read, see the variables in your data with \code{names(data$var)}}
 }
+\value{
+extracted netcdf4 components
+}
 \description{
 Functions to extract NetCDF dimension and variables
 }

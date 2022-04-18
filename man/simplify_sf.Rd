@@ -19,6 +19,8 @@ simplify_sf(data, geom, area, point_threshold = 0.9, area_threshold = 0.9)
 }
 \value{
 An sf object
+
+the data object with additional column \code{crumb} indicating whether the area is a "small crumb"
 }
 \description{
 Find (multi)polygons with small area

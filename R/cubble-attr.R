@@ -7,7 +7,7 @@
 #'
 #' If a cubble object is also a tsibble, then tsibble attributes (`key`, `index`, `index2`, `interval`)
 #' are also preserved and can be accessed via the relevant functions in the tsibble package. (NOT FULLY IMPLEMENTED)
-#'
+#' @return the name of cubble attributes
 #' @examples
 #' # extract attributes of a cubble object
 #' form(climate_aus)

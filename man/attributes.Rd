@@ -36,6 +36,9 @@ index(data)
 \arguments{
 \item{data}{an cubble object}
 }
+\value{
+the name of cubble attributes
+}
 \description{
 Functions to extract cubble attributes
 }

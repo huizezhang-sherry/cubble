@@ -24,6 +24,7 @@
 #' @importFrom clipr clipr_available write_clip
 #' @importFrom styler style_text
 #' @importFrom whisker whisker.render
+#' @return a ggplot object
 plot_map <- function(map_data, point_data, print_code = FALSE){
 
   is_sf <- inherits(map_data, "sf")

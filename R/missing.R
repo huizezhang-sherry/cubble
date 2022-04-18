@@ -10,6 +10,7 @@
 #' @rdname missing
 #' @importFrom tidyselect eval_select
 #' @export
+#' @return a cubble object with additional columns VAR_missing
 add_missing_prct <- function(data, ...){
 
   test_cubble(data)

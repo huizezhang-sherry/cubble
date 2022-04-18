@@ -12,13 +12,16 @@ face_temporal(data, col)
 \item{col}{the list column to be expanded, \code{col} is required to be specified
 if there are more than one list column and the list column name is not \code{ts}}
 }
+\value{
+a cubble object in the nested form
+}
 \description{
 \code{face_temporal()} switches a cubble object into a long cubble, suitable for temporal operations.
 The long cubble uses the combination of \code{key} and \code{index} to identify each row and
 arranges each \code{key} as a separate group.
 }
 \examples{
-climate_flat \%>\% 
-  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\% 
+climate_flat \%>\%
+  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\%
   face_temporal()
 }

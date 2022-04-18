@@ -1,6 +1,7 @@
 
 #' @rdname cubble-class
 #' @importFrom  tibble tbl_sum
+#' @return a cubble object
 #' @export
 tbl_sum.cubble_df <- function(data) {
 
@@ -50,6 +51,7 @@ tbl_sum.cubble_df <- function(data) {
 }
 
 #' @rdname cubble-class
+#' @return a TRUE/FALSE predicate
 #' @export
 is_cubble <- function(data){
   inherits(data, "cubble_df")

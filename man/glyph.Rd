@@ -122,10 +122,8 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
-\description{
-Create glyph map with ggplot2
-}
-\examples{
+\value{
+a ggplot object
 \dontrun{
 library(ggplot2)
 # basic glyph map with reference line and box---------------
@@ -158,5 +156,7 @@ ggplot() +
                  width = rel(0.8), height = 1) +
    theme_bw()
 }
-
+}
+\description{
+Create glyph map with ggplot2
 }

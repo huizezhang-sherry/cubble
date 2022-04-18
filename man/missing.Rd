@@ -11,6 +11,9 @@ add_missing_prct(data, ...)
 
 \item{...}{variables to compute percentage missing (support tidyselect)}
 }
+\value{
+a cubble object with additional columns VAR_missing
+}
 \description{
 Compute missing summary
 }

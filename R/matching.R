@@ -26,7 +26,6 @@
 #' @return A cubble with matched pairs
 #' @export
 #' @rdname matching
-#'
 match_sites <- function(major,
                         minor,
                         spatial_single_match = TRUE,
@@ -86,7 +85,7 @@ match_spatial <- function(major,
   coords_mn <- syms(coords(minor))
 
   if (identical(coords_mj, coords_mn)) {
-    major <- major %>% 
+    major <- major %>%
       rename(long_ref = coords_mj[[1]],
              lat_ref = coords_mj[[2]])
     coords_mj <- syms(c("long_ref", "lat_ref"))
@@ -103,26 +102,26 @@ match_spatial <- function(major,
     key_mn <- "key_mn"
   }
 
-  out <- major %>% 
-    as_tibble() %>% 
+  out <- major %>%
+    as_tibble() %>%
     dplyr::mutate(minor = list(
-      tibble::as_tibble(minor) %>% 
+      tibble::as_tibble(minor) %>%
         dplyr::select(!!key_mn, !!!coords_mn)
-    )) %>% 
-    tidyr::unnest(minor) %>% 
-    calc_dist(coords_mj, coords_mn) %>% 
-    dplyr::group_by(!!sym(key_mj)) %>% 
-    dplyr::slice_min(.data$dist, n = spatial_n_keep) %>% 
-    dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$dist) %>% 
-    dplyr::ungroup() %>% 
+    )) %>%
+    tidyr::unnest(minor) %>%
+    calc_dist(coords_mj, coords_mn) %>%
+    dplyr::group_by(!!sym(key_mj)) %>%
+    dplyr::slice_min(.data$dist, n = spatial_n_keep) %>%
+    dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$dist) %>%
+    dplyr::ungroup() %>%
     dplyr::filter(.data$dist <= spatial_dist_max)
 
   if (spatial_single_match) {
-    temp <- out %>% 
+    temp <- out %>%
       dplyr::mutate(dup = duplicated(!!sym(key_mn)))
 
-    prob_sites <- temp %>% 
-      dplyr::filter(.data$dup) %>% 
+    prob_sites <- temp %>%
+      dplyr::filter(.data$dup) %>%
       dplyr::pull(!!sym(key_mn))
 
     if (length(prob_sites) != 0){
@@ -134,27 +133,27 @@ match_spatial <- function(major,
         Only keep the closest match."
       )
 
-      dup_fixed <- out %>% 
-        dplyr::filter(!!sym(key_mn) %in% prob_sites) %>% 
-        dplyr::group_by(!!sym(key_mn)) %>% 
+      dup_fixed <- out %>%
+        dplyr::filter(!!sym(key_mn) %in% prob_sites) %>%
+        dplyr::group_by(!!sym(key_mn)) %>%
         dplyr::filter(.data$dist == min(.data$dist))
 
-      out <- temp %>% 
-        dplyr::filter(!!sym(key_mn) %in% good_sites) %>% 
-        dplyr::bind_rows(dup_fixed) %>% 
+      out <- temp %>%
+        dplyr::filter(!!sym(key_mn) %in% good_sites) %>%
+        dplyr::bind_rows(dup_fixed) %>%
         dplyr::select(-.data$dup)
     }
 
   }
 
-  out <- out %>% 
-    arrange(.data$dist) %>% 
+  out <- out %>%
+    arrange(.data$dist) %>%
     mutate(group = dplyr::row_number())
 
   if (any(grepl("ref", coords_mj[[1]], fixed = TRUE))) {
     mn_long <- coords_mn[[1]]
     mn_lat <-  coords_mn[[2]]
-    major <- major %>% 
+    major <- major %>%
       rename( !!{mn_long} := coords_mj[[1]],
               !!{mn_lat} := coords_mj[[2]])
   }
@@ -171,10 +170,10 @@ calc_dist <- function(data, coords1, coords2) {
   long2 <- coords2[[1]]
   lat2 <- coords2[[2]]
 
-  dt <- data %>% 
-    tibble::as_tibble() %>% 
+  dt <- data %>%
+    tibble::as_tibble() %>%
     dplyr::summarise(dplyr::across(.cols = c(!!!coords1, !!!coords2),
-                            to_radian)) %>% 
+                            to_radian)) %>%
     dplyr::mutate(
       d_long = abs(!!long1 - !!long2),
       d_lat = abs(!!lat1 - !!lat2),
@@ -188,7 +187,7 @@ calc_dist <- function(data, coords1, coords2) {
       d = 6371 * atan(sqrt(.data$a) / .data$denom)
     )
 
-  data %>% 
+  data %>%
     dplyr::bind_cols(dist = dt$d)
 
 }
@@ -221,13 +220,13 @@ match_postprocessing <- function(major, minor, match_table) {
     minor <- minor %>%  rename_key("id" = minor_key)
   }
 
-  joined_major <- major %>% 
+  joined_major <- major %>%
     dplyr::inner_join(matched_major,
                       by = stats::setNames(major_key2, key_vars(major)))
 
-  joined_minor <- minor %>% 
+  joined_minor <- minor %>%
     dplyr::inner_join(matched_minor,
-                      by = stats::setNames(minor_key2, key_vars(minor))) %>% 
+                      by = stats::setNames(minor_key2, key_vars(minor))) %>%
     arrange(.data$group)
 
 
@@ -239,10 +238,10 @@ match_postprocessing <- function(major, minor, match_table) {
     cli::cli_inform("Only bind the common variables from both datasets.")
   }
 
-  out <- joined_major %>% 
-    dplyr::select(common_var) %>% 
-    dplyr::bind_rows(joined_minor %>% 
-                       dplyr::select(common_var)) %>% 
+  out <- joined_major %>%
+    dplyr::select(common_var) %>%
+    dplyr::bind_rows(joined_minor %>%
+                       dplyr::select(common_var)) %>%
     dplyr::arrange(.data$dist)
 
   out
@@ -276,12 +275,12 @@ match_temporal <- function(major,
   }
 
 
-  dt <- data %>% 
-    face_temporal() %>% 
-    unfold(.data$group) %>% 
+  dt <- data %>%
+    face_temporal() %>%
+    unfold(.data$group) %>%
     dplyr::mutate(lag = dplyr::lag(.data$matched_var),
-                  diff = .data$lag-.data$matched_var) %>% 
-    dplyr::top_n(n = temporal_n_highest, wt = diff) %>% 
+                  diff = .data$lag-.data$matched_var) %>%
+    dplyr::top_n(n = temporal_n_highest, wt = diff) %>%
     dplyr::arrange(!!sym(index(data)), .by_group = TRUE)
 
   ngroup <- unique(dt$group)
@@ -296,22 +295,22 @@ match_temporal <- function(major,
                                          window = temporal_window)
                  }) %>%  dplyr::bind_rows()
 
-  good <- out %>% 
-    dplyr::arrange(-.data$n_match) %>% 
-    dplyr::filter(.data$n_match >= temporal_min_match) %>% 
-    as_tibble() %>% 
+  good <- out %>%
+    dplyr::arrange(-.data$n_match) %>%
+    dplyr::filter(.data$n_match >= temporal_min_match) %>%
+    as_tibble() %>%
     select(!!sym(key), .data$group, .data$n_match)
 
-  good_groups <- good %>% 
-    dplyr::pull(.data$group) %>% 
+  good_groups <- good %>%
+    dplyr::pull(.data$group) %>%
     unique()
 
-  good_n_match <- good %>% 
-    dplyr::select(.data$n_match, .data$group) %>% 
+  good_n_match <- good %>%
+    dplyr::select(.data$n_match, .data$group) %>%
     unique()
 
-  data %>% 
-    inner_join(good, by = c("group", key)) %>% 
+  data %>%
+    inner_join(good, by = c("group", key)) %>%
     dplyr::arrange(-.data$n_match)
 
 
@@ -319,10 +318,10 @@ match_temporal <- function(major,
 
 fix_data <- function(data, chosen_var){
   test_cubble(data)
-  data %>% 
-    face_temporal() %>% 
-    dplyr::select(key_vars(data), index(data), chosen_var) %>% 
-    dplyr::rename(matched_var = chosen_var) %>% 
+  data %>%
+    face_temporal() %>%
+    dplyr::select(key_vars(data), index(data), chosen_var) %>%
+    dplyr::rename(matched_var = chosen_var) %>%
     face_spatial()
 }
 
@@ -341,15 +340,15 @@ match_temporal_single <- function(data, group_id,
   }
 
 
-  to_match <- data_long %>% 
-    dplyr::filter(.data$id == minor_id) %>% 
+  to_match <- data_long %>%
+    dplyr::filter(.data$id == minor_id) %>%
     dplyr::pull(date)
 
-  a <- data_long %>% 
-    dplyr::filter(.data$id == major_id) %>% 
-    dplyr::mutate(int = lubridate::interval(date, date + window)) %>% 
-    dplyr::rowwise() %>% 
-    dplyr::mutate(match = ifelse(any(to_match %within% int), TRUE, FALSE)) %>% 
+  a <- data_long %>%
+    dplyr::filter(.data$id == major_id) %>%
+    dplyr::mutate(int = lubridate::interval(date, date + window)) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(match = ifelse(any(to_match %within% int), TRUE, FALSE)) %>%
     dplyr::ungroup()
 
 

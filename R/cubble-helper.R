@@ -8,7 +8,7 @@
 #'
 #' # proper id after removing the grouping structure
 #' climate_aus |> strip_rowwise() |> mutate(.id = row_number())
-#'
+#' @return a cubble object
 #' @export
 strip_rowwise <- function(data){
 

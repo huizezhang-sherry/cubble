@@ -23,6 +23,9 @@
 
 \item{...}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
 }
+\value{
+a cubble object
+}
 \description{
 Slicing can be useful when the number of site is too large to be all visualised in a
 single plot. The slicing family in cubble wraps around the \code{\link[dplyr:slice]{dplyr::slice()}} family to

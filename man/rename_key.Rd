@@ -11,6 +11,9 @@ rename_key(data, ...)
 
 \item{...}{argument passed to \code{rename}: NEW = OLD}
 }
+\value{
+a cubble object
+}
 \description{
 Rename the key variable
 }

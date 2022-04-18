@@ -6,9 +6,10 @@
 #' for operations whose output doesn't involve a time index.
 #'
 #' @param data a long cubble object
+#' @return a cubble object in the nested form
 #' @examples
-#' cb_long <- climate_flat %>% 
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>% 
+#' cb_long <- climate_flat %>%
+#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
 #'   face_temporal()
 #'
 #' cb_long %>%  face_spatial()
@@ -34,11 +35,11 @@ face_spatial.cubble_df <- function(data) {
     tvars <- colnames(data)[colnames(data) != key_name]
     tvars <- tvars[!tvars %in% colnames(spatial)]
 
-    unfoldd_var <- intersect(names(data), names(spatial)) %>% 
+    unfoldd_var <- intersect(names(data), names(spatial)) %>%
       setdiff(key_name)
 
-    temporal <- tibble::as_tibble(data) %>% 
-      dplyr::select(-unfoldd_var) %>% 
+    temporal <- tibble::as_tibble(data) %>%
+      dplyr::select(-unfoldd_var) %>%
       tidyr::nest(ts = -key_name)
 
     out <- spatial %>%  dplyr::left_join(temporal, by = key_name)

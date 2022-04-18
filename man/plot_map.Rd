@@ -13,6 +13,9 @@ plot_map(map_data, point_data, print_code = FALSE)
 
 \item{print_code}{whether to print out the ggplot2 code, default to FALSE}
 }
+\value{
+a ggplot object
+}
 \description{
 \code{plot_map} allows you to quickly create a ggplot with your base map
 and cubble object, with some default aesthetic and theme settings.
