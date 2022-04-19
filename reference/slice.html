@@ -102,6 +102,10 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <dt>...</dt>
 <dd><p>other arguments passed to the <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice()</a></code></p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>a cubble object</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -180,20 +184,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">climate_aus</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [115.51, -43.05, 149.82, -28.53]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [113.67, -36.11, 147.04, -12.27]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long   elev name                           wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00079103 -<span style="color: #BB0000;">37.3</span>  143. <span style="text-decoration: underline;">1</span>150   grampians (mount william)       <span style="text-decoration: underline;">94</span>833 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00008095 -<span style="color: #BB0000;">28.5</span>  116.  268   mullewa                         <span style="text-decoration: underline;">94</span>411 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00016096 -<span style="color: #BB0000;">30.5</span>  137.   98.5 roxby downs (olympic dam aerod  <span style="text-decoration: underline;">95</span>658 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00091245 -<span style="color: #BB0000;">40.7</span>  145.   94   cape grim baps                  <span style="text-decoration: underline;">94</span>954 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00020062 -<span style="color: #BB0000;">32.6</span>  140.  300   yunta airstrip                  <span style="text-decoration: underline;">94</span>684 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00094029 -<span style="color: #BB0000;">42.9</span>  147.   50.5 hobart (ellerslie road)         <span style="text-decoration: underline;">94</span>970 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00071032 -<span style="color: #BB0000;">36.5</span>  148. <span style="text-decoration: underline;">1</span>957   thredbo aws                     <span style="text-decoration: underline;">95</span>909 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00097083 -<span style="color: #BB0000;">43.0</span>  146.  408   scotts peak dam                 <span style="text-decoration: underline;">95</span>958 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00096071 -<span style="color: #BB0000;">42.1</span>  146.  742   lake st clair national park     <span style="text-decoration: underline;">94</span>976 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00069139 -<span style="color: #BB0000;">36.7</span>  150.   41   bega aws                        <span style="text-decoration: underline;">95</span>931 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                  wmo_id ts                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00072023 -<span style="color: #BB0000;">36.1</span>  147. 184   hume reservoir         <span style="text-decoration: underline;">94</span>901 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00015643 -<span style="color: #BB0000;">22.5</span>  134. 566.  territory grape farm   <span style="text-decoration: underline;">94</span>328 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00074106 -<span style="color: #BB0000;">35.8</span>  146. 114   tocumwal airport       <span style="text-decoration: underline;">94</span>877 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00018120 -<span style="color: #BB0000;">33.1</span>  138.   6.5 whyalla aero           <span style="text-decoration: underline;">95</span>664 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00011019 -<span style="color: #BB0000;">32.2</span>  126.   5.6 eyre                   <span style="text-decoration: underline;">94</span>645 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00006011 -<span style="color: #BB0000;">24.9</span>  114.   4   carnarvon airport      <span style="text-decoration: underline;">94</span>300 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00005094 -<span style="color: #BB0000;">20.9</span>  115.   6.4 barrow island airport  <span style="text-decoration: underline;">95</span>304 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00028004 -<span style="color: #BB0000;">16.0</span>  144. 204.  palmerville            <span style="text-decoration: underline;">94</span>276 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00014508 -<span style="color: #BB0000;">12.3</span>  137.  51.6 gove airport           <span style="text-decoration: underline;">94</span>150 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00007139 -<span style="color: #BB0000;">29.3</span>  118. 339   paynes find            <span style="text-decoration: underline;">94</span>404 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

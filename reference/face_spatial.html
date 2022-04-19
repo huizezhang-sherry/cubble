@@ -89,11 +89,15 @@ for operations whose output doesn't involve a time index.</p>
     <dl><dt>data</dt>
 <dd><p>a long cubble object</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>a cubble object in the nested form</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cb_long</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu"><a href="cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cb_long</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">cb_long</span> <span class="op"><a href="pipe.html">%&gt;%</a></span>  <span class="fu">face_spatial</span><span class="op">(</span><span class="op">)</span></span>

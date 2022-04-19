@@ -109,6 +109,13 @@
 <dt>output</dt>
 <dd><p>either "all" or "unmatch", whether to output all or a list of unmatched summary</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>a cubble object
+a cubble object
+a TRUE/FALSE predicate
+a cubble object</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -159,8 +166,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># If the data is already in a rowwise_df:</span></span>
-<span class="r-in"><span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="va">date</span><span class="op">:</span><span class="va">tmin</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
+<span class="r-in"><span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="va">date</span><span class="op">:</span><span class="va">tmin</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">dt</span> <span class="op"><a href="pipe.html">%&gt;%</a></span>  <span class="fu">as_cubble</span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>

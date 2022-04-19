@@ -89,6 +89,10 @@ variables into the long form for these transformations.</p>
 <dt>...</dt>
 <dd><p>spatial variables to move into the long form</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>a cubble object in the long form</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -99,7 +103,7 @@ variables into the long form for these transformations.</p>
 <span class="r-in"><span class="co"># unfold long and lat</span></span>
 <span class="r-in"><span class="va">cb_mig</span> <span class="op">&lt;-</span> <span class="va">cb</span> |&gt; <span class="fu">unfold</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># migration is not memorised by cubble:</span></span>
+<span class="r-in"><span class="co"># unfold is not memorised by cubble:</span></span>
 <span class="r-in"><span class="co"># if you switch to the nested cubble and then switch back,</span></span>
 <span class="r-in"><span class="co"># long and lat will not be preserved</span></span>
 <span class="r-in"><span class="va">cb_mig</span> |&gt; <span class="fu"><a href="face_spatial.html">face_spatial</a></span><span class="op">(</span><span class="op">)</span> |&gt; <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
