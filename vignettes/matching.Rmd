@@ -30,8 +30,7 @@ Again we will start with `prcp_aus` to look at precipitation and focus on New So
 
 ```{r}
 nsw_map <- ozmaps::abs_ste %>%  
-  filter(NAME == "New South Wales") %>%  
-  rmapshaper::ms_simplify(keep = 1e-2)
+  filter(NAME == "New South Wales") 
 
 nsw <- prcp_aus %>%    
   # subset for New South Wales stations
@@ -43,12 +42,12 @@ nsw <- prcp_aus %>%
   face_spatial() %>%  
   filter(!any(is.na(ts$prcp)))
  
-ggplot2::ggplot() +
-  ggplot2::geom_sf(data = nsw_map, color = "grey", linetype = "dotted") +
-  ggplot2::geom_point(data = nsw, ggplot2::aes(x = long, y = lat, color = automated)) +
-  ggplot2::theme_bw() +
-  ggplot2::theme(legend.position = "bottom") +
-  ggplot2::labs(x = "Longitude", y = "Latitude") + 
+ggplot() +
+  geom_sf(data = nsw_map, color = "grey", linetype = "dotted") +
+  geom_point(data = nsw, aes(x = long, y = lat, color = automated)) +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  labs(x = "Longitude", y = "Latitude") + 
   scale_color_brewer(palette = "Dark2") + 
   ggtitle("New Sourth Wales") + 
   coord_sf(xlim = c(141, 154))
@@ -137,15 +136,15 @@ vic <- prcp_aus %>%
   face_spatial() %>%  
   mutate(type = "climate")
 
-vic_map <- rmapshaper::ms_simplify(ozmaps::abs_ste %>%  filter(NAME == "Victoria"))  
+vic_map <- ozmaps::abs_ste %>%  filter(NAME == "Victoria")
 
 ggplot() + 
   geom_sf(data = vic_map) + 
   geom_point(data = dplyr::bind_rows(river, vic), 
              aes(x = long, y = lat, color = type)) + 
-  ggplot2::theme_bw() +
-  ggplot2::theme(legend.position = "bottom") +
-  ggplot2::labs(x = "Longitude", y = "Latitude") + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  labs(x = "Longitude", y = "Latitude") + 
   scale_color_brewer(palette = "Dark2")
 ```
 
