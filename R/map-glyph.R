@@ -18,8 +18,8 @@
 #' individual glyph.
 #' @export
 #' @rdname glyph
-#' @examples
 #' @return a ggplot object
+#' @examples
 #' \dontrun{
 #' library(ggplot2)
 #' # basic glyph map with reference line and box---------------

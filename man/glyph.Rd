@@ -124,6 +124,11 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \value{
 a ggplot object
+}
+\description{
+Create glyph map with ggplot2
+}
+\examples{
 \dontrun{
 library(ggplot2)
 # basic glyph map with reference line and box---------------
@@ -156,7 +161,5 @@ ggplot() +
                  width = rel(0.8), height = 1) +
    theme_bw()
 }
-}
-\description{
-Create glyph map with ggplot2
+
 }
