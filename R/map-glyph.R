@@ -20,7 +20,6 @@
 #' @rdname glyph
 #' @return a ggplot object
 #' @examples
-#' \dontrun{
 #' library(ggplot2)
 #' # basic glyph map with reference line and box---------------
 #' ggplot(data = GGally::nasa,
@@ -51,7 +50,6 @@
 #'                  y_major = lat, y_minor = surftemp),
 #'                  width = rel(0.8), height = 1) +
 #'    theme_bw()
-#' }
 #'
 geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
                        position = "identity", ..., x_major = NULL,
