@@ -11,6 +11,9 @@ switch_key(data, key)
 
 \item{key}{the new key}
 }
+\value{
+a cubble object
+}
 \description{
 \code{switch_key()} allows you select a new variable in the data to become the key.
 This can be used to create hierarchical data where one variable is nested in another.

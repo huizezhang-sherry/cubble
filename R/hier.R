@@ -4,6 +4,7 @@
 #' This can be used to create hierarchical data where one variable is nested in another.
 #' @param data a cubble object, can be either long or nested cubble
 #' @param key the new key
+#' @return a cubble object
 #'
 #' @examples
 #' library(ggplot2)
