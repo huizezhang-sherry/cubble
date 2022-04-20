@@ -21,7 +21,7 @@ A tibble object with 155 rows and 10 columns
 \item{tmin}{minimum temperature}
 }
 
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 639 rows and 6 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 5 rows and 6 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1830 rows and 5 columns.
 }
