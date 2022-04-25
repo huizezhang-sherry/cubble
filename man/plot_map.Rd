@@ -32,6 +32,8 @@ state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
 # a quick plot
 plot_map(state_map, climate_aus)
 
+\dontrun{
 # print out the ggplot2 code of the map
 plot_map(state_map, climate_aus, print_code = TRUE)
+}
 }

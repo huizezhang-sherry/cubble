@@ -18,8 +18,11 @@
 #' # a quick plot
 #' plot_map(state_map, climate_aus)
 #'
+#'\dontrun{
 #' # print out the ggplot2 code of the map
 #' plot_map(state_map, climate_aus, print_code = TRUE)
+
+#'}
 #' @export
 #' @importFrom clipr clipr_available write_clip
 #' @importFrom styler style_text
