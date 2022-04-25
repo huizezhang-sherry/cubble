@@ -10,3 +10,4 @@
 ^vignettes/articles$
 ^cran-comments\.md$
 ^Meta$
+^CRAN-SUBMISSION$
