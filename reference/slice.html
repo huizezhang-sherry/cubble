@@ -184,20 +184,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">climate_aus</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [116.04, -38.63, 153.4, -20.7]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [119.79, -41.73, 151.71, -12.65]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                          wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00085099 -<span style="color: #BB0000;">38.6</span>  146.   3   pound creek                    <span style="text-decoration: underline;">94</span>886 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00009592 -<span style="color: #BB0000;">34.4</span>  116. 174   pemberton                      <span style="text-decoration: underline;">95</span>613 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00082139 -<span style="color: #BB0000;">36.2</span>  148. 981   hunters hill                   <span style="text-decoration: underline;">94</span>878 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00010917 -<span style="color: #BB0000;">32.7</span>  117. 275   wandering                      <span style="text-decoration: underline;">95</span>640 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00010911 -<span style="color: #BB0000;">33.1</span>  118. 286   lake grace                     <span style="text-decoration: underline;">95</span>637 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00004083 -<span style="color: #BB0000;">20.7</span>  117.   7   karratha aero                  <span style="text-decoration: underline;">95</span>307 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00055049 -<span style="color: #BB0000;">31.5</span>  151. 390   quirindi post office           <span style="text-decoration: underline;">95</span>746 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00058212 -<span style="color: #BB0000;">29.2</span>  153.  62.5 evans head raaf bombing range  <span style="text-decoration: underline;">94</span>598 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00077010 -<span style="color: #BB0000;">35.7</span>  142.  77.3 hopetoun airport               <span style="text-decoration: underline;">94</span>838 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00037034 -<span style="color: #BB0000;">21.8</span>  140. 288.  the monument airport           <span style="text-decoration: underline;">94</span>336 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                    wmo_id ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00090184 -<span style="color: #BB0000;">38.4</span>  142.  45.4 cape nelson lighthouse   <span style="text-decoration: underline;">94</span>826 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00014198 -<span style="color: #BB0000;">12.7</span>  133.  26.5 jabiru airport           <span style="text-decoration: underline;">94</span>137 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00027045 -<span style="color: #BB0000;">12.7</span>  142.  18   weipa aero               <span style="text-decoration: underline;">94</span>170 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00007176 -<span style="color: #BB0000;">23.4</span>  120. 524   newman aero              <span style="text-decoration: underline;">94</span>317 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00091306 -<span style="color: #BB0000;">41.7</span>  147. 148   cressy research station  <span style="text-decoration: underline;">95</span>966 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00011019 -<span style="color: #BB0000;">32.2</span>  126.   5.6 eyre                     <span style="text-decoration: underline;">94</span>645 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00063077 -<span style="color: #BB0000;">33.7</span>  151. 320   springwood bowling club  <span style="text-decoration: underline;">95</span>744 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00061390 -<span style="color: #BB0000;">32.9</span>  152.  21   newcastle university     <span style="text-decoration: underline;">94</span>781 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00065068 -<span style="color: #BB0000;">33.1</span>  148. 323.  parkes airport aws       <span style="text-decoration: underline;">95</span>717 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00016097 -<span style="color: #BB0000;">26.3</span>  132. 703.  ernabella (pukatja)      <span style="text-decoration: underline;">94</span>474 &lt;tibble&gt;</span>
 </code></pre></div>
     </div>
   </div>
@@ -212,7 +212,7 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
