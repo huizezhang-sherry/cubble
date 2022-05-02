@@ -39,8 +39,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 #' @export
 dplyr_reconstruct.cubble_df <- function(data, template) {
 
-
-  if (cubble_can_reconstrcut(data, template)){
+  if (cubble_can_reconstruct(data, template)){
     new_cubble(data,
                key = key_vars(template), index = index(template),
                coords = coords(template), spatial = spatial(template),
@@ -53,9 +52,10 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
 
 }
 
-cubble_can_reconstrcut <- function(data, to){
+cubble_can_reconstruct <- function(data, to){
   has_key <- has_index <- FALSE
 
+  if (nrow(data) == 0) return(FALSE)
   # have key
   has_key <- any(key_vars(to) %in% names(data))
 

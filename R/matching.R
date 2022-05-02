@@ -287,7 +287,7 @@ match_temporal <- function(major,
 
   out <- map(1:length(ngroup),
                  ~ {
-                   group_id = ngroup[.x]
+                   group_id <- ngroup[.x]
 
                    match_temporal_single(dt,
                                          group_id = group_id,
