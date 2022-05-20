@@ -42,7 +42,6 @@ Suggests:
     rmapshaper,
     ozmaps,
     GGally,
-    rnoaa,
     ggrepel,
     ggforce,
     purrr

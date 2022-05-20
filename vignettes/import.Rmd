@@ -28,44 +28,21 @@ This article shows you how to create a cubble from data in the wild. You should 
   
 ## A cubble from tibble with list column
 
-List column can be a useful structure when querying data since you can first create a row-wise data frame with all the metadata and then query the data as a nested list. We will show how to convert this output into a cubble with climate data.
-
-Suppose we are interested in the climate stations close to Melbourne and Sydney. The function `rnoaa::ghcnd_stations()` allows you to subset the RNOAA station master list with some criteria on variable, distance and recording years: 
+List column can be a useful structure when querying data since you can first create a row-wise data frame with all the metadata and then query the data as a nested list. We will show how to convert this output into a cubble in a small example with five weather stations close to Sydney, Australia. Here is the metadata of the stations:
 
 ```{r echo = FALSE}
-latlon_ref <- tibble::tibble(id = c("sydney", "melbourne"),
-                         lat = c(-33.8675, -37.8136),
-                         long = c(151.2070, 144.9631))
-
-master_list <- climate_aus %>%  
-   as_tibble() %>%  
-   select(id, lat, long, elev, name, wmo_id)
-
-calc_dist <- function(df_ref, df, n = 5){
-  long_ref <- df_ref$long
-  lat_ref <- df_ref$lat
-  
-  df %>%  
-    mutate(long_ref = long_ref,
-           lat_ref=  lat_ref,
-           dist = rnoaa::meteo_spherical_distance(lat, long,lat_ref, long_ref)) %>%  
-    slice_min(dist, n = n) %>%  
-    mutate(city = df_ref$id) %>%  
-    select(-long_ref, -lat_ref)
-}
-
-stations <- do.call("rbind", purrr::map(1:nrow(latlon_ref), 
-                             ~calc_dist(latlon_ref[.x, ], master_list)))
+syd_all <- climate_aus %>% slice_nearby(coord = c(151.207, -33.867), n = 5)
+syd <- syd_all %>% select(id:wmo_id)
 ```
 
 ```{r}
-stations
+syd
 ```
 
 Temporal variables can be queried by `rnoaa::meteo_pull_monitors()` with the date range and variable supplied. Here we turn the `stations` data into a rowwise data frame and then query the climate variables as a list-column, `ts`:  
 
-```{r}
-raw <- stations %>%  
+```{r eval = FALSE}
+raw <- syd %>%  
   rowwise() %>%  
   mutate(ts = list(rnoaa::meteo_pull_monitors(id, 
                                        date_min = "2020-01-01", 
@@ -74,6 +51,13 @@ raw <- stations %>%
 raw
 ```
 
+
+```{r echo = FALSE}
+raw <- syd_all %>% select(-c(long_ref, lat_ref, dist)) %>% rowwise()
+raw
+```
+
+
 A cubble can then be created by supplying:
 
   - `id` as the key to identify each station, 
@@ -81,10 +65,10 @@ A cubble can then be created by supplying:
   - `coords` to identify the spatial coordinates of each station.
 
 ```{r}
-sydmel_climate <- raw %>%  
+syd_climate <- raw %>%  
   as_cubble(key = id, index = date, coords = c(long, lat))
 
-sydmel_climate
+syd_climate
 ```
 
 # A cubble from tsibble
