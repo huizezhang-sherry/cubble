@@ -6,7 +6,7 @@
 #' @rdname netcdf
 #' @return extracted netcdf4 components
 extract_var <- function(data, vars){
-  if (inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
+  if (!inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
 
   out <- map(vars, ~ncdf4::ncvar_get(data,.x))
 
@@ -16,7 +16,7 @@ extract_var <- function(data, vars){
 #'@export
 #' @rdname netcdf
 extract_longlat <- function(data){
-  if (inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
+  if (!inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
 
   dims <- names(data$dim)
 
@@ -43,7 +43,7 @@ extract_longlat <- function(data){
 #' @export
 #' @rdname netcdf
 extract_time <- function(data){
-  if (inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
+  if (!inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
   dims <- names(data$dim)
   if (!"time" %in% dims) inform("No time dimension detected!")
   if ("time" %in% dims) time <- ncdf4::ncvar_get(data, "time")
