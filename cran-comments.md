@@ -5,7 +5,7 @@ Duration: 2m 3.1s
 
 R CMD check succeeded
 
-* The glyph examples take ~8s to run, which is beyond the 5s limit of CRAN check, hence it is wrapped in \dontrun.
+* The example on glyph, plot_map, and climate_aus take slightly more than 5s to run, which is beyond the 5s limit of CRAN check, hence it is wrapped in \dontrun.
 * This is a submission addressing Prof Brian Ripley's email, which is copyed below:
     
     Checking cubble creates ~/Library/Caches/R/noaa_ghcnd/ on macOS, not an
