@@ -79,11 +79,11 @@ as_cubble.list <- function(data, key, index, coords,
 
   if (output == "all"){
     if (unmatch_t){
-      cli::cli_alert_warning("Some sites in the temporal table don't have corresponding spatial information")
+      cli::cli_alert_warning("Some sites in the temporal table don't have spatial information")
     }
 
     if (unmatch_s){
-      cli::cli_alert_warning("Some sites in the spatial table don't have corresponding temporal information")
+      cli::cli_alert_warning("Some sites in the spatial table don't have temporal information")
     }
 
     if (unmatch_s | unmatch_t)
