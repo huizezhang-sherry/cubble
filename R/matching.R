@@ -70,125 +70,84 @@ match_sites <- function(major,
 
 }
 
-
 #' @export
-#' @rdname matching
-match_spatial <- function(major,
-                          minor,
+match_spatial <- function(major, minor,
+                          major_ll = NULL, minor_ll = NULL,
+                          major_key = NULL, minor_key = NULL,
                           spatial_single_match = TRUE,
                           spatial_n_keep = 1,
-                          spatial_dist_max = 10) {
-  test_cubble(major)
-  test_cubble(minor)
+                          spatial_dist_max = 10){
 
-  coords_mj <- syms(coords(major))
-  coords_mn <- syms(coords(minor))
+  major_small <- construct_match_ll(major, major_ll)
+  minor_small <- construct_match_ll(minor, minor_ll, major = FALSE)
 
-  if (identical(coords_mj, coords_mn)) {
-    major <- major %>%
-      rename(long_ref = coords_mj[[1]],
-             lat_ref = coords_mj[[2]])
-    coords_mj <- syms(c("long_ref", "lat_ref"))
-  }
+  data_std <- major_small %>%
+    dplyr::mutate(minor = list(minor_small)) %>%
+    tidyr::unnest(minor)
+  class(data_std) <- c("std_ll", class(data_std))
+  res <- data_std %>% calc_dist()
 
-  key_mj <- key_vars(major)
-  key_mn <- key_vars(minor)
-
-  if (identical(key_mj, key_mn)) {
-    major <- major %>%  rename_key(key_mj = key_mj)
-    key_mj <- "key_mj"
-
-    minor <- minor %>%  rename_key(key_mn = key_mn)
-    key_mn <- "key_mn"
-  }
-
-  out <- major %>%
-    as_tibble() %>%
-    dplyr::mutate(minor = list(
-      tibble::as_tibble(minor) %>%
-        dplyr::select(!!key_mn, !!!coords_mn)
-    )) %>%
-    tidyr::unnest(minor) %>%
-    calc_dist(coords_mj, coords_mn) %>%
-    dplyr::group_by(!!sym(key_mj)) %>%
-    dplyr::slice_min(.data$dist, n = spatial_n_keep) %>%
-    dplyr::select(!!sym(key_mj), !!sym(key_mn), .data$dist) %>%
+  res <- res %>%
+    dplyr::group_by(!!sym("key1")) %>%
+    dplyr::slice_min(dist, n = spatial_n_keep) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.data$dist <= spatial_dist_max)
+    dplyr::filter(dist <= spatial_dist_max)
+  class(res) <- c("std_dist", class(res))
 
-  if (spatial_single_match) {
-    temp <- out %>%
-      dplyr::mutate(dup = duplicated(!!sym(key_mn)))
-
-    prob_sites <- temp %>%
-      dplyr::filter(.data$dup) %>%
-      dplyr::pull(!!sym(key_mn))
-
-    if (length(prob_sites) != 0){
-      good <- temp %>%  dplyr::filter(!.data$dup) %>%  dplyr::pull(!!sym(key_mn))
-      good_sites <- good[!good %in% prob_sites]
-
-      cli::cli_inform(
-        "Detect site {.val {prob_sites}} having multiple matches.
-        Only keep the closest match."
-      )
-
-      dup_fixed <- out %>%
-        dplyr::filter(!!sym(key_mn) %in% prob_sites) %>%
-        dplyr::group_by(!!sym(key_mn)) %>%
-        dplyr::filter(.data$dist == min(.data$dist))
-
-      out <- temp %>%
-        dplyr::filter(!!sym(key_mn) %in% good_sites) %>%
-        dplyr::bind_rows(dup_fixed) %>%
-        dplyr::select(-.data$dup)
-    }
-
+  if (spatial_single_match){
+    res <- res %>%
+      dplyr::group_by(!!sym("key2")) %>%
+      dplyr::slice_min(dist, n = 1) %>%
+      dplyr::ungroup()
   }
 
-  out <- out %>%
-    arrange(.data$dist) %>%
-    mutate(group = dplyr::row_number())
+  res <- res %>%
+    dplyr::arrange(dist) %>%
+    dplyr::mutate(group = dplyr::row_number())
 
-  if (any(grepl("ref", coords_mj[[1]], fixed = TRUE))) {
-    mn_long <- coords_mn[[1]]
-    mn_lat <-  coords_mn[[2]]
-    major <- major %>%
-      rename( !!{mn_long} := coords_mj[[1]],
-              !!{mn_lat} := coords_mj[[2]])
-  }
-
-  match_postprocessing(major, minor, out)
+  out <- match_postprocessing(major, minor, res, major_ll, minor_ll)
+  out
 }
 
-calc_dist <- function(data, coords1, coords2) {
-  coords1 <- eval_tidy(enquo(coords1), data)
-  coords2 <- eval_tidy(enquo(coords2), data)
+#' @export
+construct_match_ll <- function(data, data_ll, major = TRUE){
+  data_ll <- enquo(data_ll)
 
-  long1 <- coords1[[1]]
-  lat1 <- coords1[[2]]
-  long2 <- coords2[[1]]
-  lat2 <- coords2[[2]]
+  if (is_cubble(data)){
+    data <- data %>% dplyr::select(key_vars(data), coords(data))
+  } else{
+    if (quo_is_null(data_ll)){
+      cli::cli_abort("Please provide the longitude and latitude column of the data")
+    }
+    data <- data %>% dplyr::select(1, !!!data_ll)
+  }
 
-  dt <- data %>%
-    tibble::as_tibble() %>%
-    dplyr::summarise(dplyr::across(.cols = c(!!!coords1, !!!coords2),
-                            to_radian)) %>%
+  if (major){
+    colnames(data) <- c("key1", "long1", "lat1")
+  } else{
+    colnames(data) <- c("key2", "long2", "lat2")
+  }
+
+  data
+}
+
+#' @export
+calc_dist <- function(data){
+  UseMethod("calc_dist")
+}
+
+#' @export
+calc_dist.std_ll <- function(data){
+  res <- data %>%
     dplyr::mutate(
-      d_long = abs(!!long1 - !!long2),
-      d_lat = abs(!!lat1 - !!lat2),
-      a = (cos(!!lat2) * sin(.data$d_long)) ^ 2 +
-        (
-          cos(!!lat1) * sin(!!lat2) -
-            sin(!!lat1) * cos(!!lat2) * cos(.data$d_long)
-        ) ^ 2,
-      denom = sin(!!lat1) * sin(!!lat2) +
-        cos(!!lat1) * cos(!!lat2) * cos(.data$d_long),
-      d = 6371 * atan(sqrt(.data$a) / .data$denom)
-    )
-
-  data %>%
-    dplyr::bind_cols(dist = dt$d)
+      dplyr::across(c(long1, long2, lat1, lat2), to_radian),
+      d_long = abs(long1 - long2),
+      d_lat = abs(lat1 - lat2),
+      a = (cos(lat2) * sin(d_long)) ^ 2 +
+        (cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(d_long)) ^ 2,
+      denom = sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(d_long),
+      dist = 6371 * atan(sqrt(a) / denom)) %>%
+    select(key1, key2, dist)
 
 }
 
@@ -197,55 +156,66 @@ to_radian <- function(val) {
 }
 
 
-#' @rdname matching
-match_postprocessing <- function(major, minor, match_table) {
-  is_cubble(major)
-  is_cubble(minor)
+calc_dist.tbl_df <- function(data, ll){
 
-  major_key <- key_vars(major)
-  minor_key <- key_vars(minor)
+  # make it into long1, long2, lat1, lat2
 
-  matched_major <- match_table %>%  select(1, .data$dist, .data$group)
-  matched_minor <- match_table %>%  select(2, .data$dist,  .data$group)
+}
 
-  major_key2 <- colnames(matched_major)[1]
-  minor_key2 <- colnames(matched_minor)[1]
+#' @export
+is.std_ll <- function(data){
+  inherits(data, "std_ll")
+}
 
-  if (!identical(major_key, minor_key)) {
-    cli::cli_inform(
-      "The key variable is named differently in the two datasets.
-                    Coerce the key to {.field id} to bind them together."
-    )
-    major <- major %>%  rename_key("id" = major_key)
-    minor <- minor %>%  rename_key("id" = minor_key)
+match_postprocessing <- function(major, minor,
+                                 match_table,
+                                 major_ll, minor_ll){
+  matched_major <- restore(major, match_table, major_ll)
+  matched_minor <- restore(minor, match_table, minor_ll, major = FALSE)
+
+  if (colnames(matched_major)[1] != colnames(matched_minor)[1]){
+    colnames(matched_minor)[1] <- colnames(matched_major)[1]
   }
 
-  joined_major <- major %>%
-    dplyr::inner_join(matched_major,
-                      by = stats::setNames(major_key2, key_vars(major)))
-
-  joined_minor <- minor %>%
-    dplyr::inner_join(matched_minor,
-                      by = stats::setNames(minor_key2, key_vars(minor))) %>%
-    arrange(.data$group)
-
-
-  common_var <-
-    intersect(colnames(joined_major), colnames(joined_minor))
-
-  if (length(common_var) != ncol(joined_major) |
-      length(common_var) != ncol(joined_minor)) {
+  common_var <- intersect(colnames(matched_major), colnames(matched_minor))
+  if (length(common_var) != ncol(matched_major) |
+      length(common_var) != ncol(matched_minor)) {
     cli::cli_inform("Only bind the common variables from both datasets.")
   }
 
-  out <- joined_major %>%
+  out <- matched_major %>%
     dplyr::select(common_var) %>%
-    dplyr::bind_rows(joined_minor %>%
-                       dplyr::select(common_var)) %>%
-    dplyr::arrange(.data$dist)
-
+    rbind(matched_minor %>% dplyr::select(1, common_var)) %>%
+    dplyr::arrange(dist)
   out
 }
+
+restore <- function(data, match_table, data_ll, major = TRUE){
+  # data_ll <- enquo(data_ll)
+  if (major){
+    matched_key <- "key1"
+    matched_info <- match_table %>% select("key1", "dist", "group")
+  } else{
+    matched_key <- "key2"
+    matched_info <- match_table %>% select("key2", "dist", "group")
+  }
+
+  if (is_cubble(data)){
+    dt_key <- key_vars(data)
+    matched_origin <- data %>%
+      rename_coords(c("long", "lat")) %>%
+      dplyr::inner_join(matched_info, by = stats::setNames(matched_key, dt_key))
+  } else{
+    first <- colnames(data)[1]
+    colnames(data)[colnames(data) %in% data_ll] <- c("long", "lat")
+    matched_origin <- data %>%
+      dplyr::inner_join(matched_info, by = stats::setNames(matched_key, first))
+  }
+
+  matched_origin
+
+}
+
 
 #' @export
 #' @rdname matching
