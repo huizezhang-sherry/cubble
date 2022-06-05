@@ -128,6 +128,21 @@ rename_key <- function(data, ...){
              spatial = spatial(data), form = determine_form(data))
 }
 
+#' @export
+rename_coords <- function(data, ...){
+  new_coords <- list(...)[[1]]
+  old_coords <- coords(data)
+  test_cubble(data)
+  out <- data %>% as_tibble()
+  colnames(out)[colnames(out) %in% coords(data)] <- new_coords
+
+
+  new_cubble(out,
+             key = key_vars(data), index = index(data), coords = new_coords,
+             spatial = spatial(data), form = determine_form(data))
+
+}
+
 
 #' Find the centroid of cubble
 #'
