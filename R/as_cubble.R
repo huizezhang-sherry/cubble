@@ -123,7 +123,8 @@ as_cubble.list <- function(data, key, index, coords,
   }
 
   ts <- temporal
-  out <- spatial %>%  dplyr::nest_join(ts, by = shared)
+  out <- spatial %>% dplyr::left_join(ts %>% nest(ts = -shared))
+  #out <- spatial %>%  dplyr::nest_join(ts, by = shared)
   coords <- names(out)[tidyselect::eval_select(coords, out)]
 
   new_cubble(out,

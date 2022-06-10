@@ -61,12 +61,12 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
   }
 
   #tsibble_attr <- NULL
-  if ("tbl_ts" %in% class(data)){
+  if (inherits(data, "tbl_ts")){
     attr$class <- c(attr$class, "tbl_ts")
     attr <- c(attr, tsibble_attr)
   }
 
-  if ("sf" %in% class(data)){
+  if (inherits(data, "sf")){
     sf_attr <- attributes(data)
     attr$class <- c(attr$class, "sf")
     attr <- c(attr, sf_column = list(sf_attr$sf_column), agr = list(sf_attr$agr))

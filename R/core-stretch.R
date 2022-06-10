@@ -29,7 +29,9 @@ face_temporal.cubble_df <- function(data, col){
   }
   index <- index(data)
   coords <- coords(data)
-  data <- as_tibble(data)
+
+  class_l <- length(class(data))
+  class(data) <- class(data)[2:class_l]
   is_tsibble <- "tbl_ts" %in% map_chr(data$ts, ~class(.x)[1])
 
   col <- enquo(col)
@@ -37,7 +39,7 @@ face_temporal.cubble_df <- function(data, col){
 
   # unnest the temporal variables
   if (is_tsibble) data$ts <- map(data$ts, tibble::as_tibble)
-  out <- data %>%  dplyr::select(!!cur_key, !!col) %>%  tidyr::unnest(c(!!col))
+  out <- as_tibble(data) %>%  dplyr::select(!!cur_key, !!col) %>%  tidyr::unnest(c(!!col))
 
   # organise spatial variables into `spatial`
   spatial <- data %>%  select(-!!col)

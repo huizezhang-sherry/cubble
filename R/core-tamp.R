@@ -38,21 +38,14 @@ face_spatial.cubble_df <- function(data) {
     unfoldd_var <- intersect(names(data), names(spatial)) %>%
       setdiff(key_name)
 
-    temporal <- tibble::as_tibble(data) %>%
-      dplyr::select(-unfoldd_var) %>%
-      tidyr::nest(ts = -key_name)
+    temporal <- data %>% tidyr::nest(ts = -key_name)
 
     out <- spatial %>%  dplyr::left_join(temporal, by = key_name)
 
   } else if (length(key) == 2){
     spatial <- spatial %>%  tidyr::nest(.val = -key_name[1])
-    temporal <- as_tibble(data) %>%  tidyr::nest(ts = -key_name[1])
+    temporal <-data %>%  tidyr::nest(ts = -key_name[1])
     out <- left_join(spatial, temporal, by = key_name[1])
-  }
-
-
-  if ("tbl_ts" %in% class(data)){
-    out <- out %>%  mutate(ts = map(.data$ts, ~tsibble::as_tsibble(.x, index = index)))
   }
 
   new_cubble(out,
