@@ -5,6 +5,7 @@
 \alias{as_cubble.list}
 \alias{as_cubble.tbl_df}
 \alias{as_cubble.rowwise_df}
+\alias{print.cubble_df}
 \alias{tbl_sum.cubble_df}
 \alias{is_cubble}
 \alias{cubble}
@@ -17,6 +18,8 @@ as_cubble(data, key, index, coords, ...)
 \method{as_cubble}{tbl_df}(data, key, index, coords, ...)
 
 \method{as_cubble}{rowwise_df}(data, key, index, coords, ...)
+
+\method{print}{cubble_df}(x)
 
 \method{tbl_sum}{cubble_df}(data)
 
@@ -38,6 +41,8 @@ cubble(..., key, index, coords)
 \item{output}{either "all" or "unmatch", whether to output all or a list of unmatched summary}
 }
 \value{
+a cubble object
+
 a cubble object
 
 a cubble object

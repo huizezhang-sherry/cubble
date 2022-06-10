@@ -1,3 +1,10 @@
+#' @rdname cubble-class
+#' @importFrom  tibble tbl_sum
+#' @return a cubble object
+#' @export
+print.cubble_df <- function(x){
+  pillar:::print.tbl(x)
+}
 
 #' @rdname cubble-class
 #' @importFrom  tibble tbl_sum
@@ -37,8 +44,10 @@ tbl_sum.cubble_df <- function(data) {
     msg <- glue::glue("{index}, {key} [{key_n}]: long form")
   }
 
-  if ("tbl_ts" %in% class(data)){
+  if (inherits(data, "tbl_ts")){
     msg <- glue::glue("{msg} [tsibble]")
+  } else if (inherits(data, "sf")){
+    msg <- glue::glue("{msg} [sf]")
   }
 
   if (is_nested(data)) {

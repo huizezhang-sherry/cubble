@@ -16,5 +16,5 @@
   s3_register("dplyr::slice_sample", "cubble_df")
 
   s3_register("dplyr::rename", "cubble_df")
-
+  s3_register("base::print", "cubble_df")
 }
