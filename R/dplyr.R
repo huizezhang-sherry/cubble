@@ -40,6 +40,9 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
 dplyr_reconstruct.cubble_df <- function(data, template) {
 
   if (cubble_can_reconstruct(data, template)){
+
+    if(inherits(template, "sf")) class(data) <- c("sf", class(data))
+
     new_cubble(data,
                key = key_vars(template), index = index(template),
                coords = coords(template), spatial = spatial(template),
