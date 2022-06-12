@@ -20,6 +20,8 @@ cubble <- function(..., key, index, coords) {
 
 new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL){
 
+  # take ordered as TRUE, for now
+  attr(index, "ordered") <- TRUE
   if (form == "nested" & ".val" %in% names(data)){
     group_dt <- data |> tidyr::unnest(.data$.val)
   } else{

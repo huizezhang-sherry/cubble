@@ -42,6 +42,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
   if (cubble_can_reconstruct(data, template)){
 
     if(inherits(template, "sf")) class(data) <- c("sf", class(data))
+    if(inherits(template, "tbl_ts")) class(data) <- c("tbl_ts", class(data))
 
     new_cubble(data,
                key = key_vars(template), index = index(template),
