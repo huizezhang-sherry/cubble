@@ -78,7 +78,7 @@ cubble_can_reconstruct <- function(data, to){
 summarise.cubble_df <- function(data, ...){
   key <- key_vars(data)
   spatial <- spatial(data)
-  out <- NextMethod("summarise")
+  out <- NextMethod()
 
   new_cubble(out,
              key = key, index = index(data), coords = coords(data),

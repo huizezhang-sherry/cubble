@@ -131,8 +131,9 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 
 #' @export
 `names<-.cubble_df` <- function(x, value){
-  out <- NextMethod()
-  dplyr_reconstruct(out, x)
+  data <- as_tibble(x)
+  names(data) <- value
+  dplyr_reconstruct(data, x)
 }
 
 

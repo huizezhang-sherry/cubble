@@ -38,7 +38,7 @@ face_spatial.cubble_df <- function(data) {
     unfoldd_var <- intersect(names(data), names(spatial)) %>%
       setdiff(key_name)
 
-    temporal <- data %>% tidyr::nest(ts = -key_name)
+    temporal <- as_tibble(data) %>% tidyr::nest(ts = -key_name)
 
     out <- spatial %>%  dplyr::left_join(temporal, by = key_name)
 
