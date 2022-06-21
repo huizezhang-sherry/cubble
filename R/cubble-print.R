@@ -1,9 +1,17 @@
 #' @rdname cubble-class
+#' @param x,width,n_extra,n,max_extra_cols,max_footer_lines see pillar tbl-format.R
 #' @importFrom  tibble tbl_sum
 #' @return a cubble object
 #' @export
-print.cubble_df <- function(x){
-  pillar:::print.tbl(x)
+print.cubble_df <- function(x, width = NULL, ...,
+                            n_extra = NULL,
+                            n = NULL, max_extra_cols = NULL, max_footer_lines = NULL){
+  # ref: https://github.com/r-lib/pillar/blob/main/R/tbl-format.R
+  writeLines(format(
+    x,
+    width = width, ...,
+    n = n, max_extra_cols = max_extra_cols, max_footer_lines = max_footer_lines
+  ))
 }
 
 #' @rdname cubble-class

@@ -1,3 +1,8 @@
+#' `tsibble` methods implemented in cubble
+#'
+#' See \code{\link[tsibble]{fill_gaps}}
+#' @param .data,...,.full,.start,.end see tsibble documentation
+#' @return a cubble object
 #' @export
 fill_gaps.cubble_df <- function(.data, ..., .full = FALSE,
                                 .start = NULL, .end = NULL) {

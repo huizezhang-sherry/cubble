@@ -19,7 +19,15 @@ as_cubble(data, key, index, coords, ...)
 
 \method{as_cubble}{rowwise_df}(data, key, index, coords, ...)
 
-\method{print}{cubble_df}(x)
+\method{print}{cubble_df}(
+  x,
+  width = NULL,
+  ...,
+  n_extra = NULL,
+  n = NULL,
+  max_extra_cols = NULL,
+  max_footer_lines = NULL
+)
 
 \method{tbl_sum}{cubble_df}(data)
 
@@ -39,6 +47,8 @@ cubble(..., key, index, coords)
 \item{...}{a list object to create new cubble}
 
 \item{output}{either "all" or "unmatch", whether to output all or a list of unmatched summary}
+
+\item{x, width, n_extra, n, max_extra_cols, max_footer_lines}{see pillar tbl-format.R}
 }
 \value{
 a cubble object

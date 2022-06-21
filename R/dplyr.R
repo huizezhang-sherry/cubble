@@ -54,7 +54,7 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
     x <- tibble::new_tibble(x, nrow = nrow(x))
 
     if ("tbl_ts" %in% class(template)){
-      x <- tsibble::build_tsibble(out, key = key_vars(template)[1])
+      x <- tsibble::build_tsibble(x, key = key_vars(template)[1])
     }
 
 
@@ -65,8 +65,6 @@ dplyr_reconstruct.cubble_df <- function(data, template) {
     return(x)
 
   }
-
-
 
 }
 

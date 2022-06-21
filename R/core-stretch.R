@@ -42,6 +42,8 @@ face_temporal.cubble_df <- function(data, col){
   out <- as_tibble(data) %>%  dplyr::select(!!cur_key, !!col) %>%  tidyr::unnest(c(!!col))
 
   # organise spatial variables into `spatial`
+  class(data) <- class(data)[class(data) != "cubble_df"]
+  if (".val" %in% colnames(data)) data <- as_tibble(data)
   spatial <- data %>%  select(-!!col)
   if (".val" %in% colnames(spatial)) spatial <- spatial %>%  tidyr::unnest(.data$.val)
 
