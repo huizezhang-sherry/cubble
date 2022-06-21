@@ -87,7 +87,15 @@
 <span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for cubble_df</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>
+  <span class="va">x</span>,
+  width <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>,
+  n_extra <span class="op">=</span> <span class="cn">NULL</span>,
+  n <span class="op">=</span> <span class="cn">NULL</span>,
+  max_extra_cols <span class="op">=</span> <span class="cn">NULL</span>,
+  max_footer_lines <span class="op">=</span> <span class="cn">NULL</span>
+<span class="op">)</span>
 
 <span class="co"># S3 method for cubble_df</span>
 <span class="fu"><a href="https://pillar.r-lib.org/reference/tbl_sum.html" class="external-link">tbl_sum</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>
@@ -101,24 +109,49 @@
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>the object to be created or tested as cubble</p></dd>
+
+
 <dt>key</dt>
 <dd><p>the spatial identifier</p></dd>
+
+
 <dt>index</dt>
 <dd><p>the time identifier</p></dd>
+
+
 <dt>coords</dt>
 <dd><p>the coordinates that characterise the spatial dimension</p></dd>
+
+
 <dt>...</dt>
 <dd><p>a list object to create new cubble</p></dd>
+
+
 <dt>output</dt>
 <dd><p>either "all" or "unmatch", whether to output all or a list of unmatched summary</p></dd>
+
+
+<dt>x, width, n_extra, n, max_extra_cols, max_footer_lines</dt>
+<dd><p>see pillar tbl-format.R</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a cubble object
-a cubble object
-a cubble object
-a TRUE/FALSE predicate
-a cubble object</p>
+    
+
+<p>a cubble object</p>
+
+
+<p>a cubble object</p>
+
+
+<p>a cubble object</p>
+
+
+<p>a TRUE/FALSE predicate</p>
+
+
+<p>a cubble object</p>
     </div>
 
     <div id="ref-examples">
@@ -158,12 +191,13 @@ a cubble object</p>
 <span class="r-in">          key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Some sites in the spatial table don't have temporal information</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Use argument `output = "unmatch"` to check on the unmatched key</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining, by = "id"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id            lat  long  elev name           wmo_id ts                </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;tibble [0 × 4]&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;NULL&gt;</span>            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
@@ -218,7 +252,7 @@ a cubble object</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -86,12 +86,17 @@ variables into the long form for these transformations.</p>
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a long cubble object</p></dd>
+
+
 <dt>...</dt>
 <dd><p>spatial variables to move into the long form</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a cubble object in the long form</p>
+    
+
+<p>a cubble object in the long form</p>
     </div>
 
     <div id="ref-examples">
@@ -110,18 +115,18 @@ variables into the long form for these transformations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:    [115.97, -32.94, 133.55, -12.42]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id          date        prcp  tmax  tmin</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00009021 2020-01-01     0  31.9  15.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00009021 2020-01-02     0  24.9  16.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00009021 2020-01-03     6  23.2  13  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00009021 2020-01-04     0  28.4  12.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00009021 2020-01-05     0  35.3  11.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00009021 2020-01-06     0  34.8  13.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00009021 2020-01-07     0  32.8  15.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00009021 2020-01-08     0  30.4  17.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00009021 2020-01-09     0  28.7  17.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00009021 2020-01-10     0  32.6  15.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id          date        prcp  tmax  tmin  long   lat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00009021 2020-01-01     0  31.9  15.3  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00009021 2020-01-02     0  24.9  16.4  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00009021 2020-01-03     6  23.2  13    116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00009021 2020-01-04     0  28.4  12.4  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00009021 2020-01-05     0  35.3  11.6  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00009021 2020-01-06     0  34.8  13.1  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00009021 2020-01-07     0  32.8  15.1  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00009021 2020-01-08     0  30.4  17.4  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00009021 2020-01-09     0  28.7  17.3  116. -<span style="color: #BB0000;">31.9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00009021 2020-01-10     0  32.6  15.8  116. -<span style="color: #BB0000;">31.9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1,820 more rows</span></span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -138,7 +143,7 @@ variables into the long form for these transformations.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

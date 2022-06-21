@@ -137,6 +137,8 @@
 <code><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply <code>mapping</code> if there is no plot mapping.</p></dd>
+
+
 <dt>data</dt>
 <dd><p>The data to be displayed in this layer. There are three
 options:</p>
@@ -149,51 +151,74 @@ data. All objects will be fortified to produce a data frame. See
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
 from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></dd>
+
+
 <dt>stat</dt>
 <dd><p>The statistical transformation to use on the data for this
 layer, as a string.</p></dd>
+
+
 <dt>position</dt>
 <dd><p>Position adjustment, either as a string, or the result of
 a call to a position adjustment function.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other arguments passed on to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code>. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 <code>colour = "red"</code> or <code>size = 3</code>. They may also be parameters
 to the paired geom/stat.</p></dd>
+
+
 <dt>x_major, x_minor, y_major, y_minor</dt>
 <dd><p>The name of the variable (as a
 string) for the major and minor x and y axes. Together, each unique
 combination of <code>x_major</code> and <code>y_major</code> specifies a grid cell.</p></dd>
+
+
 <dt>y_scale, x_scale</dt>
 <dd><p>The scaling function to be applied to each set of
 minor values within a grid cell.  Defaults to <code><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></code> so
 that no scaling is performed.</p></dd>
+
+
 <dt>polar</dt>
 <dd><p>A logical of length 1, specifying whether the glyphs should
 be drawn in polar coordinates.  Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>height, width</dt>
 <dd><p>The height and width of each glyph. Defaults to 95% of
 the <code><a href="https://ggplot2.tidyverse.org/reference/resolution.html" class="external-link">resolution</a></code> of the data. Specify the width
 absolutely by supplying a numeric vector of length 1, or relative to the
 resolution of the data by using <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">rel</a></code>.</p></dd>
+
+
 <dt>global_rescale</dt>
 <dd><p>Whether rescale is performed globally or on each
 individual glyph.</p></dd>
+
+
 <dt>show.legend</dt>
 <dd><p>logical. Should this layer be included in the legends?
 <code>NA</code>, the default, includes if any aesthetics are mapped.
 <code>FALSE</code> never includes, and <code>TRUE</code> always includes.
 It can also be a named logical vector to finely select the aesthetics to
 display.</p></dd>
+
+
 <dt>inherit.aes</dt>
 <dd><p>If <code>FALSE</code>, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.org/reference/borders.html" class="external-link">borders()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a ggplot object</p>
+    
+
+<p>a ggplot object</p>
     </div>
 
     <div id="ref-examples">
@@ -245,7 +270,7 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

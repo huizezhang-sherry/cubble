@@ -99,12 +99,17 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a cubble object to slice</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other arguments passed to the <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice()</a></code></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a cubble object</p>
+    
+
+<p>a cubble object</p>
     </div>
 
     <div id="ref-examples">
@@ -184,20 +189,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span class="co"># random sample</span></span>
 <span class="r-in"><span class="va">climate_aus</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [114.16, -38.86, 153.13, -13.32]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [116.33, -43.49, 151.6, -25.64]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                       wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00008251 -<span style="color: #BB0000;">27.7</span>  114.   6   kalbarri                    <span style="text-decoration: underline;">94</span>401 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00081049 -<span style="color: #BB0000;">36.4</span>  145. 114   tatura inst sustainable ag  <span style="text-decoration: underline;">95</span>836 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00090015 -<span style="color: #BB0000;">38.9</span>  144.  82   cape otway lighthouse       <span style="text-decoration: underline;">94</span>842 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00052088 -<span style="color: #BB0000;">30.0</span>  148. 133   walgett airport aws         <span style="text-decoration: underline;">95</span>715 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00009500 -<span style="color: #BB0000;">35.0</span>  118.   3   albany                      <span style="text-decoration: underline;">94</span>801 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00040842 -<span style="color: #BB0000;">27.4</span>  153.   4.5 brisbane aero               <span style="text-decoration: underline;">94</span>578 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00009581 -<span style="color: #BB0000;">34.6</span>  118. 300   mount barker                <span style="text-decoration: underline;">94</span>630 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00014909 -<span style="color: #BB0000;">13.3</span>  133. 416   central arnhem plateau      <span style="text-decoration: underline;">94</span>141 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00015664 -<span style="color: #BB0000;">23.3</span>  129. 454.  walungurru                  <span style="text-decoration: underline;">94</span>321 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00082139 -<span style="color: #BB0000;">36.2</span>  148. 981   hunters hill                <span style="text-decoration: underline;">94</span>878 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                  wmo_id ts                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00061250 -<span style="color: #BB0000;">32.6</span>  152.    30 paterson (tocal aws)   <span style="text-decoration: underline;">94</span>775 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00010612 -<span style="color: #BB0000;">32.1</span>  118.   276 narembeen              <span style="text-decoration: underline;">95</span>626 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00023122 -<span style="color: #BB0000;">34.5</span>  139.    65 roseworthy aws         <span style="text-decoration: underline;">95</span>671 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00094008 -<span style="color: #BB0000;">42.8</span>  148.     4 hobart airport         <span style="text-decoration: underline;">94</span>975 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00082139 -<span style="color: #BB0000;">36.2</span>  148.   981 hunters hill           <span style="text-decoration: underline;">94</span>878 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00017099 -<span style="color: #BB0000;">30.3</span>  139.   318 arkaroola              <span style="text-decoration: underline;">94</span>676 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00035070 -<span style="color: #BB0000;">25.6</span>  150.   199 taroom post office     <span style="text-decoration: underline;">94</span>525 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00094010 -<span style="color: #BB0000;">43.5</span>  147.    55 cape bruny lighthouse  <span style="text-decoration: underline;">94</span>967 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00009968 -<span style="color: #BB0000;">34.6</span>  116.   210 shannon                <span style="text-decoration: underline;">95</span>617 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00010626 -<span style="color: #BB0000;">32.5</span>  117.   297 pingelly               <span style="text-decoration: underline;">95</span>616 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -212,7 +217,7 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
