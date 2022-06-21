@@ -29,6 +29,7 @@ reference:
   - slice_nearby
   - slice_head.cubble_df
   - simplify_sf
+  - fill_gaps.cubble_df
 - title: "Visualisation with cubble"
 - contents:
   - plot_map
