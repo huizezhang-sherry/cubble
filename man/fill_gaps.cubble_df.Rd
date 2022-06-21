@@ -4,7 +4,7 @@
 \alias{fill_gaps.cubble_df}
 \title{\code{tsibble} methods implemented in cubble}
 \usage{
-fill_gaps.cubble_df(.data, ..., .full = FALSE, .start = NULL, .end = NULL)
+\method{fill_gaps}{cubble_df}(.data, ..., .full = FALSE, .start = NULL, .end = NULL)
 }
 \arguments{
 \item{.data, ..., .full, .start, .end}{see tsibble documentation}

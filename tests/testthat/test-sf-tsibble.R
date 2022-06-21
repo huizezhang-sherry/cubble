@@ -2,16 +2,10 @@ library(dplyr)
 library(sf)
 library(tsibble)
 
-raw <- weatherdata::historical_tmax %>%
-  filter(between(stringr::str_sub(id, 7, 8), 46, 75))
-
-stations_sf <- raw %>%
-  select(id: wmo_id) %>%
-  ungroup() %>%
+stations_sf <- stations %>%
   st_as_sf(coords = c("long", "lat"), crs = 4283, remove = FALSE)
 
-ts <- raw %>%
-  face_temporal() %>%
+ts <- climate %>%
   as_tsibble(key = id) %>%
   slice_sample(prop = 0.9) %>%
   arrange(id, date)

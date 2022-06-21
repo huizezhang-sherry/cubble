@@ -2,12 +2,13 @@
 #'
 #' See \code{\link[tsibble]{fill_gaps}}
 #' @param .data,...,.full,.start,.end see tsibble documentation
+#' @importFrom tsibble fill_gaps
 #' @return a cubble object
 #' @export
 fill_gaps.cubble_df <- function(.data, ..., .full = FALSE,
                                 .start = NULL, .end = NULL) {
 
-  temporal <- NextMethod("fill_gaps")
+  temporal <- NextMethod()
   spatial <- spatial(.data)
 
   new_cubble(temporal,
