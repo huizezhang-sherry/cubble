@@ -44,7 +44,9 @@ Suggests:
     GGally,
     ggrepel,
     ggforce,
-    purrr
+    purrr,
+    stars,
+    units
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)

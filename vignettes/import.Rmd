@@ -25,6 +25,7 @@ This article shows you how to create a cubble from data in the wild. You should 
   - a tsibble 
   - separate spatial and temporal tables
   - NetCDF data
+  - a `stars` object
   
 ## A cubble from tibble with list column
 
@@ -151,3 +152,21 @@ dt <- as_cubble(raw, vars = c("q", "z"),
 dt
 ```
 
+
+# Convert from a `stars` object to `cubble`
+
+Currently, the `cubble` package can convert a `stars` object with three dimension(s) in the order of longitude, latitude, and time: 
+  
+```{r}
+# create a toy stars object
+m <- array(1:60, dim = c(x= 5, y = 4, t = 3))
+time = 1:3
+library(units)
+units(time) = as_units("days since 2015-01-01")
+m_dim <- stars::st_dimensions(x =  seq(146, 162, 4), y = seq(-44, -41, 1), t = time)
+st <- stars::st_as_stars(list(m = m, m2 = m), dimensions = m_dim)
+st
+as_cubble(st)
+```
+
+When the `dimensions` object is too complex for `cubble` to handle, the package will emit an message. 

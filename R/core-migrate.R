@@ -35,7 +35,7 @@ unfold <- function(data, ...){
       "{.code {names(dots)[!in_spatial]}} does not exist as a spaital variable. No migration")
   }
 
-  to_join <- sp |> select(key_vars(data), names(dots)[in_spatial]) |> dplyr::distinct()
+  to_join <- sp %>% as_tibble() |> select(key_vars(data), names(dots)[in_spatial]) |> dplyr::distinct()
   out <- data |> left_join(to_join, by = key)
 
   if (nrow(out) != nrow(data)){

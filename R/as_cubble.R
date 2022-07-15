@@ -267,3 +267,60 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
              spatial = NULL, form = "nested")
 }
 
+#' @export
+as_cubble.stars <- function(data, key, index, coords, ...){
+
+  # parse the dimensions attribute
+  dim_obj <- attr(data, "dimensions")
+  dim_flatten <- purrr::map(dim_obj, parse_dimension)
+  longlat <- names(dim_flatten)[1:2]
+  time <- names(dim_flatten)[3]
+  mapping <- do.call("expand.grid", rev(dim_flatten)) %>%
+    dplyr::group_by(!!!syms(longlat)) %>%
+    dplyr::mutate(id = dplyr::cur_group_id())
+
+  # extract data underneath
+  raw <- unclass(data)
+  var_nm <- names(raw)
+  dim <- c(map(dim_flatten, length))
+  out <- map2(
+    raw, names(raw),
+    ~{single <- array(unlist(.x), dim = dim) %>% as.data.frame.table();
+    colnames(single)[length(dim_flatten) + 1] <- .y; return(single)})
+  res <- purrr::reduce(out, cbind) %>%
+    cbind(mapping) %>%
+    dplyr::select(names(dim_flatten), var_nm, "id") %>%
+    dplyr::arrange(.data$id) %>%
+    tibble::as_tibble() %>%
+    cubble::as_cubble(key = "id", index = time, coords = longlat)
+  res
+
+}
+
+
+parse_dimension <- function(obj){
+
+    if (!is.null(obj$value)) {
+      out <- obj$value
+    } else if (is.numeric(obj$from) & is.numeric(obj$to) & inherits(obj$delta, "numeric")){
+      out <- seq(obj$offset, obj$offset + (obj$to - 1) * obj$delta, by = obj$delta)
+    } else if (!is.na(obj$refsys)){
+      if (obj$refsys == "udunits"){
+      tstring <- attr(obj$offset, "units")$numerator
+      origin <- parse_time(tstring)
+
+      if (is.null(origin))
+        cli::cli_abort("The units is currently too complex for {.field cubble} to parse.")
+
+      tperiod <- stringr::word(tstring)
+      time <- seq(obj$from,obj$to, as.numeric(obj$delta))
+      out <- origin %m+% do.call(tperiod, list(x = floor(time)))
+      } else if (obj$refsys == "POSIXct"){
+        out <- obj$value
+      }
+    } else{
+      cli::cli_abort("The units is currently too complex for {.field cubble} to parse.")
+    }
+
+  out
+}
