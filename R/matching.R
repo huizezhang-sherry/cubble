@@ -249,7 +249,6 @@ match_postprocessing <- function(major, minor, match_table) {
 
 #' @export
 #' @rdname matching
-#' @importFrom lubridate %within%
 match_temporal <- function(major,
                            minor,
                            temporal_by,

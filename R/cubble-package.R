@@ -6,6 +6,9 @@
 #' @importFrom rlang .data quo_is_missing sym as_name
 #' @importFrom cli cli_abort cli_inform
 #' @importFrom tsibble index as_tsibble
+#' @importFrom lubridate %m+% hours days minutes seconds years %within% month
+#' @importFrom stats embed na.omit qnorm
+#'
 #' @aliases cubble-package
 #' @keywords internal
 "_PACKAGE"

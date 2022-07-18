@@ -39,7 +39,6 @@ extract_longlat <- function(data){
 }
 
 #' @importFrom stringr word
-#' @importFrom lubridate %m+% hours days minutes seconds years
 #' @export
 #' @rdname netcdf
 extract_time <- function(data){
