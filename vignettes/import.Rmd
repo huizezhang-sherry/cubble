@@ -170,3 +170,4 @@ as_cubble(st)
 ```
 
 When the `dimensions` object is too complex for `cubble` to handle, the package will emit an message. 
+
