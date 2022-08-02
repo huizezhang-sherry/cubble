@@ -79,7 +79,7 @@ variables into the long form for these transformations.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">unfold</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">unfold</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -101,17 +101,17 @@ variables into the long form for these transformations.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> |&gt;</span>
-<span class="r-in">  <span class="fu"><a href="cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> |&gt;</span>
-<span class="r-in">  <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># unfold long and lat</span></span>
-<span class="r-in"><span class="va">cb_mig</span> <span class="op">&lt;-</span> <span class="va">cb</span> |&gt; <span class="fu">unfold</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># unfold is not memorised by cubble:</span></span>
-<span class="r-in"><span class="co"># if you switch to the nested cubble and then switch back,</span></span>
-<span class="r-in"><span class="co"># long and lat will not be preserved</span></span>
-<span class="r-in"><span class="va">cb_mig</span> |&gt; <span class="fu"><a href="face_spatial.html">face_spatial</a></span><span class="op">(</span><span class="op">)</span> |&gt; <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># unfold long and lat</span></span></span>
+<span class="r-in"><span><span class="va">cb_mig</span> <span class="op">&lt;-</span> <span class="va">cb</span> <span class="op">|&gt;</span> <span class="fu">unfold</span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># unfold is not memorised by cubble:</span></span></span>
+<span class="r-in"><span><span class="co"># if you switch to the nested cubble and then switch back,</span></span></span>
+<span class="r-in"><span><span class="co"># long and lat will not be preserved</span></span></span>
+<span class="r-in"><span><span class="va">cb_mig</span> <span class="op">|&gt;</span> <span class="fu"><a href="face_spatial.html">face_spatial</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:    [115.97, -32.94, 133.55, -12.42]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span>
@@ -128,7 +128,8 @@ variables into the long form for these transformations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00009021 2020-01-09     0  28.7  17.3  116. -<span style="color: #BB0000;">31.9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00009021 2020-01-10     0  32.6  15.8  116. -<span style="color: #BB0000;">31.9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1,820 more rows</span></span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -143,7 +144,7 @@ variables into the long form for these transformations.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

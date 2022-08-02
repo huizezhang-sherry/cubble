@@ -75,7 +75,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">add_missing_prct</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_missing_prct</span><span class="op">(</span><span class="va">data</span>, <span class="va">vars</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,7 +84,7 @@
 <dd><p>a cubble object</p></dd>
 
 
-<dt>...</dt>
+<dt>vars</dt>
 <dd><p>variables to compute percentage missing (support tidyselect)</p></dd>
 
 </dl></div>
@@ -102,23 +102,24 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">climate_aus</span> <span class="op"><a href="pipe.html">%&gt;%</a></span>  <span class="fu">add_missing_prct</span><span class="op">(</span><span class="va">prcp</span><span class="op">:</span><span class="va">tmin</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">climate_aus</span> <span class="op"><a href="pipe.html">%&gt;%</a></span>  <span class="fu">add_missing_prct</span><span class="op">(</span>vars <span class="op">=</span> <span class="va">prcp</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [639]: nested form</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [113.53, -43.66, 153.64, -10.05]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name  wmo_id ts       prcp_missing tmax_missing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00001006 -<span style="color: #BB0000;">15.5</span>  128.   3.8 wynd…  <span style="text-decoration: underline;">95</span>214 &lt;tibble&gt;      0.010<span style="text-decoration: underline;">9</span>       0      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00001007 -<span style="color: #BB0000;">13.8</span>  126.   6   trou…  <span style="text-decoration: underline;">94</span>102 &lt;tibble&gt;      0.021<span style="text-decoration: underline;">9</span>       0.002<span style="text-decoration: underline;">73</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00001018 -<span style="color: #BB0000;">16.4</span>  126. 546   moun…  <span style="text-decoration: underline;">94</span>211 &lt;tibble&gt;      0.027<span style="text-decoration: underline;">3</span>       0.035<span style="text-decoration: underline;">5</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00001019 -<span style="color: #BB0000;">14.3</span>  127.  23   kalu…  <span style="text-decoration: underline;">94</span>100 &lt;tibble&gt;      0.032<span style="text-decoration: underline;">8</span>       0.002<span style="text-decoration: underline;">73</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00001020 -<span style="color: #BB0000;">14.1</span>  126.  51   trus…  <span style="text-decoration: underline;">95</span>101 &lt;tibble&gt;      0.008<span style="text-decoration: underline;">20</span>      0.005<span style="text-decoration: underline;">46</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00001025 -<span style="color: #BB0000;">15.4</span>  126. 385   doon…  <span style="text-decoration: underline;">94</span>215 &lt;tibble&gt;      0.046<span style="text-decoration: underline;">4</span>       0.095<span style="text-decoration: underline;">6</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00002012 -<span style="color: #BB0000;">18.2</span>  128. 422   hall…  <span style="text-decoration: underline;">94</span>212 &lt;tibble&gt;      0.030<span style="text-decoration: underline;">1</span>       0.041<span style="text-decoration: underline;">0</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00002032 -<span style="color: #BB0000;">17.0</span>  128. 203   warm…  <span style="text-decoration: underline;">94</span>213 &lt;tibble&gt;      0.021<span style="text-decoration: underline;">9</span>       0.054<span style="text-decoration: underline;">6</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00002056 -<span style="color: #BB0000;">15.8</span>  129.  44   kunu…  <span style="text-decoration: underline;">94</span>216 &lt;tibble&gt;      0.019<span style="text-decoration: underline;">1</span>       0.002<span style="text-decoration: underline;">73</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00002064 -<span style="color: #BB0000;">16.6</span>  128. 164   argy…  <span style="text-decoration: underline;">94</span>217 &lt;tibble&gt;      0.038<span style="text-decoration: underline;">3</span>       0.019<span style="text-decoration: underline;">1</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 629 more rows, and 1 more variable: tmin_missing &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                wmo_id ts       prcp_miss…¹</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00001006 -<span style="color: #BB0000;">15.5</span>  128.   3.8 wyndham aero         <span style="text-decoration: underline;">95</span>214 &lt;tibble&gt;     0.010<span style="text-decoration: underline;">9</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00001007 -<span style="color: #BB0000;">13.8</span>  126.   6   troughton island     <span style="text-decoration: underline;">94</span>102 &lt;tibble&gt;     0.021<span style="text-decoration: underline;">9</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00001018 -<span style="color: #BB0000;">16.4</span>  126. 546   mount elizabeth      <span style="text-decoration: underline;">94</span>211 &lt;tibble&gt;     0.027<span style="text-decoration: underline;">3</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00001019 -<span style="color: #BB0000;">14.3</span>  127.  23   kalumburu            <span style="text-decoration: underline;">94</span>100 &lt;tibble&gt;     0.032<span style="text-decoration: underline;">8</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00001020 -<span style="color: #BB0000;">14.1</span>  126.  51   truscott             <span style="text-decoration: underline;">95</span>101 &lt;tibble&gt;     0.008<span style="text-decoration: underline;">20</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00001025 -<span style="color: #BB0000;">15.4</span>  126. 385   doongan              <span style="text-decoration: underline;">94</span>215 &lt;tibble&gt;     0.046<span style="text-decoration: underline;">4</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00002012 -<span style="color: #BB0000;">18.2</span>  128. 422   halls creek airport  <span style="text-decoration: underline;">94</span>212 &lt;tibble&gt;     0.030<span style="text-decoration: underline;">1</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00002032 -<span style="color: #BB0000;">17.0</span>  128. 203   warmun               <span style="text-decoration: underline;">94</span>213 &lt;tibble&gt;     0.021<span style="text-decoration: underline;">9</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00002056 -<span style="color: #BB0000;">15.8</span>  129.  44   kununurra aero       <span style="text-decoration: underline;">94</span>216 &lt;tibble&gt;     0.019<span style="text-decoration: underline;">1</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00002064 -<span style="color: #BB0000;">16.6</span>  128. 164   argyle aerodrome     <span style="text-decoration: underline;">94</span>217 &lt;tibble&gt;     0.038<span style="text-decoration: underline;">3</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 629 more rows, and abbreviated variable name ¹​prcp_missing</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -133,7 +134,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

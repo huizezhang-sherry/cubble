@@ -119,154 +119,154 @@
 </h3>
 <p>A nested cubble is built on top of a <code>rowwise_df</code>, which comes with the <code>groups</code> attributes, as well as the usual <code>names</code>, <code>row.names</code>, and <code>class</code>. Note that the <code>class</code> attribute contains the history class that a <code>rowwise_df</code> is built upon: <code>tbl_df</code>, <code>tbl</code> and <code>data.frame</code>. This is an example of the attributes for a nested cubble:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_small</span> <span class="op">&lt;-</span>  <span class="va">climate_flat</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-01-01"</span>, <span class="st">"2020-01-02"</span>, <span class="st">"2020-01-03"</span>, <span class="st">"2020-01-04"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
-
-<span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_small</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
-  <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span>
-<span class="va">nested</span>
-<span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="co">#&gt;   id            lat  long  elev name           wmo_id ts              </span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span>
-<span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span>
-<span class="co">#&gt; $class</span>
-<span class="co">#&gt; [1] "cubble_df"  "rowwise_df" "tbl_df"     "tbl"        "data.frame"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $row.names</span>
-<span class="co">#&gt; [1] 1 2 3 4 5</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $names</span>
-<span class="co">#&gt; [1] "id"     "lat"    "long"   "elev"   "name"   "wmo_id" "ts"    </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $groups</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
-<span class="co">#&gt;   id                .rows</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021         <span style="color: #949494;">[1]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311         <span style="color: #949494;">[1]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614         <span style="color: #949494;">[1]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015         <span style="color: #949494;">[1]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131         <span style="color: #949494;">[1]</span></span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $index</span>
-<span class="co">#&gt; [1] "date"</span>
-<span class="co">#&gt; attr(,"ordered")</span>
-<span class="co">#&gt; [1] TRUE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $coords</span>
-<span class="co">#&gt; [1] "long" "lat" </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $form</span>
-<span class="co">#&gt; [1] "nested"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">climate_small</span> <span class="op">&lt;-</span>  <span class="va">climate_flat</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-01-01"</span>, <span class="st">"2020-01-02"</span>, <span class="st">"2020-01-03"</span>, <span class="st">"2020-01-04"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_small</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">nested</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt;   id            lat  long  elev name           wmo_id ts              </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">nested</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $class</span></span>
+<span><span class="co">#&gt; [1] "cubble_df"  "rowwise_df" "tbl_df"     "tbl"        "data.frame"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $row.names</span></span>
+<span><span class="co">#&gt; [1] 1 2 3 4 5</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $groups</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">#&gt;   id                .rows</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021         <span style="color: #949494;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311         <span style="color: #949494;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614         <span style="color: #949494;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015         <span style="color: #949494;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131         <span style="color: #949494;">[1]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $names</span></span>
+<span><span class="co">#&gt; [1] "id"     "lat"    "long"   "elev"   "name"   "wmo_id" "ts"    </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $index</span></span>
+<span><span class="co">#&gt; [1] "date"</span></span>
+<span><span class="co">#&gt; attr(,"ordered")</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $coords</span></span>
+<span><span class="co">#&gt; [1] "long" "lat" </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $form</span></span>
+<span><span class="co">#&gt; [1] "nested"</span></span></code></pre></div>
 <p>In this example, four stations are recorded at four time points: 1st to 4th Jan 2020. The <code>key</code> specified is mapped to the <code>groups</code> while <code>index</code> and <code>coords</code> are stored as the variable name in a cubble. This attribute will be the same as <code>key</code> most of the time but a useful piece of information to record later in the hierarchical data structure.</p>
 <p>The <code>rowwise_df</code> class uses a <code>group</code> attribute to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                rain</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     2</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     3</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                rain</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     3</span></span></code></pre></div>
 <p>which matches the basic mutate style of calculation, so it is easier to remember than the <code>purrr</code> style syntax:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">climate_small</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
-  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">prcp</span>, <span class="va">tmax</span>, <span class="va">tmin</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm<span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 8</span></span>
-<span class="co">#&gt;   id            lat  long  elev name           wmo_id data              rain</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     2</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     3</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">climate_small</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">prcp</span>, <span class="va">tmax</span>, <span class="va">tmin</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm<span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 8</span></span></span>
+<span><span class="co">#&gt;   id            lat  long  elev name           wmo_id data              rain</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [4 × 4]&gt;</span>     3</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="long-cubble">Long cubble<a class="anchor" aria-label="anchor" href="#long-cubble"></a>
 </h3>
 <p>A long form cubble is built from the <code>grouped_df</code> class where observations from the same site forms a group. Below prints a long cubble along with its attributes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">long</span>
-<span class="co">#&gt; <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># bbox:    [115.97, -32.94, 133.55, -12.42]</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span>
-<span class="co">#&gt;    id          date        prcp  tmax  tmin</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00009021 2020-01-01     0  31.9  15.3</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00009021 2020-01-02     0  24.9  16.4</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00009021 2020-01-03     6  23.2  13  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00009021 2020-01-04     0  28.4  12.4</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00010311 2020-01-01     0  38    16.4</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00010311 2020-01-02     0  30    15.5</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00010311 2020-01-03     0  25.2  10.5</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00010311 2020-01-04     0  26.3   7  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00010614 2020-01-01     0  34    14  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00010614 2020-01-02     0  27.5  15.2</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span> ASN00010614 2020-01-03     0  21    10.9</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">12</span> ASN00010614 2020-01-04     0  24.9   6.5</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">13</span> ASN00014015 2020-01-01    58  34.4  23.6</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">14</span> ASN00014015 2020-01-02    32  34.5  25.9</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">15</span> ASN00014015 2020-01-03     0  34.7  26.3</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">16</span> ASN00014015 2020-01-04     0  35    26.6</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">17</span> ASN00015131 2020-01-01    18  40.1  24.6</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">18</span> ASN00015131 2020-01-02    32  40.6  27.6</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">19</span> ASN00015131 2020-01-03    34  41.2  24  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">20</span> ASN00015131 2020-01-04     0  40.9  26.8</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span>
-<span class="co">#&gt; $class</span>
-<span class="co">#&gt; [1] "cubble_df"  "grouped_df" "tbl_df"     "tbl"        "data.frame"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $row.names</span>
-<span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $names</span>
-<span class="co">#&gt; [1] "id"   "date" "prcp" "tmax" "tmin"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $groups</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
-<span class="co">#&gt;   id                .rows</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $index</span>
-<span class="co">#&gt; [1] "date"</span>
-<span class="co">#&gt; attr(,"ordered")</span>
-<span class="co">#&gt; [1] TRUE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $spatial</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># Rowwise:  id</span></span>
-<span class="co">#&gt;   id            lat  long  elev name           wmo_id</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $coords</span>
-<span class="co">#&gt; [1] "long" "lat" </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $form</span>
-<span class="co">#&gt; [1] "long"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">long</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># bbox:    [115.97, -32.94, 133.55, -12.42]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
+<span><span class="co">#&gt;    id          date        prcp  tmax  tmin</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00009021 2020-01-01     0  31.9  15.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00009021 2020-01-02     0  24.9  16.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00009021 2020-01-03     6  23.2  13  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00009021 2020-01-04     0  28.4  12.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00010311 2020-01-01     0  38    16.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00010311 2020-01-02     0  30    15.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00010311 2020-01-03     0  25.2  10.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00010311 2020-01-04     0  26.3   7  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00010614 2020-01-01     0  34    14  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00010614 2020-01-02     0  27.5  15.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> ASN00010614 2020-01-03     0  21    10.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> ASN00010614 2020-01-04     0  24.9   6.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> ASN00014015 2020-01-01    58  34.4  23.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> ASN00014015 2020-01-02    32  34.5  25.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> ASN00014015 2020-01-03     0  34.7  26.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> ASN00014015 2020-01-04     0  35    26.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> ASN00015131 2020-01-01    18  40.1  24.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> ASN00015131 2020-01-02    32  40.6  27.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> ASN00015131 2020-01-03    34  41.2  24  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> ASN00015131 2020-01-04     0  40.9  26.8</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $class</span></span>
+<span><span class="co">#&gt; [1] "cubble_df"  "grouped_df" "tbl_df"     "tbl"        "data.frame"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $row.names</span></span>
+<span><span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $names</span></span>
+<span><span class="co">#&gt; [1] "id"   "date" "prcp" "tmax" "tmin"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $groups</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">#&gt;   id                .rows</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $index</span></span>
+<span><span class="co">#&gt; [1] "date"</span></span>
+<span><span class="co">#&gt; attr(,"ordered")</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $spatial</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Rowwise:  id</span></span></span>
+<span><span class="co">#&gt;   id            lat  long  elev name           wmo_id</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $coords</span></span>
+<span><span class="co">#&gt; [1] "long" "lat" </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $form</span></span>
+<span><span class="co">#&gt; [1] "long"</span></span></code></pre></div>
 <p>The <code>spatial</code> attribute records the time-invariant variables in the data, so that when switch back to the nested form, these variables won’t get lost.</p>
 </div>
 <div class="section level2">
@@ -274,27 +274,27 @@
 </h2>
 <p>Apart from the usual <code>%@%</code> or <code>attr(DATA, "ATTRIBUTE")</code> to extract class attributes, cubble provides functions with the corresponding attribute name for easier extraction: <code><a href="../reference/attributes.html">index()</a></code>, <code><a href="../reference/attributes.html">key_vars()</a></code>, <code><a href="../reference/attributes.html">key_data()</a></code>, <code><a href="../reference/attributes.html">coords()</a></code>, and <code><a href="../reference/attributes.html">spatial()</a></code> can be used to extract the relevant component in both forms:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/attributes.html">key_vars</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span>
-<span class="co">#&gt; [1] "id"</span>
-<span class="fu"><a href="../reference/attributes.html">key_data</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
-<span class="co">#&gt;   id                .rows</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015         <span style="color: #949494;">[4]</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131         <span style="color: #949494;">[4]</span></span>
-<span class="fu"><a href="../reference/attributes.html">spatial</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># Rowwise:  id</span></span>
-<span class="co">#&gt;   id            lat  long  elev name           wmo_id</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/attributes.html">key_vars</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "id"</span></span>
+<span><span class="fu"><a href="../reference/attributes.html">key_data</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">#&gt;   id                .rows</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131         <span style="color: #949494;">[4]</span></span></span>
+<span><span class="fu"><a href="../reference/attributes.html">spatial</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Rowwise:  id</span></span></span>
+<span><span class="co">#&gt;   id            lat  long  elev name           wmo_id</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airport   <span style="text-decoration: underline;">94</span>610</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00010311 -<span style="color: #BB0000;">31.9</span>  117. 179   york            <span style="text-decoration: underline;">94</span>623</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236</span></span></code></pre></div>
 </div>
   </div>
 
@@ -315,7 +315,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
