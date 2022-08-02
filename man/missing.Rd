@@ -4,12 +4,12 @@
 \alias{add_missing_prct}
 \title{Compute missing summary}
 \usage{
-add_missing_prct(data, ...)
+add_missing_prct(data, vars)
 }
 \arguments{
 \item{data}{a cubble object}
 
-\item{...}{variables to compute percentage missing (support tidyselect)}
+\item{vars}{variables to compute percentage missing (support tidyselect)}
 }
 \value{
 a cubble object with additional columns VAR_missing
@@ -23,5 +23,5 @@ Compute missing summary
 }
 }
 \examples{
-climate_aus \%>\%  add_missing_prct(prcp:tmin)
+climate_aus \%>\%  add_missing_prct(vars = prcp)
 }

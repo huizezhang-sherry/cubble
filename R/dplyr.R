@@ -18,7 +18,7 @@ dplyr_row_slice.cubble_df <- function(data, i, ...){
   out <- vec_slice(data, i)
   key <- key_vars(data)
   # update spatial as subsetting will change the number of row
-  if (is_long(data)){
+  if (is_long(data) && length(key) == 1){
     keep <- unique(out[[key]])
     spatial <- spatial(data) %>%  filter(!!sym(key) %in% keep)
   }
