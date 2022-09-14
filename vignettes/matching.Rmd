@@ -1,5 +1,5 @@
 ---
-title: "3. Application: matching"
+title: "Application: matching"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{matching}
