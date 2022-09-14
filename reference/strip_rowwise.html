@@ -35,16 +35,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/aggregation.html">2. Application: hierarchical data structure</a>
+      <a href="../articles/aggregation.html">Application: aggregation</a>
     </li>
     <li>
-      <a href="../articles/cubble-design.html">1. Details on cubble design</a>
+      <a href="../articles/cubble-design.html">Details on cubble design</a>
     </li>
     <li>
-      <a href="../articles/import.html">0. Import data as a cubble</a>
+      <a href="../articles/import.html">Import data as a cubble</a>
     </li>
     <li>
-      <a href="../articles/matching.html">3. Application: matching</a>
+      <a href="../articles/matching.html">Application: matching</a>
     </li>
   </ul></li>
 <li>
@@ -112,7 +112,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00002056 -<span style="color: #BB0000;">15.8</span>  129.  44   kununurra aero       <span style="text-decoration: underline;">94</span>216 &lt;tibble&gt;     1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00002064 -<span style="color: #BB0000;">16.6</span>  128. 164   argyle aerodrome     <span style="text-decoration: underline;">94</span>217 &lt;tibble&gt;     1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 629 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># proper id after removing the grouping structure</span></span></span>
 <span class="r-in"><span><span class="va">climate_aus</span> <span class="op">|&gt;</span> <span class="fu">strip_rowwise</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>.id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -132,7 +131,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00002056 -<span style="color: #BB0000;">15.8</span>  129.  44   kununurra aero       <span style="text-decoration: underline;">94</span>216 &lt;tibble&gt;     9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00002064 -<span style="color: #BB0000;">16.6</span>  128. 164   argyle aerodrome     <span style="text-decoration: underline;">94</span>217 &lt;tibble&gt;    10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 629 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span>
 </code></pre></div>
     </div>
   </div>
