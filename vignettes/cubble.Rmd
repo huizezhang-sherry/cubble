@@ -1,5 +1,5 @@
 ---
-title: "2. Data manipulation with cubble"
+title: "Getting started with cubble"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{cubble}

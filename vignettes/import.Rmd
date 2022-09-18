@@ -1,5 +1,5 @@
 ---
-title: "Import data as a cubble"
+title: "Importing spatiotemporal data into a cubble"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{import}

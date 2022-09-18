@@ -1,5 +1,5 @@
 ---
-title: "Details on cubble design"
+title: "Explanation of the cubble data structure"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{design}

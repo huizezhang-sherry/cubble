@@ -1,5 +1,5 @@
 ---
-title: "Application: matching"
+title: "Combining multiple data sources with simple spatiotemporal matching"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{matching}

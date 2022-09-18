@@ -1,5 +1,5 @@
 ---
-title: "Application: aggregation"
+title: "Aggregating data spatially, and making glyph maps"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{aggregation}
