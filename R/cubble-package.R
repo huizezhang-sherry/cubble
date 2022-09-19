@@ -1,7 +1,7 @@
 #' @import rlang vctrs
 #' @importFrom stats setNames
 #' @importFrom dplyr filter group_by ungroup summarise n_distinct mutate select left_join inner_join top_n arrange across ends_with rename
-#' @importFrom dplyr new_rowwise_df new_grouped_df group_data rowwise
+#' @importFrom dplyr new_rowwise_df new_grouped_df group_data rowwise bind_rows distinct
 #' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr nest unnest
 #' @importFrom rlang .data quo_is_missing sym as_name
