@@ -42,7 +42,7 @@ as_cubble <- function(data, key, index, coords, ...) {
 #' @rdname cubble-class
 #' @export
 as_cubble.list <- function(data, key, index, coords, by = NULL,
-                           output = "all", ...){
+                           output = "auto-match", ...){
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -51,7 +51,7 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   test_missing(quo = index, var = "index")
   #test_missing(quo = coords, var = "coords")
 
-  if (!output %in% c("all", "unmatch", "auto-match")){
+  if (!output %in% c("unmatch", "auto-match")){
     cli::cli_abort('Please choose one of the two outputs: "all" and "unmatch"')
   }
 
@@ -86,19 +86,6 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   only_temporal <- setdiff(temporal_key_lvl, spatial_key_lvl)
   unmatch_t <- length(only_temporal) != 0
   unmatch_s <- length(only_spatial) != 0
-
-  if (output == "all"){
-    if (unmatch_t){
-      cli::cli_alert_warning("Some sites in the temporal table don't have spatial information")
-    }
-
-    if (unmatch_s){
-      cli::cli_alert_warning("Some sites in the spatial table don't have temporal information")
-    }
-
-    if (unmatch_s | unmatch_t)
-    cli::cli_alert_warning('Use argument {.code output = "unmatch"} to check on the unmatched key')
-  }
 
   if (output %in% c("auto-match", "unmatch") && (unmatch_t| unmatch_s)){
     temporal_v <- temporal %>%
@@ -141,10 +128,25 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
       left_join(correction, by = setNames("spatial", as_name(key))) %>%
       select(-!!key) %>%
       rename(!!key := temporal)
+
+    ltemp <- length(others$temporal)
+    lspatial <- length(others$spatial)
+      if (ltemp != 0){
+        cli::cli_alert_warning("Some sites in the temporal table don't have spatial information")
+      }
+
+      if (lspatial != 0){
+        cli::cli_alert_warning("Some sites in the spatial table don't have temporal information")
+      }
+
+      if (lspatial != 0 | lspatial != 0)
+        cli::cli_alert_warning('Use argument {.code output = "unmatch"} to check on the unmatched key')
+
   }
 
   ts <- temporal
   out <- spatial %>% dplyr::left_join(ts %>% nest(ts = -shared) , by = shared)
+  out <- out %>% rowwise() %>% filter(!is.null(ts)) %>% ungroup()
   if (!is_null(by)) {key <- names(shared)}
   coords <- names(out)[tidyselect::eval_select(coords, out)]
 
