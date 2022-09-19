@@ -76,26 +76,39 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
     cli::cli_abort("Inputs data in the list need to either common column or specified through the {.code by} argument.")
   }
 
+
+  a <- spatial %>% select(!!key) %>% rename(spatial = !!key)
+  if (!is_null(by)){
+    b <- temporal %>% select(!!sym(by)) %>% rename(temporal = !!sym(by)) %>% distinct()
+  } else{
+    b <- temporal %>% select(!!key) %>% rename(temporal = !!key) %>% distinct()
+  }
+
+  correction <- inner_join(a, b, by = c("spatial" = "temporal"))
+  correction <- correction %>% mutate(temporal = spatial)
+
   if (!is_null(by)){
     spatial_key_lvl <- spatial[[names(by)]]
+    temporal_key_lvl <- temporal[[by]]
   } else{
     spatial_key_lvl <- spatial[[as_name(key)]]
+    temporal_key_lvl <- temporal[[as_name(key)]]
   }
-  temporal_key_lvl <- temporal[[as_name(key)]]
+
   only_spatial <- setdiff(spatial_key_lvl, temporal_key_lvl)
   only_temporal <- setdiff(temporal_key_lvl, spatial_key_lvl)
   unmatch_t <- length(only_temporal) != 0
   unmatch_s <- length(only_spatial) != 0
 
   if (output %in% c("auto-match", "unmatch") && (unmatch_t| unmatch_s)){
-    temporal_v <- temporal %>%
-      dplyr::filter({{key}} %in% only_temporal) %>%
-      dplyr::pull({{key}}) %>%
-      unique()
 
     if (is_null(by)){
       spatial_v <- spatial %>%
         dplyr::filter({{key}} %in% only_spatial) %>%
+        dplyr::pull({{key}}) %>%
+        unique()
+      temporal_v <- temporal %>%
+        dplyr::filter({{key}} %in% only_temporal) %>%
         dplyr::pull({{key}}) %>%
         unique()
     }else{
@@ -103,6 +116,11 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
         dplyr::filter(!!sym(names(by)) %in% only_spatial) %>%
         dplyr::pull(!!sym(names(by))) %>%
         unique()
+
+      temporal_v <- temporal %>%
+         dplyr::filter(!!sym(by) %in% only_temporal) %>%
+         dplyr::pull(!!sym(by)) %>%
+         unique()
      }
 
     t <- gsub("\\s\\(.+\\)", "", temporal_v)
@@ -111,12 +129,11 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
     s_idx <- grep(paste0(t, collapse = "|"), s)
 
     if (length(t_idx) == 0 | length(s_idx) == 0){
-      correction <- tibble::tibble()
       others <- list(temporal = temporal_v, spatial = spatial_v)
     } else{
-      correction <- tibble::tibble(
+      correction <- correction %>% bind_rows(tibble::tibble(
         spatial = sort(spatial_v[s_idx]),
-        temporal = sort(temporal_v[t_idx]))
+        temporal = sort(temporal_v[t_idx])))
 
       others <- list(temporal = temporal_v[-t_idx],
                      spatial = spatial_v[-s_idx])
@@ -124,10 +141,12 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
     if (output == "unmatch"){
       return(list(paired = correction, others = others))
     }
-    spatial <- spatial %>%
-      left_join(correction, by = setNames("spatial", as_name(key))) %>%
-      select(-!!key) %>%
-      rename(!!key := temporal)
+    if (nrow(correction) !=0 ){
+      spatial <- spatial %>%
+        left_join(correction, by = setNames("spatial", as_name(key))) %>%
+        select(-!!key) %>%
+        rename(!!key := temporal)
+    }
 
     ltemp <- length(others$temporal)
     lspatial <- length(others$spatial)
@@ -139,7 +158,7 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
         cli::cli_alert_warning("Some sites in the spatial table don't have temporal information")
       }
 
-      if (lspatial != 0 | lspatial != 0)
+      if (ltemp != 0 | lspatial != 0)
         cli::cli_alert_warning('Use argument {.code output = "unmatch"} to check on the unmatched key')
 
   }
