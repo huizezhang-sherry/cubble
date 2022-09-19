@@ -1,3 +1,4 @@
+#' @param by only used in `as_cubble.list()` to specify the joining variable from spatial and temporal table
 #' @rdname cubble-class
 #' @importFrom tidyr unchop
 #' @importFrom tsibble key_vars index
@@ -40,7 +41,7 @@ as_cubble <- function(data, key, index, coords, ...) {
 
 #' @rdname cubble-class
 #' @export
-as_cubble.list <- function(data, key, index, coords,
+as_cubble.list <- function(data, key, index, coords, by = NULL,
                            output = "all", ...){
   key <- enquo(key)
   index <- enquo(index)
@@ -61,16 +62,25 @@ as_cubble.list <- function(data, key, index, coords,
   spatial <- data$spatial
   temporal <- data$temporal
 
-
   var_names <- map(data, colnames) %>%  unlist()
   common <- var_names %>%  duplicated()
   shared <- unname(var_names[common])
 
-  if (length(shared) == 0){
-    cli::cli_abort("Inputs data in the list need to have at least one shared column.")
+  if (!is_null(by)){
+    if (by %in% names(temporal) && names(by) %in% names(spatial)){
+      shared <- by
+    }
   }
 
-  spatial_key_lvl <- spatial[[as_name(key)]]
+  if (length(shared) == 0){
+    cli::cli_abort("Inputs data in the list need to either common column or specified through the {.code by} argument.")
+  }
+
+  if (!is_null(by)){
+    spatial_key_lvl <- spatial[[names(by)]]
+  } else{
+    spatial_key_lvl <- spatial[[as_name(key)]]
+  }
   temporal_key_lvl <- temporal[[as_name(key)]]
   only_spatial <- setdiff(spatial_key_lvl, temporal_key_lvl)
   only_temporal <- setdiff(temporal_key_lvl, spatial_key_lvl)
@@ -96,10 +106,18 @@ as_cubble.list <- function(data, key, index, coords,
       dplyr::pull({{key}}) %>%
       unique()
 
-    spatial <- spatial %>%
-      dplyr::filter({{key}} %in% only_spatial) %>%
-      dplyr::pull({{key}}) %>%
-      unique()
+    if (is_null(by)){
+      spatial <- spatial %>%
+        dplyr::filter({{key}} %in% only_spatial) %>%
+        dplyr::pull({{key}}) %>%
+        unique()
+    }else{
+      spatial <- spatial %>%
+        dplyr::filter(!!sym(names(by)) %in% only_spatial) %>%
+        dplyr::pull(!!sym(names(by))) %>%
+        unique()
+
+     }
 
     t <- gsub("\\s\\(.+\\)", "", temporal)
     s <- gsub("\\s\\(.+\\)", "", spatial)
@@ -123,8 +141,8 @@ as_cubble.list <- function(data, key, index, coords,
   }
 
   ts <- temporal
-  out <- spatial %>% dplyr::left_join(ts %>% nest(ts = -shared))
-  #out <- spatial %>%  dplyr::nest_join(ts, by = shared)
+  out <- spatial %>% dplyr::left_join(ts %>% nest(ts = -shared) , by = shared)
+  if (!is_null(by)) {key <- names(shared)}
   coords <- names(out)[tidyselect::eval_select(coords, out)]
 
   new_cubble(out,
