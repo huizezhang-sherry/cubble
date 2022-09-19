@@ -51,7 +51,7 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   test_missing(quo = index, var = "index")
   #test_missing(quo = coords, var = "coords")
 
-  if (!output %in% c("all", "unmatch")){
+  if (!output %in% c("all", "unmatch", "auto-match")){
     cli::cli_abort('Please choose one of the two outputs: "all" and "unmatch"')
   }
 
@@ -100,44 +100,47 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
     cli::cli_alert_warning('Use argument {.code output = "unmatch"} to check on the unmatched key')
   }
 
-  if (output == "unmatch" && (unmatch_t| unmatch_s)){
-    temporal <- temporal %>%
+  if (output %in% c("auto-match", "unmatch") && (unmatch_t| unmatch_s)){
+    temporal_v <- temporal %>%
       dplyr::filter({{key}} %in% only_temporal) %>%
       dplyr::pull({{key}}) %>%
       unique()
 
     if (is_null(by)){
-      spatial <- spatial %>%
+      spatial_v <- spatial %>%
         dplyr::filter({{key}} %in% only_spatial) %>%
         dplyr::pull({{key}}) %>%
         unique()
     }else{
-      spatial <- spatial %>%
+      spatial_v <- spatial %>%
         dplyr::filter(!!sym(names(by)) %in% only_spatial) %>%
         dplyr::pull(!!sym(names(by))) %>%
         unique()
-
      }
 
-    t <- gsub("\\s\\(.+\\)", "", temporal)
-    s <- gsub("\\s\\(.+\\)", "", spatial)
+    t <- gsub("\\s\\(.+\\)", "", temporal_v)
+    s <- gsub("\\s\\(.+\\)", "", spatial_v)
     t_idx <- grep(paste0(s, collapse = "|"), t)
     s_idx <- grep(paste0(t, collapse = "|"), s)
 
     if (length(t_idx) == 0 | length(s_idx) == 0){
       correction <- tibble::tibble()
-      others <- list(temporal = temporal, spatial = spatial)
+      others <- list(temporal = temporal_v, spatial = spatial_v)
     } else{
       correction <- tibble::tibble(
-        spatial = sort(spatial[s_idx]),
-        temporal = sort(temporal[t_idx]))
+        spatial = sort(spatial_v[s_idx]),
+        temporal = sort(temporal_v[t_idx]))
 
-      others <- list(temporal = temporal[-t_idx],
-                     spatial = spatial[-s_idx])
+      others <- list(temporal = temporal_v[-t_idx],
+                     spatial = spatial_v[-s_idx])
     }
-
-
-    return(list(paired = correction, others = others))
+    if (output == "unmatch"){
+      return(list(paired = correction, others = others))
+    }
+    spatial <- spatial %>%
+      left_join(correction, by = setNames("spatial", as_name(key))) %>%
+      select(-!!key) %>%
+      rename(!!key := temporal)
   }
 
   ts <- temporal
