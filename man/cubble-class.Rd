@@ -13,7 +13,7 @@
 \usage{
 as_cubble(data, key, index, coords, ...)
 
-\method{as_cubble}{list}(data, key, index, coords, output = "all", ...)
+\method{as_cubble}{list}(data, key, index, coords, by = NULL, output = "all", ...)
 
 \method{as_cubble}{tbl_df}(data, key, index, coords, ...)
 
@@ -45,6 +45,8 @@ cubble(..., key, index, coords)
 \item{coords}{the coordinates that characterise the spatial dimension}
 
 \item{...}{a list object to create new cubble}
+
+\item{by}{only used in \code{as_cubble.list()} to specify the joining variable from spatial and temporal table}
 
 \item{output}{either "all" or "unmatch", whether to output all or a list of unmatched summary}
 
