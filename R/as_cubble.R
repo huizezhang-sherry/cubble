@@ -86,6 +86,7 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
 
   correction <- inner_join(a, b, by = c("spatial" = "temporal"))
   correction <- correction %>% mutate(temporal = spatial)
+  if (nrow(correction) == 0) {correction <- tibble()}
 
   if (!is_null(by)){
     spatial_key_lvl <- spatial[[names(by)]]
