@@ -70,27 +70,6 @@ tmax <- tmax %>%  face_temporal() %>%  unfold(latitude, longitude)
 tmax
 ```
 
+Now you have seen the basic wrangling with cubble, it is time to make some plots! 
+The vignette [Making glyph map](glyph.html) will show you how to plot time series in the space using a glyph map. 
 
-# Glyph map
-
-The `cubble` package also provides a `geom_glyph()` interface to plot the glyph map. The geometry asks for `x_major`, `y_major`, `x_minor`, and `y_minor` as the required aesthetics: 
-
-```{r}
-nsw_vic <- ozmaps::abs_ste %>%  filter(NAME %in% c("Victoria"))
-
-ggplot() + 
-  geom_sf(data = nsw_vic, fill = "transparent", color = "grey", linetype = "dotted") + 
-  geom_glyph(data = tmax, 
-             aes(x_major = longitude, x_minor = month, 
-                 y_major = latitude, y_minor = tmax,
-                 group = interaction(id, group), color = group),
-             width = 1, height = 0.4) +
-  scale_color_brewer(palette = "Dark2") + 
-  theme_bw() + 
-  coord_sf(xlim = c(141, 150)) + 
-  theme(legend.position = "bottom") +
-  labs(x = "Longitude", y = "Latitude")
-
-```
-
-Remember that Australia is in the southern hemisphere, so the temperature curves are in U shapes :)
