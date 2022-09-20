@@ -13,7 +13,7 @@
 \usage{
 as_cubble(data, key, index, coords, ...)
 
-\method{as_cubble}{list}(data, key, index, coords, by = NULL, output = "all", ...)
+\method{as_cubble}{list}(data, key, index, coords, by = NULL, output = "auto-match", ...)
 
 \method{as_cubble}{tbl_df}(data, key, index, coords, ...)
 
