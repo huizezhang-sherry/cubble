@@ -46,7 +46,10 @@ Suggests:
     ggforce,
     purrr,
     stars,
-    units
+    units,
+    leaflet,
+    plotly,
+    crosstalk
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)

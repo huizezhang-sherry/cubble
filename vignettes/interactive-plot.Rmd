@@ -1,0 +1,155 @@
+---
+title: "Making a linked map and time series plot"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{interactive-vis}
+  %\VignetteEngine{knitr::rmarkdown}
+   %\usepackage[utf8]{inputenc}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center"
+)
+
+library(cubble)
+library(dplyr)
+library(ggplot2)
+library(leaflet)
+library(crosstalk)
+library(plotly)
+```
+
+[TODO: Intro]
+
+This vignette will show you how to make interactive graphic with an cubble object. We will be using `crosstalk::bscols()` to create a linked interactive plot of an Australia map, made with leaflet, and a ggplot-turned plotly time series plot: 
+
+```{r echo = FALSE}
+knitr::include_graphics("cluster-diagram/interactive.png")
+```
+
+
+This vignette assumes you have gone through [Get started](cubble.html) and is familiar with basic data wrangling in cubble with `face_temporal()` and `face_spatial()`. 
+
+# Variation of dinurnal temperature range in Australia
+
+Australia occupies a  and different temperature patterns can be observed. Given the maximum and minimum temperature in the climate data in `climate_subset`, we can compute the average maximum and minimum temperature by month at each location. The difference between the maximum and minimum temperature, the diurnal temperature range, has different variation across the year and its variance will be used as the color for our plot. The code below compute these variables: 
+
+```{r}
+(clean <- climate_subset |>
+  face_temporal() |>
+  mutate(month = lubridate::month(date, label = TRUE, abbr = TRUE)) |>
+  group_by(month) |>
+  summarise(
+    tmax = mean(tmax, na.rm = TRUE),
+    tmin = mean(tmin, na.rm = TRUE),
+    diff = mean(tmax - tmin, na.rm = TRUE)
+    ) |>
+  face_spatial() |>
+  mutate(temp_diff_var = var(ts$diff, na.rm = TRUE)))
+```
+
+# Linking with crosstalk
+
+[TODO: text]
+
+```{r}
+nested <- clean %>% SharedData$new(~id, group = "cubble")
+long <- clean |>
+  face_temporal() |>
+  unfold(temp_diff_var) |>
+  arrange(temp_diff_var) %>% 
+  SharedData$new(~id, group = "cubble")
+```
+
+# Create map with leaflet
+
+A basic leaflet map of stations can be created with an underlying map tile (`addTiles()`) and points to represent stations (`addCircleMarkers()`):
+
+```
+leaflet(nested, width = 300, height = 300) |>
+  addTiles() |>
+  addCircleMarkers()
+```
+
+Applying color to the stations requires mapping the variable in the data to the color palette. Here the numerical variable `temp_diff_var` is mapped onto a sequential color palette, Rocket, with some fine tuning using `colorNumeric()`. A popup of station names can be added with the `popup` argument in `addCircleMarkers()` and a `~` is needed when specifying variable name in  leaflet syntax:
+
+```{r}
+domain <- clean$temp_diff_var
+pal <- colorNumeric(
+  colorspace::sequential_hcl(
+    "Rocket",  n = 7, cmax = 90, rev = TRUE, c2 = 40, l2= 85, c1 = 20, l1 = 30),
+  domain = domain)
+
+(map <- leaflet(nested, width = 300, height = 300) |>
+  addTiles() |>
+  addCircleMarkers(color = ~pal(domain), group = "a", radius = 0.1,
+                   popup = ~name, fillOpacity = 1, opacity = 1))
+```
+
+
+# Time series plot with plotly
+
+The time series plot can show the temperature band of each station, allowing for visualising the dinurnal temperature range by month. We use `geom_ribbon()` to create a temperature band that shows both the maximum and minimum temperature and add `geom_points()` to allow selection on the plot:
+
+```{r}
+ts_static <- long %>% 
+  ggplot(aes(x = month, group = id,
+         fill = temp_diff_var, color = temp_diff_var
+         )) +
+  geom_ribbon(aes(ymin = tmin, ymax = tmax), size = 0.1, alpha = 0.3) +
+  geom_point(aes(y = tmax), size = 0.1) +
+  geom_point(aes(y = tmin), size = 0.1) +
+  colorspace::scale_fill_continuous_sequential(
+    "Rocket",  n_interp = 7, cmax = 90, rev = TRUE,
+    c2 = 40, l2= 85, c1 = 20, l1 = 30, name = "Var. temp. diff.") +
+  colorspace::scale_colour_continuous_sequential(
+    "Rocket",  n_interp = 7, cmax = 90, rev = TRUE,
+    c2 = 40, l2= 85, c1 = 20, l1 = 30, name = "Var. temp. diff.") +
+  labs(x = "Month", y = "Temperature") +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    legend.position = "bottom"
+    )
+```
+
+The static ggplot object can be turned into a plotly object with `ggplotly()` and `plotly::highlight()` enable the selection with box or lasso (`on = "plotly_selected"`):
+
+```{r}
+(ts_interactive <- ggplotly(ts_static, width = 600, height = 300) %>% 
+    highlight(on = "plotly_selected", opacityDim = 0.012))
+```
+
+
+# Assemble into a linked plot
+
+`crosstalk::bscols()` can be thought of as the `patchwork` for interactive graphics, which arrange multiple interactive graphics in columns.
+
+```{r}
+bscols(map, ts_interactive, widths = c(4, 6))
+```
+
+# Making selection to see the linking
+
+The selection built in the linked plot goes in both directions. In the screenshot below, a lasso selection is made on the time series and this links to cygnet bay on the northwest coastline of Australia. [describe weather]
+
+```{r echo = FALSE, out.width="150%"}
+knitr::include_graphics("cluster-diagram/selection1.png")
+```
+
+Selection on the leaflet map is made through the selection tool below the zoom in/out bottom on the map. Two selections are made on the northern Australia and inland Queensland, which shows ...
+
+```{r echo = FALSE, out.width="150%"}
+knitr::include_graphics("cluster-diagram/selection2.png")
+```
+
+```{r echo = FALSE, out.width="150%"}
+knitr::include_graphics("cluster-diagram/selection3.png")
+```
+
+Now it is your time to view the tooltip on the map and use the linking to explore weather pattern in Australia! 
