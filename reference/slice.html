@@ -49,6 +49,9 @@ allow slicing from top and bottom, based on a variable, or in random."><!-- math
       <a href="../articles/import.html">Importing spatiotemporal data into a cubble</a>
     </li>
     <li>
+      <a href="../articles/interactive-plot.html">Making a linked map and time series plot</a>
+    </li>
+    <li>
       <a href="../articles/matching.html">Combining multiple data sources with simple spatiotemporal matching</a>
     </li>
   </ul></li>
@@ -192,20 +195,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span><span class="co"># random sample</span></span></span>
 <span class="r-in"><span><span class="va">climate_aus</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [115.71, -37.84, 153.05, -11.4]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [114.16, -43.24, 149.53, -15.74]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long   elev name                     wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00009500 -<span style="color: #BB0000;">35.0</span>  118.    3   albany                    <span style="text-decoration: underline;">94</span>801 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00009977 -<span style="color: #BB0000;">32.5</span>  116.    3   mandurah                  <span style="text-decoration: underline;">94</span>605 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00014142 -<span style="color: #BB0000;">11.4</span>  130.   18.3 pirlangimpi               <span style="text-decoration: underline;">94</span>119 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00014901 -<span style="color: #BB0000;">13.8</span>  131.   42.8 douglas river             <span style="text-decoration: underline;">94</span>128 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00021133 -<span style="color: #BB0000;">33.8</span>  138.  109.  snowtown (rayville park)  <span style="text-decoration: underline;">95</span>670 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00040908 -<span style="color: #BB0000;">26.4</span>  153.    6.4 tewantin rsl park         <span style="text-decoration: underline;">94</span>570 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00041525 -<span style="color: #BB0000;">28.2</span>  152.  475.  warwick                   <span style="text-decoration: underline;">94</span>555 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00063077 -<span style="color: #BB0000;">33.7</span>  151.  320   springwood bowling club   <span style="text-decoration: underline;">95</span>744 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00070005 -<span style="color: #BB0000;">36.9</span>  149.  705   bombala (therry street)   <span style="text-decoration: underline;">94</span>928 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00085291 -<span style="color: #BB0000;">37.8</span>  146. <span style="text-decoration: underline;">1</span>561   mount baw baw             <span style="text-decoration: underline;">95</span>901 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long   elev name                   wmo_id ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00008251 -<span style="color: #BB0000;">27.7</span>  114.    6   kalbarri                <span style="text-decoration: underline;">94</span>401 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00008297 -<span style="color: #BB0000;">30.3</span>  117.  324.  dalwallinu              <span style="text-decoration: underline;">95</span>629 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00012044 -<span style="color: #BB0000;">33.6</span>  121.  220   munglinup west          <span style="text-decoration: underline;">95</span>644 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00014949 -<span style="color: #BB0000;">15.7</span>  132.  221   delamere weapons range  <span style="text-decoration: underline;">94</span>225 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00026100 -<span style="color: #BB0000;">36.7</span>  141.   35   padthaway south         <span style="text-decoration: underline;">95</span>823 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00033119 -<span style="color: #BB0000;">21.1</span>  149.   30.3 mackay m.o              <span style="text-decoration: underline;">94</span>367 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00033210 -<span style="color: #BB0000;">22.3</span>  150.    9.2 st lawrence             <span style="text-decoration: underline;">95</span>369 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00036031 -<span style="color: #BB0000;">23.4</span>  144.  192.  longreach aero          <span style="text-decoration: underline;">94</span>346 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00070349 -<span style="color: #BB0000;">35.5</span>  149. <span style="text-decoration: underline;">1</span>760   mount ginini aws        <span style="text-decoration: underline;">95</span>925 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00094155 -<span style="color: #BB0000;">43.2</span>  148.  240   tasman island           <span style="text-decoration: underline;">95</span>986 &lt;tibble&gt;</span>
 </code></pre></div>
     </div>
   </div>
