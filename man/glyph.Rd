@@ -97,8 +97,9 @@ string) for the major and minor x and y axes. Together, each unique
 combination of \code{x_major} and \code{y_major} specifies a grid cell.}
 
 \item{y_scale, x_scale}{The scaling function to be applied to each set of
-minor values within a grid cell.  Defaults to \code{\link{identity}} so
-that no scaling is performed.}
+minor values within a grid cell. Defaults to \code{\link{identity}} so
+that no scaling is performed. Please specify the scaling function as a
+string (see examples)}
 
 \item{polar}{A logical of length 1, specifying whether the glyphs should
 be drawn in polar coordinates.  Defaults to \code{FALSE}.}
@@ -146,13 +147,6 @@ ggplot(data = GGally::nasa,
            y_major = lat, y_minor = surftemp)) +
   geom_glyph(global_rescale = FALSE)
 
-# with polar coordinate ---------------
-ggplot() +
-  geom_glyph(data = GGally::nasa,
-             aes(x_major = long, x_minor = day,
-                 y_major = lat, y_minor = surftemp), polar = TRUE) +
-   theme_bw()
-
 # adjust width and height with relative & absolute value ---------------
 ggplot() +
   geom_glyph(data = GGally::nasa,
@@ -160,6 +154,15 @@ ggplot() +
                  y_major = lat, y_minor = surftemp),
                  width = rel(0.8), height = 1) +
    theme_bw()
+
+# apply a re-scaling on Y and use polar coordinate
+range01 <- GGally::range01
+GGally::nasa \%>\%
+  ggplot(aes(x_major = long, x_minor = day,
+             y_major = lat, y_minor = ozone)) +
+    geom_glyph_box(fill=NA) +
+    geom_glyph_line() +
+    geom_glyph(y_scale = "range01", polar = TRUE)
 }
 
 }
