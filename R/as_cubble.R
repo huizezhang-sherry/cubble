@@ -1,4 +1,4 @@
-#' @param by only used in `as_cubble.list()` to specify the joining variable from spatial and temporal table
+#' @param by only used in `as_cubble.list()` to specify the linking key between spatial and temporal data
 #' @rdname cubble-class
 #' @importFrom tidyr unchop
 #' @importFrom tsibble key_vars index
@@ -48,130 +48,106 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   coords <- enquo(coords)
 
   test_missing(quo = key, var = "key")
+  key_nm <- as_name(key)
   test_missing(quo = index, var = "index")
-  #test_missing(quo = coords, var = "coords")
+  # parse coords from a quosure to a string vector
+  coords <- as.list(quo_get_expr(coords))[-1]
+  coords <- unlist(map(coords, as_string))
 
   if (!output %in% c("unmatch", "auto-match")){
-    cli::cli_abort('Please choose one of the two outputs: "all" and "unmatch"')
+    cli::cli_abort('Please choose one of the two outputs: "unmatch" and "auto-match"')
   }
 
   if (length(data) > 2){
-    cli::cli_abort("Currently cubble can only take two element for the list input.")
+    cli::cli_abort("Currently cubble can only take two elements for the list input.")
   }
-  # now specific list(spatial = ..., temporal = ...)
+
+  # find the common "key" column between spatial and temporal
+  # if no shared, parse the `by` argument
   spatial <- data$spatial
   temporal <- data$temporal
+  shared <- do.call("intersect", map(data, colnames) %>% setNames(c("x", "y")))
 
-  var_names <- map(data, colnames) %>%  unlist()
-  common <- var_names %>%  duplicated()
-  shared <- unname(var_names[common])
-
+  # if the `by` argument is used,
+  # align the joined column in spatial and temporal to the name in spatial
+  # correct the key to the name in spatial, if name in temporal is used
   if (!is_null(by)){
     if (by %in% names(temporal) && names(by) %in% names(spatial)){
-      shared <- by
+      # rename the join column to have the same name
+      names(temporal)[names(temporal) == by] <- names(by)
     }
+    if (key_nm == by) key_mn <- names(by)
+    shared <- names(by)
   }
 
   if (length(shared) == 0){
-    cli::cli_abort("Inputs data in the list need to either common column or specified through the {.code by} argument.")
+    cli::cli_abort(
+      "Input data need to have either common column or the {.code by} argument specified.")
+  }
+
+  if (!key_nm %in% shared){
+    cli::cli_abort(
+      "Please make sure key is the common column of spatial and temporal data.
+      In case the {.code by} argument is used, {.field key} should be either side of the {.code by} argument")
+    # shared, key_nm and by should point to the same variable name now
+    # use key_nm from now on
   }
 
 
-  a <- spatial %>% select(!!key) %>% rename(spatial = !!key)
-  if (!is_null(by)){
-    b <- temporal %>% select(!!sym(by)) %>% rename(temporal = !!sym(by)) %>% distinct()
-  } else{
-    b <- temporal %>% select(!!key) %>% rename(temporal = !!key) %>% distinct()
-  }
+  matched_tbl <-  tibble(
+    spatial = intersect(unique(temporal[[key_nm]]), spatial[[key_nm]])
+    ) %>%
+    mutate(temporal = spatial)
+  if (nrow(matched_tbl) == 0) {matched_tbl <- tibble()}
 
-  correction <- inner_join(a, b, by = c("spatial" = "temporal"))
-  correction <- correction %>% mutate(temporal = spatial)
-  if (nrow(correction) == 0) {correction <- tibble()}
+  # find whether there are unmatched spatial and temporal key level
+  slvl <- spatial[[key_nm]]
+  tlvl <- temporal[[key_nm]]
+  only_spatial <- setdiff(slvl, tlvl)
+  only_temporal <- setdiff(tlvl, slvl)
+  has_unmatch <- length(only_temporal) != 0 | length(only_spatial) != 0
 
-  if (!is_null(by)){
-    spatial_key_lvl <- spatial[[names(by)]]
-    temporal_key_lvl <- temporal[[by]]
-  } else{
-    spatial_key_lvl <- spatial[[as_name(key)]]
-    temporal_key_lvl <- temporal[[as_name(key)]]
-  }
+  if (has_unmatch){
+    # construct the unmatching summary
+    matching_res <- cubble_automatch(
+      spatial = spatial, temporal = temporal,
+      key_nm = key_nm, matched_tbl = matched_tbl,
+      only_spatial = only_spatial, only_temporal = only_temporal
+      )
 
-  only_spatial <- setdiff(spatial_key_lvl, temporal_key_lvl)
-  only_temporal <- setdiff(temporal_key_lvl, spatial_key_lvl)
-  unmatch_t <- length(only_temporal) != 0
-  unmatch_s <- length(only_spatial) != 0
+    # return early with the unmatch summary
+    if (output == "unmatch") return(matching_res)
 
-  if (output %in% c("auto-match", "unmatch") && (unmatch_t| unmatch_s)){
-
-    if (is_null(by)){
-      spatial_v <- spatial %>%
-        dplyr::filter({{key}} %in% only_spatial) %>%
-        dplyr::pull({{key}}) %>%
-        unique()
-      temporal_v <- temporal %>%
-        dplyr::filter({{key}} %in% only_temporal) %>%
-        dplyr::pull({{key}}) %>%
-        unique()
-    }else{
-      spatial_v <- spatial %>%
-        dplyr::filter(!!sym(names(by)) %in% only_spatial) %>%
-        dplyr::pull(!!sym(names(by))) %>%
-        unique()
-
-      temporal_v <- temporal %>%
-         dplyr::filter(!!sym(by) %in% only_temporal) %>%
-         dplyr::pull(!!sym(by)) %>%
-         unique()
-     }
-
-    t <- gsub("\\s\\(.+\\)", "", temporal_v)
-    s <- gsub("\\s\\(.+\\)", "", spatial_v)
-    t_idx <- grep(paste0(s, collapse = "|"), t)
-    s_idx <- grep(paste0(t, collapse = "|"), s)
-
-    if (length(t_idx) == 0 | length(s_idx) == 0){
-      others <- list(temporal = temporal_v, spatial = spatial_v)
-    } else{
-      correction <- correction %>% bind_rows(tibble::tibble(
-        spatial = sort(spatial_v[s_idx]),
-        temporal = sort(temporal_v[t_idx])))
-
-      others <- list(temporal = temporal_v[-t_idx],
-                     spatial = spatial_v[-s_idx])
-    }
-    if (output == "unmatch"){
-      return(list(paired = correction, others = others))
-    }
-    if (nrow(correction) !=0 ){
-      spatial <- spatial %>%
-        left_join(correction, by = setNames("spatial", as_name(key))) %>%
-        select(-!!key) %>%
-        rename(!!key := temporal)
+    # inform users about the unmatch
+    others <- matching_res$others
+    has_t_unmatched <- length(others$temporal) != 0
+    has_s_unmatched <- length(others$spatial) != 0
+    has_either_unmatched <- has_t_unmatched | has_s_unmatched
+    if (has_t_unmatched){
+      cli::cli_alert_warning(
+        "Some sites in the temporal table don't have spatial information"
+        )
     }
 
-    ltemp <- length(others$temporal)
-    lspatial <- length(others$spatial)
-      if (ltemp != 0){
-        cli::cli_alert_warning("Some sites in the temporal table don't have spatial information")
-      }
+    if (has_s_unmatched){
+      cli::cli_alert_warning(
+        "Some sites in the spatial table don't have temporal information"
+        )
+    }
 
-      if (lspatial != 0){
-        cli::cli_alert_warning("Some sites in the spatial table don't have temporal information")
-      }
-
-      if (ltemp != 0 | lspatial != 0)
-        cli::cli_alert_warning('Use argument {.code output = "unmatch"} to check on the unmatched key')
-
+    if (has_either_unmatched){
+      cli::cli_alert_warning(
+        'Use argument {.code output = "unmatch"} to check on the unmatched key'
+        )
+    }
   }
 
-  ts <- temporal
-  out <- spatial %>% dplyr::left_join(ts %>% nest(ts = -shared) , by = shared)
-  out <- out %>% rowwise() %>% filter(!is.null(ts)) %>% ungroup()
-  if (!is_null(by)) {key <- names(shared)}
-  coords <- names(out)[tidyselect::eval_select(coords, out)]
+  out <- suppressMessages(
+    dplyr::inner_join(spatial, temporal %>% nest(ts = -key_nm))
+  )
 
   new_cubble(out,
-             key = as_name(key), index = as_name(index), coords = coords,
+             key = key_nm, index = as_name(index), coords = coords,
              spatial = NULL, form = "nested")
 }
 
