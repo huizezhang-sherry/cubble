@@ -220,7 +220,6 @@ rescale11 <- function(x, xlim = NULL) 2 * rescale01(x, xlim) - 1
 is.rel <- function(x) inherits(x, "rel")
 
 glyph_data_setup <- function(data, params){
-  #browser()
   if (length(unique(data$group)) == 1){
     data$group <- interaction(data$x_major, data$y_major, drop = TRUE)
     data <- data %>%  dplyr::group_by(.data$group)
@@ -234,6 +233,11 @@ glyph_data_setup <- function(data, params){
   if (!is_null(params$y_scale) & !identical(params$y_scale, "identity")){
     data <- data %>%
       dplyr::mutate(y_minor = rlang::exec(unique(params$y_scale), .data$y_minor))
+  }
+
+  datetime_class <- c("Date", "yearmonth", "yearweek", "yearquarter")
+  if (any(class(data$x_minor) %in% datetime_class)){
+    data[["x_minor"]] <- as.numeric(data[["x_minor"]])
   }
 
   data <- data %>%
