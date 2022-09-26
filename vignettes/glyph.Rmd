@@ -1,5 +1,5 @@
 ---
-title: "Making glyph map"
+title: "Making a glyph map"
 output: rmarkdown::html_vignette
 bibliography: '`r system.file("reference.bib", package = "cubble")`'
 vignette: >

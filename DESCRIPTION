@@ -18,7 +18,7 @@ RoxygenNote: 7.2.1
 Imports: 
     cli,
     clipr,
-    dplyr,
+    dplyr (>= 1.0.99.9000),
     geosphere,
     ggplot2,
     glue,
@@ -33,7 +33,6 @@ Imports:
     tidyr,
     tidyselect,
     tsibble,
-    vctrs,
     whisker
 Suggests: 
     rmarkdown,
@@ -49,10 +48,15 @@ Suggests:
     units,
     leaflet,
     plotly,
-    crosstalk
+    crosstalk,
+    concaveman,
+    colorspace
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
 Config/testthat/edition: 3
 URL: https://github.com/huizezhang-sherry/cubble
 BugReports: https://github.com/huizezhang-sherry/cubble/issues
+Remotes: 
+    tidyverse/dplyr,
+    r-lib/vctrs

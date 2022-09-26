@@ -94,11 +94,11 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   }
 
 
-  matched_tbl <-  tibble(
+  matched_tbl <-  tibble::tibble(
     spatial = intersect(unique(temporal[[key_nm]]), spatial[[key_nm]])
     ) %>%
     mutate(temporal = spatial)
-  if (nrow(matched_tbl) == 0) {matched_tbl <- tibble()}
+  if (nrow(matched_tbl) == 0) {matched_tbl <- tibble::tibble()}
 
   # find whether there are unmatched spatial and temporal key level
   slvl <- spatial[[key_nm]]

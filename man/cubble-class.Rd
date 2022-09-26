@@ -46,7 +46,7 @@ cubble(..., key, index, coords)
 
 \item{...}{a list object to create new cubble}
 
-\item{by}{only used in \code{as_cubble.list()} to specify the joining variable from spatial and temporal table}
+\item{by}{only used in \code{as_cubble.list()} to specify the linking key between spatial and temporal data}
 
 \item{output}{either "all" or "unmatch", whether to output all or a list of unmatched summary}
 
