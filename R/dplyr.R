@@ -111,7 +111,7 @@ summarise.cubble_df <- function(data, ...){
 #' @importFrom dplyr group_by_prepare
 group_by.cubble_df <- function(data, ...){
   key <- key_vars(data)
-  groups <- dplyr::group_by_prepare(data, ..., .add = TRUE, caller_env = caller_env())
+  groups <- dplyr::group_by_prepare(data, ..., .add = TRUE)
   group_var <- groups$group_names
   index <- setdiff(group_var,key)
   out <- groups$data

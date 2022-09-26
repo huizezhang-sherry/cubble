@@ -86,7 +86,7 @@ Taking the output from the [Get started](cubble.html) page, we can visualise the
 
 ```{r echo = FALSE}
 OUTPUT_FROM_GET_STARTED <- tmax_hist %>% 
-  filter(between(stringr::str_sub(id, 7, 8), 76, 90)) %>% 
+  filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 76, 90)) %>% 
   face_temporal() %>% 
   group_by(
     month = lubridate::month(yearmonth),
