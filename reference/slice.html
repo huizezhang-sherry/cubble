@@ -43,7 +43,7 @@ allow slicing from top and bottom, based on a variable, or in random."><!-- math
       <a href="../articles/cubble-design.html">Explanation of the cubble data structure</a>
     </li>
     <li>
-      <a href="../articles/glyph.html">Making glyph map</a>
+      <a href="../articles/glyph.html">Making a glyph map</a>
     </li>
     <li>
       <a href="../articles/import.html">Importing spatiotemporal data into a cubble</a>
@@ -195,20 +195,20 @@ allow slicing from top and bottom, based on a variable, or in random.</p>
 <span class="r-in"><span><span class="co"># random sample</span></span></span>
 <span class="r-in"><span><span class="va">climate_aus</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   id [10]: nested form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [115.1, -35.56, 153.1, -12.6]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:     [133.67, -36.99, 152.46, -12.67]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                          wmo_id ts      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00005017 -<span style="color: #BB0000;">21.7</span>  115.  10.5 onslow airport                 <span style="text-decoration: underline;">95</span>305 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00009961 -<span style="color: #BB0000;">33.9</span>  120.  26   hopetoun north                 <span style="text-decoration: underline;">95</span>635 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00010692 -<span style="color: #BB0000;">33.1</span>  119. 320   newdegate research station     <span style="text-decoration: underline;">94</span>628 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00012305 -<span style="color: #BB0000;">28.6</span>  122. 464.  laverton aero                  <span style="text-decoration: underline;">94</span>449 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00014041 -<span style="color: #BB0000;">12.6</span>  131.  14.1 middle point aws               <span style="text-decoration: underline;">95</span>121 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00018011 -<span style="color: #BB0000;">32.1</span>  134.  10   ceduna post office             <span style="text-decoration: underline;">94</span>653 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00022031 -<span style="color: #BB0000;">34.7</span>  138.  32   minlaton aero                  <span style="text-decoration: underline;">95</span>659 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00023804 -<span style="color: #BB0000;">35.6</span>  139.   8   victor harbor (encounter bay)  <span style="text-decoration: underline;">95</span>811 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00032141 -<span style="color: #BB0000;">18.5</span>  146.  10   lucinda point                  <span style="text-decoration: underline;">94</span>295 &lt;tibble&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00040861 -<span style="color: #BB0000;">26.6</span>  153.   3.3 maroochydore aero              <span style="text-decoration: underline;">94</span>569 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name                   wmo_id ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00018011 -<span style="color: #BB0000;">32.1</span>  134.  10   ceduna post office      <span style="text-decoration: underline;">94</span>653 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00025006 -<span style="color: #BB0000;">35.1</span>  140.  72   karoonda                <span style="text-decoration: underline;">95</span>813 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00026099 -<span style="color: #BB0000;">37.0</span>  141.  49.7 naracoorte aerodrome    <span style="text-decoration: underline;">94</span>820 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00027045 -<span style="color: #BB0000;">12.7</span>  142.  18   weipa aero              <span style="text-decoration: underline;">94</span>170 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00033307 -<span style="color: #BB0000;">19.4</span>  147. 556   woolshed                <span style="text-decoration: underline;">95</span>293 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00042112 -<span style="color: #BB0000;">26.7</span>  150. 305.  miles constance street  <span style="text-decoration: underline;">95</span>529 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00055325 -<span style="color: #BB0000;">31.1</span>  151. 395.  tamworth airport aws    <span style="text-decoration: underline;">95</span>762 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00057095 -<span style="color: #BB0000;">28.8</span>  152. 555   tabulam (muirne)        <span style="text-decoration: underline;">94</span>587 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00074034 -<span style="color: #BB0000;">36.0</span>  146. 143   corowa airport          <span style="text-decoration: underline;">95</span>895 &lt;tibble&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00077010 -<span style="color: #BB0000;">35.7</span>  142.  77.3 hopetoun airport        <span style="text-decoration: underline;">94</span>838 &lt;tibble&gt;</span>
 </code></pre></div>
     </div>
   </div>

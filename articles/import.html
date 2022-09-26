@@ -59,7 +59,7 @@
       <a href="../articles/cubble-design.html">Explanation of the cubble data structure</a>
     </li>
     <li>
-      <a href="../articles/glyph.html">Making glyph map</a>
+      <a href="../articles/glyph.html">Making a glyph map</a>
     </li>
     <li>
       <a href="../articles/import.html">Importing spatiotemporal data into a cubble</a>
@@ -314,18 +314,18 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [26565]: nested form</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [113, -53, 153, -12]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: time [dttm], q [dbl], z [dbl]</span></span></span>
-<span><span class="co">#&gt;       id  long   lat ts              </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1  113    -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2  113.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3  114.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4  114.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5  114    -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6  114.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7  114.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8  115.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9  115    -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10  115.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt;       id      long       lat ts              </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl[1d]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl[1d]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1      113        -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2      113.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3      114.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4      114.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5      114        -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6      114.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7      114.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8      115.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9      115        -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10      115.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 26,555 more rows</span></span></span></code></pre></div>
 <p>The memory limit with NetCDF data in cubble depends on longitude grid point x latitude grid point x time grid point x number of variable. Cubble can handle slightly more than 300 x 300 (longitude x longitude) grid points for 3 variables in one year. You can reduce the spatial grid points in exchange for longer time period and more variables. A 300 by 300 spatial grid can be:</p>
 <ul>
@@ -341,18 +341,18 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [6765]: nested form</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [113, -53, 153, -12]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: time [dttm], q [dbl], z [dbl]</span></span></span>
-<span><span class="co">#&gt;       id  long   lat ts              </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1   113   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2   114   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3   115   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4   116   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5   117   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6   118   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7   119   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8   120   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9   121   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10   122   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt;       id      long       lat ts              </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl[1d]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl[1d]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1       113       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     2       114       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     3       115       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     4       116       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     5       117       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     6       118       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     7       119       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8       120       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9       121       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10       122       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 6,755 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
