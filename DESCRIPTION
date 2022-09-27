@@ -33,6 +33,7 @@ Imports:
     tidyr,
     tidyselect,
     tsibble,
+    vctrs,
     whisker
 Suggests: 
     rmarkdown,
