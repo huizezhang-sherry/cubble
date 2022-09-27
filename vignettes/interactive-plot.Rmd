@@ -24,20 +24,18 @@ library(crosstalk)
 library(plotly)
 ```
 
-[TODO: Intro]
-
-This vignette will show you how to make interactive graphic with an cubble object. We will be using `crosstalk::bscols()` to create a linked interactive plot of an Australia map, made with leaflet, and a ggplot-turned plotly time series plot: 
+Interactive graphics can be useful because they make it possible to look at the data in multiple of ways on-the-fly. This is especially important for spatio-temporal data, where we would like to interactively connect spatial and temporal displays. This vignette will show you how to make an interactive graphic with a cubble object. We will be using `crosstalk::bscols()` to create a linked interactive plot of an Australia map, made with leaflet, and a ggplot-turned plotly time series plot: 
 
 ```{r echo = FALSE}
 knitr::include_graphics("cluster-diagram/interactive.png")
 ```
 
 
-This vignette assumes you have gone through [Get started](cubble.html) and is familiar with basic data wrangling in cubble with `face_temporal()` and `face_spatial()`. 
+This vignette assumes you have gone through [Get started](cubble.html) and are familiar with basic data wrangling in cubble with `face_temporal()` and `face_spatial()`. 
 
-# Variation of dinurnal temperature range in Australia
+# Variation of the diurnal temperature range in Australia
 
-Australia occupies a  and different temperature patterns can be observed. Given the maximum and minimum temperature in the climate data in `climate_subset`, we can compute the average maximum and minimum temperature by month at each location. The difference between the maximum and minimum temperature, the diurnal temperature range, has different variation across the year and its variance will be used as the color for our plot. The code below compute these variables: 
+Australia occupies a  and different temperature patterns can be observed. Given the maximum and minimum temperature in the climate data in `climate_subset`, we can compute the average maximum and minimum temperature by month at each location. The difference between the maximum and minimum temperature, the diurnal temperature range, has different variations across the year and its variance will be used as the color for our plot. The codes below compute these variables: 
 
 ```{r}
 (clean <- climate_subset |>
@@ -55,7 +53,7 @@ Australia occupies a  and different temperature patterns can be observed. Given 
 
 # Linking with crosstalk
 
-[TODO: text]
+Crosstalk accepts linking between multiple data objects in the same group. Here we create two SharedData objects (one using the nested form and another using the long form), with `id` as the key and give them the same group name (`group = "cubble"`):
 
 ```{r}
 nested <- clean %>% SharedData$new(~id, group = "cubble")
@@ -66,7 +64,7 @@ long <- clean |>
   SharedData$new(~id, group = "cubble")
 ```
 
-# Create map with leaflet
+# Create maps with leaflet
 
 A basic leaflet map of stations can be created with an underlying map tile (`addTiles()`) and points to represent stations (`addCircleMarkers()`):
 
@@ -76,7 +74,7 @@ leaflet(nested, width = 300, height = 300) |>
   addCircleMarkers()
 ```
 
-Applying color to the stations requires mapping the variable in the data to the color palette. Here the numerical variable `temp_diff_var` is mapped onto a sequential color palette, Rocket, with some fine tuning using `colorNumeric()`. A popup of station names can be added with the `popup` argument in `addCircleMarkers()` and a `~` is needed when specifying variable name in  leaflet syntax:
+Applying color to the stations requires mapping the variable in the data to the color palette. Here the numerical variable `temp_diff_var` is mapped onto a sequential color palette, Rocket, with some fine-tuning using `colorNumeric()`. A popup of station names can be added with the `popup` argument in `addCircleMarkers()` and a `~` is needed when specifying variable name in  leaflet syntax:
 
 ```{r}
 domain <- clean$temp_diff_var
@@ -94,7 +92,7 @@ pal <- colorNumeric(
 
 # Time series plot with plotly
 
-The time series plot can show the temperature band of each station, allowing for visualising the dinurnal temperature range by month. We use `geom_ribbon()` to create a temperature band that shows both the maximum and minimum temperature and add `geom_points()` to allow selection on the plot:
+The time series plot can show the temperature band of each station, allowing for visualising the diurnal temperature range by month. We use `geom_ribbon()` to create a temperature band that shows both the maximum and minimum temperature and add `geom_points()` to allow selection on the plot:
 
 ```{r}
 ts_static <- long %>% 
@@ -128,7 +126,7 @@ The static ggplot object can be turned into a plotly object with `ggplotly()` an
 
 # Assemble into a linked plot
 
-`crosstalk::bscols()` can be thought of as the `patchwork` for interactive graphics, which arrange multiple interactive graphics in columns.
+`crosstalk::bscols()` can be thought of as the `patchwork` for interactive graphics, which arranges multiple interactive graphics in columns.
 
 ```{r}
 bscols(map, ts_interactive, widths = c(4, 6))
@@ -136,13 +134,13 @@ bscols(map, ts_interactive, widths = c(4, 6))
 
 # Making selection to see the linking
 
-The selection built in the linked plot goes in both directions. In the screenshot below, a lasso selection is made on the time series and this links to cygnet bay on the northwest coastline of Australia. [describe weather]
+The selection built in the linked plot goes in both directions. In the screenshot below, a lasso selection is made on the time series and this links to cygnet bay on the northwest coastline of Australia. The area has a larger temperature range in July than in the summer period (December - February).
 
 ```{r echo = FALSE, out.width="150%"}
 knitr::include_graphics("cluster-diagram/selection1.png")
 ```
 
-Selection on the leaflet map is made through the selection tool below the zoom in/out bottom on the map. Two selections are made on the northern Australia and inland Queensland, which shows ...
+Selection on the leaflet map is made through the selection tool below the zoom-in/out bottom on the map. Two selections are made on northern Australia and inland Queensland. Northern Australia has a narrow temperature range constantly 20 degrees throughout the year, while the temperature range in inland Queensland is much larger and there is a clear difference between the summer and winter periods.
 
 ```{r echo = FALSE, out.width="150%"}
 knitr::include_graphics("cluster-diagram/selection2.png")
@@ -152,4 +150,4 @@ knitr::include_graphics("cluster-diagram/selection2.png")
 knitr::include_graphics("cluster-diagram/selection3.png")
 ```
 
-Now it is your time to view the tooltip on the map and use the linking to explore weather pattern in Australia! 
+Now it is your time to view the tooltip on the map and use the selection to explore weather patterns in Australia! 
