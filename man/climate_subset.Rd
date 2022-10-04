@@ -24,15 +24,7 @@ Daily measure on precipitation (prcp) maximum temperature (tmax), and
 minimum temperature (tmin) in 2020 for 30 stations.
 }
 \examples{
-library(ggplot2)
-state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-ggplot2::ggplot() +
-  ggplot2::geom_sf(data = state_map,
-                   ggplot2::aes(geometry = .data$geometry),
-                   color = "grey", linetype = "dotted") +
-  ggplot2::geom_point(data = climate_subset,
-                      ggplot2::aes(x = long, y = lat)) +
-  ggplot2::theme_bw()
+climate_subset \%>\% face_temporal()
 }
 \seealso{
 climate_aus climate_flat

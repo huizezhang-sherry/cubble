@@ -15,17 +15,7 @@
 #'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 #' }
 #' @examples
-#' \dontrun{
-#' library(ggplot2)
-#' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-#' ggplot2::ggplot() +
-#'   ggplot2::geom_sf(data = state_map,
-#'                    ggplot2::aes(geometry = .data$geometry),
-#'                    color = "grey", linetype = "dotted") +
-#'   ggplot2::geom_point(data = climate_aus,
-#'                       ggplot2::aes(x = long, y = lat)) +
-#'   ggplot2::theme_bw()
-#' }
+#' climate_aus %>% face_temporal() %>% face_spatial()
 #' @seealso climate_subset climate_flat
 "climate_aus"
 
@@ -44,15 +34,7 @@
 #'   \item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
 #' }
 #' @examples
-#' library(ggplot2)
-#' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-#' ggplot2::ggplot() +
-#'   ggplot2::geom_sf(data = state_map,
-#'                    ggplot2::aes(geometry = .data$geometry),
-#'                    color = "grey", linetype = "dotted") +
-#'   ggplot2::geom_point(data = climate_subset,
-#'                       ggplot2::aes(x = long, y = lat)) +
-#'   ggplot2::theme_bw()
+#' climate_subset %>% face_temporal()
 #' @seealso climate_aus climate_flat
 "climate_subset"
 
@@ -78,15 +60,7 @@
 #' @seealso climate_aus climate_subset
 #' @rdname climate_flat
 #' @examples
-#' library(ggplot2)
-#' state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-#' ggplot2::ggplot() +
-#'  ggplot2::geom_sf(data = state_map,
-#'                   ggplot2::aes(geometry = .data$geometry),
-#'                   color = "grey", linetype = "dotted") +
-#'    ggplot2::geom_point(data = climate_aus,
-#'                        ggplot2::aes(x = long, y = lat)) +
-#'    ggplot2::theme_bw()
+#' climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
 "climate_flat"
 
 #'@rdname climate_flat

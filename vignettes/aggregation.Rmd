@@ -18,12 +18,13 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(cubble)
 library(ggplot2)
+library(sf)
 ```
 
 Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. `prcp_aus` extracts daily precipitation and minimum temperature from GHCN for 639 stations in Australia from 2016 to 2020. This is where these stations locate in an Australia map: 
 
 ```{r}
-state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+state_map <- st_simplify(ozmaps::abs_ste, dTolerance = 4000)
 ggplot() + 
   geom_sf(data = state_map, inherit.aes = FALSE,
           color = "grey80", alpha = 0.4, linetype = 3) +
@@ -94,7 +95,7 @@ cluster_long <- cluster_nested %>%
   summarise(prcp = mean(prcp, na.rm = TRUE)) %>%  
   unfold(cent_long, cent_lat)
 
-state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
+state_map <- st_simplify(ozmaps::abs_ste, dTolerance = 4000)
 
 ggplot_smooth <- cluster_long %>%  
   ggplot() +

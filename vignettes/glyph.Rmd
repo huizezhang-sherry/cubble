@@ -124,7 +124,7 @@ OUTPUT_FROM_GET_STARTED %>%
 library(tidyverse)
 library(ggsvg)
 library(patchwork)
-nsw <- ozmaps::abs_ste %>% filter(NAME %in% c("New South Wales")) %>% rmapshaper::ms_simplify()
+nsw <- ozmaps::abs_ste %>% filter(NAME %in% c("New South Wales")) %>% sf::st_simplify(dTolerance = 4000)
 
 single <- climate_aus %>% filter(id == "ASN00076031")
 glyph_dt <- single %>% face_temporal() %>% unfold(long, lat)

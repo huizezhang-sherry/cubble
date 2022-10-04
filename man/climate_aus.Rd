@@ -28,17 +28,7 @@ minimum temperature (tmin) in 2020 for 639 stations. \code{stations} and
 }
 }
 \examples{
-\dontrun{
-library(ggplot2)
-state_map <- rmapshaper::ms_simplify(ozmaps::abs_ste, keep = 2e-3)
-ggplot2::ggplot() +
-  ggplot2::geom_sf(data = state_map,
-                   ggplot2::aes(geometry = .data$geometry),
-                   color = "grey", linetype = "dotted") +
-  ggplot2::geom_point(data = climate_aus,
-                      ggplot2::aes(x = long, y = lat)) +
-  ggplot2::theme_bw()
-}
+climate_aus \%>\% face_temporal() \%>\% face_spatial()
 }
 \seealso{
 climate_subset climate_flat

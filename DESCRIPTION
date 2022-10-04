@@ -36,7 +36,6 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    rmapshaper,
     ozmaps,
     GGally,
     ggrepel,
