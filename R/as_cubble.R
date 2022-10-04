@@ -291,7 +291,7 @@ as_cubble.stars <- function(data, key, index, coords, ...){
 
   # parse the dimensions attribute
   dim_obj <- attr(data, "dimensions")
-  dim_flatten <- purrr::map(dim_obj, parse_dimension)
+  dim_flatten <- map(dim_obj, parse_dimension)
   longlat <- names(dim_flatten)[1:2]
   time <- names(dim_flatten)[3]
   mapping <- do.call("expand.grid", rev(dim_flatten)) %>%
@@ -331,7 +331,7 @@ parse_dimension <- function(obj){
       if (is.null(origin))
         cli::cli_abort("The units is currently too complex for {.field cubble} to parse.")
 
-      tperiod <- stringr::word(tstring)
+      tperiod <- sub(" .*", "\\1", tstring)
       time <- seq(obj$from,obj$to, as.numeric(obj$delta))
       out <- origin %m+% do.call(tperiod, list(x = floor(time)))
       } else if (obj$refsys == "POSIXct"){

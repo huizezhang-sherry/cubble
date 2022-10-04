@@ -38,7 +38,6 @@ extract_longlat <- function(data){
 
 }
 
-#' @importFrom stringr word
 #' @importFrom lubridate %m+% hours days minutes seconds years
 #' @export
 #' @rdname netcdf
@@ -51,7 +50,7 @@ extract_time <- function(data){
   tunits <- ncdf4::ncatt_get(data, "time", "units")
 
   # process period
-  tperiod <- stringr::word(tunits$value)
+  tperiod <- sub(" .*", "\\1", tunits$value)
   if (tperiod %in% c("day", "hour", "minute", "second" ,"month", "year")) {
     tperiod <- paste0(tperiod, "s")
   }
