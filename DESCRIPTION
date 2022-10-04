@@ -57,4 +57,5 @@ BugReports: https://github.com/huizezhang-sherry/cubble/issues
 Remotes: 
     tidyverse/dplyr,
     r-lib/vctrs,
-    r-lib/tidyselect
+    r-lib/tidyselect,
+    r-lib/lifecycle
