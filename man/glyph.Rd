@@ -16,8 +16,8 @@ geom_glyph(
   x_minor = NULL,
   y_major = NULL,
   y_minor = NULL,
-  x_scale = "identity",
-  y_scale = "identity",
+  x_scale = identity,
+  y_scale = identity,
   polar = FALSE,
   width = ggplot2::rel(2.1),
   height = ggplot2::rel(1.8),
@@ -98,8 +98,7 @@ combination of \code{x_major} and \code{y_major} specifies a grid cell.}
 
 \item{y_scale, x_scale}{The scaling function to be applied to each set of
 minor values within a grid cell. Defaults to \code{\link{identity}} so
-that no scaling is performed. Please specify the scaling function as a
-string (see examples)}
+that no scaling is performed.}
 
 \item{polar}{A logical of length 1, specifying whether the glyphs should
 be drawn in polar coordinates.  Defaults to \code{FALSE}.}
@@ -130,39 +129,42 @@ a ggplot object
 Create glyph map with ggplot2
 }
 \examples{
-\dontrun{
+print_p <- GGally::print_if_interactive
+
 library(ggplot2)
 # basic glyph map with reference line and box---------------
-ggplot(data = GGally::nasa,
+p <- ggplot(data = GGally::nasa,
        aes(x_major = long, x_minor = day,
            y_major = lat, y_minor = surftemp)) +
   geom_glyph_box() +
   geom_glyph_line() +
   geom_glyph() +
   theme_bw()
+print_p(p)
 
 # rescale on each individual glyph ---------------
-ggplot(data = GGally::nasa,
+p <- ggplot(data = GGally::nasa,
        aes(x_major = long, x_minor = day,
            y_major = lat, y_minor = surftemp)) +
   geom_glyph(global_rescale = FALSE)
+print_p(p)
 
 # adjust width and height with relative & absolute value ---------------
-ggplot() +
+p <- ggplot() +
   geom_glyph(data = GGally::nasa,
              aes(x_major = long, x_minor = day,
                  y_major = lat, y_minor = surftemp),
                  width = rel(0.8), height = 1) +
    theme_bw()
+print_p(p)
 
 # apply a re-scaling on Y and use polar coordinate
-range01 <- GGally::range01
-GGally::nasa \%>\%
+p <-
+  GGally::nasa \%>\%
   ggplot(aes(x_major = long, x_minor = day,
              y_major = lat, y_minor = ozone)) +
     geom_glyph_box(fill=NA) +
     geom_glyph_line() +
-    geom_glyph(y_scale = "range01", polar = TRUE)
-}
-
+    geom_glyph(y_scale = GGally::range01, polar = TRUE)
+print_p(p)
 }
