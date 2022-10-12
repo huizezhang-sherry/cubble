@@ -11,3 +11,4 @@
 ^cran-comments\.md$
 ^Meta$
 ^CRAN-SUBMISSION$
+^tests/testthat/_snaps$

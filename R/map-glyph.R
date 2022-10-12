@@ -13,53 +13,55 @@
 #'  resolution of the data by using \code{\link[ggplot2]{rel}}.
 #' @param y_scale,x_scale The scaling function to be applied to each set of
 #'  minor values within a grid cell. Defaults to \code{\link{identity}} so
-#'  that no scaling is performed. Please specify the scaling function as a
-#'  string (see examples)
+#'  that no scaling is performed.
 #' @param global_rescale Whether rescale is performed globally or on each
 #' individual glyph.
 #' @export
 #' @rdname glyph
 #' @return a ggplot object
 #' @examples
-#' \dontrun{
+#' print_p <- GGally::print_if_interactive
+#'
 #' library(ggplot2)
 #' # basic glyph map with reference line and box---------------
-#' ggplot(data = GGally::nasa,
+#' p <- ggplot(data = GGally::nasa,
 #'        aes(x_major = long, x_minor = day,
 #'            y_major = lat, y_minor = surftemp)) +
 #'   geom_glyph_box() +
 #'   geom_glyph_line() +
 #'   geom_glyph() +
 #'   theme_bw()
+#' print_p(p)
 #'
 #' # rescale on each individual glyph ---------------
-#' ggplot(data = GGally::nasa,
+#' p <- ggplot(data = GGally::nasa,
 #'        aes(x_major = long, x_minor = day,
 #'            y_major = lat, y_minor = surftemp)) +
 #'   geom_glyph(global_rescale = FALSE)
+#' print_p(p)
 #'
 #' # adjust width and height with relative & absolute value ---------------
-#' ggplot() +
+#' p <- ggplot() +
 #'   geom_glyph(data = GGally::nasa,
 #'              aes(x_major = long, x_minor = day,
 #'                  y_major = lat, y_minor = surftemp),
 #'                  width = rel(0.8), height = 1) +
 #'    theme_bw()
+#' print_p(p)
 #'
 #' # apply a re-scaling on Y and use polar coordinate
-#' range01 <- GGally::range01
-#' GGally::nasa %>%
+#' p <-
+#'   GGally::nasa %>%
 #'   ggplot(aes(x_major = long, x_minor = day,
 #'              y_major = lat, y_minor = ozone)) +
 #'     geom_glyph_box(fill=NA) +
 #'     geom_glyph_line() +
-#'     geom_glyph(y_scale = "range01", polar = TRUE)
-#' }
-#'
+#'     geom_glyph(y_scale = GGally::range01, polar = TRUE)
+#' print_p(p)
 geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
                        position = "identity", ..., x_major = NULL,
                        x_minor = NULL, y_major = NULL, y_minor = NULL,
-                       x_scale = "identity", y_scale = "identity",
+                       x_scale = identity, y_scale = identity,
                        polar = FALSE, width = ggplot2::rel(2.1),
                        height = ggplot2::rel(1.8), global_rescale = TRUE,
                        show.legend = NA,
@@ -77,8 +79,8 @@ geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
       width = width,
       height = height,
       global_rescale = global_rescale,
-      x_scale = x_scale,
-      y_scale = y_scale,
+      x_scale = make_scale(x_scale),
+      y_scale = make_scale(y_scale),
       ...
     )
   )
@@ -103,8 +105,8 @@ GeomGlyph <- ggplot2::ggproto(
     width = ggplot2::rel(2.1),
     height = ggplot2::rel(2.1),
     global_rescale = TRUE,
-    x_scale = "identity",
-    y_scale = "identity"
+    x_scale = make_scale(identity),
+    y_scale = make_scale(identity)
   )
 )
 
@@ -219,20 +221,58 @@ rescale11 <- function(x, xlim = NULL) 2 * rescale01(x, xlim) - 1
 
 is.rel <- function(x) inherits(x, "rel")
 
+has_scale <- function(x) {
+  if (is.null(x)) {
+    return(FALSE)
+  }
+
+  # Unwrap the list structure so that it can be stored in a tbl
+  stopifnot(is.list(x))
+  x <- x[[1]]
+  !is_null(x) &&
+    !(
+      identical(x, "identity") ||
+      identical(x, identity)
+    )
+}
+make_scale <- function(x) {
+  # Wrap the list structure so that it can be stored in a tbl
+  list(x)
+}
+get_scale <- function(x) {
+  stopifnot(is.list(x))
+  # Unwrap the list structure so that it can be stored in a tbl
+  fn <- x[[1]]
+  if (is.character(fn)) {
+    # Legacy support for `"identity"`
+    fn <- get(unique(x)[1], envir = globalenv(), mode = "function")
+  }
+  stopifnot(is.function(fn))
+  fn
+}
+
 glyph_data_setup <- function(data, params){
   if (length(unique(data$group)) == 1){
     data$group <- interaction(data$x_major, data$y_major, drop = TRUE)
     data <- data %>%  dplyr::group_by(.data$group)
   }
 
-  if (!is_null(params$x_scale) & !identical(params$x_scale, "identity")){
-    data <- data %>%
-      dplyr::mutate(x_minor = rlang::exec(unique(params$x_scale), .data$x_minor))
+  if (has_scale(params$x_scale)) {
+    x_scale <- get_scale(params$x_scale)
+    data <-
+      data %>%
+      dplyr::mutate(
+        x_minor = x_scale(.data$x_minor)
+      )
   }
 
-  if (!is_null(params$y_scale) & !identical(params$y_scale, "identity")){
-    data <- data %>%
-      dplyr::mutate(y_minor = rlang::exec(unique(params$y_scale), .data$y_minor))
+  if (has_scale(params$y_scale)) {
+    y_scale <- get_scale(params$y_scale)
+    data <-
+      data %>%
+      dplyr::mutate(
+        y_minor = y_scale(.data$y_minor)
+      )
   }
 
   datetime_class <- c("Date", "yearmonth", "yearweek", "yearquarter")
@@ -302,4 +342,3 @@ calc_ref_box <- function(data, params){
                    ymax = .data$y_major + .data$height / 2)
   ref_box
 }
-
