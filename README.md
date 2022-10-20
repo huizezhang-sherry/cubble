@@ -42,7 +42,6 @@ coordinates that defines the site, `coords`.
 ``` r
 library(cubble)
 library(dplyr)
-#> Warning: package 'dplyr' was built under R version 4.1.2
 nested <- climate_flat |> 
   as_cubble(key = id, index = date, coords = c(long, lat))
 nested
