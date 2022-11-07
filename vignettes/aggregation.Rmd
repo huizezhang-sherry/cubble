@@ -3,8 +3,10 @@ title: "Aggregating data spatially, and making glyph maps"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{aggregation}
-  %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -37,11 +39,7 @@ This is a lot of stations to look at for one climate variable and they can't all
 First, let's summarise the daily data into weekly sum for each station:
 
 ```{r}
-(station_long <- prcp_aus %>%  
-  face_temporal(ts) %>%  
-  mutate(wk = lubridate::week(date)) %>%  
-  group_by(wk) %>%  
-  summarise(prcp = sum(prcp, na.rm = TRUE)))
+prcp_aus
 ```
 
 First we need to assign each station a cluster number. Here we use a simple kmean algorithm based on the distance matrix to create 20 clusters. This creates `station_nested` as a station level nested cubble with a cluster column indicating the group each station belongs to.
@@ -51,8 +49,7 @@ coords <- cbind(prcp_aus$long, prcp_aus$lat)
 dist_raw <- geosphere::distm(coords, coords)
 
 set.seed(123)
-station_nested <- station_long %>%  
-  face_spatial() %>%  
+station_nested <- prcp_aus %>%  
   strip_rowwise() %>%  
   mutate(cluster = kmeans(dist_raw,centers = 20, nstart = 500)$cluster)
 ```
