@@ -5,7 +5,7 @@
 \alias{prcp_aus}
 \title{Daily precipitation data from 2016 to 2020}
 \format{
-An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
+An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 663 rows and 7 columns.
 }
 \usage{
 prcp_aus
