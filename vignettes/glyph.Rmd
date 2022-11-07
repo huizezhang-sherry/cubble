@@ -88,9 +88,10 @@ Taking the output from the [Get started](cubble.html) page, we can visualise the
 OUTPUT_FROM_GET_STARTED <- tmax_hist %>% 
   filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 76, 90)) %>% 
   face_temporal() %>% 
-  group_by(
+  mutate(
     month = lubridate::month(yearmonth),
     group = as.factor(ifelse(lubridate::year(yearmonth) > 2015, "2016 ~ 2020","1971 ~ 1975"))) %>%  
+  group_by(month, group) %>% 
   summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
   face_spatial() %>%  
   filter(nrow(ts) == 24) %>% 
