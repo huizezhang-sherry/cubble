@@ -83,10 +83,10 @@ pal <- colorNumeric(
     "Rocket",  n = 7, cmax = 90, rev = TRUE, c2 = 40, l2= 85, c1 = 20, l1 = 30),
   domain = domain)
 
-(map <- leaflet(nested, width = 300, height = 300) |>
+map <- leaflet(nested, width = 300, height = 300) |>
   addTiles() |>
   addCircleMarkers(color = ~pal(domain), group = "a", radius = 0.1,
-                   popup = ~name, fillOpacity = 1, opacity = 1))
+                   popup = ~name, fillOpacity = 1, opacity = 1)
 ```
 
 
@@ -100,8 +100,8 @@ ts_static <- long %>%
          fill = temp_diff_var, color = temp_diff_var
          )) +
   geom_ribbon(aes(ymin = tmin, ymax = tmax), size = 0.1, alpha = 0.3) +
-  geom_point(aes(y = tmax), size = 0.1) +
-  geom_point(aes(y = tmin), size = 0.1) +
+  # geom_point(aes(y = tmax), size = 0.1) +
+  # geom_point(aes(y = tmin), size = 0.1) +
   colorspace::scale_fill_continuous_sequential(
     "Rocket",  n_interp = 7, cmax = 90, rev = TRUE,
     c2 = 40, l2= 85, c1 = 20, l1 = 30, name = "Var. temp. diff.") +
@@ -119,8 +119,8 @@ ts_static <- long %>%
 The static ggplot object can be turned into a plotly object with `ggplotly()` and `plotly::highlight()` enable the selection with box or lasso (`on = "plotly_selected"`):
 
 ```{r}
-(ts_interactive <- ggplotly(ts_static, width = 600, height = 300) %>% 
-    highlight(on = "plotly_selected", opacityDim = 0.012))
+ts_interactive <- ggplotly(ts_static, width = 600, height = 300) %>% 
+    highlight(on = "plotly_selected", opacityDim = 0.012)
 ```
 
 
@@ -128,8 +128,14 @@ The static ggplot object can be turned into a plotly object with `ggplotly()` an
 
 `crosstalk::bscols()` can be thought of as the `patchwork` for interactive graphics, which arranges multiple interactive graphics in columns.
 
-```{r}
+```{r eval = FALSE}
 bscols(map, ts_interactive, widths = c(4, 6))
+```
+
+Below is a screenshot of the full graphics:
+
+```{r echo = FALSE, out.width="150%"}
+knitr::include_graphics("cluster-diagram/interactive-full.png")
 ```
 
 # Making selection to see the linking
