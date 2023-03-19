@@ -1,11 +1,12 @@
 # helper
 slice_factory <- function(f, ...){
-  function(data, ...){
+  function(data, order_by, ..., n, prop, by, with_ties, na_rm, weight_by, replace){
     key <- key_vars(data)
     spatial <- spatial(data)
     index <- index(data)
     coords <- coords(data)
     data <- tibble::as_tibble(data)
+    order_by <- data[[rlang::quo_get_expr(enquo(order_by))]]
     out <- NextMethod()
 
     new_cubble(out,
@@ -21,7 +22,7 @@ slice_factory <- function(f, ...){
 #' allow slicing from top and bottom, based on a variable, or in random.
 #'
 #' @param data a cubble object to slice
-#' @param ... other arguments passed to the [dplyr::slice()]
+#' @param order_by,...,n,prop,by,with_ties,na_rm,weight_by,replace other arguments passed to the [dplyr::slice()]
 #' @examples
 #' # slice the first 50 stations from the top/ bottom
 #' library(dplyr)
@@ -76,7 +77,7 @@ slice_nearby <- function(data, coord, buffer, n){
 }
 
 #' @export
-slice_nearby.cubble_df <- function(data, coord, buffer = NA, n = NA){
+slice_nearby.cubble_df <- function(data, coord, buffer = NA, n = NA, ...){
 
   test_cubble(data)
   if (form(data) == "long") data <- data |> face_spatial()
@@ -102,10 +103,11 @@ slice_nearby.cubble_df <- function(data, coord, buffer = NA, n = NA){
       mutate(long_ref = coord[1], lat_ref = coord[2]) |>
       calc_dist(coords1 = as.list(coords(data)) |> syms(),
                 coords2 = list(long_ref = sym("long_ref"), lat_ref = sym("lat_ref"))) |>
-      slice_min(.data$dist, n = n)
+      slice_min(dist, n = n, ...)
   }
 
   out
 
 
 }
+globalVariables("dist")

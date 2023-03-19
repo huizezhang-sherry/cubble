@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Cubble
+# cubble <a href='https://huizezhang-sherry.github.io/cubble/'><img src='man/figures/logo.svg' align="right" height="138.5" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/huizezhang-sherry/cubble/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions)

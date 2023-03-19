@@ -18,8 +18,9 @@ print.cubble_df <- function(x, width = NULL, ...,
 #' @importFrom  tibble tbl_sum
 #' @return a cubble object
 #' @export
-tbl_sum.cubble_df <- function(data) {
+tbl_sum.cubble_df <- function(x) {
 
+  data <- x
   key <- key_vars(data)[1]
   key_n <- map_dbl(key, ~length(unique(key_data(data)[[.x]])))
 

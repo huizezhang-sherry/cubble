@@ -8,20 +8,75 @@
 \alias{slice_sample.cubble_df}
 \title{Slicing a cubble}
 \usage{
-\method{slice_head}{cubble_df}(data, ...)
+\method{slice_head}{cubble_df}(
+  data,
+  order_by,
+  ...,
+  n,
+  prop,
+  by,
+  with_ties,
+  na_rm,
+  weight_by,
+  replace
+)
 
-\method{slice_tail}{cubble_df}(data, ...)
+\method{slice_tail}{cubble_df}(
+  data,
+  order_by,
+  ...,
+  n,
+  prop,
+  by,
+  with_ties,
+  na_rm,
+  weight_by,
+  replace
+)
 
-\method{slice_min}{cubble_df}(data, ...)
+\method{slice_min}{cubble_df}(
+  data,
+  order_by,
+  ...,
+  n,
+  prop,
+  by,
+  with_ties,
+  na_rm,
+  weight_by,
+  replace
+)
 
-\method{slice_max}{cubble_df}(data, ...)
+\method{slice_max}{cubble_df}(
+  data,
+  order_by,
+  ...,
+  n,
+  prop,
+  by,
+  with_ties,
+  na_rm,
+  weight_by,
+  replace
+)
 
-\method{slice_sample}{cubble_df}(data, ...)
+\method{slice_sample}{cubble_df}(
+  data,
+  order_by,
+  ...,
+  n,
+  prop,
+  by,
+  with_ties,
+  na_rm,
+  weight_by,
+  replace
+)
 }
 \arguments{
 \item{data}{a cubble object to slice}
 
-\item{...}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
+\item{order_by, ..., n, prop, by, with_ties, na.rm, weight_by, replace}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
 }
 \value{
 a cubble object

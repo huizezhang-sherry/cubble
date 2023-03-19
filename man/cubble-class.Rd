@@ -29,7 +29,7 @@ as_cubble(data, key, index, coords, ...)
   max_footer_lines = NULL
 )
 
-\method{tbl_sum}{cubble_df}(data)
+\method{tbl_sum}{cubble_df}(x)
 
 is_cubble(data)
 
