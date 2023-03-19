@@ -76,7 +76,7 @@
 \arguments{
 \item{data}{a cubble object to slice}
 
-\item{order_by, ..., n, prop, by, with_ties, na.rm, weight_by, replace}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
+\item{order_by, ..., n, prop, by, with_ties, na_rm, weight_by, replace}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
 }
 \value{
 a cubble object
