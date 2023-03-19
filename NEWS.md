@@ -1,3 +1,8 @@
+# cubble 0.2.1
+
+* add pkg logo
+* fix mismatch of arguments in slice_*() with the latest dplyr generics
+
 # cubble 0.2.0
 
 * update on `geom_glyph` to take regular function
