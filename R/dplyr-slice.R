@@ -1,6 +1,23 @@
 # helper
-slice_factory <- function(f, ...){
-  function(data, order_by, ..., n, prop, by, with_ties, na_rm, weight_by, replace){
+slice_head_tail <- function(f, ...){
+  function(.data, ..., n, prop, by){
+    data <- .data
+    key <- key_vars(data)
+    spatial <- spatial(data)
+    index <- index(data)
+    coords <- coords(data)
+    data <- tibble::as_tibble(data)
+    out <- NextMethod()
+
+    new_cubble(out,
+               key = key , index = index , coords = coords,
+               spatial = spatial, form = determine_form(data))
+  }
+}
+
+slice_min_max <- function(f, ...){
+  function(.data, order_by, ..., n, prop, by, with_ties, na_rm){
+    data <- .data
     key <- key_vars(data)
     spatial <- spatial(data)
     index <- index(data)
@@ -22,7 +39,8 @@ slice_factory <- function(f, ...){
 #' allow slicing from top and bottom, based on a variable, or in random.
 #'
 #' @param data a cubble object to slice
-#' @param order_by,...,n,prop,by,with_ties,na_rm,weight_by,replace other arguments passed to the [dplyr::slice()]
+#' @param ...,n,prop,by other arguments passed to the [dplyr::slice()]
+#' @param order_by,with_ties,na_rm other arguments passed to the [dplyr::slice()]
 #' @examples
 #' # slice the first 50 stations from the top/ bottom
 #' library(dplyr)
@@ -40,23 +58,23 @@ slice_factory <- function(f, ...){
 #' @rdname slice
 #' @return a cubble object
 #' @export
-slice_head.cubble_df <- slice_factory("slice_head", group = FALSE)
+slice_head.cubble_df <- slice_head_tail("slice_head")
 
 #' @rdname slice
 #' @export
-slice_tail.cubble_df <- slice_factory("slice_tail")
+slice_tail.cubble_df <- slice_head_tail("slice_tail")
 
 #' @rdname slice
 #' @export
-slice_min.cubble_df <- slice_factory("slice_min")
+slice_min.cubble_df <- slice_min_max("slice_min")
 
 #' @rdname slice
 #' @export
-slice_max.cubble_df <- slice_factory("slice_max")
+slice_max.cubble_df <- slice_min_max("slice_max")
 
 #' @rdname slice
 #' @export
-slice_sample.cubble_df <- slice_factory("slice_sample")
+slice_sample.cubble_df <- slice_min_max("slice_sample")
 
 #' Location-based slicing
 #' @param data the data to slice

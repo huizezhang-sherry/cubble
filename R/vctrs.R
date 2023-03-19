@@ -87,7 +87,7 @@ vec_cast.cubble_df.tbl_df <- function(x, to, ...) cubble_cast(x, to, ...)
 #' @export
 vec_cast.tbl_df.cubble_df <- function(x, to, ...) vctrs::tib_cast(x, to, ...)
 #' @export
-vec_cast.data.frame.cubble_df <- function(x, y, ...) vctrs::df_cast(x, y, ...)
+vec_cast.data.frame.cubble_df <- function(x, to, ...) vctrs::df_cast(x, to, ...)
 #' @export
 vec_cast.cubble_df.data.frame <- function(x, to, ..., x_arg, to_arg, call) cubble_cast(x, to, ...)
 
