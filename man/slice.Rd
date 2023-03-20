@@ -19,11 +19,11 @@
 \method{slice_sample}{cubble_df}(.data, order_by, ..., n, prop, by, with_ties, na_rm)
 }
 \arguments{
+\item{.data}{a cubble object to slice}
+
 \item{..., n, prop, by}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
 
 \item{order_by, with_ties, na_rm}{other arguments passed to the \code{\link[dplyr:slice]{dplyr::slice()}}}
-
-\item{data}{a cubble object to slice}
 }
 \value{
 a cubble object
