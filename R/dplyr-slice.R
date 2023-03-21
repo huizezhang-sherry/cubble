@@ -126,4 +126,4 @@ slice_nearby.cubble_df <- function(data, coord, buffer = NA, n = NA, ...){
 
 
 }
-globalVariables(".data", "dist")
+globalVariables(c(".data", "dist"))
