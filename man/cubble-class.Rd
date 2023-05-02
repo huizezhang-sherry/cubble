@@ -97,4 +97,24 @@ dt \%>\%  as_cubble(coords = c(long, lat))
 path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
 raw <- ncdf4::nc_open(path)
 dt <- as_cubble(raw, vars = c("q", "z"))
+
+# sftime object - example 1
+if (! requireNamespace("sftime", quietly = TRUE))
+    stop("package sftime required, please install it first")
+x_sfc <- sf::st_sfc(
+  sf::st_point(1:2),
+  sf::st_point(c(1,3)),
+  sf::st_point(2:3),
+  sf::st_point(c(2,1))
+)
+x_sftime1 <- sftime::st_sftime(a = 1:4, x_sfc, time = Sys.time()- 0:3 * 3600 * 24)
+x_sftime1 \%>\% as_cubble(key = a, index = time)
+
+# sftime object - example 2
+dt <- climate_flat \%>\%
+  filter(lubridate::day(date) <= 5, lubridate::month(date) == 1) \%>\%
+  sf::st_as_sf(coords = c("long", "lat"), remove = FALSE) \%>\%
+  sftime::st_as_sftime()
+dt \%>\%
+  as_cubble(key = id, index = date, coords = c(long, lat))
 }

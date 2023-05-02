@@ -48,7 +48,8 @@ Suggests:
     crosstalk,
     concaveman,
     colorspace,
-    vdiffr
+    vdiffr,
+    sftime
 VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
