@@ -6,6 +6,8 @@
 \alias{_PACKAGE}
 \title{cubble: A Vector Spatio-Temporal Data Structure for Data Analysis}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables.
 }
 \seealso{
