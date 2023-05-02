@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Importing spatiotemporal data into a cubble • cubble</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -13,6 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Importing spatiotemporal data into a cubble">
 <meta property="og:description" content="cubble">
+<meta property="og:image" content="/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -33,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -93,7 +100,7 @@
 
       
 
-      </header><script src="import_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Importing spatiotemporal data into a cubble</h1>
@@ -106,7 +113,10 @@
 
     
     
-<p>This article shows you how to create a cubble from data in the wild. You should have already seen an example of constructing a cubble from a tibble in the README page and here are more examples that construct a cubble from:</p>
+<p>This article shows you how to create a cubble from data in the wild.
+You should have already seen an example of constructing a cubble from a
+tibble in the README page and here are more examples that construct a
+cubble from:</p>
 <ul>
 <li>a tibble with list column<br>
 </li>
@@ -118,7 +128,11 @@
 <div class="section level3">
 <h3 id="a-cubble-from-tibble-with-list-column">A cubble from tibble with list column<a class="anchor" aria-label="anchor" href="#a-cubble-from-tibble-with-list-column"></a>
 </h3>
-<p>List column can be a useful structure when querying data since you can first create a row-wise data frame with all the metadata and then query the data as a nested list. We will show how to convert this output into a cubble in a small example with five weather stations close to Sydney, Australia. Here is the metadata of the stations:</p>
+<p>List column can be a useful structure when querying data since you
+can first create a row-wise data frame with all the metadata and then
+query the data as a nested list. We will show how to convert this output
+into a cubble in a small example with five weather stations close to
+Sydney, Australia. Here is the metadata of the stations:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">syd</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
@@ -129,7 +143,11 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00066062 -<span style="color: #BB0000;">33.9</span>  151.    39 sydney (observatory hill)       <span style="text-decoration: underline;">94</span>768</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00066124 -<span style="color: #BB0000;">33.8</span>  151.    55 parramatta north (masons drive  <span style="text-decoration: underline;">94</span>764</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00066194 -<span style="color: #BB0000;">33.9</span>  151.     3 canterbury racecourse aws       <span style="text-decoration: underline;">94</span>766</span></span></code></pre></div>
-<p>Temporal variables can be queried by <code>rnoaa::meteo_pull_monitors()</code> with the date range and variable supplied. Here we turn the <code>stations</code> data into a rowwise data frame and then query the climate variables as a list-column, <code>ts</code>:</p>
+<p>Temporal variables can be queried by
+<code>rnoaa::meteo_pull_monitors()</code> with the date range and
+variable supplied. Here we turn the <code>stations</code> data into a
+rowwise data frame and then query the climate variables as a
+list-column, <code>ts</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="va">syd</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
@@ -142,11 +160,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span></span>
 <span><span class="co">#&gt;   id            lat  long  elev name                           wmo_id ts      </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00066037 -<span style="color: #BB0000;">33.9</span>  151.     6 sydney airport amo              <span style="text-decoration: underline;">94</span>767 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00066059 -<span style="color: #BB0000;">33.7</span>  151.   199 terrey hills aws                <span style="text-decoration: underline;">94</span>759 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00066062 -<span style="color: #BB0000;">33.9</span>  151.    39 sydney (observatory hill)       <span style="text-decoration: underline;">94</span>768 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00066124 -<span style="color: #BB0000;">33.8</span>  151.    55 parramatta north (masons drive  <span style="text-decoration: underline;">94</span>764 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00066194 -<span style="color: #BB0000;">33.9</span>  151.     3 canterbury racecourse aws       <span style="text-decoration: underline;">94</span>766 &lt;tibble&gt;</span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00066037 -<span style="color: #BB0000;">33.9</span>  151.     6 sydney airport amo              <span style="text-decoration: underline;">94</span>767 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00066059 -<span style="color: #BB0000;">33.7</span>  151.   199 terrey hills aws                <span style="text-decoration: underline;">94</span>759 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00066062 -<span style="color: #BB0000;">33.9</span>  151.    39 sydney (observatory hill)       <span style="text-decoration: underline;">94</span>768 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00066124 -<span style="color: #BB0000;">33.8</span>  151.    55 parramatta north (masons drive  <span style="text-decoration: underline;">94</span>764 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00066194 -<span style="color: #BB0000;">33.9</span>  151.     3 canterbury racecourse aws       <span style="text-decoration: underline;">94</span>766 <span style="color: #949494;">&lt;tibble&gt;</span></span></span></code></pre>
 <p>A cubble can then be created by supplying:</p>
 <ul>
 <li>
@@ -154,7 +172,8 @@
 <li>
 <code>date</code> as the index to identify time, and</li>
 <li>
-<code>coords</code> to identify the spatial coordinates of each station.</li>
+<code>coords</code> to identify the spatial coordinates of each
+station.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">syd_climate</span> <span class="op">&lt;-</span> <span class="va">raw</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
@@ -162,20 +181,22 @@
 <span></span>
 <span><span class="va">syd_climate</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [151.01, -33.95, 151.23, -33.69]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [151.0181, -33.9465, 151.2253, -33.6908]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id            lat  long  elev name                           wmo_id ts      </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00066037 -<span style="color: #BB0000;">33.9</span>  151.     6 sydney airport amo              <span style="text-decoration: underline;">94</span>767 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00066059 -<span style="color: #BB0000;">33.7</span>  151.   199 terrey hills aws                <span style="text-decoration: underline;">94</span>759 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00066062 -<span style="color: #BB0000;">33.9</span>  151.    39 sydney (observatory hill)       <span style="text-decoration: underline;">94</span>768 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00066124 -<span style="color: #BB0000;">33.8</span>  151.    55 parramatta north (masons drive  <span style="text-decoration: underline;">94</span>764 &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00066194 -<span style="color: #BB0000;">33.9</span>  151.     3 canterbury racecourse aws       <span style="text-decoration: underline;">94</span>766 &lt;tibble&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00066037 -<span style="color: #BB0000;">33.9</span>  151.     6 sydney airport amo              <span style="text-decoration: underline;">94</span>767 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00066059 -<span style="color: #BB0000;">33.7</span>  151.   199 terrey hills aws                <span style="text-decoration: underline;">94</span>759 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00066062 -<span style="color: #BB0000;">33.9</span>  151.    39 sydney (observatory hill)       <span style="text-decoration: underline;">94</span>768 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00066124 -<span style="color: #BB0000;">33.8</span>  151.    55 parramatta north (masons drive  <span style="text-decoration: underline;">94</span>764 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00066194 -<span style="color: #BB0000;">33.9</span>  151.     3 canterbury racecourse aws       <span style="text-decoration: underline;">94</span>766 <span style="color: #949494;">&lt;tibble&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-cubble-from-tsibble">A cubble from tsibble<a class="anchor" aria-label="anchor" href="#a-cubble-from-tsibble"></a>
 </h2>
-<p>If you have already got a <code>tsibble</code> object, with key and index registered, only <code>coords</code> needs to be specified to create a cubble:</p>
+<p>If you have already got a <code>tsibble</code> object, with key and
+index registered, only <code>coords</code> needs to be specified to
+create a cubble:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dt</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tsibble: 1,830 x 10 [1D]</span></span></span>
@@ -192,10 +213,10 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airp…  <span style="text-decoration: underline;">94</span>610 2020-01-08     0  30.4  17.4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airp…  <span style="text-decoration: underline;">94</span>610 2020-01-09     0  28.7  17.3</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00009021 -<span style="color: #BB0000;">31.9</span>  116.  15.4 perth airp…  <span style="text-decoration: underline;">94</span>610 2020-01-10     0  32.6  15.8</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 1,820 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1,820 more rows</span></span></span>
 <span><span class="va">dt</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.9764, -32.9342, 133.5407, -12.4239]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span></span>
@@ -204,12 +225,16 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tbl_ts [366 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tbl_ts [366 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tbl_ts [366 × 4]&gt;</span></span></span></code></pre></div>
-<p>Notice here each element of the list-column <code>ts</code> is of class <code>tbl_ts</code> and you are free to apply your favourite function on the tsibble class :)</p>
+<p>Notice here each element of the list-column <code>ts</code> is of
+class <code>tbl_ts</code> and you are free to apply your favourite
+function on the tsibble class :)</p>
 </div>
 <div class="section level2">
 <h2 id="separate-spatial-and-temporal-tables">Separate spatial and temporal tables<a class="anchor" aria-label="anchor" href="#separate-spatial-and-temporal-tables"></a>
 </h2>
-<p>Sometimes, you may get the spatial and temporal data from different sources and they live in two separate tables with a linking variable:</p>
+<p>Sometimes, you may get the spatial and temporal data from different
+sources and they live in two separate tables with a linking
+variable:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># a spatial sheet</span></span>
 <span><span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_flat.html">stations</a></span></span>
@@ -237,13 +262,15 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00009021 2020-01-08     0  30.4  17.4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00009021 2020-01-09     0  28.7  17.3</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00009021 2020-01-10     0  32.6  15.8</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 1,820 more rows</span></span></span></code></pre></div>
-<p>When created out of separate tables, <code><a href="../reference/cubble-class.html">as_cubble()</a></code> will check on the match of linking variable in the spatial and temporal table.</p>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1,820 more rows</span></span></span></code></pre></div>
+<p>When created out of separate tables, <code><a href="../reference/cubble-class.html">as_cubble()</a></code> will
+check on the match of linking variable in the spatial and temporal
+table.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_flat.html">stations</a></span>, temporal <span class="op">=</span> <span class="fu">cubble</span><span class="fu">::</span><span class="va"><a href="../reference/climate_flat.html">climate</a></span><span class="op">)</span>,</span>
 <span>          key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.97, -32.94, 133.55, -12.42]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.9764, -32.9342, 133.5407, -12.4239]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span></span>
@@ -252,20 +279,32 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00010614 -<span style="color: #BB0000;">32.9</span>  117. 338   narrogin        <span style="text-decoration: underline;">94</span>627 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ASN00014015 -<span style="color: #BB0000;">12.4</span>  131.  30.4 darwin airport  <span style="text-decoration: underline;">94</span>120 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ASN00015131 -<span style="color: #BB0000;">17.6</span>  134. 220   elliott         <span style="text-decoration: underline;">94</span>236 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span></span></code></pre></div>
-<p>Messages will emit to notify the unmatched, if detected. This would be useful to catch some sites with only spatial/ temporal information and the slight mismatch in character linking variable.</p>
+<p>Messages will emit to notify the unmatched, if detected. This would
+be useful to catch some sites with only spatial/ temporal information
+and the slight mismatch in character linking variable.</p>
 </div>
 <div class="section level2">
 <h2 id="a-cubble-from-netcdf-data">A cubble from NetCDF data<a class="anchor" aria-label="anchor" href="#a-cubble-from-netcdf-data"></a>
 </h2>
-<p>NetCDF (Network Common Data Form) is a commonly used data format in the climatology community to deliver global mapping of atmosphere, ocean, and land. Here we provide some general information regarding this format before showing an example of creating a cubble out of NetCDF data.</p>
+<p>NetCDF (Network Common Data Form) is a commonly used data format in
+the climatology community to deliver global mapping of atmosphere,
+ocean, and land. Here we provide some general information regarding this
+format before showing an example of creating a cubble out of NetCDF
+data.</p>
 <p>NetCDF data has two main components:</p>
 <ul>
 <li>
-<strong>dimension</strong>: define the spatio-temporal grid (longitude, latitude, and time) and</li>
+<strong>dimension</strong>: define the spatio-temporal grid
+(longitude, latitude, and time) and</li>
 <li>
 <strong>variable</strong>: populate the defined grid.</li>
 </ul>
-<p>Attributes are usually associated with dimension and variable in the NetCDF format data. A few packages in R exists for manipulating NetCDF data and this includes a high-level R interface: <code>ncdf4</code>, a low-level interface that calls C interface: <code>RNetCDF</code>, and a tidyverse implementation: <code>tidync</code>. Here let’s take a look at a NetCDF data:</p>
+<p>Attributes are usually associated with dimension and variable in the
+NetCDF format data. A few packages in R exists for manipulating NetCDF
+data and this includes a high-level R interface: <code>ncdf4</code>, a
+low-level interface that calls C interface: <code>RNetCDF</code>, and a
+tidyverse implementation: <code>tidync</code>. Here let’s take a look at
+a NetCDF data:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ncdf/era5-pressure.nc"</span>, package <span class="op">=</span> <span class="st">"cubble"</span><span class="op">)</span></span>
 <span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="fu">ncdf4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_open.html" class="external-link">nc_open</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
@@ -305,9 +344,29 @@
 <span><span class="co">#&gt;     2 global attributes:</span></span>
 <span><span class="co">#&gt;         Conventions: CF-1.6</span></span>
 <span><span class="co">#&gt;         history: 2022-04-17 01:14:41 GMT by grib_to_netcdf-2.24.3: /opt/ecmwf/mars-client/bin/grib_to_netcdf -S param -o /cache/data8/adaptor.mars.internal-1650158081.486927-5264-6-90c05c05-ca42-4b7a-b6f8-d9617d0f0500.nc /cache/tmp/90c05c05-ca42-4b7a-b6f8-d9617d0f0500-adaptor.mars.internal-1650158080.1120768-5264-12-tmp.grib</span></span></code></pre></div>
-<p>In a NetCDF data, it is not the the actual data that gets directly printed out, but the metadata. There are 2 variables and 3 dimensions in this data and each is associated with a few attributes. In this data the attributes for the two variables includes the scaling and offset parameter, representation of the missing and its fill value, along with its unit and names. In NetCDF, data is stored in its <em>packed value</em> to save space and sometimes, you will need to use a formula like <span class="math inline">\(\text{unpacked value} = \text{packed value} \times \text{scale factor} + \text{add offset}\)</span> to unpack the data. Luckily, when reading in the NetCDF data with the <code>ncdf4</code> package, it has already unpack the data for you, so no need to worry about the scaling and offset.</p>
-<p>In principle, NetCDF data can store data with arbitrary variable, dimension, and attribute and this will cause a chaos to generalise its manipulation. <a href="http://cfconventions.org/" class="external-link">Metadata convention for climate and forecast (CF convention)</a> is a guideline that has been designed to standardise the format of NetCDF data. Thanks to the CF convention, <code>cubble</code> can now extract specific components as per the CF convention to build a cubble from NetCDF data.</p>
-<p>Cubble provides an <code><a href="../reference/cubble-class.html">as_cubble()</a></code> method to coerce the <code>ncdf4</code> class from the <code>ncdf4</code> package into a cubble. It maps each combination of longitude and latitude into an <code>id</code> as the key:</p>
+<p>In a NetCDF data, it is not the the actual data that gets directly
+printed out, but the metadata. There are 2 variables and 3 dimensions in
+this data and each is associated with a few attributes. In this data the
+attributes for the two variables includes the scaling and offset
+parameter, representation of the missing and its fill value, along with
+its unit and names. In NetCDF, data is stored in its <em>packed
+value</em> to save space and sometimes, you will need to use a formula
+like <span class="math inline">\(\text{unpacked value} = \text{packed
+value} \times \text{scale factor} + \text{add offset}\)</span> to unpack
+the data. Luckily, when reading in the NetCDF data with the
+<code>ncdf4</code> package, it has already unpack the data for you, so
+no need to worry about the scaling and offset.</p>
+<p>In principle, NetCDF data can store data with arbitrary variable,
+dimension, and attribute and this will cause a chaos to generalise its
+manipulation. <a href="http://cfconventions.org/" class="external-link">Metadata convention
+for climate and forecast (CF convention)</a> is a guideline that has
+been designed to standardise the format of NetCDF data. Thanks to the CF
+convention, <code>cubble</code> can now extract specific components as
+per the CF convention to build a cubble from NetCDF data.</p>
+<p>Cubble provides an <code><a href="../reference/cubble-class.html">as_cubble()</a></code> method to coerce the
+<code>ncdf4</code> class from the <code>ncdf4</code> package into a
+cubble. It maps each combination of longitude and latitude into an
+<code>id</code> as the key:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span><span class="va">raw</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q"</span>, <span class="st">"z"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">dt</span></span>
@@ -326,13 +385,22 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8      115.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9      115        -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10      115.       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 26,555 more rows</span></span></span></code></pre></div>
-<p>The memory limit with NetCDF data in cubble depends on longitude grid point x latitude grid point x time grid point x number of variable. Cubble can handle slightly more than 300 x 300 (longitude x longitude) grid points for 3 variables in one year. You can reduce the spatial grid points in exchange for longer time period and more variables. A 300 by 300 spatial grid can be:</p>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26,555 more rows</span></span></span></code></pre></div>
+<p>The memory limit with NetCDF data in cubble depends on longitude grid
+point x latitude grid point x time grid point x number of variable.
+Cubble can handle slightly more than 300 x 300 (longitude x longitude)
+grid points for 3 variables in one year. You can reduce the spatial grid
+points in exchange for longer time period and more variables. A 300 by
+300 spatial grid can be:</p>
 <ul>
-<li>a bounding box of [100, -80, 180, 0] at 0.25 degree resolution, or</li>
-<li>a global bounding box [-180, -90, 180, -90] at 1 degree resolution.</li>
+<li>a bounding box of [100, -80, 180, 0] at 0.25 degree resolution,
+or</li>
+<li>a global bounding box [-180, -90, 180, -90] at 1 degree
+resolution.</li>
 </ul>
-<p>Subsetting longitude and latitude grid is available through <code>long_range</code> and <code>lat_range</code> if the NetCDF file has finer resolution than needed.</p>
+<p>Subsetting longitude and latitude grid is available through
+<code>long_range</code> and <code>lat_range</code> if the NetCDF file
+has finer resolution than needed.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span><span class="va">raw</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q"</span>, <span class="st">"z"</span><span class="op">)</span>,</span>
 <span>                long_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">180</span>, <span class="fl">180</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -353,18 +421,20 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     8       120       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9       121       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10       122       -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 6,755 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6,755 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="convert-from-a-stars-object-to-cubble">Convert from a <code>stars</code> object to <code>cubble</code><a class="anchor" aria-label="anchor" href="#convert-from-a-stars-object-to-cubble"></a>
 </h2>
-<p>Currently, the <code>cubble</code> package can convert a <code>stars</code> object with three dimension(s) in the order of longitude, latitude, and time:</p>
+<p>Currently, the <code>cubble</code> package can convert a
+<code>stars</code> object with three dimension(s) in the order of
+longitude, latitude, and time:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create a toy stars object</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">60</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x<span class="op">=</span> <span class="fl">5</span>, y <span class="op">=</span> <span class="fl">4</span>, t <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">time</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-quantities/units/" class="external-link">units</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">units</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html" class="external-link">as_units</a></span><span class="op">(</span><span class="st">"days since 2015-01-01"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-quantities.github.io/units/" class="external-link">units</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/units.html" class="external-link">units</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://r-quantities.github.io/units/reference/units.html" class="external-link">as_units</a></span><span class="op">(</span><span class="st">"days since 2015-01-01"</span><span class="op">)</span></span>
 <span><span class="va">m_dim</span> <span class="op">&lt;-</span> <span class="fu">stars</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_dimensions.html" class="external-link">st_dimensions</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">146</span>, <span class="fl">162</span>, <span class="fl">4</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">44</span>, <span class="op">-</span><span class="fl">41</span>, <span class="fl">1</span><span class="op">)</span>, t <span class="op">=</span> <span class="va">time</span><span class="op">)</span></span>
 <span><span class="va">st</span> <span class="op">&lt;-</span> <span class="fu">stars</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/stars/reference/st_as_stars.html" class="external-link">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span>, m2 <span class="op">=</span> <span class="va">m</span><span class="op">)</span>, dimensions <span class="op">=</span> <span class="va">m_dim</span><span class="op">)</span></span>
 <span><span class="va">st</span></span>
@@ -378,10 +448,10 @@
 <span><span class="co">#&gt; x    1  5                         146                           4      NA FALSE</span></span>
 <span><span class="co">#&gt; y    1  4                         -44                           1      NA FALSE</span></span>
 <span><span class="co">#&gt; t    1  3 1 [(days since 2015-01-01)] 1 [(days since 2015-01-01)] udunits FALSE</span></span>
-<span><span class="co">#&gt;   values x/y</span></span>
-<span><span class="co">#&gt; x   NULL [x]</span></span>
-<span><span class="co">#&gt; y   NULL [y]</span></span>
-<span><span class="co">#&gt; t   NULL</span></span>
+<span><span class="co">#&gt;   x/y</span></span>
+<span><span class="co">#&gt; x [x]</span></span>
+<span><span class="co">#&gt; y [y]</span></span>
+<span><span class="co">#&gt; t</span></span>
 <span><span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span><span class="va">st</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [20]: nested form</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [146, -44, 162, -41]</span></span></span>
@@ -408,7 +478,8 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span>   162   -<span style="color: #BB0000;">43</span>    18 <span style="color: #949494;">&lt;tibble [3 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span>   162   -<span style="color: #BB0000;">42</span>    19 <span style="color: #949494;">&lt;tibble [3 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span>   162   -<span style="color: #BB0000;">41</span>    20 <span style="color: #949494;">&lt;tibble [3 × 3]&gt;</span></span></span></code></pre></div>
-<p>When the <code>dimensions</code> object is too complex for <code>cubble</code> to handle, the package will emit an message.</p>
+<p>When the <code>dimensions</code> object is too complex for
+<code>cubble</code> to handle, the package will emit an message.</p>
 </div>
   </div>
 
@@ -429,7 +500,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

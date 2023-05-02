@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Making a glyph map • cubble</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -13,6 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Making a glyph map">
 <meta property="og:description" content="cubble">
+<meta property="og:image" content="/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -33,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -93,7 +100,7 @@
 
       
 
-      </header><script src="glyph_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Making a glyph map</h1>
@@ -106,43 +113,80 @@
 
     
     
-<p>Sometimes, we wish to communicate spatial and temporal information collectively through visualisation. This can be done through making faceted maps across time, creating map animation, or in interactive graphics, constructing linking between maps and time series plot.</p>
-<p>This vignette will introduce a type of spatio-temporal plot, glyph map, which displays spatial and temporal information in a single plot using linear algebra.</p>
+<p>Sometimes, we wish to communicate spatial and temporal information
+collectively through visualisation. This can be done through making
+faceted maps across time, creating map animation, or in interactive
+graphics, constructing linking between maps and time series plot.</p>
+<p>This vignette will introduce a type of spatio-temporal plot, glyph
+map, which displays spatial and temporal information in a single plot
+using linear algebra.</p>
 <div class="section level2">
 <h2 id="what-is-a-glyph-map">What is a glyph map?<a class="anchor" aria-label="anchor" href="#what-is-a-glyph-map"></a>
 </h2>
-<p>Glyph maps are initially proposed in <span class="citation">Wickham et al. (2012)</span> and the idea is to transform the temporal coordinates into the spatial coordinates so that time series plot can be displayed on the map. The following diagram illustrates how the transformation works:</p>
+<p>Glyph maps are initially proposed in <span class="citation">Wickham
+et al. (2012)</span> and the idea is to transform the temporal
+coordinates into the spatial coordinates so that time series plot can be
+displayed on the map. The following diagram illustrates how the
+transformation works:</p>
 <p><img src="cluster-diagram/glyph-steps.png" width="100%"></p>
-<p>Subplot (1) and (2) show the location of a weather station and its associated maximum temperature in 2020. In (3), the same time series is transformed into the spatial coordinates with a defined <code>height</code> and <code>width</code> using linear algebra (Equation 1 in <span class="citation">Wickham et al. (2012)</span>). The transformed time series can then be placed on the map in (4). A polar transformation (Equation 2 in <span class="citation">Wickham et al. (2012)</span>) is also available with wrap the time series plot into a circle and it is useful to visualise seasonality.</p>
-<p>The package <code>GGally</code> initially implement the glyph map. It uses <code>glyphs()</code> to calculate the axis transformation and then uses <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon()</a></code> to draw the map.</p>
+<p>Subplot (1) and (2) show the location of a weather station and its
+associated maximum temperature in 2020. In (3), the same time series is
+transformed into the spatial coordinates with a defined
+<code>height</code> and <code>width</code> using linear algebra
+(Equation 1 in <span class="citation">Wickham et al. (2012)</span>). The
+transformed time series can then be placed on the map in (4). A polar
+transformation (Equation 2 in <span class="citation">Wickham et al.
+(2012)</span>) is also available with wrap the time series plot into a
+circle and it is useful to visualise seasonality.</p>
+<p>The package <code>GGally</code> initially implement the glyph map. It
+uses <code>glyphs()</code> to calculate the axis transformation and then
+uses <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon()</a></code> to draw the map.</p>
 <pre><code><span><span class="va">gly</span> <span class="op">&lt;-</span> <span class="fu">glyphs</span><span class="op">(</span><span class="va">data</span>, x_major <span class="op">=</span> <span class="va">...</span>, x_minor <span class="op">=</span> <span class="va">...</span>, y_major <span class="op">=</span> <span class="va">...</span>, y_minor <span class="op">=</span> <span class="va">...</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># `gx`, `gy`, and `gid` are created within `glyphs()`</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">gly</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">gx</span>, <span class="va">gy</span>, group <span class="op">=</span> <span class="va">gid</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
-<p>Four variables are required to construct a glyph map: <code>x_major</code>, <code>y_major</code>, <code>x_minor</code>, and <code>y_minor</code>. The major axes are the coordinates used to create the map and in the illustration above <code>x_major = long, y_major = lat</code>. The minor axes are the x/y variable used to construct the time series plot(<code>x_minor = date, y_minor = tmax</code> in above).</p>
+<p>Four variables are required to construct a glyph map:
+<code>x_major</code>, <code>y_major</code>, <code>x_minor</code>, and
+<code>y_minor</code>. The major axes are the coordinates used to create
+the map and in the illustration above
+<code>x_major = long, y_major = lat</code>. The minor axes are the x/y
+variable used to construct the time series
+plot(<code>x_minor = date, y_minor = tmax</code> in above).</p>
 </div>
 <div class="section level2">
 <h2 id="glyph-map-in-cubble">Glyph map in cubble<a class="anchor" aria-label="anchor" href="#glyph-map-in-cubble"></a>
 </h2>
-<p>The <code>cubble</code> package implements the glyph map in a <code><a href="../reference/glyph.html">geom_glyph()</a></code>, which perform the linear algebra internally as data transformation before the plot rendering. This allows you to use the conventionally <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> syntax within <code><a href="../reference/glyph.html">geom_glyph()</a></code> to specify the four major/minor axes:</p>
+<p>The <code>cubble</code> package implements the glyph map in a
+<code><a href="../reference/glyph.html">geom_glyph()</a></code>, which perform the linear algebra internally
+as data transformation before the plot rendering. This allows you to use
+the conventionally <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> syntax within
+<code><a href="../reference/glyph.html">geom_glyph()</a></code> to specify the four major/minor axes:</p>
 <pre><code><span><span class="va">data</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x_major <span class="op">=</span> <span class="va">...</span>, x_minor <span class="op">=</span> <span class="va">...</span>, y_major <span class="op">=</span> <span class="va">...</span>, y_minor <span class="op">=</span> <span class="va">...</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-<p>Reference line and box can be added by separate geoms (<code><a href="../reference/glyph.html">geom_glyph_box()</a></code>, <code><a href="../reference/glyph.html">geom_glyph_line()</a></code>) with the same aesthetics (<code>x_major, x_minor, y_major, y_minor</code>) and to avoid repetition, you may want specify them collectively in <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>:</p>
+<p>Reference line and box can be added by separate geoms
+(<code><a href="../reference/glyph.html">geom_glyph_box()</a></code>, <code><a href="../reference/glyph.html">geom_glyph_line()</a></code>) with the
+same aesthetics (<code>x_major, x_minor, y_major, y_minor</code>) and to
+avoid repetition, you may want specify them collectively in
+<code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>:</p>
 <pre><code><span><span class="va">data</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x_major <span class="op">=</span> <span class="va">...</span>, x_minor <span class="op">=</span> <span class="va">...</span>, y_major <span class="op">=</span> <span class="va">...</span>, y_minor <span class="op">=</span> <span class="va">...</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph_box</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
-<p>If you want add additional layer to the plot, i.e. an undelying map, that does not use the four glyph map aesthetics, the argument <code>inherit.aes = FALSE</code> is handy:</p>
+<p>If you want add additional layer to the plot, i.e. an undelying map,
+that does not use the four glyph map aesthetics, the argument
+<code>inherit.aes = FALSE</code> is handy:</p>
 <pre><code><span><span class="va">data</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x_major <span class="op">=</span> <span class="va">...</span>, x_minor <span class="op">=</span> <span class="va">...</span>, y_major <span class="op">=</span> <span class="va">...</span>, y_minor <span class="op">=</span> <span class="va">...</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">MAP_DATA</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph_box</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
-<p>Taking the output from the <a href="cubble.html">Get started</a> page, we can visualise the different in avergae temperature curve between 1971 - 1975 and 2016 - 2020 using the glyph map:</p>
+<p>Taking the output from the <a href="cubble.html">Get started</a>
+page, we can visualise the different in avergae temperature curve
+between 1971 - 1975 and 2016 - 2020 using the glyph map:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vic_map</span> <span class="op">&lt;-</span> <span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">OUTPUT_FROM_GET_STARTED</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
@@ -163,11 +207,14 @@
 <p><img src="glyph_files/figure-html/unnamed-chunk-4-1.png" width="100%"></p>
 </div>
 <div class="section level2">
-<h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+<h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Wickham2012-yr">
-<p>Wickham, Hadley, Heike Hofmann, Charlotte Wickham, and Dianne Cook. 2012. “Glyph-Maps for Visually Exploring Temporal Patterns in Climate Data and Models.” <em>Environmetrics</em> 23 (5): 382–93. <a href="https://doi.org/10.1002/env.2152" class="external-link">https://doi.org/10.1002/env.2152</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Wickham2012-yr" class="csl-entry">
+Wickham, Hadley, Heike Hofmann, Charlotte Wickham, and Dianne Cook.
+2012. <span>“Glyph-Maps for Visually Exploring Temporal Patterns in
+Climate Data and Models.”</span> <em>Environmetrics</em> 23 (5): 382–93.
+<a href="https://doi.org/10.1002/env.2152" class="external-link">https://doi.org/10.1002/env.2152</a>.
 </div>
 </div>
 </div>
@@ -190,7 +237,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
