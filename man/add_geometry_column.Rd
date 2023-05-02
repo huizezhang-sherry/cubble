@@ -19,9 +19,5 @@ add_geometry_column(x, sfc = NULL, crs, silent = FALSE)
 add geometry list column to cubble_df object
 }
 \examples{
-dt <- climate_flat \%>\%
-    tidyr::nest(ts = date:tmin) \%>\%
-    dplyr::rowwise() \%>\%
-    as_cubble(key = id, index = date, coords = c(long, lat))
-add_geometry_column(dt)
+climate_aus \%>\% add_geometry_column()
 }
