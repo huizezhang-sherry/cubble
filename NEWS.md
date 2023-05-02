@@ -1,3 +1,7 @@
+# cubble 0.2.2
+
+* `as_cubble()` method for `sf_time` objects
+
 # cubble 0.2.1
 
 * add pkg logo
