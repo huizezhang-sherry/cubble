@@ -1,7 +1,7 @@
 # cubble 0.2.2
 
-* `as_cubble()` method for `sf_time` objects
-* new function `add_geometry_column()` to 
+* `as_cubble()` method for `sftime` objects
+* new function `add_geometry_column()` to facilitate class cast with `sftime` objects (#15)
 
 # cubble 0.2.1
 
