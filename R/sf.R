@@ -24,7 +24,7 @@ add_geometry_column = function(x, sfc = NULL, crs, silent = FALSE) {
 		sfc = sf::st_geometry(sf::st_as_sf(x, coords = c("long", "lat"), crs = crs))
 	}
 	x$geometry = sfc
-	x %>% st_as_sf() %>% update_cubble()
+	x %>% sf::st_as_sf() %>% update_cubble()
 }
 
 
