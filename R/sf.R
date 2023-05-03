@@ -24,5 +24,17 @@ add_geometry_column = function(x, sfc = NULL, crs, silent = FALSE) {
 		sfc = sf::st_geometry(sf::st_as_sf(x, coords = c("long", "lat"), crs = crs))
 	}
 	x$geometry = sfc
-	x
+	x %>% st_as_sf() %>% update_cubble()
+}
+
+
+update_cubble <- function(data){
+  stopifnot(inherits(data, "cubble_df"))
+  key <- key_vars(data)
+  index <- index(data)
+  coords <- coords(data)
+
+ data %>%
+   new_cubble(key = key, index = index, coords = coords,
+              spatial = NULL, form = "nested")
 }
