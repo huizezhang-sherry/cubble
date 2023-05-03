@@ -22,6 +22,12 @@ face_spatial <- function(data) {
 
 #' @export
 face_spatial.cubble_df <- function(data) {
+
+  if (form(data) == "nested"){
+    cli::cli_alert_info("The cubble is already in the nested form")
+    return(data)
+  }
+
   test_long(data)
 
   # will only keep the first grouping variable if more than one

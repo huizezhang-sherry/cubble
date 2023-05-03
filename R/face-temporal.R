@@ -19,6 +19,12 @@ face_temporal <- function(data, col) {
 
 #' @export
 face_temporal.cubble_df <- function(data, col){
+
+  if (form(data) == "long"){
+    cli::cli_alert_info("The cubble is already in the long form")
+    return(data)
+  }
+
   test_nested(data)
 
   key <- syms(key_vars(data))
