@@ -309,30 +309,14 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
 #' @export
 as_cubble.stars <- function(data, key, index, coords, ...){
 
-  # parse the dimensions attribute
-  dim_obj <- attr(data, "dimensions")
-  dim_flatten <- map(dim_obj, parse_dimension)
-  longlat <- names(dim_flatten)[1:2]
-  time <- names(dim_flatten)[3]
-  mapping <- do.call("expand.grid", rev(dim_flatten)) %>%
-    dplyr::group_by(!!!syms(longlat)) %>%
-    dplyr::mutate(id = dplyr::cur_group_id())
+  # making the assumption that long/lat are the first two dimensions
+  # time is the third
+  longlat <- names(stars::st_dimensions(st))[1:2]
+  time <- names(stars::st_dimensions(st))[3]
 
-  # extract data underneath
-  raw <- unclass(data)
-  var_nm <- names(raw)
-  dim <- c(map(dim_flatten, length))
-  out <- map2(
-    raw, names(raw),
-    ~{single <- array(unlist(.x), dim = dim) %>% as.data.frame.table();
-    colnames(single)[length(dim_flatten) + 1] <- .y; return(single)})
-  res <- purrr::reduce(out, cbind) %>%
-    cbind(mapping) %>%
-    dplyr::select(names(dim_flatten), var_nm, "id") %>%
-    dplyr::arrange(.data$id) %>%
-    tibble::as_tibble() %>%
-    cubble::as_cubble(key = "id", index = time, coords = longlat)
-  res
+  as_tibble(data) %>%
+    mutate(id = as_integer(interaction(x, y))) %>%
+    as_cubble(key = id, index = time, coords = longlat)
 
 }
 
