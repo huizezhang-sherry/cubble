@@ -1,4 +1,4 @@
-#' The constructor for the cubble class
+#' The constructor for the \code{cubble_df} class
 #'
 #' @param ... a list object to create new cubble
 #' @param data the object to be created or tested as cubble

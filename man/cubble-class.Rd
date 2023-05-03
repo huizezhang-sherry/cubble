@@ -9,7 +9,7 @@
 \alias{tbl_sum.cubble_df}
 \alias{is_cubble}
 \alias{cubble}
-\title{The constructor for the cubble class}
+\title{The constructor for the \code{cubble_df} class}
 \usage{
 as_cubble(data, key, index, coords, ...)
 
@@ -64,7 +64,7 @@ a TRUE/FALSE predicate
 a cubble object
 }
 \description{
-The constructor for the cubble class
+The constructor for the \code{cubble_df} class
 }
 \examples{
 # Declaimer: to make the examples easier, here we first `climate_flat` into

@@ -21,7 +21,7 @@ library(cubble)
 library(dplyr)
 ```
 
-This vignette provides some details on the cubble class. Here is a diagram that summarises the attributes associated with a nested and long cubble:
+This vignette provides some details on the `cubble_df` class. Here is a diagram that summarises the attributes associated with a nested and long cubble:
 
 ```{r echo = FALSE, fig.align='center'}
 knitr::include_graphics("cluster-diagram/cubble-design.png")
