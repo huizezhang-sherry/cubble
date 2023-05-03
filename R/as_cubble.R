@@ -270,11 +270,11 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
   # subset long lat if applicable
   if (!is.null(lat_range)) {
     lat_idx <- which(lat_raw %in% lat_range)
-    lat_raw <- lat_raw[which(lat_raw %in% lat_range)]
+    lat_raw <- as.vector(lat_raw[which(lat_raw %in% lat_range)])
   }
   if (!is.null(long_range)) {
     long_idx <- which(long_raw %in% long_range)
-    long_raw <- long_raw[which(long_raw %in% long_range)]
+    long_raw <- as.vector(long_raw[which(long_raw %in% long_range)])
   }
   raw_data <- var$var %>%  map(~.x[long_idx, lat_idx,])
 
