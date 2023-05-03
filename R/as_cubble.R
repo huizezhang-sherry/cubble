@@ -256,6 +256,24 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
 }
 
 #' @export
+as_cubble.sf = function(x, key, index,...) {
+	cc = st_coordinates(st_centroid(x))
+	colnames(cc) = if (st_is_longlat(x))
+			c("long", "lat")
+		else
+			c("x", "y")
+	sf_column = attr(x, "sf_column")
+	x = cbind(x, cc)
+	x = as_tibble(x)
+	key = enquo(key)
+	index = enquo(index)
+	cu = as_cubble(x, key = !!key, index = !!index, coords = colnames(cc))
+	structure(cu, class = c("cubble_df", "sf", setdiff(class(cu), "cubble_df")),
+              sf_column = sf_column)
+}
+
+
+#' @export
 as_cubble.ncdf4 <- function(data, key, index, coords, vars,
                             lat_range = NULL, long_range = NULL, ...){
 
@@ -311,13 +329,21 @@ as_cubble.stars <- function(data, key, index, coords, ...){
 
   # making the assumption that long/lat are the first two dimensions
   # time is the third
-  longlat <- names(stars::st_dimensions(st))[1:2]
-  time <- names(stars::st_dimensions(st))[3]
+  if (is.na(st_raster_type(data))) { # vector data cube
+	stopifnot(is.null(data$id), inherits(st_get_dimension_values(data, 1), "sfc"))
+    data$id = seq_len(dim(data)[1]) # recycles
+    data = st_as_sf(data, long = TRUE)
+    key = enquo(key)
+    index = enquo(index)
+	as_cubble(data, key=!!key, index=!!index)
+  } else { # raster data cube
+    longlat <- names(stars::st_dimensions(data))[1:2]
+    time <- names(stars::st_dimensions(data))[3]
 
-  as_tibble(data) %>%
-    mutate(id = as_integer(interaction(x, y))) %>%
-    as_cubble(key = id, index = time, coords = longlat)
-
+    as_tibble(data) %>%
+      mutate(id = as_integer(interaction(x, y))) %>%
+      as_cubble(key = id, index = time, coords = longlat)
+  }
 }
 
 
