@@ -100,7 +100,7 @@ GeomGlyph <- ggplot2::ggproto(
 
   required_aes = c("x_minor", "x_major", "y_minor", "y_major"),
   default_aes = ggplot2::aes(
-    colour = "black", size = 0.5, linetype = "solid", alpha = 1,
+    colour = "black", size = 0.5, linetype = "solid", alpha = 1, linewidth = 0.5,
     polar = FALSE,
     width = ggplot2::rel(2.1),
     height = ggplot2::rel(2.1),
@@ -151,7 +151,7 @@ GeomGlyphLine <- ggplot2::ggproto(
 
   required_aes = c("x_minor", "x_major", "y_minor", "y_major"),
   default_aes = ggplot2::aes(
-    colour = "grey", size = 1, linetype = "solid", alpha = 1,
+    colour = "grey", size = 1, linetype = "solid", alpha = 1, linewidth = 0.5,
     polar = FALSE,
     width = ggplot2::rel(2.1),
     height = ggplot2::rel(2.1)
@@ -199,7 +199,7 @@ GeomGlyphBox <- ggplot2::ggproto(
 
   required_aes = c("x_minor", "x_major", "y_minor", "y_major"),
   default_aes = ggplot2::aes(
-    colour = "grey", size = 0.5, linetype = "solid", alpha = 1,
+    colour = "grey", size = 0.5, linetype = "solid", alpha = 1, linewidth = 0.5,
     fill = "transparent",
     polar = FALSE,
     width = ggplot2::rel(2.1),
@@ -253,7 +253,7 @@ get_scale <- function(x) {
 
 glyph_data_setup <- function(data, params){
   if (length(unique(data$group)) == 1){
-    data$group <- interaction(data$x_major, data$y_major, drop = TRUE)
+    data$group <- as.integer(interaction(data$x_major, data$y_major, drop = TRUE))
     data <- data %>%  dplyr::group_by(.data$group)
   }
 
