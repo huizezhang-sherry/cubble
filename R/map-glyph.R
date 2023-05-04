@@ -275,7 +275,8 @@ glyph_data_setup <- function(data, params){
       )
   }
 
-  datetime_class <- c("Date", "yearmonth", "yearweek", "yearquarter")
+  datetime_class <- c(
+    "Date", "yearmonth", "yearweek", "yearquarter","POSIXct", "POSIXlt")
   if (any(class(data$x_minor) %in% datetime_class)){
     data[["x_minor"]] <- as.numeric(data[["x_minor"]])
   }
