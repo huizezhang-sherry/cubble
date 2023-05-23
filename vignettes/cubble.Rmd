@@ -42,12 +42,12 @@ tmax
 We would also like to summarise the daily recording into monthly to smooth the maximum temperature and since it is also a time dimension operation, we can keep using the long form:  
 
 ```{r}
-tmax <-tmax %>% 
-    face_temporal() %>% 
-    mutate(
-        month = lubridate::month(yearmonth),
-        group = as.factor(ifelse(lubridate::year(yearmonth) > 2015, "2016 ~ 2020","1971 ~ 1975"))) %>%
-  group_by(month, group)%>%  
+tmax <- tmax %>%
+  face_temporal() %>%
+  group_by(new_ym = tsibble::make_yearmonth(
+    year = ifelse(lubridate::year(yearmonth) > 2015, 2016, 1971),
+    month = lubridate::month(yearmonth)
+  )) %>%
   summarise(tmax = mean(tmax, na.rm = TRUE))
 
 tmax

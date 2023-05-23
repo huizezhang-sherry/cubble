@@ -19,27 +19,51 @@ print.cubble_df <- function(x, width = NULL, ...,
 #' @return a cubble object
 #' @export
 tbl_sum.cubble_df <- function(x) {
+  #browser()
 
   data <- x
   key <- key_vars(data)[1]
   key_n <- map_dbl(key, ~length(unique(key_data(data)[[.x]])))
 
-  #check <- check_coords(data)
-  #bbox <- check$bbox
   if (form(data) == "long") nested <- spatial(data) else nested <- data
+  if (form(data) == "nested") long <- face_temporal(data) else long <- data
 
-  if (inherits(data, "sf")){
-    bbox <- sf::st_bbox(nested)
-  } else{
-    coord_vars <- coords(data)
-    if (all(!coord_vars %in% names(nested))) nested <- nested %>% unnest(.val)
-    bbox <- as_tibble(nested) %>%
-      sf::st_as_sf(coords = coord_vars) %>%
-      sf::st_bbox()
+  # header line 1
+  index <- index(data) |> paste0(collapse = ", ")
+  msg <- glue::glue("key: {key} [{key_n}], index: {index}, {form(data)} form")
+  if (inherits(data, "tbl_ts")){
+    msg <- glue::glue("{msg} [tsibble]")
+  } else if (inherits(data, "sf")){
+    msg <- glue::glue("{msg} [sf]")
   }
 
-  bbox_msg <- glue::glue("[", paste0(bbox, collapse = ", "), "]")
+  # header line 2
+  # bbox if in the nested form
+  if (is_nested(data)){
+    if (inherits(data, "sf")){
+      bbox <- sf::st_bbox(nested)
+    } else{
+      coord_vars <- coords(data)
+      if (all(!coord_vars %in% names(nested))) nested <- nested %>% unnest(.val)
+      bbox <- as_tibble(nested) %>%
+        sf::st_as_sf(coords = coord_vars) %>%
+        sf::st_bbox()
+    }
+    extent_msg <- glue::glue("[", paste0(bbox, collapse = ", "), "]")
+  } else{
+    # temporal extent if in the long form
+    if (!inherits(data, "tbl_ts")){
+      long <- as_tsibble(long, key = key_vars(data), index = index(data)[1])
+    }
+    from_to <- range(as_tibble(long)[[cubble::index(long)]])
+    by <- tsibble::interval(long)
+    gaps <- tsibble::scan_gaps(long)
+    if (nrow(gaps) == 0) gap_msg <- "no gaps" else gap_msg <- "has gaps!"
+    extent_msg <- glue::glue(
+      paste0(from_to, collapse = " -- "), " [", {format(by)}, "], ", {gap_msg})
+  }
 
+  # header line 3: other variables
   if (is_nested(data)){
     ts_size <- map_dbl(data$ts, vec_size) != 0
     var_names <- names(data$ts[ts_size][[1]])
@@ -56,24 +80,10 @@ tbl_sum.cubble_df <- function(x) {
   }
   var_msg <- glue::glue_collapse(glue::glue("{var_names} [{var_type}]"), sep = ", ")
 
-  size <- tibble::size_sum(data)
-  if(is_nested(data)){
-    msg <- glue::glue("{key} [{key_n}]: nested form")
-  } else if(is_long(data)){
-    index <- index(data) |> paste0(collapse = ", ")
-    msg <- glue::glue("{index}, {key} [{key_n}]: long form")
-  }
-
-  if (inherits(data, "tbl_ts")){
-    msg <- glue::glue("{msg} [tsibble]")
-  } else if (inherits(data, "sf")){
-    msg <- glue::glue("{msg} [sf]")
-  }
-
-  if (is_nested(data)) {
-    c("cubble" = msg, "bbox" = bbox_msg, "temporal" = var_msg)
+  if (is_nested(data)){
+    c("cubble" = msg, "extent" = extent_msg, "temporal" = var_msg)
   } else if (is_long(data)) {
-    c("cubble" = msg, "bbox" = bbox_msg, "spatial" = var_msg)
+    c("cubble" = msg, "extent" = extent_msg, "spatial" = var_msg)
   }
 
 
