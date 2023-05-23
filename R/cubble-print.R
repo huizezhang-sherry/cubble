@@ -19,7 +19,6 @@ print.cubble_df <- function(x, width = NULL, ...,
 #' @return a cubble object
 #' @export
 tbl_sum.cubble_df <- function(x) {
-  #browser()
 
   data <- x
   key <- key_vars(data)[1]
