@@ -61,8 +61,8 @@ as_cubble <- function(data, key, index, coords, ...) {
 
 #' @rdname cubble-class
 #' @export
-as_cubble.list <- function(data, key, index, coords, by = NULL,
-                           output = "auto-match", ...){
+as_cubble.list <- function(data, key, index, coords, by = NULL, ...){
+
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -73,10 +73,6 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   # parse coords from a quosure to a string vector
   coords <- as.list(quo_get_expr(coords))[-1]
   coords <- unlist(map(coords, as_string))
-
-  if (!output %in% c("unmatch", "auto-match")){
-    cli::cli_abort('Please choose one of the two outputs: "unmatch" and "auto-match"')
-  }
 
   if (length(data) > 2){
     cli::cli_abort("Currently cubble can only take two elements for the list input.")
@@ -114,11 +110,6 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   }
 
 
-  matched_tbl <-  tibble::tibble(
-    spatial = intersect(unique(temporal[[key_nm]]), spatial[[key_nm]])
-    ) %>%
-    mutate(temporal = spatial)
-  if (nrow(matched_tbl) == 0) {matched_tbl <- tibble::tibble()}
 
   # find whether there are unmatched spatial and temporal key level
   slvl <- spatial[[key_nm]]
@@ -127,40 +118,23 @@ as_cubble.list <- function(data, key, index, coords, by = NULL,
   only_temporal <- setdiff(tlvl, slvl)
   has_unmatch <- length(only_temporal) != 0 | length(only_spatial) != 0
 
-  if (has_unmatch){
-    # construct the unmatching summary
-    matching_res <- cubble_automatch(
-      spatial = spatial, temporal = temporal,
-      key_nm = key_nm, matched_tbl = matched_tbl,
-      only_spatial = only_spatial, only_temporal = only_temporal
-      )
 
-    # return early with the unmatch summary
-    if (output == "unmatch") return(matching_res)
+  if (length(only_spatial) != 0) cli::cli_alert_warning(
+    "Some sites in the spatial table don't have temporal information"
+  )
 
-    # inform users about the unmatch
-    others <- matching_res$others
-    has_t_unmatched <- length(others$temporal) != 0
-    has_s_unmatched <- length(others$spatial) != 0
-    has_either_unmatched <- has_t_unmatched | has_s_unmatched
-    if (has_t_unmatched){
-      cli::cli_alert_warning(
-        "Some sites in the temporal table don't have spatial information"
-        )
-    }
+  if (length(only_temporal) != 0) cli::cli_alert_warning(
+    "Some sites in the temporal table don't have spatial information"
+  )
 
-    if (has_s_unmatched){
-      cli::cli_alert_warning(
-        "Some sites in the spatial table don't have temporal information"
-        )
-    }
+  if (has_unmatch) cli::cli_alert_warning(
+    'Use {.fn check_key} to check on the unmatched key
+    The cubble is created only with sites having both spatial and temporal information'
+  )
 
-    if (has_either_unmatched){
-      cli::cli_alert_warning(
-        'Use argument {.code output = "unmatch"} to check on the unmatched key'
-        )
-    }
-  }
+  # only create when have both spatial & temporal info
+  spatial <- spatial %>% filter(!key_nm %in% only_spatial)
+  temporal <- temporal %>% filter(!key_nm %in% only_temporal)
 
   out <- suppressMessages(
     dplyr::inner_join(spatial, temporal %>% nest(ts = -key_nm))
