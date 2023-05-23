@@ -151,8 +151,8 @@ attributes for a nested cubble:</p>
 <span><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_small</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
 <span>  <span class="fu"><a href="../reference/cubble-class.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nested</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.9764, -32.9342, 133.5407, -12.4239]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [5], index: date, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [115.9764, -32.9342, 133.5407, -12.4239]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id            lat  long  elev name           wmo_id ts              </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
@@ -204,8 +204,8 @@ non-raining day can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [5]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [115.9764, -32.9342, 133.5407, -12.4239]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [5], index: date, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [115.9764, -32.9342, 133.5407, -12.4239]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id            lat  long  elev name           wmo_id ts                rain</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -238,8 +238,8 @@ cubble along with its attributes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">long</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:    [115.9764, -32.9342, 133.5407, -12.4239]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  key: id [5], index: date, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:  2020-01-01 -- 2020-01-04 [1D], no gaps</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
 <span><span class="co">#&gt;    id          date        prcp  tmax  tmin</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>

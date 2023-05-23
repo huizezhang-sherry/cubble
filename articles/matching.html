@@ -212,8 +212,8 @@ columns: <code>dist</code> as the distance between the pair and
 <code>group</code> as the grouping index:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">matched</span> </span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [18]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [145.7964, -36.1039, 151.6697, -30.5264]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [18], index: date, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [145.7964, -36.1039, 151.6697, -30.5264]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;    id            lat  long   elev name     wmo_id automated ts        dist group</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -317,8 +317,8 @@ the <code>dist</code> and <code>group</code> from spatial
 matching)：</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [8]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [144.5203, -37.727706, 146.059205, -36.5523]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [8], index: date, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [144.5203, -37.727706, 146.059205, -36.5523]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], matched_var [dbl]</span></span></span>
 <span><span class="co">#&gt;   id          name                  lat  long type   dist group ts       n_match</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>

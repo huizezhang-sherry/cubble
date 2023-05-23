@@ -118,8 +118,8 @@ variables into the long form for these transformations.</p>
 <span class="r-in"><span><span class="co"># if you switch to the nested cubble and then switch back,</span></span></span>
 <span class="r-in"><span><span class="co"># long and lat will not be preserved</span></span></span>
 <span class="r-in"><span><span class="va">cb_mig</span> <span class="op">|&gt;</span> <span class="fu"><a href="face_spatial.html">face_spatial</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:  date, id [5]: long form</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># bbox:    [115.9764, -32.9342, 133.5407, -12.4239]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:  key: id [5], index: date, long form</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># extent:  2020-01-01 -- 2020-12-31 [1D], no gaps</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id          date        prcp  tmax  tmin  long   lat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>

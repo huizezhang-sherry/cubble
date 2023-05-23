@@ -136,8 +136,8 @@ hierarchical data structure in cubble.</p>
 station:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prcp_aus</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [663]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.5319, -43.6578, 153.6358, -10.0511]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [663], index: wk, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [113.5319, -43.6578, 153.6358, -10.0511]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: wk [dbl], prcp [dbl]</span></span></span>
 <span><span class="co">#&gt;    id           long   lat  elev name                wmo_id ts               </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span></span>
@@ -159,8 +159,8 @@ nested cubble with a cluster column indicating the group each station
 belongs to.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">station_nested</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [663]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.5319, -43.6578, 153.6358, -10.0511]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [663], index: wk, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [113.5319, -43.6578, 153.6358, -10.0511]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: wk [dbl], prcp [dbl]</span></span></span>
 <span><span class="co">#&gt;    id           long   lat  elev name                wmo_id ts       cluster</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -180,8 +180,8 @@ the new key variable, <code>cluster</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">station_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/switch_key.html">switch_key</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span></span>
 <span><span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   cluster [5]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [118.84, -43.6578, 152.8655, -10.0511]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: cluster [5], index: wk, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [118.84, -43.6578, 152.8655, -10.0511]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: id [chr], wk [dbl], prcp [dbl]</span></span></span>
 <span><span class="co">#&gt;   cluster .val              ts                  </span></span>
 <span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>              </span></span>
@@ -197,8 +197,8 @@ invariant variables and we can add the centroid of each cluster by
 <code><a href="../reference/get_centroid.html">get_centroid()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">cluster_nested</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/get_centroid.html">get_centroid</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   cluster [20]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [113.5319, -43.6578, 153.6358, -10.0511]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: cluster [20], index: wk, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [113.5319, -43.6578, 153.6358, -10.0511]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: id [chr], wk [dbl], prcp [dbl]</span></span></span>
 <span><span class="co">#&gt;    cluster .val              ts                   hull     cent_long cent_lat</span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -226,8 +226,8 @@ invariant variables and we can add the centroid of each cluster by
 level long cubble:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">cluster_long</span> <span class="op">&lt;-</span> <span class="va">cluster_nested</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  wk, cluster [20]: long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:    [113.5319, -43.6578, 153.6358, -10.0511]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  key: cluster [20], index: wk, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:  1 -- 53 [1], no gaps</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial: id [chr], long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id</span></span></span>
 <span><span class="co"><span style="color: #949494;">#&gt; #   [dbl], hull [list], cent_long [dbl], cent_lat [dbl]</span></span></span>
 <span><span class="co">#&gt;    cluster id             wk  prcp</span></span>

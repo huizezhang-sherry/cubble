@@ -143,8 +143,8 @@ form:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="va">id</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>, <span class="fl">76</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tmax</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [24]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [142.004, -39.1297, 149.9158, -34.2358]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [24], index: yearmonth, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [142.004, -39.1297, 149.9158, -34.2358]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: yearmonth [mth], tmax [dbl]</span></span></span>
 <span><span class="co">#&gt;    id          latitude longitude elevation name                 wmo_id ts      </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
@@ -167,31 +167,31 @@ form:</p>
 smooth the maximum temperature and since it is also a time dimension
 operation, we can keep using the long form:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tmax</span> <span class="op">&lt;-</span><span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>    <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>        month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">yearmonth</span><span class="op">)</span>,</span>
-<span>        group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">yearmonth</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2015</span>, <span class="st">"2016 ~ 2020"</span>,<span class="st">"1971 ~ 1975"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">month</span>, <span class="va">group</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
+<code class="sourceCode R"><span><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span>new_ym <span class="op">=</span> <span class="fu">tsibble</span><span class="fu">::</span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/year-month.html" class="external-link">make_yearmonth</a></span><span class="op">(</span></span>
+<span>    year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">yearmonth</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2015</span>, <span class="fl">2016</span>, <span class="fl">1971</span><span class="op">)</span>,</span>
+<span>    month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">yearmonth</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tmax</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  month, group, id [24]: long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:    [142.004, -39.1297, 149.9158, -34.2358]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  key: id [24], index: new_ym, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:  1971 Jan -- 2016 Dec [1M], has gaps!</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial: latitude [dbl], longitude [dbl], elevation [dbl], name [chr], wmo_id</span></span></span>
 <span><span class="co"><span style="color: #949494;">#&gt; #   [dbl]</span></span></span>
-<span><span class="co">#&gt;    id          month group        tmax</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031     1 1971 ~ 1975  30.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00076031     1 2016 ~ 2020  34.6</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00076031     2 1971 ~ 1975  31.0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00076031     2 2016 ~ 2020  32.6</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00076031     3 1971 ~ 1975  27.7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00076031     3 2016 ~ 2020  30.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00076031     4 1971 ~ 1975  23.4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00076031     4 2016 ~ 2020  25.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00076031     5 1971 ~ 1975  19.4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00076031     5 2016 ~ 2020  19.6</span></span>
+<span><span class="co">#&gt;    id            new_ym  tmax</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;mth&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031 1971 Jan  30.8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00076031 1971 Feb  31.0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00076031 1971 Mar  27.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00076031 1971 Apr  23.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00076031 1971 May  19.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00076031 1971 Jun  16.0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00076031 1971 Jul  16.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00076031 1971 Aug  16.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00076031 1971 Sep  19.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00076031 1971 Oct  22.7</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 542 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -209,9 +209,9 @@ the nested form:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face_spatial.html">face_spatial</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">==</span> <span class="fl">24</span><span class="op">)</span></span>
 <span><span class="va">tmax</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   id [22]: nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:     [142.004, -39.1297, 149.9158, -34.2358]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: month [dbl], group [fct], tmax [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [22], index: new_ym, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [142.004, -39.1297, 149.9158, -34.2358]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: new_ym [mth], tmax [dbl]</span></span></span>
 <span><span class="co">#&gt;    id          latitude longitude elevation name                 wmo_id ts      </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031    -<span style="color: #BB0000;">34.2</span>      142.      50   mildura airport       <span style="text-decoration: underline;">94</span>693 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
@@ -236,22 +236,22 @@ can move time invariant variable into the long form with
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face_temporal.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/cubble-verb.html">unfold</a></span><span class="op">(</span><span class="va">latitude</span>, <span class="va">longitude</span><span class="op">)</span></span>
 <span><span class="va">tmax</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  month, group, id [22]: long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># bbox:    [142.004, -39.1297, 149.9158, -34.2358]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  key: id [22], index: new_ym, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># extent:  1971 Jan -- 2016 Dec [1M], has gaps!</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial: latitude [dbl], longitude [dbl], elevation [dbl], name [chr], wmo_id</span></span></span>
 <span><span class="co"><span style="color: #949494;">#&gt; #   [dbl]</span></span></span>
-<span><span class="co">#&gt;    id          month group        tmax latitude longitude</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031     1 1971 ~ 1975  30.8    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00076031     1 2016 ~ 2020  34.6    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00076031     2 1971 ~ 1975  31.0    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00076031     2 2016 ~ 2020  32.6    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00076031     3 1971 ~ 1975  27.7    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00076031     3 2016 ~ 2020  30.1    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00076031     4 1971 ~ 1975  23.4    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00076031     4 2016 ~ 2020  25.2    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00076031     5 1971 ~ 1975  19.4    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00076031     5 2016 ~ 2020  19.6    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt;    id            new_ym  tmax latitude longitude</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;mth&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031 1971 Jan  30.8    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00076031 1971 Feb  31.0    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00076031 1971 Mar  27.7    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00076031 1971 Apr  23.4    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00076031 1971 May  19.4    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00076031 1971 Jun  16.0    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00076031 1971 Jul  16.2    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00076031 1971 Aug  16.7    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00076031 1971 Sep  19.7    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00076031 1971 Oct  22.7    -<span style="color: #BB0000;">34.2</span>      142.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 518 more rows</span></span></span></code></pre></div>
 <p>Now you have seen the basic wrangling with cubble, it is time to make
 some plots! The vignette <a href="glyph.html">Making glyph map</a> will
