@@ -50,7 +50,7 @@ cubble <- function(..., key, index, coords) {
     dplyr::rowwise()
 
   #validate_cubble(data, key = as_name(key), index = as_name(index), coords = coords , ...)
-  new_cubble(data,
+  new_spatial_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
              spatial = NULL, form = "nested")
 
@@ -109,36 +109,47 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   )
 
   # only create when have both spatial & temporal info
-  spatial <- spatial %>% filter(!by %in% only_spatial)
+  spatial <- spatial %>% filter(!by %in% only_spatial) %>%
+    # from discussion: https://github.com/r-spatial/sf/issues/951
+    # to ensure the sf is built from a tibble
+    as_tibble() %>% sf::st_as_sf()
   temporal <- temporal %>% filter(!by %in% only_temporal)
 
   out <- suppressMessages(
     dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
   )
 
-  new_cubble(out,
+  new_spatial_cubble(out,
              key = by, index = as_name(index), coords = coords,
              spatial = NULL, form = "nested")
 }
 
 
 
-# new_cubble <- function(data, key, index, coords, ...){
+# new_cubble <- function(data, ..., class = NULL){
+#
+#
 #
 # }
-#
-# new_spaital_cubble <- function(data, key, index, coords, ...){
-#
-#   new_rowwise_df()
-# }
-#
-#
-# new_temporal_cubble <- function(data, key, index, coords, ...){
-#
-#
-#   new_grouped_df()
-#
-# }
+
+new_spatial_cubble <- function(data,  ..., class = NULL){
+
+  args <- list2(...)
+  groups <- grouped_df(data, args$key) %>% group_data()
+  out <- new_rowwise_df(data, groups = groups, ...)
+  class(out) <- c("spatial_cubble_df", "cubble_df", class(data))
+  out
+}
+
+
+new_temporal_cubble <- function(data, ..., class = NULL){
+
+  args <- list2(...)
+  groups <- grouped_df(data, args$key) %>% group_data()
+  data <- new_grouped_df(data, groups = groups, ...)
+  class(data) <- c("temporal_cubble_df", "cubble_df", class(data))
+  data
+}
 #
 # validate_cubble <- function(data, key, index, coords, ...){
 #

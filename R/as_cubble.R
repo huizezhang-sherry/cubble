@@ -280,8 +280,8 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
   spatial <- data %>% select(all_vars$invariant, -!!index) %>% distinct()
   temporal <- as_tibble(data) %>% select(!!key, all_vars$variant, !!index)
 
-  as_cubble(
-    list(spatial = spatial, temporal = temporal),
+  make_cubble(
+    spatial = spatial, temporal = temporal,
     key = !!key, index = !!index, coords = !!coords)
 
 }
