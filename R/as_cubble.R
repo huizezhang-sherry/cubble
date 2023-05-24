@@ -1,25 +1,33 @@
-#' @param by only used in `as_cubble.list()` to specify the linking key between spatial and temporal data
-#' @rdname cubble-class
+#' Coerce foreign objects into a cubble object
+#' @param ... other argument
+#' @param data object to be converted into an object of class \code{cubble_df}
+#' @param key the spatial identifier variable(s), support non-standard evaluation
+#' @param index the single temporal identifier variable, support non-standard evaluation
+#' @param coords the coordinates that characterise the spatial dimension
+#' @param by used in `as_cubble.list()` when the key variable has different names in the
+#' spatial and temporal data, in the syntax of \code{left_join()} \code{by} (see examples)
+#' @param vars used in `as_cubble.netcdf()` to select the variable to read in,
+#'  use `c()` for multiple variables (see examples)
+#' @param lat_range,long_range used in `as_cubble.netcdf()` to downsample the data to read,
+#' specify in the syntax of `seq(FROM, TO, BY)`(see examples)
 #' @importFrom tidyr unchop
 #' @importFrom tsibble key_vars index
 #' @export
 #' @return a cubble object
 #' @examples
-#' # Declaimer: to make the examples easier, here we first `climate_flat` into
-#' # different classes and show how they can be casted into a cubble. This is to
-#' # demonstrate if your data come in one of the classes, it can be directly cast
-#' # into a cubble. By no mean you need to first transform your data into any of
-#' # the following class and then cast it to cubble.
+#' climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
 #'
-#' # If the data is in a tibble:
-#' climate_flat %>%  as_cubble(key = id, index = date, coords = c(long, lat))
-#'
-#' # If the spatial and temporal information are in two separate tables:
+#' # stations and climate are in-built data in cubble
 #' library(dplyr)
-#' spatial <- climate_flat %>%  select(id:wmo_id) %>%  distinct()
-#' temporal <- climate_flat %>%  select(id, date: tmin) %>%  filter(id != "ASN00009021")
-#' as_cubble(data = list(spatial = spatial, temporal = temporal),
-#'           key = id, index = date, coords = c(long, lat))
+#' as_cubble(data = list(spatial = stations, temporal = climate),
+#'          key = id, index = date, coords = c(long, lat))
+#'
+#' # when the key variable is named differently, use the `by` argument,
+#' # cubble will take the name from TODO
+#' climate2 <- climate %>% rename(station = id)
+#' as_cubble(data = list(spatial = stations, temporal = climate),
+#'           by = c("id" = "station"), key = id,
+#'           index = date, coords = c(long, lat))
 #'
 #' # If the data is already in a rowwise_df:
 #' dt <- climate_flat %>%
@@ -27,39 +35,34 @@
 #'   dplyr::rowwise()
 #' dt %>%  as_cubble(key = id, index = date, coords = c(long, lat))
 #'
-#' # If the data is already in a tsibble, only need to supply `coords`
+#' # only need `coords` if create from a tsibble
 #' dt <- climate_flat %>%  tsibble::as_tsibble(key = id, index = date)
 #' dt %>%  as_cubble(coords = c(long, lat))
 #'
-#' # If the data is in netcdf:
+#' # netcdf
 #' path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
 #' raw <- ncdf4::nc_open(path)
 #' dt <- as_cubble(raw, vars = c("q", "z"))
+#' # read at every degree
+#' dt <- as_cubble(raw,vars = c("q", "z"),
+#'                 long_range = seq(113, 153, 1),
+#'                 lat_range = seq(-53, -12, 1))
 #'
-#' # sftime object - example 1
-#' if (! requireNamespace("sftime", quietly = TRUE))
-#'     stop("package sftime required, please install it first")
-#' x_sfc <- sf::st_sfc(
-#'   sf::st_point(1:2),
-#'   sf::st_point(c(1,3)),
-#'   sf::st_point(2:3),
-#'   sf::st_point(c(2,1))
-#' )
-#' x_sftime1 <- sftime::st_sftime(a = 1:4, x_sfc, time = Sys.time()- 0:3 * 3600 * 24)
-#' x_sftime1 %>% as_cubble(key = a, index = time)
+#' # stars
+#' dt <- stars::read_ncdf(path)
+#' dt %>% as_cubble()
 #'
-#' # sftime object - example 2
+#' # don't have to supply coords if create from a sftime
 #' dt <- climate_flat %>%
 #'   filter(lubridate::day(date) <= 5, lubridate::month(date) == 1) %>%
-#'   sf::st_as_sf(coords = c("long", "lat"), remove = FALSE) %>%
+#'   sf::st_as_sf(coords = c("long", "lat")) %>%
 #'   sftime::st_as_sftime()
-#' dt %>%
-#'   as_cubble(key = id, index = date, coords = c(long, lat))
+#' dt %>% as_cubble(key = id, index = date)
 as_cubble <- function(data, key, index, coords, ...) {
   UseMethod("as_cubble")
 }
 
-#' @rdname cubble-class
+#' @rdname as_cubble
 #' @export
 as_cubble.list <- function(data, key, index, coords, by = NULL, ...){
 
@@ -82,38 +85,23 @@ as_cubble.list <- function(data, key, index, coords, by = NULL, ...){
   # if no shared, parse the `by` argument
   spatial <- data$spatial
   temporal <- data$temporal
-  shared <- do.call("intersect", map(data, colnames) %>% setNames(c("x", "y")))
-
-  # if the `by` argument is used,
-  # align the joined column in spatial and temporal to the name in spatial
-  # correct the key to the name in spatial, if name in temporal is used
-  if (!is_null(by)){
-    if (by %in% names(temporal) && names(by) %in% names(spatial)){
-      # rename the join column to have the same name
-      names(temporal)[names(temporal) == by] <- names(by)
+  common_cols <- do.call("intersect", map(data, colnames) %>% setNames(c("x", "y")))
+  if (!is_null(by)) {
+    if (by %in% names(temporal) && names(by) %in% names(spatial)) {
+      # rename the common column to have the same name
+      names(spatial)[names(spatial) == names(by)] <- by
     }
-    if (key_nm == by) key_mn <- names(by)
-    shared <- names(by)
+  } else if (length(common_cols) != 0) {
+    # use the first common column
+    by <- intersect(names(spatial), names(temporal))[1]
+  } else{
+    cli::cli_abort("No shared column found.
+    Please supply the shared key using the {.code by} argument")
   }
-
-  if (length(shared) == 0){
-    cli::cli_abort(
-      "Input data need to have either common column or the {.code by} argument specified.")
-  }
-
-  if (!key_nm %in% shared){
-    cli::cli_abort(
-      "Please make sure key is the common column of spatial and temporal data.
-      In case the {.code by} argument is used, {.field key} should be either side of the {.code by} argument")
-    # shared, key_nm and by should point to the same variable name now
-    # use key_nm from now on
-  }
-
-
 
   # find whether there are unmatched spatial and temporal key level
-  slvl <- spatial[[key_nm]]
-  tlvl <- temporal[[key_nm]]
+  slvl <- spatial[[by]]
+  tlvl <- temporal[[by]]
   only_spatial <- setdiff(slvl, tlvl)
   only_temporal <- setdiff(tlvl, slvl)
   has_unmatch <- length(only_temporal) != 0 | length(only_spatial) != 0
@@ -133,19 +121,19 @@ as_cubble.list <- function(data, key, index, coords, by = NULL, ...){
   )
 
   # only create when have both spatial & temporal info
-  spatial <- spatial %>% filter(!key_nm %in% only_spatial)
-  temporal <- temporal %>% filter(!key_nm %in% only_temporal)
+  spatial <- spatial %>% filter(!by %in% only_spatial)
+  temporal <- temporal %>% filter(!by %in% only_temporal)
 
   out <- suppressMessages(
-    dplyr::inner_join(spatial, temporal %>% nest(ts = -key_nm))
+    dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
   )
 
   new_cubble(out,
-             key = key_nm, index = as_name(index), coords = coords,
+             key = by, index = as_name(index), coords = coords,
              spatial = NULL, form = "nested")
 }
 
-#' @rdname cubble-class
+#' @rdname as_cubble
 #' @export
 as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   if (inherits(data, "tbl_ts")){
@@ -187,7 +175,7 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
              spatial = NULL, form = "nested")
 }
 
-#' @rdname cubble-class
+#' @rdname as_cubble
 #' @export
 as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
   key <- enquo(key)
@@ -229,6 +217,7 @@ as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
              spatial = NULL, form = "nested")
 }
 
+#' @rdname as_cubble
 #' @export
 as_cubble.sf = function(data, key, index,...) {
 	cc = sf::st_coordinates(sf::st_centroid(data))
@@ -246,7 +235,7 @@ as_cubble.sf = function(data, key, index,...) {
               sf_column = sf_column)
 }
 
-
+#' @rdname as_cubble
 #' @export
 as_cubble.ncdf4 <- function(data, key, index, coords, vars,
                             lat_range = NULL, long_range = NULL, ...){
@@ -298,6 +287,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
              spatial = NULL, form = "nested")
 }
 
+#' @rdname as_cubble
 #' @export
 as_cubble.stars <- function(data, key, index, coords, ...){
 
@@ -315,7 +305,7 @@ as_cubble.stars <- function(data, key, index, coords, ...){
     time <- names(stars::st_dimensions(data))[3]
 
     as_tibble(data) %>%
-      mutate(id = as.integer(interaction(x, y))) %>%
+      mutate(id = as.integer(interaction(!!sym(longlat[[1]]), !!sym(longlat[[2]])))) %>%
       as_cubble(key = id, index = time, coords = longlat)
   }
 }
@@ -348,9 +338,9 @@ parse_dimension <- function(obj){
   out
 }
 
+#' @rdname as_cubble
 #' @export
 as_cubble.sftime <- function(data, key, index, coords, ...){
-  #browser()
 
   key <- enquo(key)
   index <- enquo(index)
