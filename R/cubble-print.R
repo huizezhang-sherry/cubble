@@ -1,5 +1,7 @@
-#' @rdname cubble-class
+#' print a cubble object
+#' @rdname cubble-print
 #' @param x,width,n_extra,n,max_extra_cols,max_footer_lines see pillar tbl-format.R
+#' @param ... other argument to pass into `format()`
 #' @importFrom  tibble tbl_sum
 #' @return a cubble object
 #' @export
@@ -14,7 +16,7 @@ print.cubble_df <- function(x, width = NULL, ...,
   ))
 }
 
-#' @rdname cubble-class
+#' @rdname cubble-print
 #' @importFrom  tibble tbl_sum
 #' @return a cubble object
 #' @export
@@ -23,9 +25,6 @@ tbl_sum.cubble_df <- function(x) {
   data <- x
   key <- key_vars(data)[1]
   key_n <- map_dbl(key, ~length(unique(key_data(data)[[.x]])))
-
-  if (form(data) == "long") nested <- spatial(data) else nested <- data
-  if (form(data) == "nested") long <- face_temporal(data) else long <- data
 
   # header line 1
   index <- index(data) |> paste0(collapse = ", ")
@@ -39,6 +38,7 @@ tbl_sum.cubble_df <- function(x) {
   # header line 2
   # bbox if in the nested form
   if (is_nested(data)){
+    if (form(data) == "long") nested <- spatial(data) else nested <- data
     if (inherits(data, "sf")){
       bbox <- sf::st_bbox(nested)
     } else{
@@ -50,6 +50,7 @@ tbl_sum.cubble_df <- function(x) {
     }
     extent_msg <- glue::glue("[", paste0(bbox, collapse = ", "), "]")
   } else{
+    if (form(data) == "nested") long <- face_temporal(data) else long <- data
     # temporal extent if in the long form
     if (!inherits(data, "tbl_ts")){
       long <- as_tsibble(long, key = key_vars(data), index = index(data)[1])

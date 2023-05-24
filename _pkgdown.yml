@@ -3,7 +3,7 @@ template:
     bootswatch: cosmo
 
 reference:
-- title: "S3 method on cubble"
+- title: "The cubble class"
 - contents:
   - cubble
   - as_cubble
@@ -14,6 +14,7 @@ reference:
 - title: "Data quality check"
 - contents:
   - starts_with("add")
+  - check_key
 - title: "Reshape cubble"
 - contents:
   - face_temporal

@@ -1,8 +1,8 @@
-#' The constructor for the \code{cubble_df} class
+#' Create a cubble object
 #'
 #' @param ... a list object to create new cubble
-#' @param data the object to be created or tested as cubble
-#' @param key the spatial identifier
+#' @param data object to be converted into an object of class \code{cubble_df}
+#' @param key the variable that identifies the spatial location.
 #' @param index the time identifier
 #' @param coords the coordinates that characterise the spatial dimension
 #' @rdname cubble-class
