@@ -14,11 +14,17 @@ cubble(..., key, index, coords)
 
 \item{...}{a list object to create new cubble}
 
-\item{key}{the variable that identifies the spatial location.}
+\item{key}{the variable(s) that identifies the spatial location.}
 
-\item{index}{the time identifier}
+\item{index}{the single variable that identifies time, currently support
+base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
+tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class,
+supply in non-standard evaluation}
 
-\item{coords}{the coordinates that characterise the spatial dimension}
+\item{coords}{the coordinate columns, in the form of \code{c(LONGITUDE, LATITUDE)}
+the argument can be omitted if created from an sf and its subclasses.
+In case the sf geometry column is not POINT, cubble will use the centroid
+coordinates as LONGITUDE and LATITUDE}
 }
 \value{
 a TRUE/FALSE predicate

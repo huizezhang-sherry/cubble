@@ -39,16 +39,23 @@ as_cubble(data, key, index, coords, ...)
 \arguments{
 \item{data}{object to be converted into an object of class \code{cubble_df}}
 
-\item{key}{the spatial identifier variable(s), support non-standard evaluation}
+\item{key}{the spatial identifying variable(s), it can be a single variable, i.e.
+\code{key = id}, or a vector of two variables: \code{key = c(cluster, id)}
+(see the example in \link{switch_key})}
 
-\item{index}{the single temporal identifier variable, support non-standard evaluation}
+\item{index}{the single temporal identifying variable, currently support
+base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
+tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class}
 
-\item{coords}{the coordinates that characterise the spatial dimension}
+\item{coords}{the coordinate columns, in the form of \code{c(LONGITUDE, LATITUDE)}
+the argument can be omitted if created from an sf and its subclasses.
+In the case that the sf geometry column is not POINT, cubble will use the centroid
+coordinates as LONGITUDE and LATITUDE}
 
-\item{...}{other argument}
+\item{...}{other arguments}
 
 \item{by}{used in \code{as_cubble.list()} when the key variable has different names in the
-spatial and temporal data, in the syntax of \code{left_join()} \code{by} (see examples)}
+spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples)}
 
 \item{vars}{used in \code{as_cubble.netcdf()} to select the variable to read in,
 use \code{c()} for multiple variables (see examples)}
@@ -73,7 +80,7 @@ as_cubble(data = list(spatial = stations, temporal = climate),
 # when the key variable is named differently, use the `by` argument,
 # cubble will take the name from TODO
 climate2 <- climate \%>\% rename(station = id)
-as_cubble(data = list(spatial = stations, temporal = climate),
+as_cubble(data = list(spatial = stations, temporal = climate2),
           by = c("id" = "station"), key = id,
           index = date, coords = c(long, lat))
 
@@ -103,7 +110,7 @@ dt \%>\% as_cubble()
 # don't have to supply coords if create from a sftime
 dt <- climate_flat \%>\%
   filter(lubridate::day(date) <= 5, lubridate::month(date) == 1) \%>\%
-  sf::st_as_sf(coords = c("long", "lat")) \%>\%
+  sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) \%>\%
   sftime::st_as_sftime()
 dt \%>\% as_cubble(key = id, index = date)
 }

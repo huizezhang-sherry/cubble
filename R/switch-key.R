@@ -7,7 +7,6 @@
 #' @return a cubble object
 #'
 #' @examples
-#' library(ggplot2)
 #' library(dplyr)
 #' # create an artificial cluster for stations
 #' set.seed(1234)

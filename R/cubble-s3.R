@@ -2,9 +2,15 @@
 #'
 #' @param ... a list object to create new cubble
 #' @param data object to be converted into an object of class \code{cubble_df}
-#' @param key the variable that identifies the spatial location.
-#' @param index the time identifier
-#' @param coords the coordinates that characterise the spatial dimension
+#' @param key the variable(s) that identifies the spatial location.
+#' @param index the single variable that identifies time, currently support
+#' base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
+#' tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class,
+#' supply in non-standard evaluation
+#' @param coords the coordinate columns, in the form of \code{c(LONGITUDE, LATITUDE)}
+#' the argument can be omitted if created from an sf and its subclasses.
+#' In case the sf geometry column is not POINT, cubble will use the centroid
+#' coordinates as LONGITUDE and LATITUDE
 #' @rdname cubble-class
 #' @return a cubble object
 #' @export

@@ -8,6 +8,7 @@ reference:
   - cubble
   - as_cubble
   - is_cubble
+  - print
 - title: "Extract cubble attributes"
 - contents:
   - key_data
