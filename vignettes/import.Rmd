@@ -100,10 +100,10 @@ cubble::stations
 cubble::climate
 ```
 
-When created out of separate tables, `as_cubble()` will check on the match of linking variable in the spatial and temporal table. 
+When created out of separate tables, `make_cubble()` will check on the match of linking variable in the spatial and temporal table. 
 
 ```{r}
-as_cubble(list(spatial = cubble::stations, temporal = cubble::climate),
+make_cubble(spatial = cubble::stations, temporal = cubble::climate,
           key = id, index = date, coords = c(long, lat))
 ```
 

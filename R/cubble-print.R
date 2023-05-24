@@ -89,7 +89,8 @@ tbl_sum.cubble_df <- function(x) {
 
 }
 
-#' @rdname cubble-class
+#' Check if the object is a cubble or its subclass
+#' @param data the object to test
 #' @return a TRUE/FALSE predicate
 #' @export
 is_cubble <- function(data){

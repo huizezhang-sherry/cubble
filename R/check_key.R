@@ -1,7 +1,7 @@
 #' Check key matching from multiple data sources
 #'
 #' When creating a cubble from two sources (spatial and temporal data) with
-#' \code{as_cubble(list(spatial = ..., temporal = ...), ...)}, \code{as_cubble()} will
+#' \code{make_cubble(spatial = ..., temporal = ..., ...)}, \code{make_cubble()} will
 #' informed users about potential disagreement of the key values in the two datasets
 #' (some sites appear in one table but not the other). This function summarises
 #' the key values into those match, potentially can be matched, and can't be matched.

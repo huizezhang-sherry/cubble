@@ -2,7 +2,6 @@
 % Please edit documentation in R/as_cubble.R
 \name{as_cubble}
 \alias{as_cubble}
-\alias{as_cubble.list}
 \alias{as_cubble.tbl_df}
 \alias{as_cubble.rowwise_df}
 \alias{as_cubble.sf}
@@ -12,8 +11,6 @@
 \title{Coerce foreign objects into a cubble object}
 \usage{
 as_cubble(data, key, index, coords, ...)
-
-\method{as_cubble}{list}(data, key, index, coords, by = NULL, ...)
 
 \method{as_cubble}{tbl_df}(data, key, index, coords, ...)
 
@@ -54,9 +51,6 @@ coordinates as LONGITUDE and LATITUDE}
 
 \item{...}{other arguments}
 
-\item{by}{used in \code{as_cubble.list()} when the key variable has different names in the
-spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples)}
-
 \item{vars}{used in \code{as_cubble.netcdf()} to select the variable to read in,
 use \code{c()} for multiple variables (see examples)}
 
@@ -71,18 +65,6 @@ Coerce foreign objects into a cubble object
 }
 \examples{
 climate_flat \%>\% as_cubble(key = id, index = date, coords = c(long, lat))
-
-# stations and climate are in-built data in cubble
-library(dplyr)
-as_cubble(data = list(spatial = stations, temporal = climate),
-         key = id, index = date, coords = c(long, lat))
-
-# when the key variable is named differently, use the `by` argument,
-# cubble will take the name from TODO
-climate2 <- climate \%>\% rename(station = id)
-as_cubble(data = list(spatial = stations, temporal = climate2),
-          by = c("id" = "station"), key = id,
-          index = date, coords = c(long, lat))
 
 # If the data is already in a rowwise_df:
 dt <- climate_flat \%>\%

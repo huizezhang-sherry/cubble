@@ -1,7 +1,8 @@
 #' Create a cubble object
 #'
 #' @param ... a list object to create new cubble
-#' @param data object to be converted into an object of class \code{cubble_df}
+#' @param spatial a tibble of spatial variables, contain key and the two coords columns
+#' @param temporal a tibble of temporal variables, contain key and index
 #' @param key the variable(s) that identifies the spatial location.
 #' @param index the single variable that identifies time, currently support
 #' base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
@@ -11,20 +12,150 @@
 #' the argument can be omitted if created from an sf and its subclasses.
 #' In case the sf geometry column is not POINT, cubble will use the centroid
 #' coordinates as LONGITUDE and LATITUDE
+#' @param by used in `make_cubble` when the key variable has different names in the
+#' spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples
 #' @rdname cubble-class
 #' @return a cubble object
 #' @export
+#' @examples
+#' cubble(
+#'   id = rep(c("perth", "melbourne", "sydney"), each = 3),
+#'   date = rep(as.Date("2020-01-01") + 0:2, times = 3),
+#'   long = rep(c(115.86, 144.96, 151.21), each = 3),
+#'   lat = rep(c(-31.95, -37.81, -33.87), each = 3),
+#'   value = rnorm(n = 9),
+#'   key = id, index = date, coords = c(long, lat)
+#'   )
+#'
+#' # stations and climate are in-built data in cubble
+#' make_cubble(spatial = stations, temporal = climate,
+#'             key = id, index = date, coords = c(long, lat))
+#'
+#' # when the key variable is named differently, use the `by` argument,
+#' # cubble will take the name from TODO
+#' climate2 <- climate %>% rename(station = id)
+#' make_cubble(spatial = stations, temporal = climate2,
+#'           by = c("id" = "station"), key = id,
+#'           index = date, coords = c(long, lat))
 cubble <- function(..., key, index, coords) {
   data <- tibble::tibble(!!!list2(...))
   key <- enquo(key)
+  index <- enquo(index)
+  coords <- enquo(coords)
+  coords <- names(data)[tidyselect::eval_select(coords, data)]
+
+  all_vars <- find_invariant(data, !!key)
+  data <- data %>%
+    tidyr::nest(ts = c(!!!all_vars$variant)) %>%
+    dplyr::rowwise()
+
+  #validate_cubble(data, key = as_name(key), index = as_name(index), coords = coords , ...)
   new_cubble(data,
              key = as_name(key), index = as_name(index), coords = coords,
              spatial = NULL, form = "nested")
 
 }
 
-new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL){
+#' @rdname cubble-class
+#' @export
+make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
 
+  key <- enquo(key)
+  index <- enquo(index)
+  coords <- enquo(coords)
+
+  test_missing(quo = key, var = "key")
+  key_nm <- as_name(key)
+  test_missing(quo = index, var = "index")
+  # parse coords from a quosure to a string vector
+  coords <- as.list(quo_get_expr(coords))[-1]
+  coords <- unlist(map(coords, as_string))
+
+  # find the common "key" column between spatial and temporal
+  # if no shared, parse the `by` argument
+  common_cols <- intersect(names(spatial), names(temporal))
+  if (!is_null(by)) {
+    if (by %in% names(temporal) && names(by) %in% names(spatial)) {
+      # rename the common column to have the same name
+      names(spatial)[names(spatial) == names(by)] <- by
+    }
+  } else if (length(common_cols) != 0) {
+    # use the first common column
+    by <- intersect(names(spatial), names(temporal))[1]
+  } else{
+    cli::cli_abort("No shared column found.
+    Please supply the shared key using the {.code by} argument")
+  }
+
+  # find whether there are unmatched spatial and temporal key level
+  slvl <- spatial[[by]]
+  tlvl <- temporal[[by]]
+  only_spatial <- setdiff(slvl, tlvl)
+  only_temporal <- setdiff(tlvl, slvl)
+  has_unmatch <- length(only_temporal) != 0 | length(only_spatial) != 0
+
+
+  if (length(only_spatial) != 0) cli::cli_alert_warning(
+    "Some sites in the spatial table don't have temporal information"
+  )
+
+  if (length(only_temporal) != 0) cli::cli_alert_warning(
+    "Some sites in the temporal table don't have spatial information"
+  )
+
+  if (has_unmatch) cli::cli_alert_warning(
+    'Use {.fn check_key} to check on the unmatched key
+    The cubble is created only with sites having both spatial and temporal information'
+  )
+
+  # only create when have both spatial & temporal info
+  spatial <- spatial %>% filter(!by %in% only_spatial)
+  temporal <- temporal %>% filter(!by %in% only_temporal)
+
+  out <- suppressMessages(
+    dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
+  )
+
+  new_cubble(out,
+             key = by, index = as_name(index), coords = coords,
+             spatial = NULL, form = "nested")
+}
+
+
+
+# new_cubble <- function(data, key, index, coords, ...){
+#
+# }
+#
+# new_spaital_cubble <- function(data, key, index, coords, ...){
+#
+#   new_rowwise_df()
+# }
+#
+#
+# new_temporal_cubble <- function(data, key, index, coords, ...){
+#
+#
+#   new_grouped_df()
+#
+# }
+#
+# validate_cubble <- function(data, key, index, coords, ...){
+#
+#  # all the checks go here
+# }
+
+
+#' Cubble constructor
+#' @param data data
+#' @param key key
+#' @param index key
+#' @param coords key
+#' @param spatial key
+#' @param form key
+#' @param tsibble_attr key
+#' @export
+new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL){
   data <- arrange(data, !!sym(key[1]))
 
   # take ordered as TRUE, for now

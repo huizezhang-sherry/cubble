@@ -11,8 +11,6 @@
 #' the argument can be omitted if created from an sf and its subclasses.
 #' In the case that the sf geometry column is not POINT, cubble will use the centroid
 #' coordinates as LONGITUDE and LATITUDE
-#' @param by used in `as_cubble.list()` when the key variable has different names in the
-#' spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples)
 #' @param vars used in `as_cubble.netcdf()` to select the variable to read in,
 #'  use `c()` for multiple variables (see examples)
 #' @param lat_range,long_range used in `as_cubble.netcdf()` to downsample the data to read,
@@ -23,18 +21,6 @@
 #' @return a cubble object
 #' @examples
 #' climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
-#'
-#' # stations and climate are in-built data in cubble
-#' library(dplyr)
-#' as_cubble(data = list(spatial = stations, temporal = climate),
-#'          key = id, index = date, coords = c(long, lat))
-#'
-#' # when the key variable is named differently, use the `by` argument,
-#' # cubble will take the name from TODO
-#' climate2 <- climate %>% rename(station = id)
-#' as_cubble(data = list(spatial = stations, temporal = climate2),
-#'           by = c("id" = "station"), key = id,
-#'           index = date, coords = c(long, lat))
 #'
 #' # If the data is already in a rowwise_df:
 #' dt <- climate_flat %>%
@@ -67,77 +53,6 @@
 #' dt %>% as_cubble(key = id, index = date)
 as_cubble <- function(data, key, index, coords, ...) {
   UseMethod("as_cubble")
-}
-
-#' @rdname as_cubble
-#' @export
-as_cubble.list <- function(data, key, index, coords, by = NULL, ...){
-
-  key <- enquo(key)
-  index <- enquo(index)
-  coords <- enquo(coords)
-
-  test_missing(quo = key, var = "key")
-  key_nm <- as_name(key)
-  test_missing(quo = index, var = "index")
-  # parse coords from a quosure to a string vector
-  coords <- as.list(quo_get_expr(coords))[-1]
-  coords <- unlist(map(coords, as_string))
-
-  if (length(data) > 2){
-    cli::cli_abort("Currently cubble can only take two elements for the list input.")
-  }
-
-  # find the common "key" column between spatial and temporal
-  # if no shared, parse the `by` argument
-  spatial <- data$spatial
-  temporal <- data$temporal
-  common_cols <- do.call("intersect", map(data, colnames) %>% setNames(c("x", "y")))
-  if (!is_null(by)) {
-    if (by %in% names(temporal) && names(by) %in% names(spatial)) {
-      # rename the common column to have the same name
-      names(spatial)[names(spatial) == names(by)] <- by
-    }
-  } else if (length(common_cols) != 0) {
-    # use the first common column
-    by <- intersect(names(spatial), names(temporal))[1]
-  } else{
-    cli::cli_abort("No shared column found.
-    Please supply the shared key using the {.code by} argument")
-  }
-
-  # find whether there are unmatched spatial and temporal key level
-  slvl <- spatial[[by]]
-  tlvl <- temporal[[by]]
-  only_spatial <- setdiff(slvl, tlvl)
-  only_temporal <- setdiff(tlvl, slvl)
-  has_unmatch <- length(only_temporal) != 0 | length(only_spatial) != 0
-
-
-  if (length(only_spatial) != 0) cli::cli_alert_warning(
-    "Some sites in the spatial table don't have temporal information"
-  )
-
-  if (length(only_temporal) != 0) cli::cli_alert_warning(
-    "Some sites in the temporal table don't have spatial information"
-  )
-
-  if (has_unmatch) cli::cli_alert_warning(
-    'Use {.fn check_key} to check on the unmatched key
-    The cubble is created only with sites having both spatial and temporal information'
-  )
-
-  # only create when have both spatial & temporal info
-  spatial <- spatial %>% filter(!by %in% only_spatial)
-  temporal <- temporal %>% filter(!by %in% only_temporal)
-
-  out <- suppressMessages(
-    dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
-  )
-
-  new_cubble(out,
-             key = by, index = as_name(index), coords = coords,
-             spatial = NULL, form = "nested")
 }
 
 #' @rdname as_cubble
