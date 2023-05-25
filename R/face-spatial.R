@@ -1,32 +1,29 @@
-#' Switch a cubble object into the nested form
+#' Switch a cubble object between the nested (spatial) form and the long (temporal) form
 #'
-#' `face_spatial()` turns a long cubble back into a nest cubble and can be seen as
-#' the inverse operation of \code{face_temporal()}.
-#' The nested cubble identifies each row by `key` and is suitable
-#' for operations whose output doesn't involve a time index.
-#'
-#' @param data a long cubble object
-#' @return a cubble object in the nested form
-#' @rdname face_spatial
+#' While `face_temporal()` switches a cubble object into a long cubble,
+#' suitable for temporal operations, `face_spatial()` turns a long cubble back
+#' into a nest cubble for spatial operations. The two operations are exact inverse.
+#' @param data a cubble object
+#' @param col the list column to be expanded, `col` is required to be specified
+#' if there are more than one list column and the list column name is not `ts`
+#' @return a cubble object
+#' @rdname face
 #' @export
 #' @examples
 #' cb_long <- climate_mel %>% face_temporal()
-#'
-#' # face_spatial and face_temporal are exact inverse
 #' cb_back <- cb_long %>% face_spatial()
 #' identical(climate_mel, cb_back)
 face_spatial <- function(data) {
   UseMethod("face_spatial")
 }
 
-
-#' @rdname face_spatial
+#' @rdname face
 #' @export
 face_spatial.cubble_df <- function(data) {
   NextMethod()
 }
 
-#' @rdname face_spatial
+#' @rdname face
 #' @export
 face_spatial.spatial_cubble_df <- function(data) {
   cli::cli_alert_info("The cubble is already in the nested form")
@@ -34,7 +31,7 @@ face_spatial.spatial_cubble_df <- function(data) {
 
 }
 
-#' @rdname face_spatial
+#' @rdname face
 #' @export
 face_spatial.temporal_cubble_df <- function(data) {
   # will only keep the first grouping variable if more than one

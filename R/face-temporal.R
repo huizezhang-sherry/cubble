@@ -1,34 +1,23 @@
-#' Switch a cubble object into the long form
-#'
-#' `face_temporal()` switches a cubble object into a long cubble, suitable for temporal operations.
-#' The long cubble uses the combination of `key` and `index` to identify each row and
-#' arranges each `key` as a separate group.
-#' @param data a nested cubble object
-#' @param col the list column to be expanded, `col` is required to be specified
-#' if there are more than one list column and the list column name is not `ts`
-#' @return a cubble object in the nested form
-#' @rdname face_temporal
+#' @rdname face
 #' @export
-#' @examples
-#' climate_mel %>% face_temporal()
 face_temporal <- function(data, col) {
   UseMethod("face_temporal")
 }
 
-#' @rdname face_temporal
+#' @rdname face
 #' @export
 face_temporal.cubble_df <- function(data, col){
   NextMethod()
 }
 
-#' @rdname face_temporal
+#' @rdname face
 #' @export
 face_temporal.temporal_cubble_df <- function(data, col){
   cli::cli_alert_info("The cubble is already in the long form")
   data
 }
 
-#' @rdname face_temporal
+#' @rdname face
 #' @export
 face_temporal.spatial_cubble_df <- function(data, col){
 
