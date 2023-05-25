@@ -2,9 +2,18 @@
 % Please edit documentation in R/face-spatial.R
 \name{face_spatial}
 \alias{face_spatial}
+\alias{face_spatial.cubble_df}
+\alias{face_spatial.spatial_cubble_df}
+\alias{face_spatial.temporal_cubble_df}
 \title{Switch a cubble object into the nested form}
 \usage{
 face_spatial(data)
+
+\method{face_spatial}{cubble_df}(data)
+
+\method{face_spatial}{spatial_cubble_df}(data)
+
+\method{face_spatial}{temporal_cubble_df}(data)
 }
 \arguments{
 \item{data}{a long cubble object}

@@ -264,6 +264,7 @@ parse_dimension <- function(obj){
 #' @export
 as_cubble.sftime <- function(data, key, index, coords, ...){
 
+  browser()
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)

@@ -61,6 +61,7 @@ tbl_sum.temporal_cubble_df <- function(x){
 
   key <- key_vars(x)[1]
   key_n <- map_dbl(key, ~length(unique(key_data(x)[[.x]])))
+  index <- index(x)
 
   # header line 1
   line1 <- glue::glue("key: {key} [{key_n}], index: {index}, long form")
@@ -68,11 +69,11 @@ tbl_sum.temporal_cubble_df <- function(x){
 
   # line 2: FROM -- TO [BY] HAS_GAP
   if (!inherits(x, "tbl_ts")) {
-    x <- as_tsibble(x, key = key_vars(x), index = index(x)[1])
+    x_tsibble <- as_tsibble(as_tibble(x), key = key_vars(x), index = index(x)[1])
   }
   from_to <- range(as_tibble(x)[[cubble::index(x)]])
-  by <- tsibble::interval(x)
-  gaps <- tsibble::scan_gaps(x)
+  by <- tsibble::interval(x_tsibble)
+  gaps <- tsibble::scan_gaps(x_tsibble)
   if (nrow(gaps) == 0) gap_msg <- "no gaps" else gap_msg <- "has gaps!"
   line2 <- glue::glue(
     paste0(from_to, collapse = " -- "), " [", {format(by)}, "], ", {gap_msg})

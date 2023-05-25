@@ -38,6 +38,7 @@
 #'           by = c("id" = "station"), key = id,
 #'           index = date, coords = c(long, lat))
 cubble <- function(..., key, index, coords) {
+  browser()
   data <- tibble::tibble(!!!list2(...))
   key <- enquo(key)
   index <- enquo(index)
@@ -58,7 +59,6 @@ cubble <- function(..., key, index, coords) {
 #' @rdname cubble-class
 #' @export
 make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
-
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -108,10 +108,14 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   )
 
   # only create when have both spatial & temporal info
-  spatial <- spatial %>% filter(!by %in% only_spatial) %>%
+  spatial <- spatial %>% filter(!by %in% only_spatial)
+
+  if (inherits(spatial, "sf")){
     # from discussion: https://github.com/r-spatial/sf/issues/951
     # to ensure the sf is built from a tibble
-    as_tibble() %>% sf::st_as_sf()
+    spatial <- spatial %>% as_tibble() %>% sf::st_as_sf()
+  }
+
   temporal <- temporal %>% filter(!by %in% only_temporal)
 
   out <- suppressMessages(
@@ -134,7 +138,7 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
 new_spatial_cubble <- function(data,  ..., class = NULL){
 
   args <- list2(...)
-  groups <- grouped_df(data, args$key) %>% group_data()
+  groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
   data <- new_rowwise_df(data, groups = groups, ...)
   cb_cls <- c("spatial_cubble_df", "cubble_df")
   class(data) <- c(cb_cls, setdiff(class(data), cb_cls))
@@ -145,10 +149,10 @@ new_spatial_cubble <- function(data,  ..., class = NULL){
 new_temporal_cubble <- function(data, ..., class = NULL){
 
   args <- list2(...)
-  groups <- grouped_df(data, args$key) %>% group_data()
+  groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
   data <- new_grouped_df(data, groups = groups, ...)
   cb_cls <- c("temporal_cubble_df", "cubble_df")
-  class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
+  class(data) <- c(cb_cls, setdiff(class(data), cb_cls))
   data
 }
 #

@@ -20,23 +20,42 @@
 #' # long and lat will not be preserved
 #' cb_mig |> face_spatial() |> face_temporal()
 #'
+#' @rdname unfold
 #' @export
-#' @rdname cubble-verb
-unfold <- function(data, ...){
+unfold <- function(data, ...) {
+  UseMethod("unfold")
+}
+
+#' @rdname unfold
+#' @export
+unfold.cubble_df <- function(data, ...){
+  NextMethod()
+}
+
+#' @rdname unfold
+#' @export
+unfold.spatial_cubble_df <- function(data, ...){
+  cli::cli_abort("{.fn unfold} currently can only be used on a long form cubble
+                 (class {.code spatial_cubble_df})")
+
+}
+
+#' @rdname unfold
+#' @export
+unfold.temporal_cubble_df <- function(data, ...){
   dots <- enquos(..., .named = TRUE)
-  test_cubble(data)
-  test_long(data)
   sp <- spatial(data)
   key <- key_vars(data)
-
+  index <- index(data)
+  coords <- coords(data)
   in_spatial <- map_lgl(names(dots), ~.x %in% names(sp))
   if (!all(in_spatial)){
     cli::cli_inform(
       "{.code {names(dots)[!in_spatial]}} does not exist as a spaital variable. No migration")
   }
 
-  to_join <- sp %>% as_tibble() |> select(key_vars(data), names(dots)[in_spatial]) |> dplyr::distinct()
-  out <- data |> left_join(to_join, by = key)
+  to_join <- sp %>% as_tibble() |> select(key_vars(data), names(dots)[in_spatial])
+  out <- as_tibble(data) |> left_join(to_join, by = key)
 
   if (nrow(out) != nrow(data)){
     var <- names(dots)
@@ -44,5 +63,8 @@ unfold <- function(data, ...){
       "The key and unfoldd variable{?s} {.field {var}} are not one-to-one."
     )
   }
-  out
+
+  new_temporal_cubble(
+    out, key = key, index = index, coords = coords, spatial = sp
+  )
 }

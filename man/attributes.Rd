@@ -2,7 +2,6 @@
 % Please edit documentation in R/cubble-attr.R
 \name{form}
 \alias{form}
-\alias{is_long}
 \alias{is_nested}
 \alias{spatial}
 \alias{key_vars}
@@ -14,8 +13,6 @@
 \title{Functions to extract cubble attributes}
 \usage{
 form(data)
-
-is_long(data)
 
 is_nested(data)
 
@@ -41,6 +38,13 @@ the name of cubble attributes
 }
 \description{
 Functions to extract cubble attributes
+
+#' @export
+#' @rdname attributes
+is_long <- function(data){
+test_cubble(data)
+form(data) == "long"
+}
 }
 \details{
 Apart from inheriting attributes \code{names}, \code{row.names}, and \code{class} from the underlying tibble,

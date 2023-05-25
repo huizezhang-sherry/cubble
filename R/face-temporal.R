@@ -7,25 +7,32 @@
 #' @param col the list column to be expanded, `col` is required to be specified
 #' if there are more than one list column and the list column name is not `ts`
 #' @return a cubble object in the nested form
+#' @rdname face_temporal
+#' @export
 #' @examples
 #' climate_flat %>%
 #'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
 #'   face_temporal()
-#' @export
 face_temporal <- function(data, col) {
-  test_cubble(data)
   UseMethod("face_temporal")
 }
 
+#' @rdname face_temporal
 #' @export
 face_temporal.cubble_df <- function(data, col){
+  NextMethod()
+}
 
-  if (form(data) == "long"){
-    cli::cli_alert_info("The cubble is already in the long form")
-    return(data)
-  }
+#' @rdname face_temporal
+#' @export
+face_temporal.temporal_cubble_df <- function(data, col){
+  cli::cli_alert_info("The cubble is already in the long form")
+  data
+}
 
-  test_nested(data)
+#' @rdname face_temporal
+#' @export
+face_temporal.spatial_cubble_df <- function(data, col){
 
   key <- syms(key_vars(data))
   if (length(key) == 2){
@@ -54,13 +61,11 @@ face_temporal.cubble_df <- function(data, col){
   if (".val" %in% colnames(spatial)) spatial <- spatial %>%  tidyr::unnest(.data$.val)
 
   if (is_tsibble){
-    out <- out %>%  tsibble::as_tsibble(key = !!cur_key, index = index)
+    out <- out %>% tsibble::as_tsibble(key = !!cur_key, index = index)
     tsibble_attr <- attributes(out)
   }
 
-  new_cubble(out,
-             key = map_chr(key, as_name), index = index, coords = coords,
-             spatial = spatial,
-             #tsibble_attr = tsibble_attr,
-             form = "long")
+  new_temporal_cubble(
+    out, key = map_chr(key, as_name), index = index, coords = coords, spatial = spatial
+    )
 }

@@ -58,8 +58,9 @@ find_invariant <- function(data, key) {
 
 get_listcol <- function(data){
 
-  out <- names(data)[which(names(data) == "ts")]
-  if (inherits(data[[out]], "list")) return(out)
+  if ("ts" %in% names(data)) return("ts")
+  # out <- names(data)[which(names(data) == "ts")]
+  # if (inherits(data[[out]], "list")) return(out)
 
   # if the list column is not named ts, detect the list-column
   out <- names(data)[map(data, class) == "list"]

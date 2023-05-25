@@ -28,12 +28,12 @@ form <- function(data){
   data %@% form
 }
 
-#' @export
-#' @rdname attributes
-is_long <- function(data){
-  test_cubble(data)
-  form(data) == "long"
-}
+#' #' @export
+#' #' @rdname attributes
+#' is_long <- function(data){
+#'   test_cubble(data)
+#'   form(data) == "long"
+#' }
 
 #' @export
 #' @rdname attributes
