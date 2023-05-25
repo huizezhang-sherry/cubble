@@ -78,23 +78,23 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   if (length(listcol_var) == 0){
     all_vars <- find_invariant(data, !!key)
 
-    out <- data %>%
+    data <- data %>%
       tidyr::nest(ts = c(!!!all_vars$variant)) %>%
       dplyr::rowwise()
 
   } else{
     listcol_var <- listcol_var[1]
-    invariant_var <- names(col_type)[col_type != "list"]
-    chopped <- data %>%  tidyr::unchop(listcol_var)
-    already <- as_name(index) %in% names(chopped$ts)
-
-    out <- data
-    variant <- chopped$ts %>%  map_chr(pillar::type_sum)
+    if (listcol_var != "ts") colnames(data)[colnames(data) == listcol_var] <- "ts"
+    chopped <- data %>% tidyr::unchop("ts")
+    already <- as_name(index) %in% names(chopped[["ts"]])
+    if (!already) cli::cli_abort(
+      "Can't' find the index variable in the data. Please check."
+    )
   }
 
-  new_cubble(out,
-             key = as_name(key), index = as_name(index), coords = coords,
-             spatial = NULL, form = "nested")
+  new_spatial_cubble(
+    data, key = as_name(key), index = as_name(index), coords = coords
+    )
 }
 
 #' @rdname as_cubble

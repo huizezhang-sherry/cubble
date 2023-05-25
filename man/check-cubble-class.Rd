@@ -2,9 +2,15 @@
 % Please edit documentation in R/cubble-print.R
 \name{is_cubble}
 \alias{is_cubble}
+\alias{is_cubble_spatial}
+\alias{is_cubble_temporal}
 \title{Check if the object is a cubble or its subclass}
 \usage{
 is_cubble(data)
+
+is_cubble_spatial(data)
+
+is_cubble_temporal(data)
 }
 \arguments{
 \item{data}{the object to test}
@@ -14,4 +20,10 @@ a TRUE/FALSE predicate
 }
 \description{
 Check if the object is a cubble or its subclass
+}
+\examples{
+is_cubble(climate)
+is_cubble(climate_aus)
+is_cubble_spatial(climate_aus)
+is_cubble_temporal(climate_aus)
 }

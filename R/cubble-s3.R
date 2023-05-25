@@ -50,9 +50,8 @@ cubble <- function(..., key, index, coords) {
     dplyr::rowwise()
 
   #validate_cubble(data, key = as_name(key), index = as_name(index), coords = coords , ...)
-  new_spatial_cubble(data,
-             key = as_name(key), index = as_name(index), coords = coords,
-             spatial = NULL, form = "nested")
+  new_spatial_cubble(
+    data, key = as_name(key), index = as_name(index), coords = coords)
 
 }
 
@@ -119,9 +118,9 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
     dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
   )
 
-  new_spatial_cubble(out,
-             key = by, index = as_name(index), coords = coords,
-             spatial = NULL, form = "nested")
+  new_spatial_cubble(
+    out, key = by, index = as_name(index), coords = coords
+    )
 }
 
 
@@ -136,9 +135,10 @@ new_spatial_cubble <- function(data,  ..., class = NULL){
 
   args <- list2(...)
   groups <- grouped_df(data, args$key) %>% group_data()
-  out <- new_rowwise_df(data, groups = groups, ...)
-  class(out) <- c("spatial_cubble_df", "cubble_df", class(data))
-  out
+  data <- new_rowwise_df(data, groups = groups, ...)
+  cb_cls <- c("spatial_cubble_df", "cubble_df")
+  class(data) <- c(cb_cls, setdiff(class(data), cb_cls))
+  data
 }
 
 
@@ -147,7 +147,8 @@ new_temporal_cubble <- function(data, ..., class = NULL){
   args <- list2(...)
   groups <- grouped_df(data, args$key) %>% group_data()
   data <- new_grouped_df(data, groups = groups, ...)
-  class(data) <- c("temporal_cubble_df", "cubble_df", class(data))
+  cb_cls <- c("temporal_cubble_df", "cubble_df")
+  class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
   data
 }
 #

@@ -3,6 +3,8 @@
 \name{print.cubble_df}
 \alias{print.cubble_df}
 \alias{tbl_sum.cubble_df}
+\alias{tbl_sum.spatial_cubble_df}
+\alias{tbl_sum.temporal_cubble_df}
 \title{print a cubble object}
 \usage{
 \method{print}{cubble_df}(
@@ -16,16 +18,15 @@
 )
 
 \method{tbl_sum}{cubble_df}(x)
+
+\method{tbl_sum}{spatial_cubble_df}(x)
+
+\method{tbl_sum}{temporal_cubble_df}(x)
 }
 \arguments{
 \item{x, width, n_extra, n, max_extra_cols, max_footer_lines}{see pillar tbl-format.R}
 
 \item{...}{other argument to pass into \code{format()}}
-}
-\value{
-a cubble object
-
-a cubble object
 }
 \description{
 print a cubble object
