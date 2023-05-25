@@ -82,7 +82,6 @@ dt \%>\% as_cubble()
 
 # don't have to supply coords if create from a sftime
 dt <- climate_flat \%>\%
-  filter(lubridate::day(date) <= 5, lubridate::month(date) == 1) \%>\%
   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) \%>\%
   sftime::st_as_sftime()
 dt \%>\% as_cubble(key = id, index = date)

@@ -41,7 +41,6 @@
 #'
 #' # don't have to supply coords if create from a sftime
 #' dt <- climate_flat %>%
-#'   filter(lubridate::day(date) <= 5, lubridate::month(date) == 1) %>%
 #'   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) %>%
 #'   sftime::st_as_sftime()
 #' dt %>% as_cubble(key = id, index = date)
@@ -156,9 +155,9 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
     tidyr::nest(ts = c(!!!all_vars$variant)) %>%
     dplyr::rowwise()
 
-  new_cubble(out,
-             key = key, index = "time", coords = c("long", "lat"),
-             spatial = NULL, form = "nested")
+  new_spatial_cubble(
+    out, key = key, index = "time", coords = c("long", "lat")
+    )
 }
 
 #' @rdname as_cubble
@@ -216,7 +215,6 @@ parse_dimension <- function(obj){
 #' @export
 as_cubble.sftime <- function(data, key, index, coords, ...){
 
-  browser()
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -228,14 +226,19 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
   if (quo_is_missing(coords)){
     coords = quo(c("long", "lat"))
   }
+  coords <- as.list(quo_get_expr(coords))[-1]
+  coords <- unlist(map(coords, as_string))
 
   all_vars <- data %>% find_invariant(!!key)
   spatial <- data %>% select(all_vars$invariant, -!!index) %>% distinct()
-  temporal <- as_tibble(data) %>% select(!!key, all_vars$variant, !!index)
+  temporal <- as_tibble(data) %>%
+    select(!!key, all_vars$variant, !!index) %>%
+    nest(ts = all_vars$variant)
+  out <- spatial %>% left_join(temporal, by = as_name(key))
 
-  make_cubble(
-    spatial = spatial, temporal = temporal,
-    key = !!key, index = !!index, coords = !!coords)
+  new_spatial_cubble(
+    out, key = as_name(key), index = as_name(index), coords = coords
+    )
 
 }
 
