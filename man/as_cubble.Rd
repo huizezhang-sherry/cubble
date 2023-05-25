@@ -3,7 +3,6 @@
 \name{as_cubble}
 \alias{as_cubble}
 \alias{as_cubble.tbl_df}
-\alias{as_cubble.rowwise_df}
 \alias{as_cubble.sf}
 \alias{as_cubble.ncdf4}
 \alias{as_cubble.stars}
@@ -13,8 +12,6 @@
 as_cubble(data, key, index, coords, ...)
 
 \method{as_cubble}{tbl_df}(data, key, index, coords, ...)
-
-\method{as_cubble}{rowwise_df}(data, key, index, coords, ...)
 
 \method{as_cubble}{sf}(data, key, index, ...)
 
@@ -65,12 +62,6 @@ Coerce foreign objects into a cubble object
 }
 \examples{
 climate_flat \%>\% as_cubble(key = id, index = date, coords = c(long, lat))
-
-# If the data is already in a rowwise_df:
-dt <- climate_flat \%>\%
-  tidyr::nest(ts = date:tmin) \%>\%
-  dplyr::rowwise()
-dt \%>\%  as_cubble(key = id, index = date, coords = c(long, lat))
 
 # only need `coords` if create from a tsibble
 dt <- climate_flat \%>\%  tsibble::as_tsibble(key = id, index = date)

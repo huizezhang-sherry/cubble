@@ -27,33 +27,27 @@ aus_climate_raw <- aus_stations |>
                      select(-id))) |>
   rename(lat = latitude, long = longitude, elev = elevation)
 
-aus_climate_cubble <- aus_climate_raw |>
-  cubble::as_cubble(index = date, key = id, coords = c(long, lat))
+clean <- aus_climate_raw |>
+  unnest(ts) |>
+  mutate(tmax = tmax/10, tmin = tmin/ 10)
 
-############################################################
-climate_aus <- aus_climate_cubble |>
-  face_temporal() |>
-  mutate(tmax = tmax/10, tmin = tmin/ 10)|>
-  face_spatial()
+climate_aus <- clean |>
+  cubble::as_cubble(index = date, key = id, coords = c(long, lat))
 usethis::use_data(climate_aus, overwrite = TRUE)
 
 ############################################################
-set.seed(123)
-climate_subset <- climate_aus |>
-  slice_sample(n = 30)
-usethis::use_data(climate_subset, overwrite = TRUE)
-
-############################################################
-id_vec <- c("ASN00009021", "ASN00010311", "ASN00010614", "ASN00014015", "ASN00015131")
-climate_flat <- climate_aus |>
-  filter(id %in% id_vec) |>
-  unnest() |>
-  ungroup()
+id_vec <- c("ASN00086282", "ASN00086038", "ASN00086077")
+climate_flat <- clean |> filter(id %in% id_vec, date <= as.Date("2020-01-10"))
 usethis::use_data(climate_flat, overwrite = TRUE)
 
-############################################################
-stations <- climate_flat |> select(id: wmo_id) |> distinct()
+stations <- small |> select(id: wmo_id) |> distinct()
 usethis::use_data(stations, overwrite = TRUE)
 
-climate <- climate_flat |> select(id, date: tmin)
+climate <- small |> select(id, date: tmin)
 usethis::use_data(climate, overwrite = TRUE)
+
+climate_mel <- make_cubble(
+  spatial = stations, temporal = climate,
+  key = id, index = date, coords = c(long, lat)
+  )
+usethis::use_data(climate_mel, overwrite = TRUE)

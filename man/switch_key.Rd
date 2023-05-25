@@ -22,9 +22,7 @@ This can be used to create hierarchical data where one variable is nested in ano
 library(dplyr)
 # create an artificial cluster for stations
 set.seed(1234)
-cb <- climate_flat \%>\%
-  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\%
-  mutate(cluster = sample(1:3, 1))
+cb <- climate_mel \%>\% mutate(cluster = sample(1:3, 1))
 
 # switch the key to cluster
 cb_hier <- cb \%>\%  switch_key(cluster)

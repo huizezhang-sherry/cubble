@@ -1,4 +1,4 @@
-cb <- climate_subset %>% head(5)
+cb <- climate_aus %>% head(5)
 
 test_that("selecting on single variable to calculate missingness", {
    res <- cb %>% add_missing_prct(prcp)

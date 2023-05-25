@@ -38,7 +38,9 @@ This vignette assumes you have gone through [Get started](cubble.html) and are f
 Australia occupies a  and different temperature patterns can be observed. Given the maximum and minimum temperature in the climate data in `climate_subset`, we can compute the average maximum and minimum temperature by month at each location. The difference between the maximum and minimum temperature, the diurnal temperature range, has different variations across the year and its variance will be used as the color for our plot. The codes below compute these variables: 
 
 ```{r}
-(clean <- climate_subset |>
+set.seed(123)
+climate_smaller <- climate_aus |> slice_sample(n = 30)
+(clean <- climate_smaller |>
   face_temporal() |>
   mutate(month = lubridate::month(date, label = TRUE, abbr = TRUE)) |>
   group_by(month) |>

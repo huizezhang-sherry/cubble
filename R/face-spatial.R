@@ -10,11 +10,11 @@
 #' @rdname face_spatial
 #' @export
 #' @examples
-#' cb_long <- climate_flat %>%
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
-#'   face_temporal()
+#' cb_long <- climate_mel %>% face_temporal()
 #'
-#' cb_long %>%  face_spatial()
+#' # face_spatial and face_temporal are exact inverse
+#' cb_back <- cb_long %>% face_spatial()
+#' identical(climate_mel, cb_back)
 face_spatial <- function(data) {
   UseMethod("face_spatial")
 }

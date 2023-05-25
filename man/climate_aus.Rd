@@ -3,34 +3,36 @@
 \docType{data}
 \name{climate_aus}
 \alias{climate_aus}
-\title{Australia climate data - 639 stations}
+\title{Australia climate data}
 \format{
-An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
+An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
 }
 \usage{
 climate_aus
 }
 \description{
-Daily measure on precipitation (prcp) maximum temperature (tmax), and
-minimum temperature (tmin) in 2020 for 639 stations. \code{stations} and
-\code{climate} are the separate spatial and temporal objects while
-\code{climate_aus} is the combined cubble object.
+Daily measure on precipitation (\code{prcp}), maximum temperature (\code{tmax}), and
+minimum temperature (\code{tmin}) in 2020 for 639 stations.
 }
 \details{
 \describe{
-\item{id}{station id}
-\item{lat}{latitude of the station}
-\item{long}{longitude of the station}
-\item{elev}{elevation of the station}
+\item{id}{station ID, "ASN000" are international paddings, the next two digits
+(digit 8-9) indicates the states the station is in: Western Australia: 01-13,
+Northern Territory: 14-15, South Australia: 16-26, Queensland: 27-45,
+New South Wales: 46-75, Victoria: 76-90, Tasmania: 91-99.
+See \link{http://www.bom.gov.au/climate/cdo/about/site-num.shtml}}
+\item{lat}{latitude of the stations, in degree}
+\item{long}{longitude of the stations, in degree}
+\item{elev}{elevation of the stations}
 \item{name}{station name}
 \item{wmo_id}{the world meteorological organisation (WMO) station number}
-\item{ts}{a list-column that nests all the time-wise measures: date, prcp, tmax, and tmin}
+\item{ts}{a list-column that nests all the temporal variables: date, prcp, tmax, and tmin}
 }
 }
 \examples{
 climate_aus \%>\% face_temporal() \%>\% face_spatial()
 }
 \seealso{
-climate_subset climate_flat
+stations, climate, climate_flat, climate_mel
 }
 \keyword{datasets}

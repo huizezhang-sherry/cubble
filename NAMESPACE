@@ -3,7 +3,6 @@
 S3method("[",cubble_df)
 S3method("names<-",cubble_df)
 S3method(as_cubble,ncdf4)
-S3method(as_cubble,rowwise_df)
 S3method(as_cubble,sf)
 S3method(as_cubble,sftime)
 S3method(as_cubble,stars)

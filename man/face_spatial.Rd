@@ -28,9 +28,9 @@ The nested cubble identifies each row by \code{key} and is suitable
 for operations whose output doesn't involve a time index.
 }
 \examples{
-cb_long <- climate_flat \%>\%
-  as_cubble(key = id, index = date, coords = c(long, lat)) \%>\%
-  face_temporal()
+cb_long <- climate_mel \%>\% face_temporal()
 
-cb_long \%>\%  face_spatial()
+# face_spatial and face_temporal are exact inverse
+cb_back <- cb_long \%>\% face_spatial()
+identical(climate_mel, cb_back)
 }

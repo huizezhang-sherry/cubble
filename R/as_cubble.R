@@ -22,12 +22,6 @@
 #' @examples
 #' climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
 #'
-#' # If the data is already in a rowwise_df:
-#' dt <- climate_flat %>%
-#'   tidyr::nest(ts = date:tmin) %>%
-#'   dplyr::rowwise()
-#' dt %>%  as_cubble(key = id, index = date, coords = c(long, lat))
-#'
 #' # only need `coords` if create from a tsibble
 #' dt <- climate_flat %>%  tsibble::as_tsibble(key = id, index = date)
 #' dt %>%  as_cubble(coords = c(long, lat))
@@ -95,48 +89,6 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   new_spatial_cubble(
     data, key = as_name(key), index = as_name(index), coords = coords
     )
-}
-
-#' @rdname as_cubble
-#' @export
-as_cubble.rowwise_df <- function(data, key, index, coords, ...) {
-  key <- enquo(key)
-  index <- enquo(index)
-  coords <- enquo(coords)
-
-  test_missing(quo = key, var = "key")
-  test_missing(quo = index, var = "index")
-  test_missing(quo = coords, var = "coords")
-
-  # check presents in the data
-  # checks for key
-  # checks for index
-  # checks for coords
-  coords <- names(data)[tidyselect::eval_select(coords, data)]
-
-  # if (any(duplicated(data[[as_name(key)]]))){
-  #   abort("Make sure each row identifies a key!")
-  # }
-
-  # compute leaves
-  #leaves <- as_tibble(data) %>%  tidyr::unnest() %>%  new_leaves(!!key)
-  list_col <- get_listcol(data)
-
-  if (length(list_col) == 0){
-    abort("Can't identify the list-column, prepare the data as a rowwise_df with a list column")
-  } else if (length (list_col) > 2){
-    abort("Cubble currently can only deal with at most two list columns")
-  } else{
-    nested_names <- Reduce(union, map(data[[as_name(list_col)]], names))
-    if (any(nested_names == as_name(key))){
-      data <- data %>%
-        mutate(!!list_col := list(!!ensym(list_col) %>%  select(-!!key)))
-    }
-  }
-
-  new_cubble(data,
-             key = as_name(key), index = as_name(index), coords = coords,
-             spatial = NULL, form = "nested")
 }
 
 #' @rdname as_cubble

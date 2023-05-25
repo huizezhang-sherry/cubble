@@ -8,12 +8,7 @@
 #' @param ... spatial variables to move into the long form
 #' @return a cubble object in the long form
 #' @examples
-#' cb <- climate_flat |>
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) |>
-#'   face_temporal()
-#'
-#' # unfold long and lat
-#' cb_mig <- cb |> unfold(long, lat)
+#' climate_mel %>% face_temporal() %>%  unfold(long, lat)
 #'
 #' # unfold is not memorised by cubble:
 #' # if you switch to the nested cubble and then switch back,

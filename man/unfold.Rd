@@ -29,12 +29,7 @@ and temporal variables. \code{unfold()} allows you to temporarily moves spatial
 variables into the long form for these transformations.
 }
 \examples{
-cb <- climate_flat |>
-  as_cubble(key = id, index = date, coords = c(long, lat)) |>
-  face_temporal()
-
-# unfold long and lat
-cb_mig <- cb |> unfold(long, lat)
+climate_mel \%>\% face_temporal() \%>\%  unfold(long, lat)
 
 # unfold is not memorised by cubble:
 # if you switch to the nested cubble and then switch back,

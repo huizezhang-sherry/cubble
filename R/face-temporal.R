@@ -10,9 +10,7 @@
 #' @rdname face_temporal
 #' @export
 #' @examples
-#' climate_flat %>%
-#'   as_cubble(key = id, index = date, coords = c(long, lat)) %>%
-#'   face_temporal()
+#' climate_mel %>% face_temporal()
 face_temporal <- function(data, col) {
   UseMethod("face_temporal")
 }
