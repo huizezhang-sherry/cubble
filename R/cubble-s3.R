@@ -28,17 +28,16 @@
 #'   )
 #'
 #' # stations and climate are in-built data in cubble
-#' make_cubble(spatial = stations, temporal = climate,
+#' make_cubble(spatial = stations, temporal = meteo,
 #'             key = id, index = date, coords = c(long, lat))
 #'
 #' # when the key variable is named differently, use the `by` argument,
 #' # cubble will take the name from TODO
-#' climate2 <- climate %>% rename(station = id)
-#' make_cubble(spatial = stations, temporal = climate2,
+#' meteo2 <- meteo %>% rename(station = id)
+#' make_cubble(spatial = stations, temporal = meteo2,
 #'           by = c("id" = "station"), key = id,
 #'           index = date, coords = c(long, lat))
 cubble <- function(..., key, index, coords) {
-  browser()
   data <- tibble::tibble(!!!list2(...))
   key <- enquo(key)
   index <- enquo(index)
@@ -59,6 +58,7 @@ cubble <- function(..., key, index, coords) {
 #' @rdname cubble-class
 #' @export
 make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
+
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -135,32 +135,69 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
 #
 # }
 
-new_spatial_cubble <- function(data,  ..., class = NULL){
+new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
 
   args <- list2(...)
+  if (validate) validate_spatial_cubble(data, args)
   groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
-  data <- new_rowwise_df(data, groups = groups, ...)
+  out <- new_rowwise_df(data, groups = groups, ...)
   cb_cls <- c("spatial_cubble_df", "cubble_df")
-  class(data) <- c(cb_cls, setdiff(class(data), cb_cls))
-  data
+  class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
+  out
 }
 
 
-new_temporal_cubble <- function(data, ..., class = NULL){
+new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
 
   args <- list2(...)
+  if (validate) validate_temporal_cubble(data, args)
   groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
-  data <- new_grouped_df(data, groups = groups, ...)
+  out <- new_grouped_df(data, groups = groups, ...)
   cb_cls <- c("temporal_cubble_df", "cubble_df")
-  class(data) <- c(cb_cls, setdiff(class(data), cb_cls))
-  data
+  class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
+  out
 }
-#
-# validate_cubble <- function(data, key, index, coords, ...){
-#
-#  # all the checks go here
-# }
 
+validate_spatial_cubble <- function(data, args){
+
+  # all the key values will be unique after nest()
+
+  # check on index
+  x <- as_tibble(data)
+  dup_index <- map_lgl(x[["ts"]], ~vec_duplicate_any(.x[[args$index]]))
+  index_na <- map_lgl(x[["ts"]], ~any(is.na(.x[[args$index]])))
+
+  if (any(dup_index)){
+    where_dup <- which(dup_index, TRUE)
+    cli::cli_abort("Duplicated index values found with {args$key} = {x[[args$key]][where_dup]}, please fix.")
+  }
+
+  if (any(index_na)){
+    where_dup <- which(index_na, TRUE)
+    cli::cli_abort("The index variable contains {.code NA}, please fix.")
+  }
+
+
+}
+
+validate_temporal_cubble <- function(data, args){
+  #browser()
+
+  x <- as_tibble(data)
+  dup_index <- split(x, x[[args$key]]) %>% map_lgl(~vec_duplicate_any(.x[[args$index]]))
+  index_na <- any(is.na(x[[args$index]]))
+
+  if (any(dup_index)){
+    where_dup <- which(dup_index, TRUE)
+    cli::cli_abort("Duplicated index values found with {args$key} = {x[[args$key]][where_dup]}, please fix.")
+  }
+
+  if (any(index_na)){
+    where_dup <- which(index_na, TRUE)
+    cli::cli_abort("The index variable contains {.code NA}, please fix.")
+  }
+
+}
 
 #' Cubble constructor
 #' @param data data
