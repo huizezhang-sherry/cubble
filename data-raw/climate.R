@@ -28,6 +28,7 @@ aus_climate_raw <- aus_stations |>
   rename(lat = latitude, long = longitude, elev = elevation)
 
 clean <- aus_climate_raw |>
+  select(id, long, lat, elev, name, wmo_id, ts) %>%
   unnest(ts) |>
   mutate(tmax = tmax/10, tmin = tmin/ 10)
 
@@ -40,14 +41,22 @@ id_vec <- c("ASN00086282", "ASN00086038", "ASN00086077")
 climate_flat <- clean |> filter(id %in% id_vec, date <= as.Date("2020-01-10"))
 usethis::use_data(climate_flat, overwrite = TRUE)
 
-stations <- small |> select(id: wmo_id) |> distinct()
+stations <- climate_flat |> select(id: wmo_id) |> distinct()
 usethis::use_data(stations, overwrite = TRUE)
 
-climate <- small |> select(id, date: tmin)
-usethis::use_data(climate, overwrite = TRUE)
+stations_sf <- stations |>
+  sf::st_as_sf(coords=  c("long", "lat"),  crs = sf::st_crs("OGC:CRS84"), remove = FALSE)
+usethis::use_data(stations_sf, overwrite = TRUE)
+
+meteo <- climate_flat |> select(id, date: tmin)
+usethis::use_data(meteo, overwrite = TRUE)
+
+meteo_ts <- meteo |> tsibble::as_tsibble(key = id, index = date)
+usethis::use_data(meteo_ts, overwrite = TRUE)
 
 climate_mel <- make_cubble(
-  spatial = stations, temporal = climate,
+  spatial = stations, temporal = meteo,
   key = id, index = date, coords = c(long, lat)
   )
 usethis::use_data(climate_mel, overwrite = TRUE)
+

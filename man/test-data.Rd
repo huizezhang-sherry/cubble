@@ -3,14 +3,20 @@
 \docType{data}
 \name{stations}
 \alias{stations}
-\alias{climate}
+\alias{stations_sf}
+\alias{meteo}
+\alias{meteo_ts}
 \alias{climate_flat}
 \alias{climate_mel}
 \title{Toy climate data for internal testing}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 3 rows and 6 columns.
 
+An object of class \code{sf} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 3 rows and 7 columns.
+
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 30 rows and 5 columns.
+
+An object of class \code{tbl_ts} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 30 rows and 5 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 30 rows and 10 columns.
 
@@ -19,7 +25,11 @@ An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \co
 \usage{
 stations
 
-climate
+stations_sf
+
+meteo
+
+meteo_ts
 
 climate_flat
 
@@ -29,7 +39,8 @@ climate_mel
 Daily measure (2020-01-01 to 2020-01-10) on precipitation (prcp),
 maximum temperature (tmax), and minimum temperature (tmin)
 for 3 melbourne airport stations. \code{stations} is the spatial component,
-\code{climate} has the temporal component, \code{climate_flat} has the data
+(\code{stations_sf} as an sf object), \code{meteo} has the temporal component
+(\code{meteo_ts} as a tsibble object), \code{climate_flat} has both
 in a single joined table, and \code{climate_mel} is the cubble object.
 See \code{climate_aus} on the full dataset.
 }

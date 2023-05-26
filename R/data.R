@@ -26,7 +26,8 @@
 #' Daily measure (2020-01-01 to 2020-01-10) on precipitation (prcp),
 #' maximum temperature (tmax), and minimum temperature (tmin)
 #' for 3 melbourne airport stations. \code{stations} is the spatial component,
-#' \code{climate} has the temporal component, \code{climate_flat} has the data
+#' (\code{stations_sf} as an sf object), \code{meteo} has the temporal component
+#' (\code{meteo_ts} as a tsibble object), \code{climate_flat} has both
 #' in a single joined table, and \code{climate_mel} is the cubble object.
 #' See \code{climate_aus} on the full dataset.
 #' @seealso climate_aus
@@ -42,7 +43,13 @@
 "stations"
 
 #' @rdname test-data
-"climate"
+"stations_sf"
+
+#' @rdname test-data
+"meteo"
+
+#' @rdname test-data
+"meteo_ts"
 
 #' @rdname test-data
 "climate_flat"

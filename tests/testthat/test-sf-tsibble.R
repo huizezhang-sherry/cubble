@@ -2,16 +2,8 @@ library(dplyr)
 library(sf)
 library(tsibble)
 
-stations_sf <- stations %>%
-  st_as_sf(coords = c("long", "lat"), crs = 4283, remove = FALSE)
-
-ts <- climate %>%
-  as_tsibble(key = id) %>%
-  slice_sample(prop = 0.9) %>%
-  arrange(id, date)
-
-weather <- as_cubble(
-  list(spatial = stations_sf, temporal = ts),
+weather <- make_cubble(
+  spatial = stations_sf, temporal = meteo_ts,
   key = id, index = date, coords = c("long", "lat"))
 
 ####################################

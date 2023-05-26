@@ -96,7 +96,10 @@ tbl_sum.temporal_cubble_df <- function(x){
 #' @rdname check-cubble-class
 #' @export
 #' @examples
-#' is_cubble(climate)
+#' is_cubble(stations)
+#' is_cubble(meteo)
+#' is_cubble(climate_flat)
+#' is_cubble(climate_mel)
 #' is_cubble(climate_aus)
 #' is_cubble_spatial(climate_aus)
 #' is_cubble_temporal(climate_aus)

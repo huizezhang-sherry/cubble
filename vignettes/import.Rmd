@@ -97,13 +97,13 @@ Sometimes, you may get the spatial and temporal data from different sources and 
 cubble::stations
 
 # a temporal sheet
-cubble::climate
+cubble::meteo
 ```
 
 When created out of separate tables, `make_cubble()` will check on the match of linking variable in the spatial and temporal table. 
 
 ```{r}
-make_cubble(spatial = cubble::stations, temporal = cubble::climate,
+make_cubble(spatial = cubble::stations, temporal = cubble::meteo,
           key = id, index = date, coords = c(long, lat))
 ```
 

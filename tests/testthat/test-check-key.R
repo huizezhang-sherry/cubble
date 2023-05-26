@@ -1,12 +1,10 @@
 library(lubridate)
 library(cubble)
 library(dplyr)
-stations
-ts <- climate %>% filter(lubridate::month(date) == 1)
 
 test_that("basic creation",{
   cb <- make_cubble(
-    spatial = stations, temporal = ts,
+    spatial = stations, temporal = meteo,
     key = id, index = date, coords = c(long, lat)
   )
   expect_true(is_cubble(cb))
@@ -14,24 +12,24 @@ test_that("basic creation",{
 
 
 test_that("when there are mismatch",{
-  stations3 <- stations %>% head(3)
+  stations2 <- stations %>% head(2)
   expect_message(
     cb <- make_cubble(
-      spatial = stations3, temporal = ts,
+      spatial = stations2, temporal = meteo,
       key = id, index = date, coords = c(long, lat)
     )
   )
 
   # check_key
-  key_summary <- check_key(spatial = stations3, temporal = ts)
+  key_summary <- check_key(spatial = stations2, temporal = meteo)
 
   # resolve unmatch
-  ts3 <- ts %>% filter(!id %in% key_summary$others$temporal)
+  meteo2 <- meteo %>% filter(!id %in% key_summary$others$temporal)
 
   # create cubble again with no warning
   expect_message(
     cb <- make_cubble(
-      spatial = stations3, temporal = ts3,
+      spatial = stations2, temporal = meteo2,
       key = id, index = date, coords = c(long, lat)
     ), regexp = NA
   )
@@ -40,11 +38,11 @@ test_that("when there are mismatch",{
 
 
 test_that("key variable has different names in spaital and temporal data",{
-  ts2 <- ts %>% rename(station = id)
+  meteo2 <- meteo %>% rename(station = id)
 
   expect_message(
     cb <- make_cubble(
-      spatial = stations, temporal = ts2, by = c("id" = "station"),
+      spatial = stations, temporal = meteo2, by = c("id" = "station"),
       key = id, index = date, coords = c(long, lat)
     ), regexp = NA
   )
@@ -54,8 +52,8 @@ test_that("key variable has different names in spaital and temporal data",{
 
 test_that("auto match on names",{
   # deliberately make the unmatch perth vs. perth airport
-  ts_wname <- climate %>% left_join(stations %>% select(id, name)) %>% select(-id)
-  stations2 <- stations %>% mutate(name = ifelse(id == "ASN00009021", "perth", name))
+  ts_wname <- meteo %>% left_join(stations %>% select(id, name)) %>% select(-id)
+  stations2 <- stations %>% mutate(name = ifelse(id == "ASN00086038", "essendon", name))
 
   expect_message(
     make_cubble(
@@ -65,7 +63,7 @@ test_that("auto match on names",{
   )
 
   outputs <- check_key(spatial = stations2, temporal = ts_wname)
-  expect_equal(outputs$others$temporal, "perth airport")
-  expect_equal(outputs$others$spatial, "perth")
+  expect_equal(outputs$others$temporal, "essendon airport")
+  expect_equal(outputs$others$spatial, "essendon")
 })
 
