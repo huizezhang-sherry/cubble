@@ -46,7 +46,7 @@ cubble <- function(..., key, index, coords) {
 
   all_vars <- find_invariant(data, !!key)
   data <- data %>%
-    tidyr::nest(ts = c(!!!all_vars$variant)) %>%
+    tidyr::nest(ts = c(!!index, !!!all_vars$variant)) %>%
     dplyr::rowwise()
 
   #validate_cubble(data, key = as_name(key), index = as_name(index), coords = coords , ...)
@@ -63,12 +63,38 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   index <- enquo(index)
   coords <- enquo(coords)
 
-  test_missing(quo = key, var = "key")
-  key_nm <- as_name(key)
-  test_missing(quo = index, var = "index")
-  # parse coords from a quosure to a string vector
-  coords <- as.list(quo_get_expr(coords))[-1]
-  coords <- unlist(map(coords, as_string))
+  if (quo_is_missing(key)){
+    if (inherits(temporal, "tbl_ts")){
+      key <- key_vars(temporal)
+    } else{
+      cli::cli_abort("Please supply the {.code key} argument,
+                     or a {.code tsibble} object as the temporal compoenent")
+    }
+  }
+
+  if (quo_is_missing(index)){
+    if (inherits(temporal, "tbl_ts")){
+      index <- index(temporal)
+    } else{
+      cli::cli_abort("Please supply the {.code index} argument,
+                     or a {.code tsibble} object as the temporal compoenent")
+    }
+  }
+
+  if (quo_is_missing(coords)){
+    if (inherits(spatial, "sf")){
+      cc <- sf::st_coordinates(sf::st_centroid(spatial))
+      colnames(cc) = if (sf::st_is_longlat(spatial)) c("long", "lat") else c("x", "y")
+      spatial <- cbind(spatial, cc)
+      coords <- colnames(cc)
+    } else{
+      cli::cli_abort("Please supply the {.code coords} argument,
+                     or an {.code sf} object as the spatial compoenent")
+    }
+  } else{
+    coords <- coords2strvec(coords)
+  }
+
 
   # find the common "key" column between spatial and temporal
   # if no shared, parse the `by` argument
@@ -116,7 +142,8 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
     spatial <- spatial %>% as_tibble() %>% sf::st_as_sf()
   }
 
-  temporal <- temporal %>% filter(!by %in% only_temporal)
+  temporal <- temporal %>% filter(!by %in% only_temporal) %>%
+    select(as_name(index), setdiff(colnames(temporal), as_name(index)))
 
   out <- suppressMessages(
     dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
@@ -140,6 +167,8 @@ new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
   args <- list2(...)
   if (validate) validate_spatial_cubble(data, args)
   groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
+  attr_vars <- c(args$key, args$coords)
+  data <- data %>% select(attr_vars, setdiff(colnames(data), attr_vars))
   out <- new_rowwise_df(data, groups = groups, ...)
   cb_cls <- c("spatial_cubble_df", "cubble_df")
   class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
@@ -152,6 +181,7 @@ new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
   args <- list2(...)
   if (validate) validate_temporal_cubble(data, args)
   groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
+  data <- data %>% select(args$index, setdiff(colnames(data), args$index))
   out <- new_grouped_df(data, groups = groups, ...)
   cb_cls <- c("temporal_cubble_df", "cubble_df")
   class(out) <- c(cb_cls, setdiff(class(data), cb_cls))

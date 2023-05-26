@@ -25,3 +25,12 @@ wrong_long %>% as_cubble(key = id, index= date, coords = c(lat, long))
 a <- make_cubble(spatial = stations_sf, temporal = meteo_ts, key = id, index = date)
 b <- a %>% face_temporal()
 c <- b %>% face_spatial()
+
+
+make_cubble(spatial = stations, temporal = meteo, key = id, index = date, coords = c(long, lat))
+
+make_cubble(spatial = stations_sf, temporal = meteo, key = id, index = date)
+
+make_cubble(spatial = stations, temporal = meteo_ts, coords = c(long, lat))
+
+make_cubble(spatial = stations_sf, temporal = meteo_ts)
