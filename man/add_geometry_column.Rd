@@ -19,5 +19,5 @@ add_geometry_column(x, sfc = NULL, crs, silent = FALSE)
 add geometry list column to cubble_df object
 }
 \examples{
-climate_aus \%>\% add_geometry_column()
+climate_mel \%>\% add_geometry_column()
 }

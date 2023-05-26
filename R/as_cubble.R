@@ -16,7 +16,7 @@
 #' @param lat_range,long_range used in `as_cubble.netcdf()` to downsample the data to read,
 #' specify in the syntax of `seq(FROM, TO, BY)`(see examples)
 #' @importFrom tidyr unchop
-#' @importFrom tsibble key_vars index
+#' @importFrom tsibble key_vars index key_data
 #' @export
 #' @return a cubble object
 #' @examples

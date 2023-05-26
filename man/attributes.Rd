@@ -5,7 +5,7 @@
 \alias{is_nested}
 \alias{spatial}
 \alias{key_vars}
-\alias{key_data}
+\alias{key_data.cubble_df}
 \alias{coords}
 \alias{coord_x}
 \alias{coord_y}
@@ -20,7 +20,7 @@ spatial(data)
 
 key_vars(data)
 
-key_data(data)
+\method{key_data}{cubble_df}(data)
 
 coords(data)
 
