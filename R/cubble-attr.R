@@ -35,6 +35,45 @@ coords <- function(data){
   data %@% "coords"
 }
 
+
+coords2strvec <- function(coords){
+
+  # from
+  # <quosure>
+  # expr: ^c(long, lat)
+  # env:  global
+  # to
+  # [1] "long" "lat"
+  inherits(coords, "quosure")
+  coords <- as.list(quo_get_expr(coords))[-1]
+  unlist(map(coords, as_string))
+}
+
+
+#' extract the spatial component from a cubble
+#' @param data a cubble object
+#' @rdname spatial
+#' @export
+#' @examples
+#' spatial(climate_mel)
+spatial <- function(data){
+  UseMethod("spatial")
+}
+
+#' @rdname spatial
+#' @export
+spatial.spatial_cubble_df <- function(data){
+  class(data) <- setdiff(class(data), c("spatial_cubble_df","cubble_df"))
+  data %>% select(-ts)
+}
+
+#' @rdname spatial
+#' @export
+spatial.temporal_cubble_df <- function(data){
+  data %@% "spatial"
+}
+
+
 #' extract index related components in a cubble
 #' @param data a cubble object
 #' @rdname index
