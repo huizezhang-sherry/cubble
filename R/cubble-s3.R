@@ -181,7 +181,6 @@ validate_spatial_cubble <- function(data, args){
 }
 
 validate_temporal_cubble <- function(data, args){
-  #browser()
 
   x <- as_tibble(data)
   dup_index <- split(x, x[[args$key]]) %>% map_lgl(~vec_duplicate_any(.x[[args$index]]))

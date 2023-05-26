@@ -17,5 +17,9 @@
   s3_register("dplyr::rename", "cubble_df")
   s3_register("base::print", "cubble_df")
   s3_register("tsibble::fill_gaps", "cubble_df")
+
+  s3_register("tsibble::key", "cubble_df")
   s3_register("tsibble::key_data", "cubble_df")
+  s3_register("tsibble::key_vars", "cubble_df")
+
 }

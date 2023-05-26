@@ -10,7 +10,7 @@ slice_head_tail <- function(f, ...){
 
     new_cubble(out,
                key = key , index = index , coords = coords,
-               spatial = spatial, form = determine_form(.data))
+               spatial = spatial)
   }
 }
 
@@ -26,7 +26,7 @@ slice_min_max <- function(f, ...){
 
     new_cubble(out,
                key = key , index = index , coords = coords,
-               spatial = spatial, form = determine_form(.data))
+               spatial = spatial)
   }
 }
 

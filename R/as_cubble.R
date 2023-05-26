@@ -16,7 +16,7 @@
 #' @param lat_range,long_range used in `as_cubble.netcdf()` to downsample the data to read,
 #' specify in the syntax of `seq(FROM, TO, BY)`(see examples)
 #' @importFrom tidyr unchop
-#' @importFrom tsibble key_vars index key_data
+#' @importFrom tsibble index
 #' @export
 #' @return a cubble object
 #' @examples
@@ -60,9 +60,6 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   }
   coords <- enquo(coords)
   coords <- names(data)[tidyselect::eval_select(coords, data)]
-  # - check lat between -90 to 90
-  # - check long between -180 to 180?
-  # - give it an attribution on the range? 0 to 360 or -180 to 180
 
   # check if date is already nested in the list-column
   col_type <- map(data, class)

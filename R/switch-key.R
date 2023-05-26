@@ -122,7 +122,7 @@ rename_key <- function(data, ...){
 
   new_cubble(out,
              key = names(list(...)), index = index(data), coords = coords(data),
-             spatial = spatial(data), form = determine_form(data))
+             spatial = spatial(data))
 }
 
 

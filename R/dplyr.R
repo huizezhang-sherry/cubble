@@ -120,7 +120,7 @@ group_by.cubble_df <- function(.data, ..., .add, .drop){
 
   new_cubble(out,
              key = c(key, index), index = index, coords = coords(data),
-             spatial = spatial(data), form = determine_form(data))
+             spatial = spatial(data))
 }
 
 #' @export
@@ -142,7 +142,7 @@ ungroup.cubble_df <- function(x, ...){
 
   new_cubble(data,
              key = updated_group_var, index = index(data), coords = coords(data),
-             spatial = spatial(data), form = determine_form(data))
+             spatial = spatial(data))
 }
 
 #' @export

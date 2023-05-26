@@ -1,100 +1,56 @@
-#' Functions to extract cubble attributes
-#'
-#' @details
-#' Apart from inheriting attributes `names`, `row.names`, and `class` from the underlying tibble,
-#' a cubble has its site identifier: `key`, temporal identifier, `index`, and
-#' spatial coordinate reference: `coords`.
-#'
-#' If a cubble object is also a tsibble, then tsibble attributes (`key`, `index`, `index2`, `interval`)
-#' are also preserved and can be accessed via the relevant functions in the tsibble package. (NOT FULLY IMPLEMENTED)
-#' @return the name of cubble attributes
+#' extract key related components in a cubble
+#' @param data a cubble object
+#' @rdname key
+#' @importFrom tsibble key_vars key key_data
+#' @export
 #' @examples
-#' # extract attributes of a cubble object
-#' form(climate_aus)
-#' spatial(climate_aus) %>% head(5)
-#' key_data(climate_aus) %>% head(5)
-#' key_vars(climate_aus)
-#' index(climate_aus)
-#' coords(climate_aus)
-#' coord_x(climate_aus)
-#' coord_y(climate_aus)
-#'
-#' @param data an cubble object
-#'
-#' @export
-#' @rdname attributes
-form <- function(data){
-  test_cubble(data)
-  data %@% form
+#' key(climate_mel)
+#' key_vars(climate_mel)
+#' key_data(climate_mel)
+key_vars.cubble_df <- function(data){
+  data %@% "key"
 }
 
-#' #' @export
-#' #' @rdname attributes
-#' is_long <- function(data){
-#'   test_cubble(data)
-#'   form(data) == "long"
-#' }
-
+#' @rdname key
 #' @export
-#' @rdname attributes
-is_nested <- function(data){
-  test_cubble(data)
-  form(data) == "nested"
+key.cubble_df <- function(data){
+  syms(key_vars(data))
 }
 
-determine_form <- function(data){
-  # determine_form is a lower level detector of the form based on the vector class
-  cls <- unlist(map(data, class))
-
-  if ("list" %in% cls){
-    "nested"
-  } else{
-    "long"
-  }
-}
-
+#' @rdname key
 #' @export
-#' @rdname attributes
-spatial <- function(data){
-  test_cubble(data)
-  data %@% "spatial"
-}
-
-#' @export
-#' @rdname attributes
-key_vars <- function(data){
-  names <- names2(key_data(data))
-  index <- index(data)
-  names[!names %in% c(".rows", index)]
-}
-
-#' @export
-#' @rdname attributes
 key_data.cubble_df <- function(data){
-  test_cubble(data)
+  # a tsibble object has the key attributes defined as the groups attribute
+  # in a cubble
   data %@% "groups"
 }
 
+#' extract the coords attribute from a cubble
+#' @param data a cubble object
 #' @export
-#' @rdname attributes
+#' @examples
+#' coords(climate_mel)
 coords <- function(data){
+  is_cubble(data)
   data %@% "coords"
 }
 
+#' extract index related components in a cubble
+#' @param data a cubble object
+#' @rdname index
 #' @export
-#' @rdname attributes
-coord_x <- function(data){
-  coords(data)[1]
+#' @examples
+#' index(climate_mel)
+#' index_var(climate_mel)
+index <- function(data) {
+  # not sure why tsibble doesn't have index() as an S3 method as key does
+  is_cubble(data)
+  sym(index_var(data))
 }
 
+#' @rdname index
 #' @export
-#' @rdname attributes
-coord_y <- function(data){
-  coords(data)[2]
-}
-
-#' @export
-#' @rdname attributes
-index <- function(data){
+index_var <- function(data) {
+  is_cubble(data)
   data %@% "index"
 }
