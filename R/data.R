@@ -34,7 +34,7 @@
 #' @rdname test-data
 #' @examples
 #' cb <- make_cubble(
-#'   spatial = stations, temporal = climate,
+#'   spatial = stations, temporal = meteo,
 #'   key = id, index = date, coords = c(long, lat)
 #' )
 #' identical(cb, climate_mel)

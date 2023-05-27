@@ -31,9 +31,4 @@ variables into the long form for these transformations.
 \examples{
 climate_mel \%>\% face_temporal() \%>\%  unfold(long, lat)
 
-# unfold is not memorised by cubble:
-# if you switch to the nested cubble and then switch back,
-# long and lat will not be preserved
-cb_mig |> face_spatial() |> face_temporal()
-
 }

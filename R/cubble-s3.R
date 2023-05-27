@@ -142,6 +142,12 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
     spatial <- spatial %>% as_tibble() %>% sf::st_as_sf()
   }
 
+  if (inherits(temporal, "tbl_ts")){
+    index <- temporal %@% "index"
+  } else{
+    index <- as_name(index)
+  }
+
   temporal <- temporal %>% filter(!by %in% only_temporal) %>%
     select(as_name(index), setdiff(colnames(temporal), as_name(index)))
 
@@ -150,11 +156,12 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   )
 
   new_spatial_cubble(
-    out, key = by, index = as_name(index), coords = coords
+    out, key = by, index = index, coords = coords
     )
 }
 
-
+cb_spatial_cls <- c("spatial_cubble_df", "cubble_df")
+cb_temporal_cls <- c("temporal_cubble_df", "cubble_df")
 
 # new_cubble <- function(data, ..., class = NULL){
 #
@@ -181,7 +188,7 @@ new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
   if (validate) validate_temporal_cubble(data, args)
   groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
   attr_vars <- c(args$key, args$index)
-  data <- data %>% select(attr_vars, setdiff(colnames(data), attr_vars))
+  suppressWarnings(data <- data %>% select(attr_vars, setdiff(colnames(data), attr_vars)))
   out <- new_grouped_df(data, groups = groups, ...)
   cb_cls <- c("temporal_cubble_df", "cubble_df")
   class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
@@ -191,6 +198,11 @@ new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
 validate_spatial_cubble <- function(data, args){
 
   # all the key values will be unique after nest()
+
+  # check key present
+  if (any(!args$key %in% colnames(data))){
+    cli::cli_abort("The key variable is not present, please fix")
+  }
 
   # check on index
   x <- as_tibble(data)
@@ -207,10 +219,19 @@ validate_spatial_cubble <- function(data, args){
     cli::cli_abort("The index variable contains {.code NA}, please fix.")
   }
 
+  # check coords present
+  if (any(!args$coords %in% colnames(data))){
+    cli::cli_abort("At least one of the coordinate columns not present, please fix")
+  }
+
 
 }
 
 validate_temporal_cubble <- function(data, args){
+
+  if (any(!args$key %in% colnames(data))){
+    cli::cli_abort("The key variable is not present, please fix")
+  }
 
   x <- as_tibble(data)
   dup_index <- split(x, x[[args$key]]) %>% map_lgl(~vec_duplicate_any(.x[[args$index]]))

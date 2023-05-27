@@ -4,6 +4,7 @@
 #' @importFrom tsibble key_vars key key_data
 #' @export
 #' @examples
+#' library(tsibble)
 #' key(climate_mel)
 #' key_vars(climate_mel)
 #' key_data(climate_mel)

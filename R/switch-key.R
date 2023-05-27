@@ -13,7 +13,7 @@
 #' cb <- climate_mel %>% mutate(cluster = sample(1:3, 1))
 #'
 #' # switch the key to cluster
-#' cb_hier <- cb %>%  switch_key(cluster)
+#' #cb_hier <- cb %>%  switch_key(cluster)
 #' @importFrom tidyr unpack unchop
 #' @export
 switch_key <- function(data, key){

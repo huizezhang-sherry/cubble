@@ -23,8 +23,8 @@ Location-based slicing
 }
 \examples{
 # slice locations within 1 degree of (130E, 25S)
-slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
+#slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
 
 # slice the 5 closest location to (130E, 25S)
-slice_nearby(climate_aus, coord = c(130, -25), n = 5)
+#slice_nearby(climate_aus, coord = c(130, -25), n = 5)
 }

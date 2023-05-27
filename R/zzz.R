@@ -5,6 +5,10 @@
   s3_register("dplyr::dplyr_reconstruct", "spatial_cubble_df")
   s3_register("dplyr::dplyr_reconstruct", "temporal_cubble_df")
 
+  s3_register("dplyr::arrange", "temporal_cubble_df")
+  s3_register("dplyr::select", "spatial_cubble_df")
+  s3_register("dplyr::select", "temporal_cubble_df")
+
   #s3_register("tsibble::index_by", "cubble_df")
   s3_register("dplyr::summarise", "cubble_df")
   s3_register("dplyr::ungroup", "cubble_df")
@@ -16,7 +20,6 @@
   s3_register("dplyr::slice_max", "cubble_df")
   s3_register("dplyr::slice_sample", "cubble_df")
 
-  s3_register("dplyr::rename", "cubble_df")
   s3_register("base::print", "cubble_df")
   s3_register("tsibble::fill_gaps", "cubble_df")
 

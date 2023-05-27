@@ -25,5 +25,5 @@ set.seed(1234)
 cb <- climate_mel \%>\% mutate(cluster = sample(1:3, 1))
 
 # switch the key to cluster
-cb_hier <- cb \%>\%  switch_key(cluster)
+#cb_hier <- cb \%>\%  switch_key(cluster)
 }

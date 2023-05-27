@@ -37,7 +37,7 @@ face_spatial.temporal_cubble_df <- function(data) {
   # will only keep the first grouping variable if more than one
   key <- rlang::syms(key_vars(data))
   key_name <- map_chr(key, rlang::as_name)
-  index <- index(data)
+  index <- data %@% "index"
   coords <- coords(data)
 
   spatial <- spatial(data)

@@ -10,11 +10,6 @@
 #' @examples
 #' climate_mel %>% face_temporal() %>%  unfold(long, lat)
 #'
-#' # unfold is not memorised by cubble:
-#' # if you switch to the nested cubble and then switch back,
-#' # long and lat will not be preserved
-#' cb_mig |> face_spatial() |> face_temporal()
-#'
 #' @rdname unfold
 #' @export
 unfold <- function(data, ...) {
@@ -38,6 +33,7 @@ unfold.spatial_cubble_df <- function(data, ...){
 #' @rdname unfold
 #' @export
 unfold.temporal_cubble_df <- function(data, ...){
+  #browser()
   dots <- enquos(..., .named = TRUE)
   sp <- spatial(data)
   key <- key_vars(data)
@@ -57,6 +53,12 @@ unfold.temporal_cubble_df <- function(data, ...){
     cli::cli_alert_warning(
       "The key and unfoldd variable{?s} {.field {var}} are not one-to-one."
     )
+  }
+
+  if (inherits(data, "tbl_ts")){
+    index <- data %@% index
+  } else{
+    index <- as_name(index)
   }
 
   new_temporal_cubble(

@@ -33,8 +33,7 @@ add_missing_prct <- function(data, vars){
   names(calls) <- glue::glue("{vars}_missing")
   out <- data %>% mutate(!!!calls)
 
-  new_cubble(out,
-             key = key, index = index(data), coords = coords(data),
-             spatial = NULL, form = "nested")
+  new_spatial_cubble(out,
+             key = key, index = index(data), coords = coords(data))
 }
 

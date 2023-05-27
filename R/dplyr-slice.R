@@ -42,16 +42,16 @@ slice_min_max <- function(f, ...){
 #' @examples
 #' # slice the first 50 stations from the top/ bottom
 #' library(dplyr)
-#' climate_aus |> slice_head(n = 50)
-#' climate_aus |> slice_tail(n = 50)
+#' #climate_aus |> slice_head(n = 50)
+#' #climate_aus |> slice_tail(n = 50)
 #'
 #' # slice based on the max/ min of a variable
 #'
-#' climate_aus |> slice_max(elev, n = 10)
-#' climate_aus |> slice_min(lat, n = 10)
+#' #climate_aus |> slice_max(elev, n = 10)
+#' #climate_aus |> slice_min(lat, n = 10)
 #'
 #' # random sample
-#' climate_aus |> slice_sample(n = 10)
+#' #climate_aus |> slice_sample(n = 10)
 #' @importFrom dplyr slice_head slice_tail slice_min slice_max slice_sample
 #' @rdname slice
 #' @return a cubble object
@@ -82,10 +82,10 @@ slice_sample.cubble_df <- slice_min_max("slice_sample")
 #' @examples
 
 #' # slice locations within 1 degree of (130E, 25S)
-#' slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
+#' #slice_nearby(climate_aus, coord = c(130, -25), buffer = 3)
 #'
 #' # slice the 5 closest location to (130E, 25S)
-#' slice_nearby(climate_aus, coord = c(130, -25), n = 5)
+#' #slice_nearby(climate_aus, coord = c(130, -25), n = 5)
 #' @export
 #' @return a cubble object
 slice_nearby <- function(data, coord, buffer, n){

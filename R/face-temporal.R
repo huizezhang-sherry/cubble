@@ -20,14 +20,13 @@ face_temporal.temporal_cubble_df <- function(data, col){
 #' @rdname face
 #' @export
 face_temporal.spatial_cubble_df <- function(data, col){
-
   key <- syms(key_vars(data))
   if (length(key) == 2){
     cur_key <- key[key %in% names(data)][[1]]
   } else{
     cur_key <- key[[1]]
   }
-  index <- index(data)
+  index <- index_var(data)
   coords <- coords(data)
 
   class_l <- length(class(data))
@@ -50,9 +49,10 @@ face_temporal.spatial_cubble_df <- function(data, col){
   if (is_tsibble){
     out <- out %>% tsibble::as_tsibble(key = !!cur_key, index = index)
     tsibble_attr <- attributes(out)
+    index <- out %@% "index"
   }
 
   new_temporal_cubble(
-    out, key = map_chr(key, as_name), index = as_name(index), coords = coords, spatial = spatial
+    out, key = map_chr(key, as_name), index = index, coords = coords, spatial = spatial
     )
 }

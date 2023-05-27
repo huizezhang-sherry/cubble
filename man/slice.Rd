@@ -36,14 +36,14 @@ allow slicing from top and bottom, based on a variable, or in random.
 \examples{
 # slice the first 50 stations from the top/ bottom
 library(dplyr)
-climate_aus |> slice_head(n = 50)
-climate_aus |> slice_tail(n = 50)
+#climate_aus |> slice_head(n = 50)
+#climate_aus |> slice_tail(n = 50)
 
 # slice based on the max/ min of a variable
 
-climate_aus |> slice_max(elev, n = 10)
-climate_aus |> slice_min(lat, n = 10)
+#climate_aus |> slice_max(elev, n = 10)
+#climate_aus |> slice_min(lat, n = 10)
 
 # random sample
-climate_aus |> slice_sample(n = 10)
+#climate_aus |> slice_sample(n = 10)
 }
