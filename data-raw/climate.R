@@ -45,7 +45,7 @@ stations <- climate_flat |> select(id: wmo_id) |> distinct()
 usethis::use_data(stations, overwrite = TRUE)
 
 stations_sf <- stations |>
-  sf::st_as_sf(coords=  c("long", "lat"),  crs = sf::st_crs("OGC:CRS84"), remove = FALSE)
+  sf::st_as_sf(coords=  c("long", "lat"),  crs = sf::st_crs("OGC:CRS84"))
 usethis::use_data(stations_sf, overwrite = TRUE)
 
 meteo <- climate_flat |> select(id, date: tmin)
