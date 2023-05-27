@@ -88,8 +88,8 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
       spatial <- cbind(spatial, cc)
       coords <- colnames(cc)
     } else{
-      cli::cli_abort("Please supply the {.code coords} argument,
-                     or an {.code sf} object as the spatial compoenent")
+      cli::cli_abort("Please supply the {.code coords} argument in the syntax of
+      {.code coords = c(LONG, LAT)}, or use an {.code sf} object as the spatial compoenent")
     }
   } else{
     coords <- coords2strvec(coords)
@@ -177,11 +177,11 @@ new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
 
 
 new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
-
   args <- list2(...)
   if (validate) validate_temporal_cubble(data, args)
   groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
-  data <- data %>% select(args$index, setdiff(colnames(data), args$index))
+  attr_vars <- c(args$key, args$index)
+  data <- data %>% select(attr_vars, setdiff(colnames(data), attr_vars))
   out <- new_grouped_df(data, groups = groups, ...)
   cb_cls <- c("temporal_cubble_df", "cubble_df")
   class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
@@ -350,8 +350,9 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 }
 
 #' @export
-`names<-.cubble_df` <- function(x, value){
-  out <- NextMethod()
+`names<-.cubble_df`<- function(x, value){
+  #browser()
+  out <- `names<-`(as_tibble(x), value)
   dplyr_reconstruct(out, x)
 }
 

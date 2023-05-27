@@ -21,10 +21,25 @@ wrong_long <- climate_flat %>% mutate(long = ifelse(id == "ASN00086038", long + 
 out <- wrong_long %>% create_cubble()
 wrong_long %>% as_cubble(key = id, index= date, coords = c(lat, long))
 
-
-a <- make_cubble(spatial = stations_sf, temporal = meteo_ts, key = id, index = date)
+a <- make_cubble(spatial = stations, temporal = meteo, key = id, index = date, coords = c(long, lat))
 b <- a %>% face_temporal()
 c <- b %>% face_spatial()
+
+
+# dply_row_slice
+res <- a %>% filter(elev > 40)
+res <- b %>% filter(prcp > 0)
+
+
+
+a <- make_cubble(spatial = stations_sf, temporal = meteo_ts)
+b <- a %>% face_temporal()
+c <- b %>% face_spatial()
+
+# dply_row_slice
+res <- a %>% filter(elev > 40) # fix from the sf side
+res <- b %>% filter(prcp > 0)
+
 
 
 make_cubble(spatial = stations, temporal = meteo, key = id, index = date, coords = c(long, lat))

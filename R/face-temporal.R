@@ -53,6 +53,6 @@ face_temporal.spatial_cubble_df <- function(data, col){
   }
 
   new_temporal_cubble(
-    out, key = map_chr(key, as_name), index = index, coords = coords, spatial = spatial
+    out, key = map_chr(key, as_name), index = as_name(index), coords = coords, spatial = spatial
     )
 }
