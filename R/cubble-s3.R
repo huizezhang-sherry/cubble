@@ -168,7 +168,7 @@ new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
   if (validate) validate_spatial_cubble(data, args)
   groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
   attr_vars <- c(args$key, args$coords)
-  data <- data %>% select(attr_vars, setdiff(colnames(data), attr_vars))
+  data <- data %>% select(attr_vars, setdiff(colnames(data), c(attr_vars, "ts")), "ts")
   out <- new_rowwise_df(data, groups = groups, ...)
   cb_cls <- c("spatial_cubble_df", "cubble_df")
   class(out) <- c(cb_cls, setdiff(class(data), cb_cls))

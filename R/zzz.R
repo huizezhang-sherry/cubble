@@ -1,6 +1,5 @@
 .onLoad <- function(...) {
-  s3_register("dplyr::dplyr_col_modify", "spatial_cubble_df")
-  s3_register("dplyr::dplyr_col_modify", "temporal_cubble_df")
+  s3_register("dplyr::dplyr_col_modify", "cubble_df")
   s3_register("dplyr::dplyr_row_slice", "spatial_cubble_df")
   s3_register("dplyr::dplyr_row_slice", "temporal_cubble_df")
   s3_register("dplyr::dplyr_reconstruct", "spatial_cubble_df")

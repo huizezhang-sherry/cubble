@@ -29,7 +29,10 @@ c <- b %>% face_spatial()
 # dply_row_slice
 res <- a %>% filter(elev > 40)
 res <- b %>% filter(prcp > 0)
+res <- b %>% filter(stringr::str_detect(id, "2"))
 
+res <- a %>% mutate(elev2 = elev + 10)
+res <- b %>% mutate(prcp2 = prcp + 10)
 
 
 a <- make_cubble(spatial = stations_sf, temporal = meteo_ts)
@@ -39,6 +42,10 @@ c <- b %>% face_spatial()
 # dply_row_slice
 res <- a %>% filter(elev > 40) # fix from the sf side
 res <- b %>% filter(prcp > 0)
+res <- b %>% filter(stringr::str_detect(id, "2"))
+
+res <- a %>% mutate(elev2 = elev + 10)
+res <- b %>% mutate(prcp2 = prcp + 10)
 
 
 

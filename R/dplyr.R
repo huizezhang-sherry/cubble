@@ -7,24 +7,10 @@
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @rdname dplyr
 #' @export
-dplyr_col_modify.spatial_cubble_df <- function(data, cols) {
-
-
-}
-
-
-#' @rdname dplyr
-#' @export
-dplyr_col_modify.temporal_cubble_df <- function(data, cols) {
-
-  # if ("tbl_ts" %in% class(data)){
-  #   out <- dplyr_col_modify(tsibble::as_tsibble(tibble::as_tibble(data), key = key_vars(data)), cols)
-  # } else{
-  #   out <- dplyr_col_modify(tibble::as_tibble(data), cols)
-  # }
-
-  # TODO: deal with ts??
+dplyr_col_modify.cubble_df <- function(data, cols) {
+  out <- NextMethod()
   dplyr_reconstruct(out, data)
+
 }
 
 #' @rdname dplyr
@@ -37,30 +23,18 @@ dplyr_row_slice.spatial_cubble_df <- function(data, i, ...){
 #' @rdname dplyr
 #' @export
 dplyr_row_slice.temporal_cubble_df <- function(data, i, ...){
-
   out <- NextMethod()
-
   dplyr_reconstruct(out, data)
-
-  # out <- vec_slice(data, i)
-  # key <- key_vars(data)
-  # # update spatial as subsetting will change the number of row
-  # if (is_long(data) && length(key) == 1){
-  #   keep <- unique(out[[key]])
-  #   spatial <- spatial(data) %>%  filter(!!sym(key) %in% keep)
-  # }
-  #
-  # # TODO: update coords
-  # # TODO: update index - same reason
-  # dplyr_reconstruct(out, data)
 }
 
 #' @rdname dplyr
 #' @export
 dplyr_reconstruct.spatial_cubble_df <- function(data, template) {
 
+  if (!inherits(data, "tbl_df")) data <- as_tibble(data)
+
   new_spatial_cubble(
-    as_tibble(data), key = key_vars(template),
+    data, key = key_vars(template),
     index = index_var(template), coords = coords(template)
   )
 }
@@ -70,18 +44,20 @@ dplyr_reconstruct.spatial_cubble_df <- function(data, template) {
 #' @export
 dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
 
-  key <- key_vars(template)
-  index <-  index_var(template)
-  spatial <- spatial(template)
+  key_var <- key_vars(template)
+  key_vals <- key_data(template)$id
+  index_var <-  index_var(template)
+  spatial <- spatial(template) %>% filter(!!sym(key_var) %in% key_vals)
 
   if (inherits(template, "tbl_ts")){
-
-    data <- tsibble::as_tsibble(data, key = key, index = index)
+    data <- tsibble::as_tsibble(data, key = key_var, index = index_var)
   }
 
+  if (!inherits(data, "tbl_df")) data <- as_tibble(data)
 
   new_temporal_cubble(
-    data, key = key, index = index, coords = coords(template), spatial = spatial
+    data, key = key_var, index = index_var, coords = coords(template),
+    spatial = spatial
   )
   # if (cubble_can_reconstruct(data, template)){
   #

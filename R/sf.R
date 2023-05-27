@@ -21,20 +21,10 @@ add_geometry_column = function(x, sfc = NULL, crs, silent = FALSE) {
 				message("CRS missing: using OGC:CRS84 (WGS84) as default")
 			crs = sf::st_crs("OGC:CRS84")
 		}
-		sfc = sf::st_geometry(sf::st_as_sf(x, coords = c("long", "lat"), crs = crs))
+		sfc = sf::st_geometry(sf::st_as_sf(as_tibble(x), coords = c("long", "lat"), crs = crs))
 	}
 	x$geometry = sfc
 	x %>% sf::st_as_sf() %>% update_cubble()
 }
 
 
-update_cubble <- function(data){
-  stopifnot(inherits(data, "cubble_df"))
-  key <- key_vars(data)
-  index <- index(data)
-  coords <- coords(data)
-
- data %>%
-   new_cubble(key = key, index = index, coords = coords,
-              spatial = NULL, form = "nested")
-}
