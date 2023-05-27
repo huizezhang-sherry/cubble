@@ -47,6 +47,22 @@ res <- b %>% filter(stringr::str_detect(id, "2"))
 res <- a %>% mutate(elev2 = elev + 10)
 res <- b %>% mutate(prcp2 = prcp + 10)
 
+# arrange
+a %>% arrange(wmo_id) # fix from the sf side
+b %>% arrange(prcp)
+
+# select
+a %>% select(-elev)
+b %>% select(-prcp) # not working
+
+
+
+# | verb | spatial_cubble_df | temporal_cubble_df|
+# | arrange | dplyr_row_slice.spatial_cubble_df | arrange.temporal_cubble_df |
+# | mutate | dplyr_row_slice.spatial_cubble_df | dplyr_row_slice.temporal_cubble_df|
+# | filter | dplyr_row_slice.spatial_cubble_df | dplyr_row_slice.temporal_cubble_df|
+
+
 
 
 make_cubble(spatial = stations, temporal = meteo, key = id, index = date, coords = c(long, lat))

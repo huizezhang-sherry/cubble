@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 ```{r setup, echo = FALSE}
 library(cubble)
 library(dplyr)
+library(tsibble)
 ```
 
 This vignette provides some details on the `cubble_df` class. Here is a diagram that summarises the attributes associated with a nested and long cubble:
@@ -50,15 +51,13 @@ In this example, four stations are recorded at four time points: 1st to 4th Jan 
 The `rowwise_df` class uses a `group` attribute to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by: 
 
 ```{r}
-climate_mel %>%  
-  mutate(rain = sum(ts$prcp != 0, na.rm = TRUE))
+climate_mel %>% mutate(tmax_avg = mean(ts$tmax, na.rm = TRUE))
 ```
 
 which matches the basic mutate style of calculation, so it is easier to remember than the `purrr` style syntax: 
 
-```{r}
-climate_small %>%  
-  tidyr::nest(c(date, prcp, tmax, tmin)) %>%  
+```{r eval = FALSE}
+DATA %>% 
   mutate(rain = purrr::map_dbl(data, ~sum(.x$prcp != 0, na.rm= TRUE)))
 ```
 

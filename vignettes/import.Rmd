@@ -1,5 +1,5 @@
 ---
-title: "Importing spatiotemporal data into a cubble"
+title: "Importing spatio-temporal data into a cubble"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{import}
@@ -21,96 +21,45 @@ library(dplyr)
 
 This article shows you how to create a cubble from data in the wild. You should have already seen an example of constructing a cubble from a tibble in the README page and here are more examples that construct a cubble from:  
 
-  - a tibble with list column  
-  - a tsibble 
-  - separate spatial and temporal tables
+  - a single table with both spatial and temporal information
+  - two separate tables for spatial and temporal information
   - NetCDF data
-  - a `stars` object
+  - an `stars` object
+  - an `sftime` object 
   
-## A cubble from tibble with list column
+# A single table
 
-List column can be a useful structure when querying data since you can first create a row-wise data frame with all the metadata and then query the data as a nested list. We will show how to convert this output into a cubble in a small example with five weather stations close to Sydney, Australia. Here is the metadata of the stations:
+```{r}
+climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
+```
 
-```{r echo = FALSE}
-syd_all <- climate_aus %>% slice_nearby(coord = c(151.207, -33.867), n = 5)
-syd <- syd_all %>% select(id:wmo_id)
+
+# Two separate tables
+
+```{r}
+stations
+meteo
+
+make_cubble(spatial = stations, temporal = meteo,
+            key = id, index = date, coords = c(long, lat))
 ```
 
 ```{r}
-syd
-```
+stations_sf
+meteo_ts
 
-Temporal variables can be queried by `rnoaa::meteo_pull_monitors()` with the date range and variable supplied. Here we turn the `stations` data into a rowwise data frame and then query the climate variables as a list-column, `ts`:  
-
-```{r eval = FALSE}
-raw <- syd %>%  
-  rowwise() %>%  
-  mutate(ts = list(rnoaa::meteo_pull_monitors(id, 
-                                       date_min = "2020-01-01", 
-                                       date_max = "2020-12-31",
-                                       var = c("PRCP", "TMAX", "TMIN")) %>%  select(-id))) 
-raw
-```
-
-
-```{r echo = FALSE}
-raw <- syd_all %>% select(-c(long_ref, lat_ref, dist)) %>% rowwise()
-raw
-```
-
-
-A cubble can then be created by supplying:
-
-  - `id` as the key to identify each station, 
-  - `date` as the index to identify time, and 
-  - `coords` to identify the spatial coordinates of each station.
-
-```{r}
-syd_climate <- raw %>%  
-  as_cubble(key = id, index = date, coords = c(long, lat))
-
-syd_climate
-```
-
-# A cubble from tsibble
-
-If you have already got a `tsibble` object, with key and index registered, only `coords` needs to be specified to create a cubble:
-
-```{r echo = FALSE}
-dt <- climate_flat %>%  
-  tsibble::as_tsibble(key = id, index = date)
-```
-
-```{r}
-dt
-dt %>%  as_cubble(coords = c(long, lat))
+make_cubble(spatial = stations_sf, temporal = meteo_ts)
 ```
 
 Notice here each element of the list-column `ts` is of class `tbl_ts` and you are free to apply your favourite function on the tsibble class :)
 
-# Separate spatial and temporal tables
-
 Sometimes, you may get the spatial and temporal data from different sources and they live in two separate tables with a linking variable:
-
-```{r}
-# a spatial sheet
-cubble::stations
-
-# a temporal sheet
-cubble::meteo
-```
-
 When created out of separate tables, `make_cubble()` will check on the match of linking variable in the spatial and temporal table. 
-
-```{r}
-make_cubble(spatial = cubble::stations, temporal = cubble::meteo,
-          key = id, index = date, coords = c(long, lat))
-```
 
 Messages will emit to notify the unmatched, if detected. This would be useful to catch some sites with only spatial/ temporal information and the slight mismatch in character linking variable.
 
 
-# A cubble from NetCDF data
+# NetCDF data
 
 NetCDF (Network Common Data Form) is a commonly used data format in the climatology community to deliver global mapping of atmosphere, ocean, and land. Here we provide some general information regarding this format before showing an example of creating a cubble out of NetCDF data. 
 
@@ -148,12 +97,12 @@ Subsetting longitude and latitude grid is available through `long_range` and `la
 ```{r}
 dt <- as_cubble(raw, vars = c("q", "z"),
                 long_range = seq(-180, 180, 1),
-                lat_rnage = seq(-90, -5, 1))
+                lat_range = seq(-90, -5, 1))
 dt
 ```
 
 
-# Convert from a `stars` object to `cubble`
+# An `stars` object 
 
 Currently, the `cubble` package can convert a `stars` object with three dimension(s) in the order of longitude, latitude, and time: 
   
@@ -170,4 +119,14 @@ as_cubble(st)
 ```
 
 When the `dimensions` object is too complex for `cubble` to handle, the package will emit an message. 
+
+# An `sftime` object 
+
+```{r}
+dt <- climate_flat %>%
+  sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) %>%
+  sftime::st_as_sftime()
+dt
+dt %>% as_cubble(key = id, index = date)
+```
 
