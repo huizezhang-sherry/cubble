@@ -1,10 +1,55 @@
 #' Access to dplyr verbs
-#' @param data a cubble object
+#' @param data,.data a cubble object(used as defined by the dplyr generic)
 #' @param cols,i,template,... see [dplyr::dplyr_col_modify()], [dplyr::dplyr_row_slice()],
 #' and [dplyr;:dplyr_reconstruct()]
 #'
 #' @references \link{https://dplyr.tidyverse.org/reference/dplyr_extending.html}
-#' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
+#' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct select
+#' @rdname dplyr
+#' @export
+arrange.temporal_cubble_df <- function(.data, ...){
+  out <- NextMethod()
+  dplyr_reconstruct(out, .data)
+}
+
+#' @rdname dplyr
+#' @export
+select.spatial_cubble_df <- function(.data, ...){
+
+  data <- .data
+  class(.data) <- setdiff(class(.data), cb_spatial_cls)
+  out <- NextMethod()
+  cb_attrs <- c(key_vars(data), coords(data))
+  attrs_no_in <- !cb_attrs %in% colnames(out)
+  if (any(attrs_no_in)){
+    attr_missing <- cb_attrs[which(attrs_no_in)]
+    out[[attr_missing]] <- .data[[attr_missing]]
+    cli::cli_alert_info("Missing attribute {.code {attr_missing}}, add it back.")
+  }
+
+
+  dplyr_reconstruct(out, data)
+}
+
+#' @rdname dplyr
+#' @export
+select.temporal_cubble_df <- function(.data, ...){
+  # not working
+  data <- .data
+  class(.data) <- setdiff(class(.data), cb_temporal_cls)
+  out <- NextMethod()
+  cb_attrs <- c(key_vars(data), index_var(data))
+  attrs_no_in <- !cb_attrs %in% colnames(out)
+  if (any(attrs_no_in)){
+    attr_missing <- cb_attrs[which(attrs_no_in)]
+    out[[attr_missing]] <- .data[[attr_missing]]
+    cli::cli_alert_info("Missing attribute {.code {attr_missing}}, add it back.")
+  }
+  dplyr_reconstruct(out, .data)
+}
+
+
+
 #' @rdname dplyr
 #' @export
 dplyr_col_modify.cubble_df <- function(data, cols) {
@@ -32,6 +77,7 @@ dplyr_row_slice.temporal_cubble_df <- function(data, i, ...){
 dplyr_reconstruct.spatial_cubble_df <- function(data, template) {
 
   if (!inherits(data, "tbl_df")) data <- as_tibble(data)
+  if (inherits(template, "sf")) data <- sf::st_as_sf(data, crs = sf::st_crs(template))
 
   new_spatial_cubble(
     data, key = key_vars(template),
@@ -50,7 +96,10 @@ dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
   spatial <- spatial(template) %>% filter(!!sym(key_var) %in% key_vals)
 
   if (inherits(template, "tbl_ts")){
-    data <- tsibble::as_tsibble(data, key = key_var, index = index_var)
+    suppressWarnings(
+      data <- tsibble::build_tsibble(data, key = key_var, index = index_var, ordered = FALSE)
+    )
+
   }
 
   if (!inherits(data, "tbl_df")) data <- as_tibble(data)
@@ -59,58 +108,6 @@ dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
     data, key = key_var, index = index_var, coords = coords(template),
     spatial = spatial
   )
-  # if (cubble_can_reconstruct(data, template)){
-  #
-  #   if(inherits(template, "sf")) {
-  #
-  #     attr(data, "sf_column") <- attr(template, "sf_column")
-  #     attr(data, "agr") <- attr(template, "agr")
-  #     class(data) <- c("sf", class(data))
-  #   }
-  #   if(inherits(template, "tbl_ts")){
-  #     class(data) <- c("tbl_ts", class(data))
-  #     data <- tsibble::build_tsibble(data, key = key_vars(template)[1])
-  #   }
-  #
-  #   new_cubble(data,
-  #              key = key_vars(template), index = index(template),
-  #              coords = coords(template), spatial = spatial(template),
-  #              form = form(template))
-  # } else{
-  #   # otherwise become a tibble
-  #   x <- vctrs::new_data_frame(data)
-  #   x <- tibble::new_tibble(x, nrow = nrow(x))
-  #
-  #   if ("tbl_ts" %in% class(template)){
-  #     x <- tsibble::build_tsibble(x, key = key_vars(template)[1])
-  #   }
-  #
-  #
-  #   if ("sf" %in% class(template)) {
-  #     x <- sf::st_as_sf(x, sf_column_name = attr(template, "sf_column"))
-  #   }
-  #
-  #   return(x)
-  #
-  # }
-
-}
-
-cubble_can_reconstruct <- function(data, to){
-  has_key <- has_index <- FALSE
-
-  if (nrow(data) == 0) return(FALSE)
-  # have key
-  has_key <- any(key_vars(to) %in% names(data))
-
-  # have index
-  if (is_cubble_temporal(to)){
-    has_index <- any(index(to) %in% names(data))
-  } else if (is_cubble_spatial(to)){
-    has_index <- any(index(to) %in% names(data[["ts"]][[1]]))
-  }
-
-  has_key && has_index
 
 }
 
@@ -126,14 +123,6 @@ summarise.cubble_df <- function(.data, ..., .by, .groups){
   dplyr_reconstruct(out, origin)
 
 }
-
-
-#' @export
-# select.cubble_df <- function(data, ...){
-#   out <- NextMethod()
-#
-#   dplyr_reconstruct(out, data)
-# }
 
 
 #' @export
@@ -173,8 +162,3 @@ ungroup.cubble_df <- function(x, ...){
              spatial = spatial(data))
 }
 
-#' @export
-rename.cubble_df <- function(.data, ...){
-  out <- .data %>%  as_tibble() %>%  rename(...)
-  dplyr_reconstruct(out, .data)
-}
