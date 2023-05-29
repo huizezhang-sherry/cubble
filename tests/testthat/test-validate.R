@@ -57,18 +57,21 @@ b %>% select(-prcp) # not working
 
 
 
+# this doesn't work
+# a <- climate_mel %>% dplyr::bind_cols(group = c(1, 1, 2))
+a <- climate_mel
+a$group = c(1,1, 2)
+
+
+b <- a %>% face_temporal() %>% unfold(group)
+c <- b %>% group_by(group)
+
 # | verb | spatial_cubble_df | temporal_cubble_df|
 # | arrange | dplyr_row_slice.spatial_cubble_df | arrange.temporal_cubble_df |
 # | mutate | dplyr_row_slice.spatial_cubble_df | dplyr_row_slice.temporal_cubble_df|
 # | filter | dplyr_row_slice.spatial_cubble_df | dplyr_row_slice.temporal_cubble_df|
+# | select |
+# | group_by | group_by.temporal_cubble_df | group_by.temporal_cubble_df |
+# | summarise | summarise.temporal_cubble_df | summarise.temporal_cubble_df |
 
 
-
-
-make_cubble(spatial = stations, temporal = meteo, key = id, index = date, coords = c(long, lat))
-
-make_cubble(spatial = stations_sf, temporal = meteo, key = id, index = date)
-
-make_cubble(spatial = stations, temporal = meteo_ts, coords = c(long, lat))
-
-make_cubble(spatial = stations_sf, temporal = meteo_ts)

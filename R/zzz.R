@@ -8,11 +8,12 @@
   s3_register("dplyr::arrange", "temporal_cubble_df")
   s3_register("dplyr::select", "spatial_cubble_df")
   s3_register("dplyr::select", "temporal_cubble_df")
+  s3_register("dplyr::group_by", "temporal_cubble_df")
+  s3_register("dplyr::summarise", "spatial_cubble_df")
+  s3_register("dplyr::summarise", "temporal_cubble_df")
 
   #s3_register("tsibble::index_by", "cubble_df")
-  s3_register("dplyr::summarise", "cubble_df")
-  s3_register("dplyr::ungroup", "cubble_df")
-  s3_register("dplyr::group_by", "cubble_df")
+  #s3_register("dplyr::ungroup", "cubble_df")
 
   s3_register("dplyr::slice_head", "cubble_df")
   s3_register("dplyr::slice_tail", "cubble_df")
