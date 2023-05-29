@@ -13,7 +13,7 @@
 #' In case the sf geometry column is not POINT, cubble will use the centroid
 #' coordinates as LONGITUDE and LATITUDE
 #' @param by used in `make_cubble` when the key variable has different names in the
-#' spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples
+#' spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples)
 #' @rdname cubble-class
 #' @return a cubble object
 #' @export

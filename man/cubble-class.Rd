@@ -29,7 +29,7 @@ coordinates as LONGITUDE and LATITUDE}
 \item{temporal}{a tibble of temporal variables, contain key and index}
 
 \item{by}{used in \code{make_cubble} when the key variable has different names in the
-spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples}
+spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples)}
 }
 \value{
 a cubble object

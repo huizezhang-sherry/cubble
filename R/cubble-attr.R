@@ -1,5 +1,5 @@
 #' extract key related components in a cubble
-#' @param data a cubble object
+#' @param x a cubble object
 #' @rdname key
 #' @importFrom tsibble key_vars key key_data
 #' @export
@@ -8,22 +8,22 @@
 #' key(climate_mel)
 #' key_vars(climate_mel)
 #' key_data(climate_mel)
-key_vars.cubble_df <- function(data){
-  data %@% "key"
+key_vars.cubble_df <- function(x){
+  x %@% "key"
 }
 
 #' @rdname key
 #' @export
-key.cubble_df <- function(data){
-  syms(key_vars(data))
+key.cubble_df <- function(x){
+  syms(key_vars(x))
 }
 
 #' @rdname key
 #' @export
-key_data.cubble_df <- function(data){
+key_data.cubble_df <- function(.data){
   # a tsibble object has the key attributes defined as the groups attribute
   # in a cubble
-  data %@% "groups"
+  .data %@% "groups"
 }
 
 #' extract the coords attribute from a cubble

@@ -6,14 +6,14 @@
 \alias{key_data.cubble_df}
 \title{extract key related components in a cubble}
 \usage{
-\method{key_vars}{cubble_df}(data)
+\method{key_vars}{cubble_df}(x)
 
-\method{key}{cubble_df}(data)
+\method{key}{cubble_df}(x)
 
-\method{key_data}{cubble_df}(data)
+\method{key_data}{cubble_df}(.data)
 }
 \arguments{
-\item{data}{a cubble object}
+\item{x}{a cubble object}
 }
 \description{
 extract key related components in a cubble
