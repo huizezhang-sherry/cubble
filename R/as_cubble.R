@@ -36,9 +36,11 @@
 #'                 lat_range = seq(-53, -12, 1))
 #'
 #' # stars
+#' if (require(stars, quietly = TRUE)) {
 #' dt <- stars::read_ncdf(path)
 #' dt %>% as_cubble()
 #'
+#'}
 #' # don't have to supply coords if create from a sftime
 #' dt <- climate_flat %>%
 #'   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) %>%

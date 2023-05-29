@@ -1,5 +1,5 @@
 #' extract key related components in a cubble
-#' @param x a cubble object
+#' @param x,.data a cubble object
 #' @rdname key
 #' @importFrom tsibble key_vars key key_data
 #' @export

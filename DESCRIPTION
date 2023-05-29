@@ -22,7 +22,6 @@ Imports:
     glue,
     lubridate,
     ncdf4,
-    pillar,
     rlang,
     sf,
     stringr,

@@ -13,7 +13,7 @@
 \method{key_data}{cubble_df}(.data)
 }
 \arguments{
-\item{x}{a cubble object}
+\item{x, .data}{a cubble object}
 }
 \description{
 extract key related components in a cubble
