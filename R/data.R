@@ -8,7 +8,7 @@
 #'   (digit 8-9) indicates the states the station is in: Western Australia: 01-13,
 #'   Northern Territory: 14-15, South Australia: 16-26, Queensland: 27-45,
 #'    New South Wales: 46-75, Victoria: 76-90, Tasmania: 91-99.
-#'    See \link{http://www.bom.gov.au/climate/cdo/about/site-num.shtml}}
+#'    See http://www.bom.gov.au/climate/cdo/about/site-num.shtml}
 #'   \item{lat}{latitude of the stations, in degree}
 #'   \item{long}{longitude of the stations, in degree}
 #'   \item{elev}{elevation of the stations}

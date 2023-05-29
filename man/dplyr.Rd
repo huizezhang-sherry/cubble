@@ -34,14 +34,16 @@
 \method{dplyr_reconstruct}{temporal_cubble_df}(data, template)
 }
 \arguments{
+\item{.by, .groups}{used by dplyr verbs}
+
 \item{data, .data}{a cubble object(used as defined by the dplyr generic)}
 
 \item{cols, i, template, ...}{see \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_col_modify()}}, \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_row_slice()}},
-and \code{\link[=dplyr;:dplyr_reconstruct]{dplyr;:dplyr_reconstruct()}}}
+and \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_reconstruct()}}}
 }
 \description{
 Access to dplyr verbs
 }
 \references{
-\link{https://dplyr.tidyverse.org/reference/dplyr_extending.html}
+https://dplyr.tidyverse.org/reference/dplyr_extending.html
 }

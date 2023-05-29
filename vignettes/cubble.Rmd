@@ -31,7 +31,7 @@ Global Historical Climatology Network (GHCN) provides daily climate measures fro
 Victoria stations can be subset by the station number: Australia GHCN station number starts with "ASN00" and followed by the [Bureau of Meteorology (BOM) station number](http://www.bom.gov.au/climate/cdo/about/site-num.shtml), where the 2nd and 3rd digit (7th and 8th in the GHCN number) define the state of the station. Victoria stations start from 76 to 90 and filtering Victoria stations is an operation in the spatial dimension. Hence we want to use the nested form: 
 
 ```{r}
-tmax <- tmax_hist %>% 
+tmax <- climate_aus %>% 
   filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 76, 90))
 
 tmax
@@ -44,21 +44,9 @@ We would also like to summarise the daily recording into monthly to smooth the m
 ```{r}
 tmax <- tmax %>%
   face_temporal() %>%
-  group_by(new_ym = tsibble::make_yearmonth(
-    year = ifelse(lubridate::year(yearmonth) > 2015, 2016, 1971),
-    month = lubridate::month(yearmonth)
-  )) %>%
+  group_by(month = lubridate::month(date)) %>%
   summarise(tmax = mean(tmax, na.rm = TRUE))
 
-tmax
-```
-
-# Back to spatial
-
-A data quality issue with the `rnoaa` data is that while it records the first and last year recorded of each series without the period of missingness. For example, station `ASN00085279` starts it first record in 1943, pauses for a period from 1946 to 1982, and then resumes it recording till today. We would like to remove stations like this by examining whether the summarised time series has a total of 24 months. This is a station-wise operation and `face_spatial()` can be used to convert the cubble back to the nested form: 
-
-```{r}
-tmax <- tmax %>%  face_spatial() %>%  filter(nrow(ts) == 24)
 tmax
 ```
 
@@ -67,7 +55,7 @@ tmax
 In the glyph map we are about to create, the four variables (major and minor axis for x and y) need to be in the same table. In cubble, you can move time invariant variable into the long form with `unfold()`:
 
 ```{r}
-tmax <- tmax %>%  face_temporal() %>%  unfold(latitude, longitude)
+tmax <- tmax %>%  unfold(long, lat)
 tmax
 ```
 

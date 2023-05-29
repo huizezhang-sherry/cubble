@@ -35,7 +35,7 @@ as_cubble(data, key, index, coords, ...)
 
 \item{key}{the spatial identifying variable(s), it can be a single variable, i.e.
 \code{key = id}, or a vector of two variables: \code{key = c(cluster, id)}
-(see the example in \link{switch_key})}
+(see the example in \code{switch_key})}
 
 \item{index}{the single temporal identifying variable, currently support
 base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and

@@ -31,12 +31,6 @@
 #' make_cubble(spatial = stations, temporal = meteo,
 #'             key = id, index = date, coords = c(long, lat))
 #'
-#' # when the key variable is named differently, use the `by` argument,
-#' # cubble will take the name from TODO
-#' meteo2 <- meteo %>% rename(station = id)
-#' make_cubble(spatial = stations, temporal = meteo2,
-#'           by = c("id" = "station"), key = id,
-#'           index = date, coords = c(long, lat))
 cubble <- function(..., key, index, coords) {
   data <- tibble::tibble(!!!list2(...))
   key <- enquo(key)
@@ -171,10 +165,10 @@ new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
   data <- data %>% select(attr_vars, setdiff(colnames(data), c(attr_vars, "ts")), "ts")
   if (is.null(args$groups)){
     groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
-    out <- new_grouped_df(data, groups = groups, ...)
+    out <- new_rowwise_df(data, groups = groups, ...)
   } else{
     groups <- args$groups
-    out <- new_grouped_df(data, ...)
+    out <- new_rowwise_df(data, ...)
   }
   class(out) <- c(cb_spatial_cls, setdiff(class(data), cb_spatial_cls))
   out

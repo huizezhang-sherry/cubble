@@ -16,12 +16,10 @@
 #' potentially match from both datasets, 3) others: other key values that can't
 #' be matched in a list: others$temporal and others$spatial
 #' @examples
-#' three_sites <-  stations %>% head(3)
-#' five_ts <- meteo %>% filter(lubridate::month(date) == 1)
-#' check_key(spatial = three_sites, temporal = five_ts)
+#' check_key(stations, meteo)
 #'
-#' five_ts2 <- five_ts %>% rename(station = id)
-#' check_key(spatial = three_sites, temporal = five_ts2, by = c("id" = "station"))
+#' meteo2 <- meteo %>% dplyr::rename(station = id)
+#' check_key(spatial = stations, temporal = meteo2, by = c("id" = "station"))
 check_key <- function(spatial, temporal, by = NULL) {
   common_cols <- intersect(names(spatial), names(temporal))
   if (!is_null(by)) {

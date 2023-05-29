@@ -51,10 +51,4 @@ cubble(
 make_cubble(spatial = stations, temporal = meteo,
             key = id, index = date, coords = c(long, lat))
 
-# when the key variable is named differently, use the `by` argument,
-# cubble will take the name from TODO
-meteo2 <- meteo \%>\% rename(station = id)
-make_cubble(spatial = stations, temporal = meteo2,
-          by = c("id" = "station"), key = id,
-          index = date, coords = c(long, lat))
 }

@@ -85,32 +85,25 @@ data |>
 Taking the output from the [Get started](cubble.html) page, we can visualise the different in avergae temperature curve between 1971 - 1975 and 2016 - 2020 using the glyph map:
 
 ```{r echo = FALSE}
-OUTPUT_FROM_GET_STARTED <- tmax_hist %>% 
+df <- climate_aus %>% 
+  filter(nrow(ts) == 366, id != "ASN00086127") %>% 
   filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 76, 90)) %>% 
   face_temporal() %>% 
-  mutate(
-    month = lubridate::month(yearmonth),
-    group = as.factor(ifelse(lubridate::year(yearmonth) > 2015, "2016 ~ 2020","1971 ~ 1975"))) %>%  
-  group_by(month, group) %>% 
+  group_by(month = lubridate::month(date)) %>%
   summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
-  face_spatial() %>%  
-  filter(nrow(ts) == 24) %>% 
-  face_temporal() %>%  
-  unfold(latitude, longitude)
+  unfold(long, lat)
 ```
 
 ```{r}
 vic_map <- ozmaps::abs_ste %>%  filter(NAME %in% c("Victoria"))
-OUTPUT_FROM_GET_STARTED %>% 
-  ggplot()  + 
+df %>% 
+  ggplot(aes(x_major = long, y_major = lat, 
+             x_minor = month, y_minor = tmax))  + 
   geom_sf(data = vic_map, 
           fill = "grey95", color = "white",
           inherit.aes = FALSE) + 
-  geom_glyph(
-    aes(x_major = longitude, y_major = latitude, 
-        x_minor = month, y_minor = tmax, 
-        group = interaction(id, group), color = group), 
-    width = 0.8, height = 0.3) + 
+  geom_glyph_box(width = 0.3, height = 0.08) + 
+  geom_glyph(width = 0.3, height = 0.08) + 
   scale_color_brewer(palette = "Dark2") + 
   coord_sf(xlim = c(141, 150)) + 
   theme_bw() + 

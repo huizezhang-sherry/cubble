@@ -15,11 +15,11 @@
   #s3_register("tsibble::index_by", "cubble_df")
   #s3_register("dplyr::ungroup", "cubble_df")
 
-  s3_register("dplyr::slice_head", "cubble_df")
-  s3_register("dplyr::slice_tail", "cubble_df")
-  s3_register("dplyr::slice_min", "cubble_df")
-  s3_register("dplyr::slice_max", "cubble_df")
-  s3_register("dplyr::slice_sample", "cubble_df")
+  # s3_register("dplyr::slice_head", "cubble_df")
+  # s3_register("dplyr::slice_tail", "cubble_df")
+  # s3_register("dplyr::slice_min", "cubble_df")
+  # s3_register("dplyr::slice_max", "cubble_df")
+  # s3_register("dplyr::slice_sample", "cubble_df")
 
   s3_register("base::print", "cubble_df")
   s3_register("tsibble::fill_gaps", "cubble_df")

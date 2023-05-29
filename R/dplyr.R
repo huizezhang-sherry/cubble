@@ -1,10 +1,12 @@
 #' Access to dplyr verbs
 #' @param data,.data a cubble object(used as defined by the dplyr generic)
 #' @param cols,i,template,... see [dplyr::dplyr_col_modify()], [dplyr::dplyr_row_slice()],
-#' and [dplyr;:dplyr_reconstruct()]
+#' and [dplyr::dplyr_reconstruct()]
+#' @param .by,.groups used by dplyr verbs
 #'
-#' @references \link{https://dplyr.tidyverse.org/reference/dplyr_extending.html}
+#' @references https://dplyr.tidyverse.org/reference/dplyr_extending.html
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct select
+#' @importFrom utils head
 #' @rdname dplyr
 #' @export
 arrange.temporal_cubble_df <- function(.data, ...){
@@ -101,7 +103,7 @@ summarise.temporal_cubble_df <- function(.data, ..., .by = NULL, .groups = NULL)
   out <- NextMethod()
 
   if (!index %in% colnames(out)){
-    potential_index <- .data %@% groups %>% colnames() %>% head(-1)
+    potential_index <- .data %@% groups %>% colnames() %>% utils::head(-1)
     potential_index <- setdiff(potential_index, key_vars(.data))
     new_temporal_cubble(
       out, key = key_vars(.data), index = potential_index, coords = coords(.data),
@@ -180,50 +182,4 @@ dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
 
 }
 
-# summarise.cubble_df <- function(.data, ..., .by, .groups){
-#   data <- .data
-#   key <- key_vars(data)
-#   spatial <- spatial(data)
-#   origin <- data
-#   class(data) <- class(data)[class(data) != "cubble_df"]
-#   out <- NextMethod()
-#
-#   dplyr_reconstruct(out, origin)
-#
-# }
-
-
-# group_by.cubble_df <- function(.data, ..., .add, .drop){
-#   data <- .data
-#   key <- key_vars(data)
-#   groups <- dplyr::group_by_prepare(data, ..., .add = TRUE)
-#   group_var <- groups$group_names
-#   index <- setdiff(group_var,key)
-#   out <- groups$data
-#
-#   new_cubble(out,
-#              key = c(key, index), index = index, coords = coords(data),
-#              spatial = spatial(data))
-# }
-
-# ungroup.cubble_df <- function(x, ...){
-#   data <- x
-#   ungroup_var <- names(enquos(..., .named = TRUE))
-#
-#   if (!all(ungroup_var %in% names(data))){
-#     problem <- ungroup_var[!ungroup_var %in% names(data)]
-#     cli::cli_abort("the ungroup variable: {problem} is not found in the data")
-#   }
-#
-#   if (key_vars(data)[1] %in% ungroup_var){
-#     cli::cli_abort("Can't ungroup the spatio identifier!")
-#   }
-#
-#
-#   updated_group_var <- setdiff(key_vars(data), ungroup_var)
-#
-#   new_cubble(data,
-#              key = updated_group_var, index = index(data), coords = coords(data),
-#              spatial = spatial(data))
-# }
-#
+globalVariables(c("groups"))

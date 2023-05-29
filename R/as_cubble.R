@@ -3,7 +3,7 @@
 #' @param data object to be converted into an object of class \code{cubble_df}
 #' @param key the spatial identifying variable(s), it can be a single variable, i.e.
 #' \code{key = id}, or a vector of two variables: \code{key = c(cluster, id)}
-#' (see the example in \link{switch_key})
+#' (see the example in \code{switch_key})
 #' @param index the single temporal identifying variable, currently support
 #' base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
 #' tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class
@@ -239,7 +239,7 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
 
 }
 
-
+globalVariables(c(".", ".val", "id"))
 
 
 
