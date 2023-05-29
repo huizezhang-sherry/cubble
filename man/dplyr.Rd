@@ -4,6 +4,8 @@
 \alias{arrange.temporal_cubble_df}
 \alias{select.spatial_cubble_df}
 \alias{select.temporal_cubble_df}
+\alias{summarise.spatial_cubble_df}
+\alias{summarise.temporal_cubble_df}
 \alias{dplyr_col_modify.cubble_df}
 \alias{dplyr_row_slice.spatial_cubble_df}
 \alias{dplyr_row_slice.temporal_cubble_df}
@@ -16,6 +18,10 @@
 \method{select}{spatial_cubble_df}(.data, ...)
 
 \method{select}{temporal_cubble_df}(.data, ...)
+
+\method{summarise}{spatial_cubble_df}(.data, ..., .by = NULL, .groups = NULL)
+
+\method{summarise}{temporal_cubble_df}(.data, ..., .by = NULL, .groups = NULL)
 
 \method{dplyr_col_modify}{cubble_df}(data, cols)
 

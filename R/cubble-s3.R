@@ -64,7 +64,7 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   coords <- enquo(coords)
 
   if (quo_is_missing(key)){
-    if (inherits(temporal, "tbl_ts")){
+    if (is_tsibble(temporal)){
       key <- key_vars(temporal)
     } else{
       cli::cli_abort("Please supply the {.code key} argument,
@@ -73,7 +73,7 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   }
 
   if (quo_is_missing(index)){
-    if (inherits(temporal, "tbl_ts")){
+    if (is_tsibble(temporal)){
       index <- index(temporal)
     } else{
       cli::cli_abort("Please supply the {.code index} argument,
@@ -82,7 +82,7 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   }
 
   if (quo_is_missing(coords)){
-    if (inherits(spatial, "sf")){
+    if (is_sf(spatial)){
       cc <- sf::st_coordinates(sf::st_centroid(spatial))
       colnames(cc) = if (sf::st_is_longlat(spatial)) c("long", "lat") else c("x", "y")
       spatial <- cbind(spatial, cc)
@@ -136,13 +136,13 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   # only create when have both spatial & temporal info
   spatial <- spatial %>% filter(!by %in% only_spatial)
 
-  if (inherits(spatial, "sf")){
+  if (is_sf(spatial)){
     # from discussion: https://github.com/r-spatial/sf/issues/951
     # to ensure the sf is built from a tibble
     spatial <- spatial %>% as_tibble() %>% sf::st_as_sf()
   }
 
-  if (inherits(temporal, "tbl_ts")){
+  if (is_tsibble(temporal)){
     index <- temporal %@% "index"
   } else{
     index <- as_name(index)
@@ -163,22 +163,20 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
 cb_spatial_cls <- c("spatial_cubble_df", "cubble_df")
 cb_temporal_cls <- c("temporal_cubble_df", "cubble_df")
 
-# new_cubble <- function(data, ..., class = NULL){
-#
-#
-#
-# }
-
 new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
 
   args <- list2(...)
   if (validate) validate_spatial_cubble(data, args)
-  groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
   attr_vars <- c(args$key, args$coords)
   data <- data %>% select(attr_vars, setdiff(colnames(data), c(attr_vars, "ts")), "ts")
-  out <- new_rowwise_df(data, groups = groups, ...)
-  cb_cls <- c("spatial_cubble_df", "cubble_df")
-  class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
+  if (is.null(args$groups)){
+    groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
+    out <- new_grouped_df(data, groups = groups, ...)
+  } else{
+    groups <- args$groups
+    out <- new_grouped_df(data, ...)
+  }
+  class(out) <- c(cb_spatial_cls, setdiff(class(data), cb_spatial_cls))
   out
 }
 
@@ -186,12 +184,18 @@ new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
 new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
   args <- list2(...)
   if (validate) validate_temporal_cubble(data, args)
-  groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
+
   attr_vars <- c(args$key, args$index)
   suppressWarnings(data <- data %>% select(attr_vars, setdiff(colnames(data), attr_vars)))
-  out <- new_grouped_df(data, groups = groups, ...)
-  cb_cls <- c("temporal_cubble_df", "cubble_df")
-  class(out) <- c(cb_cls, setdiff(class(data), cb_cls))
+  if (is.null(args$groups)){
+    groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
+    out <- new_grouped_df(data, groups = groups, ...)
+  } else{
+    groups <- args$groups
+    out <- new_grouped_df(data, ...)
+  }
+
+  class(out) <- c(cb_temporal_cls, setdiff(class(data), cb_temporal_cls))
   out
 }
 
@@ -372,7 +376,6 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 
 #' @export
 `names<-.cubble_df`<- function(x, value){
-  #browser()
   out <- `names<-`(as_tibble(x), value)
   dplyr_reconstruct(out, x)
 }

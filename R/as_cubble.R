@@ -51,7 +51,7 @@ as_cubble <- function(data, key, index, coords, ...) {
 #' @rdname as_cubble
 #' @export
 as_cubble.tbl_df <- function(data, key, index, coords, ...) {
-  if (inherits(data, "tbl_ts")){
+  if (is_tsibble(data)){
     key <- sym(tsibble::key_vars(data))
     index <- sym(tsibble::index(data))
   } else{

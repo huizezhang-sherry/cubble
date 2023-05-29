@@ -33,7 +33,6 @@ unfold.spatial_cubble_df <- function(data, ...){
 #' @rdname unfold
 #' @export
 unfold.temporal_cubble_df <- function(data, ...){
-  #browser()
   dots <- enquos(..., .named = TRUE)
   sp <- spatial(data)
   key <- key_vars(data)
@@ -55,7 +54,7 @@ unfold.temporal_cubble_df <- function(data, ...){
     )
   }
 
-  if (inherits(data, "tbl_ts")){
+  if (is_tsibble(data)){
     index <- data %@% index
   } else{
     index <- as_name(index)

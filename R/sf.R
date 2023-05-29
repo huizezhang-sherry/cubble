@@ -9,7 +9,7 @@
 #' @examples
 #' climate_mel %>% add_geometry_column()
 add_geometry_column = function(x, sfc = NULL, crs, silent = FALSE) {
-	stopifnot(inherits(x, "cubble_df"),
+	stopifnot(is_cubble(x),
 			  is.null(sfc) || inherits(sfc, "sfc"),
 			  missing(crs) || inherits(crs, "crs"),
 			  all(c("long", "lat") %in% names(x)))

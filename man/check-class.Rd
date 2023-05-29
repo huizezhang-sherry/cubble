@@ -4,6 +4,8 @@
 \alias{is_cubble}
 \alias{is_cubble_spatial}
 \alias{is_cubble_temporal}
+\alias{is_sf}
+\alias{is_tsibble}
 \title{Check if the object is a cubble or its subclass}
 \usage{
 is_cubble(data)
@@ -11,6 +13,10 @@ is_cubble(data)
 is_cubble_spatial(data)
 
 is_cubble_temporal(data)
+
+is_sf(data)
+
+is_tsibble(data)
 }
 \arguments{
 \item{data}{the object to test}
