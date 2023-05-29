@@ -35,22 +35,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/aggregation.html">Aggregating data spatially, and making glyph maps</a>
-    </li>
-    <li>
-      <a href="../articles/cubble-design.html">Explanation of the cubble data structure</a>
+      <a href="../articles/design.html">Explanation of the cubble data structure</a>
     </li>
     <li>
       <a href="../articles/glyph.html">Making a glyph map</a>
     </li>
     <li>
-      <a href="../articles/import.html">Importing spatiotemporal data into a cubble</a>
-    </li>
-    <li>
-      <a href="../articles/interactive-plot.html">Making a linked map and time series plot</a>
-    </li>
-    <li>
-      <a href="../articles/matching.html">Combining multiple data sources with simple spatiotemporal matching</a>
+      <a href="../articles/import.html">Importing spatio-temporal data into a cubble</a>
     </li>
   </ul></li>
 <li>
@@ -105,24 +96,16 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">climate_aus</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">add_geometry_column</span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">climate_mel</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">add_geometry_column</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> CRS missing: using OGC:CRS84 (WGS84) as default</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   key: id [639], index: date, nested form [sf]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># extent:   [113.5319, -43.6578, 153.6358, -10.0511]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id            lat  long  elev name  wmo_id ts                  geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00001006 -<span style="color: #BB0000;">15.5</span>  128.   3.8 wynd…  <span style="text-decoration: underline;">95</span>214 <span style="color: #949494;">&lt;tibble&gt;</span>   (128.1503 -15.51)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00001007 -<span style="color: #BB0000;">13.8</span>  126.   6   trou…  <span style="text-decoration: underline;">94</span>102 <span style="color: #949494;">&lt;tibble&gt;</span> (126.1485 -13.7542)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00001018 -<span style="color: #BB0000;">16.4</span>  126. 546   moun…  <span style="text-decoration: underline;">94</span>211 <span style="color: #949494;">&lt;tibble&gt;</span> (126.1025 -16.4181)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00001019 -<span style="color: #BB0000;">14.3</span>  127.  23   kalu…  <span style="text-decoration: underline;">94</span>100 <span style="color: #949494;">&lt;tibble&gt;</span> (126.6453 -14.2964)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00001020 -<span style="color: #BB0000;">14.1</span>  126.  51   trus…  <span style="text-decoration: underline;">95</span>101 <span style="color: #949494;">&lt;tibble&gt;</span>   (126.3867 -14.09)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00001025 -<span style="color: #BB0000;">15.4</span>  126. 385   doon…  <span style="text-decoration: underline;">94</span>215 <span style="color: #949494;">&lt;tibble&gt;</span> (126.3114 -15.3797)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00002012 -<span style="color: #BB0000;">18.2</span>  128. 422   hall…  <span style="text-decoration: underline;">94</span>212 <span style="color: #949494;">&lt;tibble&gt;</span> (127.6636 -18.2292)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00002032 -<span style="color: #BB0000;">17.0</span>  128. 203   warm…  <span style="text-decoration: underline;">94</span>213 <span style="color: #949494;">&lt;tibble&gt;</span> (128.2175 -17.0156)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00002056 -<span style="color: #BB0000;">15.8</span>  129.  44   kunu…  <span style="text-decoration: underline;">94</span>216 <span style="color: #949494;">&lt;tibble&gt;</span>   (128.71 -15.7814)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00002064 -<span style="color: #BB0000;">16.6</span>  128. 164   argy…  <span style="text-decoration: underline;">94</span>217 <span style="color: #949494;">&lt;tibble&gt;</span> (128.4517 -16.6381)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 629 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form, [sf]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id           long   lat  elev name   wmo_id            geometry ts      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essen…  <span style="text-decoration: underline;">95</span>866 (144.9066 -37.7276) <span style="color: #949494;">&lt;tibble&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moora…  <span style="text-decoration: underline;">94</span>870   (145.0964 -37.98) <span style="color: #949494;">&lt;tibble&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbo…  <span style="text-decoration: underline;">94</span>866 (144.8321 -37.6655) <span style="color: #949494;">&lt;tibble&gt;</span></span>
 </code></pre></div>
     </div>
   </div>
