@@ -1,8 +1,8 @@
 ---
-title: "Importing spatio-temporal data into a cubble"
+title: "2. Creation and coercion"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{import}
+  %\VignetteIndexEntry{2. create}
   %\VignetteEngine{knitr::rmarkdown}
    %\usepackage[utf8]{inputenc}
 ---

@@ -255,7 +255,6 @@ validate_temporal_cubble <- function(data, args){
 #' @param spatial key
 #' @param form key
 #' @param tsibble_attr key
-#' @export
 new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = NULL){
   data <- arrange(data, !!sym(key[1]))
 

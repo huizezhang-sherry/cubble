@@ -8,41 +8,30 @@ template:
 #   - cubble
 #   - as_cubble
 #   - is_cubble
-# # - title: "Extract cubble attributes"
-# # - contents:
-# #   #- key_data
-# # - title: "Data quality check"
-# # - contents:
-# #   #- starts_with("add")
-# #   - check_key
-# - title: "Reshape cubble"
+#   - print
+# - title: "Extract cubble attributes"
+# - contents:
+#   - key
+#   - index
+#   - coords
+#   - spatial
+# - title: "Dplyr functions"
+# - contents:
+#   - arrange
+# - title: "Cubble functions"
 # - contents:
 #   - face_temporal
-#   - face_spatial
-# - title: "Wrangle cubble"
-# - contents:
 #   - unfold
-#   - strip_rowwise
-#   #- switch_key
-#   #- rename_key
-#   #- get_centroid
-#   #- match_sites
-#   #- slice_nearby
-#   #- slice_head.cubble_df
-#   #- simplify_sf
-#   #- fill_gaps.cubble_df
 # - title: "Visualisation with cubble"
 # - contents:
 #   - geom_glyph
-# # - title: "Interface to tour"
-# # - contents:
-# #   - contains("prep")
 # - title: "In-built data"
 # - contents:
-#   - contains("climate")
-#   - tmax_hist
-#   - prcp_aus
+#   - climate_aus
+#   - stations
 #   - river
-# # - title: "Misc"
-# # - contents:
-# #   - extract_var
+# - title: "Misc"
+# - contents:
+#   - add_geometry_column
+#   - check_key
+#   - strip_rowwise

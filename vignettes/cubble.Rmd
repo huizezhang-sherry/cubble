@@ -24,11 +24,11 @@ library(ggplot2)
 ```
 
 
-Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset `tmax_hist` extracts the maximum temperature for `r nrow(tmax_hist)` Australian stations in the period 1970 - 1975 and 2016 - 2020 from the full Australian historical records starting from year 1969. `tmax_hist` is already in a cubble, with `id` as the key, `yearmonth` as the index, and `c(longitude, latitude)` as the coordinates. This vignette shows the basic manipulation of cubble in an example to compares the maximum temperature in these two periods for weather stations in Victoria, Australia.
+Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset `climate_aus` extracts the maximum temperature for `r nrow(climate_aus)` Australian stations in the period 1970 - 1975 and 2016 - 2020 from the full Australian historical records starting from year 1969. `climate_aus` is already in a cubble, with `id` as the key, `date` as the index, and `c(long, lat)` as the coordinates. This vignette shows the basic manipulation of cubble in an example to compares the maximum temperature in these two periods for weather stations in Victoria, Australia.
 
 # Spatial manipulation 
 
-Victoria stations can be subset by the station number: Australia GHCN station number starts with "ASN00" and followed by the [Bureau of Meteorology (BOM) station number](http://www.bom.gov.au/climate/cdo/about/site-num.shtml), where the 2nd and 3rd digit (7th and 8th in the GHCN number) define the state of the station. Victoria stations start from 76 to 90 and filtering Victoria stations is an operation in the spatial dimension. Hence we want to use the nested form: 
+Victoria stations can be subset by the station number: Australia GHCN station number starts with "ASN00" and followed by the [Bureau of Meteorology (BOM) station number](http://www.bom.gov.au/climate/cdo/about/site-num.shtml), where the 2nd and 3rd digit (7th and 8th in the GHCN number) define the state of the station. Victoria stations start from 76 to 90 and filtering Victoria stations is an operation in the spatial dimension. Hence we want to use the nested form:
 
 ```{r}
 tmax <- climate_aus %>% 
@@ -38,6 +38,8 @@ tmax
 ```
 
 # Temporal manipulation 
+
+`face_temporal()` switches a spatial (nested) cubble into a temporal (long) one for temporal operations:  The long form cubble is for operations whose output is cross-identified by `key` and `index`. 
 
 We would also like to summarise the daily recording into monthly to smooth the maximum temperature and since it is also a time dimension operation, we can keep using the long form:  
 
@@ -49,6 +51,8 @@ tmax <- tmax %>%
 
 tmax
 ```
+
+<!-- `face_spatial()` switches a temporal (long) cubble back to the spatial (nested) one for spatial operations and operations summarising temporal information as per location, for example, calculating the average maximum temperature: -->
 
 # The final step
 

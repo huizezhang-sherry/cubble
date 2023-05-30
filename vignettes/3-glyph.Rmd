@@ -1,10 +1,10 @@
 ---
-title: "Making a glyph map"
+title: "3. Making a glyph map"
 output: rmarkdown::html_vignette
 bibliography: '`r system.file("reference.bib", package = "cubble")`'
 vignette: >
-  %\VignetteIndexEntry{glyphmap}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{3. glyph}
+  %\VignetteEngine{knitr: :rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
