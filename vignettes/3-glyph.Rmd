@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 bibliography: '`r system.file("reference.bib", package = "cubble")`'
 vignette: >
   %\VignetteIndexEntry{3. glyph}
-  %\VignetteEngine{knitr: :rmarkdown}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
