@@ -70,7 +70,7 @@ tbl_sum.temporal_cubble_df <- function(x){
   line1 <- glue::glue("key: {key} [{key_n}], index: {index}, long form")
   group_var <- head(names(x %@% groups), -1)
   group_n <- nrow(x %@% groups)
-  if (!all(group_var != key)) {
+  if (!key %in% group_var) {
     group_var <- paste0(group_var, collapse = ", ")
     line1 <- glue::glue("{line1}, groups: {group_var} [{group_n}]")
     }

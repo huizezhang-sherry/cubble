@@ -13,7 +13,7 @@
 strip_rowwise <- function(data){
 
   is_cubble(data)
-  attr(data, "groups") <- attr(data, "groups")[NULL, ]
+  attr(data, "groups") <- NULL
   attr(data, "class") <- attr(data, "class")[attr(data, "class") != "rowwise_df"]
 
   data
