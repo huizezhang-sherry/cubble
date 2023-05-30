@@ -63,15 +63,12 @@ temporal component. The `sf` and `tsibble` class will be carried over to
 the cubble object:
 
 ``` r
-library(cubble)
 cb_nested <- make_cubble(spatial = stations_sf, temporal = meteo_ts)
 class(cb_nested)
 #> [1] "spatial_cubble_df" "cubble_df"         "sf"               
 #> [4] "tbl_df"            "tbl"               "data.frame"
-cb_long <- face_temporal(cb_nested)
-class(cb_long)
-#> [1] "temporal_cubble_df" "cubble_df"          "tbl_ts"            
-#> [4] "tbl_df"             "tbl"                "data.frame"
+class(cb_nested$ts[[1]])
+#> [1] "tbl_ts"     "tbl_df"     "tbl"        "data.frame"
 ```
 
 Check the vignette [2. Creation and coercion](create.html) for more on
