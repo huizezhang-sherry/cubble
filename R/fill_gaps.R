@@ -4,7 +4,6 @@
 #' @param .data,...,.full,.start,.end see tsibble documentation
 #' @importFrom tsibble fill_gaps
 #' @return a cubble object
-#' @export
 fill_gaps.cubble_df <- function(.data, ..., .full = FALSE,
                                 .start = NULL, .end = NULL) {
 

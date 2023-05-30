@@ -59,9 +59,3 @@
 
 #' Australia river data
 "river"
-
-#' Daily precipitation data from 2016 to 2020
-"prcp_aus"
-
-#' Victoria and Tasmania daily maximum temperature for 1970 - 1975 and 2016 - 2020
-"tmax_hist"

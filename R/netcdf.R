@@ -1,7 +1,6 @@
 #' Functions to extract NetCDF dimension and variables
 #' @param data a NetCDF file read in from \code{ncdf4::nc_open()}
 #' @param vars variables to read, see the variables in your data with \code{names(data$var)}
-#' @export
 #' @importFrom ncdf4 ncvar_get
 #' @rdname netcdf
 #' @return extracted netcdf4 components
@@ -13,7 +12,6 @@ extract_var <- function(data, vars){
   list(var = out, name = vars)
 }
 
-#'@export
 #' @rdname netcdf
 extract_longlat <- function(data){
   if (!inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
@@ -39,7 +37,6 @@ extract_longlat <- function(data){
 }
 
 #' @importFrom lubridate %m+% hours days minutes seconds years
-#' @export
 #' @rdname netcdf
 extract_time <- function(data){
   if (!inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
