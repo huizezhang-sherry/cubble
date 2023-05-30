@@ -29,7 +29,7 @@
 #' # netcdf
 #' path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
 #' raw <- ncdf4::nc_open(path)
-#' dt <- as_cubble(raw, vars = c("q", "z"))
+#' dt <- as_cubble(raw)
 #' # read at every degree
 #' dt <- as_cubble(raw,vars = c("q", "z"),
 #'                 long_range = seq(113, 153, 1),

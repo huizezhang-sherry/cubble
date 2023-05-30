@@ -4,8 +4,9 @@
 #' @importFrom ncdf4 ncvar_get
 #' @rdname netcdf
 #' @return extracted netcdf4 components
-extract_var <- function(data, vars){
+extract_var <- function(data, vars = NULL){
   if (!inherits(data, "ncdf4")) abort("Data supplied is not of class ncdf4")
+  if (is_missing(vars)){vars <- names(data$var)}
 
   out <- map(vars, ~ncdf4::ncvar_get(data,.x))
 
