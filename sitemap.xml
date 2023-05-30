@@ -10,16 +10,16 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/articles/1-class.html</loc>
+  </url>
+  <url>
+    <loc>/articles/2-create.html</loc>
+  </url>
+  <url>
+    <loc>/articles/3-glyph.html</loc>
+  </url>
+  <url>
     <loc>/articles/cubble.html</loc>
-  </url>
-  <url>
-    <loc>/articles/design.html</loc>
-  </url>
-  <url>
-    <loc>/articles/glyph.html</loc>
-  </url>
-  <url>
-    <loc>/articles/import.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -91,9 +91,6 @@
     <loc>/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/prcp_aus.html</loc>
-  </url>
-  <url>
     <loc>/reference/river.html</loc>
   </url>
   <url>
@@ -107,9 +104,6 @@
   </url>
   <url>
     <loc>/reference/test-data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tmax_hist.html</loc>
   </url>
   <url>
     <loc>/reference/unfold.html</loc>

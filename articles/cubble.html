@@ -60,13 +60,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/design.html">Explanation of the cubble data structure</a>
+      <a href="../articles/1-class.html">1. The cubble class</a>
     </li>
     <li>
-      <a href="../articles/glyph.html">Making a glyph map</a>
+      <a href="../articles/2-create.html">2. Creation and coercion</a>
     </li>
     <li>
-      <a href="../articles/import.html">Importing spatio-temporal data into a cubble</a>
+      <a href="../articles/3-glyph.html">3. Making a glyph map</a>
     </li>
   </ul>
 </li>
@@ -110,15 +110,14 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <p>Global Historical Climatology Network (GHCN) provides daily climate
 measures from stations across the world. The dataset
-<code>tmax_hist</code> extracts the maximum temperature for 39
+<code>climate_aus</code> extracts the maximum temperature for 639
 Australian stations in the period 1970 - 1975 and 2016 - 2020 from the
 full Australian historical records starting from year 1969.
-<code>tmax_hist</code> is already in a cubble, with <code>id</code> as
-the key, <code>yearmonth</code> as the index, and
-<code>c(longitude, latitude)</code> as the coordinates. This vignette
-shows the basic manipulation of cubble in an example to compares the
-maximum temperature in these two periods for weather stations in
-Victoria, Australia.</p>
+<code>climate_aus</code> is already in a cubble, with <code>id</code> as
+the key, <code>date</code> as the index, and <code>c(long, lat)</code>
+as the coordinates. This vignette shows the basic manipulation of cubble
+in an example to compares the maximum temperature in these two periods
+for weather stations in Victoria, Australia.</p>
 <div class="section level2">
 <h2 id="spatial-manipulation">Spatial manipulation<a class="anchor" aria-label="anchor" href="#spatial-manipulation"></a>
 </h2>
@@ -154,6 +153,10 @@ form:</p>
 <div class="section level2">
 <h2 id="temporal-manipulation">Temporal manipulation<a class="anchor" aria-label="anchor" href="#temporal-manipulation"></a>
 </h2>
+<p><code><a href="../reference/face.html">face_temporal()</a></code> switches a spatial (nested) cubble into
+a temporal (long) one for temporal operations: The long form cubble is
+for operations whose output is cross-identified by <code>key</code> and
+<code>index</code>.</p>
 <p>We would also like to summarise the daily recording into monthly to
 smooth the maximum temperature and since it is also a time dimension
 operation, we can keep using the long form:</p>
@@ -180,6 +183,7 @@ operation, we can keep using the long form:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00076031     9  22.4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00076031    10  24.3</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 926 more rows</span></span></span></code></pre></div>
+<!-- `face_spatial()` switches a temporal (long) cubble back to the spatial (nested) one for spatial operations and operations summarising temporal information as per location, for example, calculating the average maximum temperature: -->
 </div>
 <div class="section level2">
 <h2 id="the-final-step">The final step<a class="anchor" aria-label="anchor" href="#the-final-step"></a>
