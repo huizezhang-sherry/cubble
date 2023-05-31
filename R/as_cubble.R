@@ -219,7 +219,7 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
 
   # here assume the geometry column in an sftime object is always sfc_POINT
   data <- data %>%
-    mutate(long = st_coordinates(.)[,1], lat = st_coordinates(.)[,2])
+    mutate(long = sf::st_coordinates(.)[,1], lat = sf::st_coordinates(.)[,2])
 
   if (quo_is_missing(coords)){
     coords = quo(c("long", "lat"))

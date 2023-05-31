@@ -47,7 +47,7 @@ nested <- climate_flat %>% as_cubble(key = id, index = date, coords = c(long, la
 nested
 ```
 
-Check the vignette [1. The cubble class](class.html) for more details on the class deisgn. 
+Check the vignette [1. The cubble class](articles/cb1class.html) for more details on the class deisgn. 
 
 You can also create a cubble object by supplying the spatial and temporal component separately in `make_cubble()`. This allows you to use an `sf` object for the spatial component and a `tsibble` object for the temporal component. The `sf` and `tsibble` class will be carried over to the cubble object: 
 
@@ -57,13 +57,13 @@ class(cb_nested)
 class(cb_nested$ts[[1]])
 ```
 
-Check the vignette [2. Creation and coercion](create.html) for more on `make_cubble()` and coerce from other objects: netcdf, [stars objects](https://r-spatial.github.io/stars/), and [sftime objects](https://r-spatial.github.io/sftime/).
+Check the vignette [2. Creation and coercion](articles/cb2create.html) for more on `make_cubble()` and coerce from other objects: netcdf, [stars objects](https://r-spatial.github.io/stars/), and [sftime objects](https://r-spatial.github.io/sftime/).
 
 ## Pivot between the spatial and temporal cubble
 
 The pair of verbs, `face_temporal()` and `face_spatial()`, pivot the cubble object between the spatial and temporal sides. 
 
-Check [Getting started](cubble.html) and the vignette [3. Making a glyph map](glyph.html) for operating on the spatial and temporal cubble to make spatio-temporal visualisation.
+Check [Getting started](articles/cubble.html) and the vignette [3. Making a glyph map](articles/cb3glyph.html) for operating on the spatial and temporal cubble to make spatio-temporal visualisation.
 
 
 ## Misc

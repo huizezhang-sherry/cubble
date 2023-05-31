@@ -1,0 +1,96 @@
+---
+title: "2. Creation and coercion"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{2. create}
+  %\VignetteEngine{knitr::rmarkdown}
+   %\usepackage[utf8]{inputenc}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  warning = FALSE,
+  message = FALSE
+)
+
+library(cubble)
+```
+
+This article shows you how to create a cubble from data in the wild. You should have already seen examples of constructing a cubble from a tibble in the README page and here are more examples that construct a cubble from:  
+
+  - separate spatial and temporal tables
+  - a `tibble` object
+  - NetCDF data
+  - an `stars` object
+  - an `sftime` object 
+
+# Create from separate spatial and temporal tables
+
+Spatio-temporal data may arrives in separate tables for analysts. For example, in climate data, analysts may initially receive station data containing geographic location information, variables recorded and their recording periods. They can then query the temporal variables using the stations of interest to obtain the corresponding temporal data. Alternatively, analyses may begin as purely spatial or temporal, and analysts may obtain additional temporal or spatial data to expand the result to spatio-temporal.
+
+The function `make_cubble()` composes a cubble object from a spatial table (`spatial`) and a temporal table (`temporal`) with the three attributes `key`, `index`, and `coords` introduced in [1. The cubble class](class.html). The following code creates the nested `cubble`: 
+
+```{r}
+make_cubble(spatial = stations, temporal = meteo,
+            key = id, index = date, coords = c(long, lat))
+```
+
+The `key` and `index` argument comes from the same arguments from the tsibble objects and `coords` derives from the geometry column in an sf object. Hence, the corresponding argument can be safely omitted, if the spatial data is an sf object, i.e. `stations_sf`, or the temporal data is a tsibble object, i.e. `meteo_ts`. The sf and tsibble class from the input will be carried over to the cubble object:
+
+```{r echo = TRUE}
+(res <- make_cubble(spatial = stations_sf, temporal = meteo_ts))
+class(res)
+class(res$ts[[1]])
+```
+  
+# Coerce from foregin objects
+
+## a `tibble` object
+
+The dataset `climate_flat` joins the spatial data, `stations`, with the temporal data, `meteo`, to a single tibble object and it can be coerced into a cubble using:
+
+```{r}
+climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
+```
+
+## NetCDF data
+
+In `R`, packages for wrangling NetCDF data include a high-level R interface: `ncdf4`, a low-level interface that calls a C-interface: `RNetCDF`, and a tidyverse implementation: `tidync`. The code below casts a NetCDF object in the ncdf4 class into a cubble object:
+
+```{r echo = TRUE}
+path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
+raw <- ncdf4::nc_open(path)
+as_cubble(raw)
+```
+
+Sometimes, one may want to read in a subset of the NetCDF data and the argument `vars`, `long_range` and `lat_range` can be used to subset on the variable and the grid resolution:
+
+```{r echo = TRUE, eval = FALSE}
+as_cubble(raw, vars = "q",
+          long_range = seq(-180, 180, 1), lat_range = seq(-90, 90, 1))
+```
+
+We would recommend reducing to about 300 $\times$ 300 grid points for three daily variables in one year. A 300 by 300 spatial grid can be a bounding box of [100, -80, 180, 0] at 0.25 degree resolution or a global bounding box [-180, -90, 180, -90] at 1 degree resolution.
+
+
+## An `stars` object 
+  
+```{r}
+tif <- system.file("tif/L7_ETMs.tif", package = "stars")
+x <- stars::read_stars(tif)
+x %>% as_cubble()
+```
+
+When the `dimensions` object is too complex for `cubble` to handle, the package will emit an message. 
+
+## An `sftime` object 
+
+```{r}
+dt <- climate_flat %>%
+  sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) %>%
+  sftime::st_as_sftime()
+dt %>% as_cubble(key = id, index = date)
+```
+
