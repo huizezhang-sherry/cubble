@@ -60,13 +60,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/1-class.html">1. The cubble class</a>
+      <a href="articles/cb1class.html">1. The cubble class</a>
     </li>
     <li>
-      <a href="articles/2-create.html">2. Creation and coercion</a>
+      <a href="articles/cb2create.html">2. Creation and coercion</a>
     </li>
     <li>
-      <a href="articles/3-glyph.html">3. Making a glyph map</a>
+      <a href="articles/cb3glyph.html">3. Making a glyph map</a>
     </li>
   </ul>
 </li>
@@ -128,25 +128,22 @@
 <span><span class="co">#&gt; 1 ASN00086038  145. -37.7  78.4 essendon airport   95866 &lt;tibble [10 × 4]&gt;</span></span>
 <span><span class="co">#&gt; 2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 &lt;tibble [10 × 4]&gt;</span></span>
 <span><span class="co">#&gt; 3 ASN00086282  145. -37.7 113.  melbourne airport  94866 &lt;tibble [10 × 4]&gt;</span></span></code></pre></div>
-<p>Check the vignette <a href="class.html">1. The cubble class</a> for more details on the class deisgn.</p>
+<p>Check the vignette <a href="articles/cb1class.html">1. The cubble class</a> for more details on the class deisgn.</p>
 <p>You can also create a cubble object by supplying the spatial and temporal component separately in <code><a href="reference/cubble-class.html">make_cubble()</a></code>. This allows you to use an <code>sf</code> object for the spatial component and a <code>tsibble</code> object for the temporal component. The <code>sf</code> and <code>tsibble</code> class will be carried over to the cubble object:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/huizezhang-sherry/cubble" class="external-link">cubble</a></span><span class="op">)</span></span>
-<span><span class="va">cb_nested</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations_sf</span>, temporal <span class="op">=</span> <span class="va">meteo_ts</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cb_nested</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations_sf</span>, temporal <span class="op">=</span> <span class="va">meteo_ts</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">cb_nested</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "spatial_cubble_df" "cubble_df"         "sf"               </span></span>
 <span><span class="co">#&gt; [4] "tbl_df"            "tbl"               "data.frame"</span></span>
-<span><span class="va">cb_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/face.html">face_temporal</a></span><span class="op">(</span><span class="va">cb_nested</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">cb_long</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "temporal_cubble_df" "cubble_df"          "tbl_ts"            </span></span>
-<span><span class="co">#&gt; [4] "tbl_df"             "tbl"                "data.frame"</span></span></code></pre></div>
-<p>Check the vignette <a href="create.html">2. Creation and coercion</a> for more on <code><a href="reference/cubble-class.html">make_cubble()</a></code> and coerce from other objects: netcdf, <a href="https://r-spatial.github.io/stars/" class="external-link">stars objects</a>, and <a href="https://r-spatial.github.io/sftime/" class="external-link">sftime objects</a>.</p>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">cb_nested</span><span class="op">$</span><span class="va">ts</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "tbl_ts"     "tbl_df"     "tbl"        "data.frame"</span></span></code></pre></div>
+<p>Check the vignette <a href="articles/cb2create.html">2. Creation and coercion</a> for more on <code><a href="reference/cubble-class.html">make_cubble()</a></code> and coerce from other objects: netcdf, <a href="https://r-spatial.github.io/stars/" class="external-link">stars objects</a>, and <a href="https://r-spatial.github.io/sftime/" class="external-link">sftime objects</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="pivot-between-the-spatial-and-temporal-cubble">Pivot between the spatial and temporal cubble<a class="anchor" aria-label="anchor" href="#pivot-between-the-spatial-and-temporal-cubble"></a>
 </h2>
 <p>The pair of verbs, <code><a href="reference/face.html">face_temporal()</a></code> and <code><a href="reference/face.html">face_spatial()</a></code>, pivot the cubble object between the spatial and temporal sides.</p>
-<p>Check <a href="cubble.html">Getting started</a> and the vignette <a href="glyph.html">3. Making a glyph map</a> for operating on the spatial and temporal cubble to make spatio-temporal visualisation.</p>
+<p>Check <a href="articles/cubble.html">Getting started</a> and the vignette <a href="articles/cb3glyph.html">3. Making a glyph map</a> for operating on the spatial and temporal cubble to make spatio-temporal visualisation.</p>
 </div>
 <div class="section level2">
 <h2 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a>

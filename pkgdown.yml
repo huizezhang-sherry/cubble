@@ -2,9 +2,9 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  1-class: 1-class.html
-  2-create: 2-create.html
-  3-glyph: 3-glyph.html
+  cb1class: cb1class.html
+  cb2create: cb2create.html
+  cb3glyph: cb3glyph.html
   cubble: cubble.html
-last_built: 2023-05-30T05:09Z
+last_built: 2023-05-31T03:54Z
 

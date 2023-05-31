@@ -10,13 +10,13 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/1-class.html</loc>
+    <loc>/articles/cb1class.html</loc>
   </url>
   <url>
-    <loc>/articles/2-create.html</loc>
+    <loc>/articles/cb2create.html</loc>
   </url>
   <url>
-    <loc>/articles/3-glyph.html</loc>
+    <loc>/articles/cb3glyph.html</loc>
   </url>
   <url>
     <loc>/articles/cubble.html</loc>
@@ -92,9 +92,6 @@
   </url>
   <url>
     <loc>/reference/river.html</loc>
-  </url>
-  <url>
-    <loc>/reference/simplify_sf.html</loc>
   </url>
   <url>
     <loc>/reference/spatial.html</loc>
