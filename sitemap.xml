@@ -34,9 +34,6 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/add_geometry_column.html</loc>
-  </url>
-  <url>
     <loc>/reference/as_cubble.html</loc>
   </url>
   <url>
@@ -82,7 +79,10 @@
     <loc>/reference/key.html</loc>
   </url>
   <url>
-    <loc>/reference/make.html</loc>
+    <loc>/reference/make_spatial_sf.html</loc>
+  </url>
+  <url>
+    <loc>/reference/make_temporal_tsibble.html</loc>
   </url>
   <url>
     <loc>/reference/netcdf.html</loc>
