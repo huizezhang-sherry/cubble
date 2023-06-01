@@ -28,3 +28,9 @@ add_geometry_column = function(x, sfc = NULL, crs, silent = FALSE) {
 }
 
 
+#' @rdname make
+#' @export
+make_spatial_sf <- function(data, ...){
+  stopifnot(is_cubble_spatial(data))
+  add_geometry_column(data)
+}

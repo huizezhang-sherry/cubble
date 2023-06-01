@@ -146,7 +146,7 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
     select(as_name(index), setdiff(colnames(temporal), as_name(index)))
 
   out <- suppressMessages(
-    dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
+    dplyr::inner_join(spatial, temporal %>% nest(ts = -by)) %>% rowwise()
   )
 
   new_spatial_cubble(

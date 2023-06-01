@@ -48,15 +48,10 @@ face_spatial.temporal_cubble_df <- function(data) {
     unfoldd_var <- intersect(names(data), names(spatial)) %>%
       setdiff(key_name)
 
-    data_no_attr <- as_tibble(data)
-    attr(data_no_attr, "key") <- NULL
-    attr(data_no_attr, "index") <- NULL
-    attr(data_no_attr, "coords") <- NULL
-    attr(data_no_attr, "spatial") <- NULL
-    attr(data_no_attr, "groups") <- NULL
-    temporal <- data_no_attr %>% tidyr::nest(ts = -key_name)
+    class(data) <- setdiff(class(data), cb_temporal_cls)
+    temporal <- data %>% tidyr::nest(ts = -key_name)
 
-    out <- spatial %>%  dplyr::left_join(temporal, by = key_name) %>% rowwise()
+    out <- spatial %>% dplyr::left_join(temporal, by = key_name) %>% rowwise()
 
   } else if (length(key) == 2){
     spatial <- spatial %>%  tidyr::nest(.val = -key_name[1])
@@ -69,3 +64,11 @@ face_spatial.temporal_cubble_df <- function(data) {
     )
 }
 
+remove_attrs <- function(data){
+  attr(data, "key") <- NULL
+  attr(data, "index") <- NULL
+  attr(data, "coords") <- NULL
+  attr(data, "spatial") <- NULL
+  attr(data, "groups") <- NULL
+  data
+}

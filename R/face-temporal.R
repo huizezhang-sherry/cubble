@@ -28,6 +28,7 @@ face_temporal.spatial_cubble_df <- function(data, col){
   }
   index <- index_var(data)
   coords <- coords(data)
+  spatial <- spatial(data)
 
   class_l <- length(class(data))
   class(data) <- class(data)[2:class_l]
@@ -43,7 +44,6 @@ face_temporal.spatial_cubble_df <- function(data, col){
   # organise spatial variables into `spatial`
   class(data) <- class(data)[class(data) != "cubble_df"]
   if (".val" %in% colnames(data)) data <- as_tibble(data)
-  spatial <- data %>%  select(-!!col)
   if (".val" %in% colnames(spatial)) spatial <- spatial %>%  tidyr::unnest(.data$.val)
 
   if (is_tsibble){
