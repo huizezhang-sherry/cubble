@@ -1,15 +1,16 @@
-#' add geometry list column to cubble_df object
+#' Promote the spatial component in cubble to an sf object after creation
 #'
 #' add geometry list column to cubble_df object
-#' @param x object of class \code{cubble}
+#' @param x object of class \code{spatial_cubble_df}
 #' @param sfc object of class \code{sfc} (see package sf)
 #' @param crs object of class \code{crs} (see package sf); if missing 'OGC:CRS84' is assumed (WGS84) and a message is emitted
 #' @param silent logical; suppress message?
 #' @export
+#' @seealso [make_temporal_tsibble]
 #' @examples
-#' climate_mel %>% add_geometry_column()
-add_geometry_column = function(x, sfc = NULL, crs, silent = FALSE) {
-	stopifnot(is_cubble(x),
+#' climate_mel %>% make_spatial_sf()
+make_spatial_sf <-  function(x, sfc = NULL, crs, silent = FALSE) {
+	stopifnot(is_cubble_spatial(x),
 			  is.null(sfc) || inherits(sfc, "sfc"),
 			  missing(crs) || inherits(crs, "crs"),
 			  all(c("long", "lat") %in% names(x)))
@@ -25,12 +26,4 @@ add_geometry_column = function(x, sfc = NULL, crs, silent = FALSE) {
 	}
 	x$geometry = sfc
 	x %>% sf::st_as_sf() %>% update_cubble()
-}
-
-
-#' @rdname make
-#' @export
-make_spatial_sf <- function(data, ...){
-  stopifnot(is_cubble_spatial(data))
-  add_geometry_column(data)
 }
