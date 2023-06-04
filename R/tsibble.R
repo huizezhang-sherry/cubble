@@ -18,3 +18,5 @@ make_temporal_tsibble <- function(x, ...){
     out, key = key_vars(out), index = index_var(out), coords = coords, spatial = spatial)
 
 }
+
+

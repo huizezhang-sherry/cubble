@@ -49,7 +49,7 @@ face_spatial.temporal_cubble_df <- function(data) {
       setdiff(key_name)
 
     class(data) <- setdiff(class(data), cb_temporal_cls)
-    temporal <- data %>% tidyr::nest(ts = -key_name)
+    temporal <- data %>% remove_attrs() %>% tidyr::nest(ts = -key_name)
 
     out <- spatial %>% dplyr::left_join(temporal, by = key_name) %>% rowwise()
 
