@@ -59,3 +59,48 @@
 
 #' Australia river data
 "river"
+
+
+
+#' Daily COVID count data and Victoria LGA
+#'
+#' Daily COVID count data (\code{covid}) from 2022-01-01 to 2020-03-23 in a
+#' tsibble object (\code{date}, \code{lga}, \code{n}, and \code{avg_7day}).
+#' Victoria Local Government Area (LGA) spatial geometry in an sf object
+#' (\code{lga_name_2018} and \code{geometry})
+#'
+#'
+#'
+#' \describe{
+#'   \item{date}{date object, from 2022-01-01 to 2020-03-23}
+#'   \item{lga}{Victoria Local Government Area (LGA) in Australia}
+#'   \item{n}{COVID-19 case count}
+#'   \item{avg_7day}{rolling mean of \code{n} in a 7 day window. Calculate with \code{mutate(avg_7day = slider::slide_dbl(n, mean, .before = 6))}}
+#'   \item{lga_name_2018}{LGA encoding by Australia Bureau of Statistics,
+#'   slightly differ from the encoding used by the Department of Health in the \code{covid} data}
+#'   \item{geometry}{multipolygon geometry of each LGA}
+#' }
+#' @examples
+#' library(sf)
+#' library(dplyr)
+#' # prompt msg on the key mismatch between the two datasets
+#' make_cubble(lga, covid, by = c("lga_name_2018" = "lga"))
+#' check_res <- check_key(lga, covid, by = c("lga_name_2018" = "lga"))
+#'
+#' # fix mismatch
+#' lga2 <- lga |>
+#'   rename(lga = lga_name_2018) |>
+#'   mutate(lga = ifelse(lga == "Kingston (C) (Vic.)", "Kingston (C)", lga),
+#'          lga = ifelse(lga == "Latrobe (C) (Vic.)", "Latrobe (C)", lga)) |>
+#'   filter(!lga %in% check_res$others$spatial)
+#' covid2 <- covid |> filter(!lga %in% check_res$others$temporal)
+#'
+#' make_cubble(spatial = lga2, temporal = covid2)
+#' @rdname covid
+"covid"
+
+#' @rdname covid
+"lga"
+
+
+
