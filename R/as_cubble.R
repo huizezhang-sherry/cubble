@@ -53,8 +53,8 @@ as_cubble <- function(data, key, index, coords, ...) {
 #' @export
 as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   if (is_tsibble(data)){
-    key <- sym(tsibble::key_vars(data))
-    index <- sym(tsibble::index(data))
+    key <- sym(key_vars(data))
+    index <- sym(index(data))
   } else{
     key <- enquo(key)
     index <- enquo(index)

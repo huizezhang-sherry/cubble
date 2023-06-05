@@ -15,8 +15,6 @@ print.cubble_df <- function(x, width = NULL, ...,
   ))
 }
 
-
-#' @importFrom  tibble tbl_sum
 #' @rdname cubble-print
 #' @export
 tbl_sum.cubble_df <- function(x) {

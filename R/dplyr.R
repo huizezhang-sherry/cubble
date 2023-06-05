@@ -5,7 +5,7 @@
 #' @param .by,.groups used by dplyr verbs
 #'
 #' @references https://dplyr.tidyverse.org/reference/dplyr_extending.html
-#' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct select
+#' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @importFrom utils head
 #' @rdname dplyr
 #' @export
@@ -50,8 +50,8 @@ select.temporal_cubble_df <- function(.data, ...){
   dplyr_reconstruct(out, .data)
 }
 
+#' @rdname dplyr
 #' @export
-#' @importFrom dplyr group_by_prepare
 group_by.spatial_cubble_df <- function(.data, ..., .add, .drop){
   vars <- enquos(..., .named = TRUE)
   grp_vars <- names(vars)
@@ -65,8 +65,8 @@ group_by.spatial_cubble_df <- function(.data, ..., .add, .drop){
   )
 }
 
+#' @rdname dplyr
 #' @export
-#' @importFrom dplyr group_by_prepare
 group_by.temporal_cubble_df <- function(.data, ..., .add, .drop){
   vars <- enquos(..., .named = TRUE)
   grp_vars <- names(vars)

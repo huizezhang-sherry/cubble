@@ -1,6 +1,6 @@
 #' @import rlang vctrs
 #' @importFrom stats setNames
-#' @importFrom dplyr filter group_by ungroup summarise n_distinct mutate select left_join inner_join top_n arrange across ends_with rename
+#' @importFrom dplyr filter group_by ungroup summarise mutate select left_join inner_join arrange
 #' @importFrom dplyr new_rowwise_df new_grouped_df group_data rowwise bind_rows distinct rename
 #' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr nest unnest
