@@ -18,12 +18,6 @@ unfold <- function(data, ...) {
 
 #' @rdname unfold
 #' @export
-unfold.cubble_df <- function(data, ...){
-  NextMethod()
-}
-
-#' @rdname unfold
-#' @export
 unfold.spatial_cubble_df <- function(data, ...){
   cli::cli_abort("{.fn unfold} currently can only be used on a long form cubble
                  (class {.code spatial_cubble_df})")

@@ -2,14 +2,11 @@
 % Please edit documentation in R/unfold.R
 \name{unfold}
 \alias{unfold}
-\alias{unfold.cubble_df}
 \alias{unfold.spatial_cubble_df}
 \alias{unfold.temporal_cubble_df}
 \title{Move spatial variables into the long form}
 \usage{
 unfold(data, ...)
-
-\method{unfold}{cubble_df}(data, ...)
 
 \method{unfold}{spatial_cubble_df}(data, ...)
 
