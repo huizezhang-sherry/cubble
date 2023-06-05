@@ -39,7 +39,8 @@ tbl_sum.spatial_cubble_df <- function(x){
 
 
   # header line 2 - print bbox
-  if (!is_sf(x)) {
+  x_is_sf <- is_sf(x)
+  if (!x_is_sf) {
     coord_vars <- coords(x)
     # when there are two keys
     if (all(!coord_vars %in% names(x))) x <- x %>% unnest(.val)
@@ -47,14 +48,18 @@ tbl_sum.spatial_cubble_df <- function(x){
   }
 
   line2 <- glue::glue("[", paste0(sf::st_bbox(x), collapse = ", "), "]")
+  if (!x_is_sf) {
+    line2 <- glue::glue(line2, ", Missing CRS!")
+  } else{
+    line2 <- glue::glue(line2, ", {sf::st_crs(x, parameters = TRUE)$Name}")
+  }
 
   # header line 3: temporal variables
   all <- map(x$ts[[1]], tibble::type_sum)
-  temporal_vars <- all[names(all) != index]
   line3 <- glue::glue_collapse(
-    glue::glue("{names(temporal_vars)} [{temporal_vars}]"), sep = ", ")
+    glue::glue("{names(all)} [{all}]"), sep = ", ")
 
-  c("cubble" = line1, "extent" = line2, "temporal" = line3)
+  c("cubble" = line1, "spatial" = line2, "temporal" = line3)
 
 }
 
@@ -96,7 +101,7 @@ tbl_sum.temporal_cubble_df <- function(x){
   line3 <- glue::glue_collapse(
     glue::glue("{names(spatial_vars)} [{spatial_vars}]"), sep = ", ")
 
-  c("cubble" = line1, "extent" = line2, "spatial" = line3)
+  c("cubble" = line1, "temporal" = line2, "spatial" = line3)
 
 }
 
