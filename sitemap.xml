@@ -67,9 +67,6 @@
     <loc>/reference/face.html</loc>
   </url>
   <url>
-    <loc>/reference/fill_gaps.cubble_df.html</loc>
-  </url>
-  <url>
     <loc>/reference/glyph.html</loc>
   </url>
   <url>
@@ -107,6 +104,9 @@
   </url>
   <url>
     <loc>/reference/test-data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tsibble.html</loc>
   </url>
   <url>
     <loc>/reference/unfold.html</loc>
