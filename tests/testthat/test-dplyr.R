@@ -36,19 +36,19 @@ test_that("dplyr verbs also work when there is sf /tsibble", {
 
   # mutate - dply_row_slice
   expect_error((res <- a %>% filter(elev > 40)), NA)
-  #expect_true(test_class_sf(res))
+  expect_true(test_class_sf(res))
   expect_error((res <- b %>% filter(prcp > 0)), NA)
   expect_true(test_class_tsibble(res))
 
   # mutate - dply_col_modify
   expect_error((res <- a %>% mutate(elev2 = elev + 10)), NA)
-  #expect_true(test_class_sf(res))
+  expect_true(test_class_sf(res))
   expect_error((res <- b %>% mutate(prcp2 = prcp + 10)), NA)
   expect_true(test_class_tsibble(res))
 
   # arrange -  sf: dplyr_row_slice, tsibble: arrange.temporal_cubble_df
   expect_error((res <- a %>% arrange(wmo_id)), NA)
-  #expect_true(test_class_sf(res))
+  expect_true(test_class_sf(res))
   expect_error((res <- b %>% arrange(prcp)), NA)
   expect_true(test_class_tsibble(res))
 

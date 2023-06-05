@@ -11,6 +11,9 @@
 \alias{dplyr_row_slice.temporal_cubble_df}
 \alias{dplyr_reconstruct.spatial_cubble_df}
 \alias{dplyr_reconstruct.temporal_cubble_df}
+\alias{mutate.spatial_cubble_df}
+\alias{filter.spatial_cubble_df}
+\alias{arrange.spatial_cubble_df}
 \title{Access to dplyr verbs}
 \usage{
 \method{arrange}{temporal_cubble_df}(.data, ...)
@@ -32,6 +35,12 @@
 \method{dplyr_reconstruct}{spatial_cubble_df}(data, template)
 
 \method{dplyr_reconstruct}{temporal_cubble_df}(data, template)
+
+\method{mutate}{spatial_cubble_df}(.data, ...)
+
+\method{filter}{spatial_cubble_df}(.data, ...)
+
+\method{arrange}{spatial_cubble_df}(.data, ...)
 }
 \arguments{
 \item{.by, .groups}{used by dplyr verbs}

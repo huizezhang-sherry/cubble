@@ -183,3 +183,35 @@ dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
 }
 
 globalVariables(c("groups"))
+
+
+# those should ideally not needed
+#' @export
+#' @rdname dplyr
+mutate.spatial_cubble_df <- function(.data, ...){
+
+  data <- .data
+  class(.data) <- setdiff(class(.data), cb_spatial_cls)
+  res <- NextMethod()
+  dplyr_reconstruct(res, data)
+}
+
+#' @export
+#' @rdname dplyr
+filter.spatial_cubble_df <- function(.data, ...){
+
+  data <- .data
+  class(.data) <- setdiff(class(.data), cb_spatial_cls)
+  res <- NextMethod()
+  dplyr_reconstruct(res, data)
+}
+
+#' @export
+#' @rdname dplyr
+arrange.spatial_cubble_df <- function(.data, ...){
+
+  data <- .data
+  class(.data) <- setdiff(class(.data), cb_spatial_cls)
+  res <- NextMethod()
+  dplyr_reconstruct(res, data)
+}

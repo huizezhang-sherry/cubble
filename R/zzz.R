@@ -11,6 +11,9 @@
   s3_register("dplyr::group_by", "temporal_cubble_df")
   s3_register("dplyr::summarise", "spatial_cubble_df")
   s3_register("dplyr::summarise", "temporal_cubble_df")
+  s3_register("dplyr::mutate", "spatial_cubble_df")
+  s3_register("dplyr::filter", "spatial_cubble_df")
+  s3_register("dplyr::arrange", "spatial_cubble_df")
 
   #s3_register("tsibble::index_by", "cubble_df")
   #s3_register("dplyr::ungroup", "cubble_df")
