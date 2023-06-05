@@ -64,7 +64,7 @@ spatial <- function(data){
 #' @rdname spatial
 #' @export
 spatial.spatial_cubble_df <- function(data){
-  class(data) <- setdiff(class(data), c("spatial_cubble_df","cubble_df"))
+  class(data) <- setdiff(class(data), c("spatial_cubble_df","cubble_df", "rowwise_df"))
   data %>% select(-"ts") %>% remove_attrs()
 }
 
