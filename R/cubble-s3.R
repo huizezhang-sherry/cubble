@@ -349,7 +349,6 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
 
   # Column or matrix subsetting if nargs() == 2L
   if (n_real_args <= 2L) {
-
     j <- i
     i <- NULL
     j_arg <- i_arg
@@ -373,13 +372,13 @@ new_cubble <- function(data, key, index, coords, spatial, form, tsibble_attr = N
   dplyr_reconstruct(out, x)
 }
 
-
 `[[.cubble_df` <- function(x, value){
   out <- NextMethod()
   dplyr_reconstruct(out, x)
 }
 
-`[[<-.cubble_df` <- function(x, value){
+#' @export
+`[[<-.cubble_df` <- function(x, i, value){
   out <- NextMethod()
   dplyr_reconstruct(out, x)
 }
