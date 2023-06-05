@@ -138,8 +138,8 @@ attributes for a nested cubble:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">climate_mel</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name              wmo_id ts               </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
@@ -185,8 +185,8 @@ non-raining day can be done by:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">climate_mel</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tmax_avg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name              wmo_id tmax_avg ts      </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866     26.5 <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
@@ -207,9 +207,9 @@ cubble along with its attributes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">climate_mel</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">long</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  key: id [3], index: date, long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:  2020-01-01 -- 2020-01-10 [1D], no gaps</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># spatial: long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: 2020-01-01 -- 2020-01-10 [1D], no gaps</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
 <span><span class="co">#&gt;    id          date        prcp  tmax  tmin</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00086038 2020-01-01     0  26.8  11  </span></span>

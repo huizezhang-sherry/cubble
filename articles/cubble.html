@@ -134,8 +134,8 @@ form:</p>
 <span></span>
 <span><span class="va">tmax</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [79], index: date, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [141.2657, -39.1297, 149.9158, -34.2358]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [141.2657, -39.1297, 149.9158, -34.2358], Missing CRS!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;    id           long   lat  elev name                wmo_id ts                </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031  142. -<span style="color: #BB0000;">34.2</span>  50   mildura airport      <span style="text-decoration: underline;">94</span>693 <span style="color: #949494;">&lt;tibble [366 × 4]&gt;</span></span></span>
@@ -167,9 +167,9 @@ operation, we can keep using the long form:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tmax</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  key: id [79], index: month, long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:  1 -- 12 [1], has gaps!</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># spatial: long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [79], index: month, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: 1 -- 12 [1], has gaps!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
 <span><span class="co">#&gt;    id          month  tmax</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031     1  33.2</span></span>
@@ -195,9 +195,9 @@ can move time invariant variable into the long form with
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmax</span> <span class="op">&lt;-</span> <span class="va">tmax</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/unfold.html">unfold</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span></span>
 <span><span class="va">tmax</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:  key: id [79], index: month, long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:  1 -- 12 [1], has gaps!</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># spatial: long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [79], index: month, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: 1 -- 12 [1], has gaps!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
 <span><span class="co">#&gt;    id          month  tmax  long   lat</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031     1  33.2  142. -<span style="color: #BB0000;">34.2</span></span></span>

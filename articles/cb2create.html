@@ -135,8 +135,8 @@ the nested <code>cubble</code>:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations</span>, temporal <span class="op">=</span> <span class="va">meteo</span>,</span>
 <span>            key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name              wmo_id ts               </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
@@ -152,8 +152,8 @@ be carried over to the cubble object:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations_sf</span>, temporal <span class="op">=</span> <span class="va">meteo_ts</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form, [sf]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name   wmo_id            geometry ts      </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essen…  <span style="text-decoration: underline;">95</span>866 (144.9066 -37.7276) <span style="color: #949494;">&lt;tbl_ts&gt;</span></span></span>
@@ -178,8 +178,8 @@ single tibble object and it can be coerced into a cubble using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">climate_flat</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name              wmo_id ts               </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
@@ -199,8 +199,8 @@ object in the ncdf4 class into a cubble object:</p>
 <span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="fu">ncdf4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_open.html" class="external-link">nc_open</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span><span class="va">raw</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [26565], index: time, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [113, -53, 153, -12]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: q [dbl], z [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [113, -53, 153, -12], Missing CRS!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: time [dttm], q [dbl], z [dbl]</span></span></span>
 <span><span class="co">#&gt;       id  long   lat ts              </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1  113    -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
@@ -234,8 +234,8 @@ of [100, -80, 180, 0] at 0.25 degree resolution or a global bounding box
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">stars</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/stars/reference/read_stars.html" class="external-link">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [122848], index: time, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [288790.500000803, 9110743.00002899, 298708.50000055,</span></span></span>
-<span><span class="co"><span style="color: #949494;">#&gt; #   9120746.50002874]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [288790.500000803, 9110743.00002899, 298708.50000055,</span></span></span>
+<span><span class="co"><span style="color: #949494;">#&gt; #   9120746.50002874], Missing CRS!</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: band [int], L7_ETMs.tif [dbl]</span></span></span>
 <span><span class="co">#&gt;        id       x        y ts              </span></span>
 <span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
@@ -262,8 +262,8 @@ of [100, -80, 180, 0] at 0.25 degree resolution or a global bounding box
 <span>  <span class="fu">sftime</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sftime/man/st_as_sftime.html" class="external-link">st_as_sftime</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">dt</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form, [sf]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: prcp [dbl], tmax [dbl], tmin [dbl], date [date]</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name   wmo_id            geometry ts      </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essen…  <span style="text-decoration: underline;">95</span>866 (144.9066 -37.7276) <span style="color: #949494;">&lt;tibble&gt;</span></span></span>

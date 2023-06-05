@@ -134,8 +134,8 @@ slightly differ from the encoding used by the Department of Health in the <code>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Use `check_key()` to check on the unmatched key</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The cubble is created only with sites having both spatial and temporal information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   key: lga [78], index: date, nested form, [sf]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># extent:   [140.961682, -39.1591895, 149.976291, -33.9804256]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: n [dbl], avg_7day [dbl]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial:  [140.961682, -39.1591895, 149.976291, -33.9804256], WGS 84</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], n [dbl], avg_7day [dbl]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    lga             long   lat                                  geometry ts      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Alpine (S)      147. -<span style="color: #BB0000;">36.9</span> (((146.7258 -36.45922, 146.8033 -36.4513… <span style="color: #949494;">&lt;tbl_ts&gt;</span></span>
@@ -162,8 +162,8 @@ slightly differ from the encoding used by the Department of Health in the <code>
 <span class="r-in"><span><span class="fu"><a href="cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">lga2</span>, temporal <span class="op">=</span> <span class="va">covid2</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>st_centroid assumes attributes are constant over geometries</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   key: lga [80], index: date, nested form, [sf]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># extent:   [140.961682, -39.1591895, 149.976291, -33.9804256]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: n [dbl], avg_7day [dbl]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial:  [140.961682, -39.1591895, 149.976291, -33.9804256], WGS 84</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], n [dbl], avg_7day [dbl]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    lga             long   lat                                  geometry ts      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Alpine (S)      147. -<span style="color: #BB0000;">36.9</span> (((146.7258 -36.45922, 146.8033 -36.4513… <span style="color: #949494;">&lt;tbl_ts&gt;</span></span>
