@@ -53,7 +53,7 @@
 
 \item{data, .data}{a cubble object(used as defined by the dplyr generic)}
 
-\item{cols, i, template, ...}{see \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_col_modify()}}, \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_row_slice()}},
+\item{cols, i, template, ..., .add, .drop}{see \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_col_modify()}}, \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_row_slice()}},
 and \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_reconstruct()}}}
 }
 \description{

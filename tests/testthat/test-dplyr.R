@@ -20,7 +20,7 @@ test_that("dplyr verbs also work when there is sf /tsibble", {
   # setup
   a <- make_cubble(spatial = stations_sf, temporal = meteo_ts)
   b <- a %>% face_temporal()
-  #c <- b %>% face_spatial()
+  c <- b %>% face_spatial()
 
   test_class_sf <- function(obj){
     class(obj)[1] == "spatial_cubble_df" &&

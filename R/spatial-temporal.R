@@ -112,8 +112,20 @@ face_spatial.temporal_cubble_df <- function(data) {
 }
 
 remove_attrs <- function(data){
+  UseMethod("remove_attrs")
+}
+
+remove_attrs.tbl_df <- function(data){
   attr(data, "key") <- NULL
   attr(data, "index") <- NULL
+  attr(data, "coords") <- NULL
+  attr(data, "spatial") <- NULL
+  attr(data, "groups") <- NULL
+  data
+}
+
+
+remove_attrs.tbl_ts <- function(data){
   attr(data, "coords") <- NULL
   attr(data, "spatial") <- NULL
   attr(data, "groups") <- NULL

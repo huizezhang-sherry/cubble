@@ -1,6 +1,6 @@
 #' Access to dplyr verbs
 #' @param data,.data a cubble object(used as defined by the dplyr generic)
-#' @param cols,i,template,... see [dplyr::dplyr_col_modify()], [dplyr::dplyr_row_slice()],
+#' @param cols,i,template,...,.add,.drop see [dplyr::dplyr_col_modify()], [dplyr::dplyr_row_slice()],
 #' and [dplyr::dplyr_reconstruct()]
 #' @param .by,.groups used by dplyr verbs
 #'
