@@ -180,7 +180,7 @@ new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
   if (validate) validate_temporal_cubble(data, args)
 
   attr_vars <- c(args$key, args$index)
-  suppressWarnings(data <- data %>% select(attr_vars, setdiff(colnames(data), attr_vars)))
+  suppressWarnings(data <- data[,c(attr_vars, setdiff(colnames(data), attr_vars))])
   if (is.null(args$groups)){
     groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
     out <- new_grouped_df(data, groups = groups, ...)

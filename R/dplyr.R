@@ -121,6 +121,44 @@ summarise.temporal_cubble_df <- function(.data, ..., .by = NULL, .groups = NULL)
 
 }
 
+#' @export
+#' @rdname dplyr
+rename.spatial_cubble_df <- function(.data, ...){
+  key <- key_vars(.data)
+  index <- index_var(.data)
+  coords <- coords(.data)
+  loc <-  tidyselect::eval_rename(quote(c(...)), .data)
+  class(.data) <- setdiff(class(.data), cb_spatial_cls)
+  res <- NextMethod()
+
+  if (1 %in% loc) key <- names(loc)[1]
+  if (2 %in% loc) coords[1] <- names(which(loc == 2))
+  if (3 %in% loc) coords[2] <- names(which(loc == 3))
+
+  new_spatial_cubble(
+    res, key = key, index = index, coords = coords)
+}
+
+
+#' @export
+#' @rdname dplyr
+rename.temporal_cubble_df <- function(.data, ...){
+
+  key <- key_vars(.data)
+  index <- index_var(.data)
+  coords <- coords(.data)
+  spatial <- spatial(.data)
+  loc <-  tidyselect::eval_rename(quote(c(...)), .data)
+  class(.data) <- setdiff(class(.data), cb_temporal_cls)
+  res <- NextMethod()
+
+  if (1 %in% loc) names(spatial)[1] <- key <- names(loc)[1]
+  if (2 %in% loc) index <- names(which(loc == 2))
+
+  new_temporal_cubble(
+    res, key = key, index = index, coords = coords, spatial = spatial)
+}
+
 
 #' @rdname dplyr
 #' @export
@@ -215,3 +253,5 @@ arrange.spatial_cubble_df <- function(.data, ...){
   res <- NextMethod()
   dplyr_reconstruct(res, data)
 }
+
+
