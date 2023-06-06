@@ -99,6 +99,12 @@
 <span><span class="co"># S3 method for temporal_cubble_df</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">bind_rows.temporal_cubble_df</span><span class="op">(</span><span class="va">...</span>, .id <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">bind_cols.spatial_cubble_df</span><span class="op">(</span><span class="va">...</span>, <span class="va">.name_repair</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">bind_cols.temporal_cubble_df</span><span class="op">(</span><span class="va">...</span>, <span class="va">.name_repair</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for cubble_df</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/dplyr_extending.html" class="external-link">dplyr_col_modify</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">cols</span><span class="op">)</span></span>
 <span></span>
@@ -134,7 +140,7 @@
 <dd><p>a cubble object(used as defined by the dplyr generic)</p></dd>
 
 
-<dt>cols, i, template, ..., .add, .drop</dt>
+<dt>cols, i, template, ..., .add, .drop, .id, .name_repair</dt>
 <dd><p>see <code><a href="https://dplyr.tidyverse.org/reference/dplyr_extending.html" class="external-link">dplyr::dplyr_col_modify()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/dplyr_extending.html" class="external-link">dplyr::dplyr_row_slice()</a></code>,
 and <code><a href="https://dplyr.tidyverse.org/reference/dplyr_extending.html" class="external-link">dplyr::dplyr_reconstruct()</a></code></p></dd>
 
