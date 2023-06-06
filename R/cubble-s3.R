@@ -162,7 +162,6 @@ new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
   args <- list2(...)
   if (validate) validate_spatial_cubble(data, args)
   attr_vars <- c(args$key, args$coords)
-  data <- data %>% select(unname(attr_vars), setdiff(colnames(data), c(attr_vars, "ts")), "ts")
   if (is.null(args$groups)){
     groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
     out <- new_rowwise_df(data, groups = groups, ...)
@@ -180,7 +179,6 @@ new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
   if (validate) validate_temporal_cubble(data, args)
 
   attr_vars <- c(args$key, args$index)
-  suppressWarnings(data <- data[,c(attr_vars, setdiff(colnames(data), attr_vars))])
   if (is.null(args$groups)){
     groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
     out <- new_grouped_df(data, groups = groups, ...)
