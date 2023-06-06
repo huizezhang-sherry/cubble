@@ -1,6 +1,6 @@
 #' Access to dplyr verbs
 #' @param data,.data a cubble object(used as defined by the dplyr generic)
-#' @param cols,i,template,...,.add,.drop see [dplyr::dplyr_col_modify()], [dplyr::dplyr_row_slice()],
+#' @param cols,i,template,...,.add,.drop,.id,.name_repair see [dplyr::dplyr_col_modify()], [dplyr::dplyr_row_slice()],
 #' and [dplyr::dplyr_reconstruct()]
 #' @param .by,.groups used by dplyr verbs
 #'
@@ -159,6 +159,44 @@ rename.temporal_cubble_df <- function(.data, ...){
     res, key = key, index = index, coords = coords, spatial = spatial)
 }
 
+#' @export
+#' @rdname dplyr
+bind_rows.temporal_cubble_df <- function(..., .id = NULL){
+
+  dots <- list2(...)
+  all_temporal_cubble <- all(map_lgl(dots, is_cubble_temporal))
+  same_key <- map_chr(dots, key_vars) %>% reduce(identical)
+  same_index <- map_chr(dots, index_var) %>% reduce(identical)
+  same_coords <- map_chr(dots, coords) %>% reduce(identical)
+  if (!all_temporal_cubble)
+    cli::cli_abort("All the objects needs to be temporal cubbles to bind.")
+
+  if (!same_key) cli::cli_abort("All the objects needs to have the same key")
+  if (!same_index) cli::cli_abort("All the objects needs to have the same index")
+  if (!same_coords) cli::cli_abort("All the objects needs to have the same coords")
+
+  class(.data) <- setdiff(class(.data), cb_temporal_cls)
+  res <- NextMethod()
+  spatial <- map(dots, spatial) %>% reduce(bind_rows)
+  new_temporal_cubble(
+    res, key = same_key, index = same_index, coords = same_coords, spatial = spatial)
+
+}
+
+#' @export
+#' @rdname dplyr
+bind_cols.spatial_cubble_df <- function(..., .name_repair){
+  cli::cli_abort("Not yet support {.fn bind_cols}")
+}
+
+#' @export
+#' @rdname dplyr
+bind_cols.temporal_cubble_df <- function(..., .name_repair){
+  cli::cli_abort("Not yet support {.fn bind_cols}")
+}
+
+
+
 
 #' @rdname dplyr
 #' @export
@@ -234,15 +272,18 @@ mutate.spatial_cubble_df <- function(.data, ...){
   dplyr_reconstruct(res, data)
 }
 
+
 #' @export
 #' @rdname dplyr
-filter.spatial_cubble_df <- function(.data, ...){
-
+filter.spatial_cubble_df <- function(.data,...){
   data <- .data
   class(.data) <- setdiff(class(.data), cb_spatial_cls)
   res <- NextMethod()
   dplyr_reconstruct(res, data)
 }
+
+#' @export
+dplyr::filter
 
 #' @export
 #' @rdname dplyr
