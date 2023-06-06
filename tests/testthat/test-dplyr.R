@@ -1,3 +1,4 @@
+library(dplyr)
 test_that("dplyr verbs work on nest/long cubble", {
   # setup
  cb_nested <- climate_mel
@@ -44,7 +45,7 @@ test_that("dplyr verbs work on nest/long cubble", {
   expect_true(test_class_tsibble(res))
 
   # select -  select.spatial_cubble_df,  select.temporal_cubble_df
-  expect_error((res <- a2 %>% select(-elev)), NA)
+  expect_error((res <- a %>% select(-elev)), NA)
   expect_true(test_class_sf(res))
   #expect_error((res <- b %>% select(-prcp)), NA) # not working
   #expect_true(test_class_tsibble(res))
@@ -54,15 +55,47 @@ test_that("dplyr verbs work on nest/long cubble", {
   expect_error((res <- cb_nested %>% rename(elev2 = elev)), NA)
   expect_error((res <- cb_long %>% rename(prcp2 = prcp)), NA)
   # rename on key attributes
-  expect_error((res <- cb_nested %>% rename(id2 = id)), NA)
-  expect_error((res <- cb_nested %>% rename(long2 = long)), NA)
-  expect_error((res <- cb_long %>% rename(date2 = date)), NA)
-  expect_error((res <- cb_long %>% rename(id2 = id) %>% face_spatial()), NA)
+  expect_error(cb_nested %>% rename(id2 = id), NA)
+  expect_error(cb_nested %>% rename(long2 = long), NA)
+  expect_error(cb_long %>% rename(date2 = date), NA)
+  expect_error(cb_long %>% rename(id2 = id) %>% face_spatial(), NA)
   expect_error((res <- a %>% rename(elev2 = elev)), NA)
   expect_true(test_class_sf(res))
   expect_error((res <- b %>% rename(prcp2 = prcp)), NA)
   expect_true(test_class_tsibble(res))
 
+
+  # join - mutate_join - dplyr_reconstruct()
+  # join - filter_join - dplyr_row_slice()
+  df1 <- climate_mel %>% as_tibble() %>% select(id, name) %>% head(2)
+  nested <- climate_mel %>% select(-name)
+  expect_error(nested %>% left_join(df1, by = "id"), NA)
+  expect_error(nested %>% right_join(df1, by = "id"), NA)
+  expect_error(nested %>% inner_join(df1, by = "id"), NA)
+  expect_error(nested %>% full_join(df1, by = "id"), NA)
+  expect_error(nested %>% anti_join(df1, by = "id"), NA)
+  df2 <- face_temporal(climate_mel) %>% as_tibble() %>% select(id, date, prcp)
+  long <- face_temporal(climate_mel)
+  long[,"prcp"] <- NULL
+  expect_error(long %>% left_join(df2, by = c("id", "date")), NA)
+  expect_error(long %>% right_join(df2, by = c("id", "date")), NA)
+  expect_error(long %>% inner_join(df2, by = c("id", "date")), NA)
+  expect_error(long %>% full_join(df2, by = c("id", "date")), NA)
+  expect_error(long %>% anti_join(df2, by = c("id", "date")), NA)
+
+  # bind_rows - dplyr_reconstruct, bind_rows.temporal_cubble_df
+  df1 <- climate_mel %>% head(1)
+  df2 <- climate_mel %>% tail(2)
+  expect_error(bind_rows(df1, df2), NA)
+  df1 <- climate_mel %>% face_temporal() %>% head(10)
+  df2 <- climate_mel %>% face_temporal() %>% tail(20)
+  expect_error(bind_rows(df1, df2), NA)
+
+  # relocate - dplyr_col_select, dplyr_col_select
+  expect_error(climate_mel %>% relocate(ts, .before = name), NA)
+  expect_error(climate_mel %>% face_temporal() %>% relocate(tmin), NA)
+
 })
+
 
 

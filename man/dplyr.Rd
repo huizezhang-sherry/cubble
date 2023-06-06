@@ -10,6 +10,9 @@
 \alias{summarise.temporal_cubble_df}
 \alias{rename.spatial_cubble_df}
 \alias{rename.temporal_cubble_df}
+\alias{bind_rows.temporal_cubble_df}
+\alias{bind_cols.spatial_cubble_df}
+\alias{bind_cols.temporal_cubble_df}
 \alias{dplyr_col_modify.cubble_df}
 \alias{dplyr_row_slice.spatial_cubble_df}
 \alias{dplyr_row_slice.temporal_cubble_df}
@@ -38,6 +41,12 @@
 
 \method{rename}{temporal_cubble_df}(.data, ...)
 
+bind_rows.temporal_cubble_df(..., .id = NULL)
+
+bind_cols.spatial_cubble_df(..., .name_repair)
+
+bind_cols.temporal_cubble_df(..., .name_repair)
+
 \method{dplyr_col_modify}{cubble_df}(data, cols)
 
 \method{dplyr_row_slice}{spatial_cubble_df}(data, i, ...)
@@ -59,7 +68,7 @@
 
 \item{data, .data}{a cubble object(used as defined by the dplyr generic)}
 
-\item{cols, i, template, ..., .add, .drop}{see \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_col_modify()}}, \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_row_slice()}},
+\item{cols, i, template, ..., .add, .drop, .id, .name_repair}{see \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_col_modify()}}, \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_row_slice()}},
 and \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_reconstruct()}}}
 }
 \description{
