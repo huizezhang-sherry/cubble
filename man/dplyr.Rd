@@ -13,6 +13,8 @@
 \alias{bind_rows.temporal_cubble_df}
 \alias{bind_cols.spatial_cubble_df}
 \alias{bind_cols.temporal_cubble_df}
+\alias{rowwise.spatial_cubble_df}
+\alias{rowwise.temporal_cubble_df}
 \alias{dplyr_col_modify.cubble_df}
 \alias{dplyr_row_slice.spatial_cubble_df}
 \alias{dplyr_row_slice.temporal_cubble_df}
@@ -46,6 +48,10 @@ bind_rows.temporal_cubble_df(..., .id = NULL)
 bind_cols.spatial_cubble_df(..., .name_repair)
 
 bind_cols.temporal_cubble_df(..., .name_repair)
+
+\method{rowwise}{spatial_cubble_df}(data, ...)
+
+\method{rowwise}{temporal_cubble_df}(data, ...)
 
 \method{dplyr_col_modify}{cubble_df}(data, cols)
 

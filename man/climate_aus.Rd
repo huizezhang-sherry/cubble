@@ -5,7 +5,7 @@
 \alias{climate_aus}
 \title{Australia climate data}
 \format{
-An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
+An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
 }
 \usage{
 climate_aus

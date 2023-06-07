@@ -92,10 +92,28 @@ test_that("dplyr verbs work on nest/long cubble", {
   expect_error(bind_rows(df1, df2), NA)
 
   # relocate - dplyr_col_select, dplyr_col_select
-  expect_error(climate_mel %>% relocate(ts, .before = name), NA)
-  expect_error(climate_mel %>% face_temporal() %>% relocate(tmin), NA)
+  expect_error(cb_nested %>% relocate(ts, .before = name), NA)
+  expect_error(cb_nested %>% face_temporal() %>% relocate(tmin), NA)
 
+  # slice - all the slice_* uses dplyr::slice(), which uses dplyr_row_slice()
+  expect_error(cb_nested %>% slice_head(n = 2), NA)
+  expect_error(cb_nested %>% slice_tail(n = 2), NA)
+  expect_error(cb_nested %>% slice_max(elev), NA)
+  expect_error(cb_nested %>% slice_min(elev), NA)
+  expect_error(cb_nested %>% slice_sample(n = 2), NA)
+
+  # rowwise - rowwise.spatial_cubble_df, rowwise_temporal_cuble_df
+  expect_error(cb_nested %>% rowwise(), NA)
+  expect_error(cb_long %>% rowwise(), NA)
+  expect_error(a %>% rowwise(), NA)
+  expect_error(b %>% rowwise(), NA)
 })
+
+
+
+
+
+
 
 
 

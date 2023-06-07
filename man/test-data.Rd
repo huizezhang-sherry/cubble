@@ -20,7 +20,7 @@ An object of class \code{tbl_ts} (inherits from \code{tbl_df}, \code{tbl}, \code
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 30 rows and 10 columns.
 
-An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 3 rows and 7 columns.
+An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 3 rows and 7 columns.
 }
 \usage{
 stations

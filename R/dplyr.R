@@ -202,6 +202,22 @@ bind_cols.temporal_cubble_df <- function(..., .name_repair){
 }
 
 
+#' @export
+#' @rdname dplyr
+rowwise.spatial_cubble_df <- function(data, ...){
+  out <- NextMethod()
+  new_spatial_cubble(
+    out, key = key_vars(data), index = index_var(data), coords = coords(data))
+}
+
+#' @export
+#' @rdname dplyr
+rowwise.temporal_cubble_df <- function(data, ...){
+  out <- NextMethod()
+  new_temporal_cubble(
+    out, key = key_vars(data), index = index_var(data),
+    coords = coords(data), spatial = spatial(data))
+}
 
 
 #' @rdname dplyr

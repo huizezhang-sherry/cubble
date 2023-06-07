@@ -30,7 +30,9 @@ tbl_sum.spatial_cubble_df <- function(x){
 
   # header line 1
   line1 <- glue::glue("key: {key} [{key_n}], index: {index}, nested form")
-  if ("groups" %in% names(attributes(x))){
+  if ("rowwise_df" %in% class(x)){
+    line1 <- glue::glue("{line1}, groups: rowwise")
+  } else if ("groups" %in% names(attributes(x))){
     group_var <- head(names(x %@% groups), -1)
     group_n <- nrow(x %@% groups)
     if (all(group_var != key)) line1 <- glue::glue("{line1}, groups: {group_var} [{group_n}]")
@@ -73,12 +75,16 @@ tbl_sum.temporal_cubble_df <- function(x){
 
   # header line 1
   line1 <- glue::glue("key: {key} [{key_n}], index: {index}, long form")
-  group_var <- head(names(x %@% groups), -1)
-  group_n <- nrow(x %@% groups)
-  if (!key %in% group_var) {
-    group_var <- paste0(group_var, collapse = ", ")
-    line1 <- glue::glue("{line1}, groups: {group_var} [{group_n}]")
+  if ("rowwise_df" %in% class(x)){
+    line1 <- glue::glue("{line1}, groups: rowwise")
+  } else if ("groups" %in% names(attributes(x))){
+    group_var <- head(names(x %@% groups), -1)
+    group_n <- nrow(x %@% groups)
+    if (!key %in% group_var) {
+      group_var <- paste0(group_var, collapse = ", ")
+      line1 <- glue::glue("{line1}, groups: {group_var} [{group_n}]")
     }
+  }
   if (is_tsibble(x)) line1 <- glue::glue("{line1}, [tsibble]")
 
   # line 2: FROM -- TO [BY] HAS_GAP
