@@ -98,7 +98,7 @@ face_spatial.temporal_cubble_df <- function(data) {
     class(data) <- setdiff(class(data), cb_temporal_cls)
     temporal <- data %>% remove_attrs() %>% tidyr::nest(ts = -key_name)
 
-    out <- spatial %>% dplyr::left_join(temporal, by = key_name) %>% rowwise()
+    out <- spatial %>% dplyr::left_join(temporal, by = key_name)
 
   } else if (length(key) == 2){
     spatial <- spatial %>%  tidyr::nest(.val = -key_name[1])

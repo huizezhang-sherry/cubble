@@ -1,14 +1,20 @@
 #' Access to dplyr verbs
+#'
+#' Verbs supported for both nested and long cubble include:
+#' [dplyr::mutate()], [dplyr::filter()],  [dplyr::arrange()], [dplyr::select()],
+#' [dplyr::group_by()], [dplyr::summarise()],. [dplyr::rename()], [dplyr::bind_cols()],
+#' \code{dplyr::slice_*()}, \code{dplyr::*_join()}, [dplyr::relocate()], [dplyr::pull()]
+#'
 #' @param data,.data a cubble object(used as defined by the dplyr generic)
-#' @param cols,i,template,...,.add,.drop,.id,.name_repair see [dplyr::dplyr_col_modify()], [dplyr::dplyr_row_slice()],
-#' and [dplyr::dplyr_reconstruct()]
-#' @param .by,.groups used by dplyr verbs
+#' @param cols,i,template,...,.add,.drop,.id,.name_repair,.by,.groups see docs in dplyr verbs
 #'
 #' @references https://dplyr.tidyverse.org/reference/dplyr_extending.html
 #' @importFrom dplyr dplyr_col_modify dplyr_row_slice dplyr_reconstruct
 #' @importFrom utils head
 #' @rdname dplyr
 #' @export
+#' @examples
+#' #today
 arrange.temporal_cubble_df <- function(.data, ...){
   out <- NextMethod()
   dplyr_reconstruct(out, .data)

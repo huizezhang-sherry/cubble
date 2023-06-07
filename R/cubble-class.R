@@ -39,9 +39,7 @@ cubble <- function(..., key, index, coords) {
   coords <- names(data)[tidyselect::eval_select(coords, data)]
 
   all_vars <- find_invariant(data, !!key)
-  data <- data %>%
-    tidyr::nest(ts = c(!!index, !!!all_vars$variant)) %>%
-    dplyr::rowwise()
+  data <- data %>% tidyr::nest(ts = c(!!index, !!!all_vars$variant))
 
   #validate_cubble(data, key = as_name(key), index = as_name(index), coords = coords , ...)
   new_spatial_cubble(
@@ -144,10 +142,7 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
 
   temporal <- temporal %>% filter(!by %in% only_temporal) %>%
     select(as_name(index), setdiff(colnames(temporal), as_name(index)))
-
-  out <- suppressMessages(
-    dplyr::inner_join(spatial, temporal %>% nest(ts = -by)) %>% rowwise()
-  )
+  out <- suppressMessages(dplyr::inner_join(spatial, temporal %>% nest(ts = -by)) )
 
   new_spatial_cubble(
     out, key = by, index = index, coords = coords
@@ -162,13 +157,7 @@ new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
   args <- list2(...)
   if (validate) validate_spatial_cubble(data, args)
   attr_vars <- c(args$key, args$coords)
-  if (is.null(args$groups)){
-    groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
-    out <- new_rowwise_df(data, groups = groups, ...)
-  } else{
-    groups <- args$groups
-    out <- new_rowwise_df(data, ...)
-  }
+  out <- new_tibble(data, ...)
   class(out) <- c(cb_spatial_cls, setdiff(class(data), cb_spatial_cls))
   out
 }
@@ -179,14 +168,7 @@ new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
   if (validate) validate_temporal_cubble(data, args)
 
   attr_vars <- c(args$key, args$index)
-  if (is.null(args$groups)){
-    groups <- dplyr::grouped_df(data, args$key) %>% dplyr::group_data()
-    out <- new_grouped_df(data, groups = groups, ...)
-  } else{
-    groups <- args$groups
-    out <- new_grouped_df(data, ...)
-  }
-
+  out <- new_tibble(data, ...)
   class(out) <- c(cb_temporal_cls, setdiff(class(data), cb_temporal_cls))
   out
 }

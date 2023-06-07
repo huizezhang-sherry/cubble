@@ -30,9 +30,11 @@ tbl_sum.spatial_cubble_df <- function(x){
 
   # header line 1
   line1 <- glue::glue("key: {key} [{key_n}], index: {index}, nested form")
-  group_var <- head(names(x %@% groups), -1)
-  group_n <- nrow(x %@% groups)
-  if (all(group_var != key)) line1 <- glue::glue("{line1}, groups: {group_var} [{group_n}]")
+  if ("groups" %in% names(attributes(x))){
+    group_var <- head(names(x %@% groups), -1)
+    group_n <- nrow(x %@% groups)
+    if (all(group_var != key)) line1 <- glue::glue("{line1}, groups: {group_var} [{group_n}]")
+  }
   if (is_sf(x)) line1 <- glue::glue("{line1}, [sf]")
 
 

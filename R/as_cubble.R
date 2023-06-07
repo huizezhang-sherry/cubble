@@ -70,8 +70,7 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
     all_vars <- find_invariant(data, !!key)
 
     data <- data %>%
-      tidyr::nest(ts = c(!!!all_vars$variant)) %>%
-      dplyr::rowwise()
+      tidyr::nest(ts = c(!!!all_vars$variant))
 
   } else{
     listcol_var <- listcol_var[1]
@@ -148,10 +147,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
 
   key <- "id"
   all_vars <- find_invariant(data, !!key)
-
-  out <- data %>%
-    tidyr::nest(ts = c(!!!all_vars$variant)) %>%
-    dplyr::rowwise()
+  out <- data %>% tidyr::nest(ts = c(!!!all_vars$variant))
 
   new_spatial_cubble(
     out, key = key, index = "time", coords = c("long", "lat")

@@ -64,15 +64,18 @@ bind_cols.temporal_cubble_df(..., .name_repair)
 \method{arrange}{spatial_cubble_df}(.data, ...)
 }
 \arguments{
-\item{.by, .groups}{used by dplyr verbs}
-
 \item{data, .data}{a cubble object(used as defined by the dplyr generic)}
 
-\item{cols, i, template, ..., .add, .drop, .id, .name_repair}{see \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_col_modify()}}, \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_row_slice()}},
-and \code{\link[dplyr:dplyr_extending]{dplyr::dplyr_reconstruct()}}}
+\item{cols, i, template, ..., .add, .drop, .id, .name_repair, .by, .groups}{see docs in dplyr verbs}
 }
 \description{
-Access to dplyr verbs
+Verbs supported for both nested and long cubble include:
+\code{\link[dplyr:mutate]{dplyr::mutate()}}, \code{\link[dplyr:filter]{dplyr::filter()}},  \code{\link[dplyr:arrange]{dplyr::arrange()}}, \code{\link[dplyr:select]{dplyr::select()}},
+\code{\link[dplyr:group_by]{dplyr::group_by()}}, \code{\link[dplyr:summarise]{dplyr::summarise()}},. \code{\link[dplyr:rename]{dplyr::rename()}}, \code{\link[dplyr:bind_cols]{dplyr::bind_cols()}},
+\code{dplyr::slice_*()}, \code{dplyr::*_join()}, \code{\link[dplyr:relocate]{dplyr::relocate()}}, \code{\link[dplyr:pull]{dplyr::pull()}}
+}
+\examples{
+#today
 }
 \references{
 https://dplyr.tidyverse.org/reference/dplyr_extending.html
