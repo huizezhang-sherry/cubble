@@ -167,21 +167,21 @@ operation, we can keep using the long form:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>tmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tmax</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [79], index: month, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [79], index: month, long form, groups: month [12]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: 1 -- 12 [1], has gaps!</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
-<span><span class="co">#&gt;    id          month  tmax</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031     1  33.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00076031     2  31.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00076031     3  27.6</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00076031     4  22.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00076031     5  18.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00076031     6  16.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00076031     7  16.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00076031     8  16.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00076031     9  22.4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00076031    10  24.3</span></span>
+<span><span class="co">#&gt;    month id           tmax</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1 ASN00076031  33.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     1 ASN00076047  33.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     1 ASN00076064  32.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     1 ASN00077010  32.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     1 ASN00077094  33.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     1 ASN00078015  30.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     1 ASN00079028  31.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     1 ASN00079097  28.8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     1 ASN00079099  28.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>     1 ASN00079100  30.6</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 926 more rows</span></span></span></code></pre></div>
 <!-- `face_spatial()` switches a temporal (long) cubble back to the spatial (nested) one for spatial operations and operations summarising temporal information as per location, for example, calculating the average maximum temperature: -->
 </div>
@@ -198,18 +198,18 @@ can move time invariant variable into the long form with
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [79], index: month, long form</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: 1 -- 12 [1], has gaps!</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
-<span><span class="co">#&gt;    id          month  tmax  long   lat</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00076031     1  33.2  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00076031     2  31.1  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00076031     3  27.6  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00076031     4  22.1  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00076031     5  18.2  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00076031     6  16.8  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00076031     7  16.2  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00076031     8  16.9  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00076031     9  22.4  142. -<span style="color: #BB0000;">34.2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00076031    10  24.3  142. -<span style="color: #BB0000;">34.2</span></span></span>
+<span><span class="co">#&gt;    month id           tmax  long   lat</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     1 ASN00076031  33.2  142. -<span style="color: #BB0000;">34.2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     1 ASN00076047  33.1  142. -<span style="color: #BB0000;">35.1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     1 ASN00076064  32.7  142. -<span style="color: #BB0000;">35.1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     1 ASN00077010  32.3  142. -<span style="color: #BB0000;">35.7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     1 ASN00077094  33.2  144. -<span style="color: #BB0000;">35.4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     1 ASN00078015  30.6  142. -<span style="color: #BB0000;">36.3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     1 ASN00079028  31.1  142. -<span style="color: #BB0000;">36.7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     1 ASN00079097  28.8  142. -<span style="color: #BB0000;">37.1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     1 ASN00079099  28.6  141. -<span style="color: #BB0000;">37.0</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>     1 ASN00079100  30.6  142. -<span style="color: #BB0000;">36.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 926 more rows</span></span></span></code></pre></div>
 <p>Now you have seen the basic wrangling with cubble, it is time to make
 some plots! The vignette <a href="glyph.html">Making glyph map</a> will
