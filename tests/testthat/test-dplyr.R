@@ -45,11 +45,14 @@ test_that("dplyr verbs work on nest/long cubble", {
   expect_true(test_class_tsibble(res))
 
   # select -  select.spatial_cubble_df,  select.temporal_cubble_df
+  expect_error(cb_nested %>% select(name), NA)
+  expect_error(cb_nested %>% select(-id, -name), NA)
   expect_error((res <- a %>% select(-elev)), NA)
   expect_true(test_class_sf(res))
-  #expect_error((res <- b %>% select(-prcp)), NA) # not working
-  #expect_true(test_class_tsibble(res))
-
+  expect_error(cb_long %>% select(prcp), NA)
+  expect_error(cb_long %>% select(-prcp, -date), NA)
+  expect_error((res <- b %>% select(-prcp)), NA)
+  expect_true(test_class_tsibble(res))
 
   # rename - rename.spatial_cubble_df, rename.temporal_cubble_df
   expect_error((res <- cb_nested %>% rename(elev2 = elev)), NA)
@@ -64,6 +67,13 @@ test_that("dplyr verbs work on nest/long cubble", {
   expect_error((res <- b %>% rename(prcp2 = prcp)), NA)
   expect_true(test_class_tsibble(res))
 
+  # summarise - summarise.spatial_cubble_df, summarise.temporal_cubble_df
+  expect_error(cb_long %>%
+                 group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) %>%
+                 summarise(t = mean(tmax)), NA)
+  expect_error(cb_long %>%
+                 mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) %>%
+                 summarise(t = mean(tmax), .by = first_5), NA)
 
   # join - mutate_join - dplyr_reconstruct()
   # join - filter_join - dplyr_row_slice()
@@ -107,13 +117,16 @@ test_that("dplyr verbs work on nest/long cubble", {
   expect_error(cb_long %>% rowwise(), NA)
   expect_error(a %>% rowwise(), NA)
   expect_error(b %>% rowwise(), NA)
+
+  # group_by & ungroup - group_by/ungroup.spatial_cubble_df, xxx.temporal_cubble_df
+  expect_error((res <- cb_nested %>% mutate(group1 = c(1, 1, 2)) %>% group_by(group1)), NA)
+  expect_error(res %>% ungroup(), NA)
+  expect_error((res2 <- res %>% face_temporal() %>% unfold(group1) %>% group_by(group1)), NA)
+  expect_error(res2 %>% ungroup(), NA)
+  expect_error(res2 %>% mutate(first5 = ifelse(lubridate::day(date) <= 5, 1, 6)) %>%
+    group_by(first5) %>%
+    ungroup(group1), NA)
 })
-
-
-
-
-
-
 
 
 

@@ -6,6 +6,8 @@
 \alias{select.temporal_cubble_df}
 \alias{group_by.spatial_cubble_df}
 \alias{group_by.temporal_cubble_df}
+\alias{ungroup.spatial_cubble_df}
+\alias{ungroup.temporal_cubble_df}
 \alias{summarise.spatial_cubble_df}
 \alias{summarise.temporal_cubble_df}
 \alias{rename.spatial_cubble_df}
@@ -35,9 +37,13 @@
 
 \method{group_by}{temporal_cubble_df}(.data, ..., .add, .drop)
 
+\method{ungroup}{spatial_cubble_df}(x, ...)
+
+\method{ungroup}{temporal_cubble_df}(x, ...)
+
 \method{summarise}{spatial_cubble_df}(.data, ..., .by = NULL, .groups = NULL)
 
-\method{summarise}{temporal_cubble_df}(.data, ..., .by = NULL, .groups = NULL)
+\method{summarise}{temporal_cubble_df}(.data, ..., .by = key_vars(.data), .groups = NULL)
 
 \method{rename}{spatial_cubble_df}(.data, ...)
 
@@ -70,19 +76,163 @@ bind_cols.temporal_cubble_df(..., .name_repair)
 \method{arrange}{spatial_cubble_df}(.data, ...)
 }
 \arguments{
-\item{data, .data}{a cubble object(used as defined by the dplyr generic)}
+\item{...}{In \code{group_by()}, variables or computations to group by.
+Computations are always done on the ungrouped data frame.
+To perform computations on the grouped data, you need to use
+a separate \code{mutate()} step before the \code{group_by()}.
+Computations are not allowed in \code{nest_by()}.
+In \code{ungroup()}, variables to remove from the grouping.}
 
-\item{cols, i, template, ..., .add, .drop, .id, .name_repair, .by, .groups}{see docs in dplyr verbs}
+\item{.add}{When \code{FALSE}, the default, \code{group_by()} will
+override existing groups. To add to the existing groups, use
+\code{.add = TRUE}.
+
+This argument was previously called \code{add}, but that prevented
+creating a new grouping variable called \code{add}, and conflicts with
+our naming conventions.}
+
+\item{.drop}{Drop groups formed by factor levels that don't appear in the
+data? The default is \code{TRUE} except when \code{.data} has been previously
+grouped with \code{.drop = FALSE}. See \code{\link[dplyr:group_by_drop_default]{group_by_drop_default()}} for details.}
+
+\item{x}{A \code{\link[dplyr:tbl]{tbl()}}}
+
+\item{.by}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Optionally, a selection of columns to
+group by for just this operation, functioning as an alternative to \code{\link[dplyr:group_by]{group_by()}}. For
+details and examples, see \link[dplyr:dplyr_by]{?dplyr_by}.}
+
+\item{.groups}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Grouping structure of the
+result.
+\itemize{
+\item "drop_last": dropping the last level of grouping. This was the
+only supported option before version 1.0.0.
+\item "drop": All levels of grouping are dropped.
+\item "keep": Same grouping structure as \code{.data}.
+\item "rowwise": Each row is its own group.
+}
+
+When \code{.groups} is not specified, it is chosen
+based on the number of rows of the results:
+\itemize{
+\item If all the results have 1 row, you get "drop_last".
+\item If the number of rows varies, you get "keep" (note that returning a
+variable number of rows was deprecated in favor of \code{\link[dplyr:reframe]{reframe()}}, which
+also unconditionally drops all levels of grouping).
+}
+
+In addition, a message informs you of that choice, unless the result is ungrouped,
+the option "dplyr.summarise.inform" is set to \code{FALSE},
+or when \code{summarise()} is called from a function in a package.}
+
+\item{.id}{The name of an optional identifier column. Provide a string to
+create an output column that identifies each input. The column will use
+names if available, otherwise it will use positions.}
+
+\item{.name_repair}{One of \code{"unique"}, \code{"universal"}, or
+\code{"check_unique"}. See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the meaning of these
+options.}
+
+\item{data, .data}{a cubble object of class \code{spatial_cubble_df} or \code{temporal_cubble_df}}
+
+\item{cols}{A named list used to modify columns. A \code{NULL} value should remove
+an existing column.}
+
+\item{i}{A numeric or logical vector that indexes the rows of \code{data}.}
+
+\item{template}{Template data frame to use for restoring attributes.}
 }
 \description{
 Verbs supported for both nested and long cubble include:
 \code{\link[dplyr:mutate]{dplyr::mutate()}}, \code{\link[dplyr:filter]{dplyr::filter()}},  \code{\link[dplyr:arrange]{dplyr::arrange()}}, \code{\link[dplyr:select]{dplyr::select()}},
-\code{\link[dplyr:group_by]{dplyr::group_by()}}, \code{\link[dplyr:summarise]{dplyr::summarise()}},. \code{\link[dplyr:rename]{dplyr::rename()}}, \code{\link[dplyr:bind_cols]{dplyr::bind_cols()}},
-\code{dplyr::slice_*()}, \code{dplyr::*_join()}, \code{\link[dplyr:relocate]{dplyr::relocate()}}, \code{\link[dplyr:pull]{dplyr::pull()}}
+\code{\link[dplyr:group_by]{dplyr::group_by()}}, \code{\link[dplyr:group_by]{dplyr::ungroup()}}, \code{\link[dplyr:summarise]{dplyr::summarise()}},. \code{\link[dplyr:rename]{dplyr::rename()}},
+\code{\link[dplyr:bind_cols]{dplyr::bind_cols()}}, \code{\link[dplyr:rowwise]{dplyr::rowwise()}},
+\code{dplyr::slice_*()}, \code{dplyr::*_join())}, \code{\link[dplyr:relocate]{dplyr::relocate()}}, \code{\link[dplyr:pull]{dplyr::pull()}}
+}
+\details{
+You may find not all the verbs have a \code{verb.spatial_cubble_df} or
+\code{verb.temporal_cubble_df} implemented. These verbs under the hood call
+the dplyr extending trios: \code{dplyr_row_slice}, \code{dplyr_col_modify}, and
+\code{dplyr_reconstruct}. See https://dplyr.tidyverse.org/reference/dplyr_extending.html
 }
 \examples{
-#today
-}
-\references{
-https://dplyr.tidyverse.org/reference/dplyr_extending.html
+library(dplyr)
+cb_nested <- climate_mel
+cb_long <- face_temporal(climate_mel)
+
+# filter - currently filter.spatial_cubble_df, dply_row_slice
+cb_nested \%>\% filter(elev > 40)
+cb_long \%>\% filter(prcp > 0)
+
+# mutate - curerntly mutate.spatial_cubble_df, dply_col_modify
+cb_nested \%>\% mutate(elev2 = elev + 10)
+cb_long \%>\% mutate(prcp2 = prcp + 10)
+
+# arrange - currently arrange.spatial_cubble_df, arrange.temporal_cubble_df
+cb_nested \%>\% arrange(wmo_id)
+cb_long \%>\% arrange(prcp)
+
+# summarise - summarise.spatial_cubble_df,  summarise.temporal_cubble_df
+cb_long \%>\%
+  group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) \%>\%
+  summarise(tmax = mean(tmax))
+cb_long \%>\%
+  mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) \%>\%
+  summarise(t = mean(tmax), .by = first_5)
+
+# select -  select.spatial_cubble_df,  select.temporal_cubble_df
+cb_nested \%>\% select(name)
+cb_nested \%>\% select(-id, -name)
+cb_long \%>\% select(prcp)
+cb_long \%>\% select(-prcp, -date)
+
+# rename - rename.spatial_cubble_df, rename.temporal_cubble_df
+cb_nested \%>\% rename(elev2 = elev)
+cb_long \%>\% rename(prcp2 = prcp)
+# rename on key attributes
+cb_nested \%>\% rename(id2 = id)
+cb_long \%>\% rename(date2 = date)
+
+# join - mutate_join - dplyr_reconstruct()
+# join - filter_join - dplyr_row_slice()
+df1 <- cb_nested \%>\% as_tibble() \%>\% select(id, name) \%>\% head(2)
+nested <- cb_nested \%>\% select(-name)
+nested \%>\% left_join(df1, by = "id")
+nested \%>\% right_join(df1, by = "id")
+nested \%>\% inner_join(df1, by = "id")
+nested \%>\% full_join(df1, by = "id")
+nested \%>\% anti_join(df1, by = "id")
+
+# bind_rows - dplyr_reconstruct, bind_rows.temporal_cubble_df
+df1 <- cb_nested \%>\% head(1)
+df2 <- cb_nested \%>\% tail(2)
+bind_rows(df1, df2)
+df1 <- cb_long \%>\% head(10)
+df2 <- cb_long \%>\% tail(20)
+bind_rows(df1, df2)
+
+# relocate - dplyr_col_select, dplyr_col_select
+cb_nested \%>\% relocate(ts, .before = name)
+cb_nested \%>\% face_temporal() \%>\% relocate(tmin)
+
+# slice - all the slice_* uses dplyr::slice(), which uses dplyr_row_slice()
+cb_nested \%>\% slice_head(n = 2)
+cb_nested \%>\% slice_tail(n = 2)
+cb_nested \%>\% slice_max(elev)
+cb_nested \%>\% slice_min(elev)
+cb_nested \%>\% slice_sample(n = 2)
+
+# rowwise - rowwise.spatial_cubble_df, rowwise.temporal_cuble_df
+cb_nested \%>\% rowwise()
+cb_long \%>\% rowwise()
+
+# group_by & ungroup - group_by/ungroup.spatial_cubble_df, xxx.temporal_cubble_df
+(res <- cb_nested \%>\% mutate(group1 = c(1, 1, 2)) \%>\% group_by(group1))
+res \%>\% ungroup()
+(res2 <- res \%>\% face_temporal() \%>\% unfold(group1) \%>\% group_by(group1))
+res2 \%>\% ungroup()
+res2 \%>\% mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) \%>\%
+  group_by(first_5) \%>\%
+  ungroup(group1)
 }

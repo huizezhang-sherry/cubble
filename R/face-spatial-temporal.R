@@ -115,6 +115,20 @@ remove_attrs <- function(data){
   UseMethod("remove_attrs")
 }
 
+remove_attrs.default <- function(data){
+  as_tibble(data)
+}
+
+remove_attrs.grouped_df <- function(data){
+  attr(data, "key") <- NULL
+  attr(data, "index") <- NULL
+  attr(data, "coords") <- NULL
+  attr(data, "spatial") <- NULL
+  data
+}
+
+remove_attrs.rowwise_df <- remove_attrs.grouped_df
+
 remove_attrs.tbl_df <- function(data){
   attr(data, "key") <- NULL
   attr(data, "index") <- NULL
