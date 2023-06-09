@@ -24,8 +24,8 @@ tbl_sum.cubble_df <- function(x) {
 #' @rdname cubble-print
 #' @export
 tbl_sum.spatial_cubble_df <- function(x){
-  key <- key_vars(x)[1]
-  key_n <- nrow(spatial(x))
+  key <- key_vars(x)
+  key_n <- nrow(key_data(x))
   index <- index(x)
 
   # header line 1

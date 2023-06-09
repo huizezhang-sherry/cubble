@@ -41,10 +41,8 @@ cubble <- function(..., key, index, coords) {
   all_vars <- find_invariant(data, !!key)
   data <- data %>% tidyr::nest(ts = c(!!index, !!!all_vars$variant))
 
-  #validate_cubble(data, key = as_name(key), index = as_name(index), coords = coords , ...)
   new_spatial_cubble(
     data, key = as_name(key), index = as_name(index), coords = coords)
-
 }
 
 #' @rdname cubble-class
@@ -153,22 +151,23 @@ cb_spatial_cls <- c("spatial_cubble_df", "cubble_df")
 cb_temporal_cls <- c("temporal_cubble_df", "cubble_df")
 
 new_spatial_cubble <- function(data,  ..., validate = TRUE, class = NULL){
-
   args <- list2(...)
   if (validate) validate_spatial_cubble(data, args)
-  attr_vars <- c(args$key, args$coords)
-  out <- new_tibble(data, ...)
+  args$key <- build_key_data(data, args$key)
+  out <- new_tibble(data, !!!args)
   class(out) <- c(cb_spatial_cls, setdiff(class(data), cb_spatial_cls))
   out
 }
 
+build_key_data <- function(data, key){
+  dplyr::group_data(dplyr::grouped_df(data, vars = key, drop = TRUE))
+}
 
 new_temporal_cubble <- function(data, ..., validate = TRUE, class = NULL){
   args <- list2(...)
   if (validate) validate_temporal_cubble(data, args)
-
-  attr_vars <- c(args$key, args$index)
-  out <- new_tibble(data, ...)
+  args$key <- build_key_data(data, args$key)
+  out <- new_tibble(data, !!!args)
   class(out) <- c(cb_temporal_cls, setdiff(class(data), cb_temporal_cls))
   out
 }
@@ -201,7 +200,6 @@ validate_spatial_cubble <- function(data, args){
   if (any(!args$coords %in% colnames(data))){
     cli::cli_abort("At least one of the coordinate columns not present, please fix")
   }
-
 
 }
 

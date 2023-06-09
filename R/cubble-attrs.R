@@ -9,7 +9,8 @@
 #' key_vars(climate_mel)
 #' key_data(climate_mel)
 key_vars.cubble_df <- function(x){
-  x %@% "key"
+  keys <- key_data(x)
+  head(names(keys), -1L)
 }
 
 #' @rdname key
@@ -23,7 +24,7 @@ key.cubble_df <- function(x){
 key_data.cubble_df <- function(.data){
   # a tsibble object has the key attributes defined as the groups attribute
   # in a cubble
-  .data %@% "groups"
+  .data %@% "key"
 }
 
 #' extract the coords attribute from a cubble
