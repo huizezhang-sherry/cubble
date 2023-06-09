@@ -157,7 +157,12 @@ attributes for a nested cubble:</p>
 <span><span class="co">#&gt; [1] "id"     "long"   "lat"    "elev"   "name"   "wmo_id" "ts"    </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $key</span></span>
-<span><span class="co">#&gt; [1] "id"</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;   id                .rows</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038         <span style="color: #949494;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077         <span style="color: #949494;">[1]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282         <span style="color: #949494;">[1]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $index</span></span>
 <span><span class="co">#&gt; [1] "date"</span></span>
@@ -228,7 +233,12 @@ cubble along with its attributes:</p>
 <span><span class="co">#&gt; [1] "id"   "date" "prcp" "tmax" "tmin"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $key</span></span>
-<span><span class="co">#&gt; [1] "id"</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;   id                .rows</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038        <span style="color: #949494;">[10]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077        <span style="color: #949494;">[10]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282        <span style="color: #949494;">[10]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $index</span></span>
 <span><span class="co">#&gt; [1] "date"</span></span>
@@ -266,7 +276,12 @@ both forms:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "id"</span></span>
 <span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/key-data.html" class="external-link">key_data</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
-<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;   id                .rows</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038        <span style="color: #949494;">[10]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077        <span style="color: #949494;">[10]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282        <span style="color: #949494;">[10]</span></span></span>
 <span><span class="fu"><a href="../reference/spatial.html">spatial</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name              wmo_id</span></span>
