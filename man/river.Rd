@@ -5,7 +5,7 @@
 \alias{river}
 \title{Australia river data}
 \format{
-An object of class \code{cubble_df} (inherits from \code{rowwise_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 71 rows and 5 columns.
+An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 71 rows and 6 columns.
 }
 \usage{
 river
