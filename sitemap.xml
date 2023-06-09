@@ -19,6 +19,9 @@
     <loc>/articles/cb3glyph.html</loc>
   </url>
   <url>
+    <loc>/articles/cb4match.html</loc>
+  </url>
+  <url>
     <loc>/articles/cubble.html</loc>
   </url>
   <url>
@@ -83,6 +86,9 @@
   </url>
   <url>
     <loc>/reference/make_temporal_tsibble.html</loc>
+  </url>
+  <url>
+    <loc>/reference/matching.html</loc>
   </url>
   <url>
     <loc>/reference/netcdf.html</loc>
