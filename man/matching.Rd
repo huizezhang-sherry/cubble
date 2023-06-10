@@ -7,65 +7,70 @@
 \title{Matching sites from two data sources}
 \usage{
 match_sites(
-  major,
-  minor,
-  spatial_n_keep = 1,
-  spatial_n_pair = 5,
+  df1,
+  df2,
+  crs = sf::st_crs("OGC:CRS84"),
+  which = NULL,
+  par = 0,
+  spatial_n_each = 1,
+  spatial_n_group = 4,
   temporal_matching = TRUE,
   temporal_by,
+  temporal_match_fn = match_peak,
   temporal_n_highest = 20,
-  temporal_independent,
   temporal_window = 5,
-  temporal_min_match = 10
+  temporal_min_match = 10,
+  ...
 )
 
 match_spatial(
-  major,
-  minor,
-  major_crs = "EPSG:4087",
-  minor_crs = "EPSG:4087",
-  spatial_n_keep = 1,
-  spatial_n_pair = 10
+  df1,
+  df2,
+  crs = sf::st_crs("OGC:CRS84"),
+  which = NULL,
+  par = 0,
+  spatial_n_each = 1,
+  spatial_n_group = 4
 )
 
 match_temporal(
-  major,
-  minor,
+  data,
   temporal_by,
+  temporal_match_fn = match_peak,
   temporal_n_highest = 20,
-  temporal_independent,
   temporal_window = 5,
-  temporal_min_match = 10
+  temporal_min_match = 10,
+  ...
 )
 }
 \arguments{
-\item{major}{The major dataset to match, every key in the major dataset will have a match, unless filtered by \code{dist_max}}
+\item{df1, df2}{the two cubble objects to match}
 
-\item{minor}{The dataset to match from}
+\item{crs}{a crs object from \code{st_crs}}
 
-\item{spatial_n_keep}{The number of matching to keep}
+\item{which}{character; for Cartesian coordinates only: one of \code{Euclidean}, \code{Hausdorff} or \code{Frechet}; for geodetic coordinates, great circle distances are computed; see details}
 
-\item{temporal_matching}{Whether to perform temporal matching}
+\item{par}{for \code{which} equal to \code{Hausdorff} or \code{Frechet}, optionally use a value between 0 and 1 to densify the geometry}
 
-\item{temporal_by}{The variable used for temporal matching}
+\item{spatial_n_each}{integer, the number of matched "station" in \code{df2} for each \code{df1} record}
 
-\item{temporal_n_highest}{The number of highest peak used for temporal matching}
+\item{spatial_n_group}{integer, the number of matched group (pair) return}
 
-\item{temporal_independent}{The dataset used to construct the temporal window,
-need to be the name of either major or minor.}
+\item{temporal_matching}{logical, whether to match temporally}
 
-\item{temporal_window}{The temporal window allowed to fall in}
+\item{temporal_by}{in the syntax of c("xxx" = "xxx), the variables to match in \code{df1} and \code{df2}}
 
-\item{temporal_min_match}{The minimum number of peak matching for temporal matching}
+\item{temporal_match_fn}{character, the function name on how two time series should be matched}
 
-\item{spatial_single_match}{Whether each observation in the minor dataset is only allowed to to be matched once, default to \code{TRUE}}
+\item{temporal_n_highest}{numeric, the number of highest peak used for temporal matching in \code{match_peak}}
 
-\item{spatial_dist_max}{The maximum distance allowed between matched pair}
+\item{temporal_window}{The temporal window allowed in \code{match_peak}}
 
-\item{match_table}{The spatial matching table}
-}
-\value{
-A cubble with matched pairs
+\item{temporal_min_match}{The minimum number of peak matching for temporal matching in \code{match_peak}}
+
+\item{...}{parameters passing to temporal match}
+
+\item{data}{the result from spatial matching}
 }
 \description{
 The function includes both spatial and temporal matching. The spatial matching
@@ -75,4 +80,11 @@ first filters out the \code{n} largest increases, determined by \code{temporal_n
 in both datasets,  constructs an interval of length \code{temporal_window} from
 one dataset and count the number that large increase from the other dataset
 falls into the interval constructed.
+}
+\examples{
+a1 <- match_spatial(climate_aus, river)
+# turn with different distance calculation:
+a2 <- match_spatial(climate_aus, river, which = "Hausdorff")
+# tune the number of matches in each group
+a3 <- match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
 }

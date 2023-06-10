@@ -83,7 +83,7 @@ matched <- match_spatial(auto, non_auto)
 The result from the pairing is also a cubble with two additional columns:  `dist` as the distance between the pair and `group` as the grouping index:
 
 ```{r}
-matched <- matched %>% filter(group <= 10)
+matched <- bind_rows(matched) %>% filter(group <= 10)
 ```
 
 Then we can create visualisation to see where these pairs are in the map:
@@ -128,14 +128,13 @@ Bureau of Meteorology collects [water data](http://www.bom.gov.au/metadata/catal
 
 ```{r echo = FALSE}
 river <- river %>%  mutate(type = "river")
-river2 <- river %>% rename(id = station)
 
 vic <- climate_aus %>%  
   # subset for Victoria stations
   filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 76, 90)) %>%  
   face_temporal() %>%  
   filter(lubridate::year(date) == 2020) %>%  
-  face_spatial() %>%  
+  face_spatial() %>% 
   mutate(type = "climate")
 
 vic_map <- ozmaps::abs_ste %>%  filter(NAME == "Victoria")
@@ -206,21 +205,18 @@ We first find the `n` peaks in each series (3 peaks here). A variable needs to b
 In the river level and precipitation example, `Water_course_level` in `river` will be matched to `prcp` in `climate`. This can be specified in `temporal_by`, an analogue to  the `by` syntax in `join`. The goal in this example is to see if precipitation will be reflected by the water level in the river and this puts precipitation `prcp`, as the independent. Given there is one year worth of data, the number of peak (`temporal_n_highest`) to consider is slightly raised from a default 20 to 30 and `temporal_min_match` is raised accordingly. 
 
 ```{r}
-res_sp <- match_spatial(river2, vic) %>% filter(group != 7)
-sp1 <- res_sp %>% filter(type == "river")
-sp2 <- res_sp %>% filter(type == "climate")
-
-res <- match_sites(sp1, sp2,
-                   temporal_by = c("Water_course_level" = "prcp"),
-                   temporal_independent = "prcp",
-                   temporal_n_highest = 50,
-                   temporal_min_match = 15)
+res_sp <- match_spatial(vic, river, spatial_n_group = 10) 
+res_sp2 <- res_sp %>% bind_rows() %>% filter(!group %in% c(5, 8))
+res <- res_sp2 %>% group_split(group) %>% purrr::map(~.x %>% update_cubble() %>% match_temporal(
+                   temporal_by = c("prcp" = "Water_course_level"),
+                   temporal_n_highest = 30,
+                   temporal_min_match = 15))
 ```
 
 The output from temporal matching is also a cubble with `n_match` for the number of matched temporal peaks (on top of the `dist` and `group` from spatial matching)： 
 
 ```{r}
-res <- res %>% filter(n_matches >= 23)
+res <- res %>% bind_rows() %>% filter(n_matches >= 21)
 ```
 
 We can look at the matched pair on the map:
@@ -228,9 +224,9 @@ We can look at the matched pair on the map:
 ```{r}
 ggplot() + 
   geom_sf(data = vic_map) + 
-  geom_point(data = res %>% as_tibble(), 
+  geom_point(data = res_sp %>% bind_rows() %>% as_tibble(), 
              aes(x = long, y = lat, color = type)) + 
-  ggrepel::geom_label_repel(data = res %>%  filter(type == "river") %>% as_tibble(),
+  ggrepel::geom_label_repel(data = res_sp %>% bind_rows() %>% as_tibble(), min.segment.length = 0,
                             aes(x = long, y = lat, label = group)) + 
   scale_color_brewer(palette = "Dark2") + 
   ggplot2::theme_bw() +
@@ -243,9 +239,9 @@ or to look at the series:
 
 ```{r}
 res_long <- res %>%  
-  face_temporal(ts) %>%  
+  face_temporal() %>%  
   unfold(group, type) %>%  
-  rename(prcp = matched_var) %>%  
+  rename(prcp = matched) %>%  
   group_by(group, type) %>%
   mutate(prcp = (prcp - min(prcp, na.rm = TRUE))/ (max(prcp, na.rm = TRUE) - min(prcp, na.rm = TRUE))) 
 

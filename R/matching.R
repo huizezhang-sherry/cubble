@@ -8,60 +8,56 @@
 #' one dataset and count the number that large increase from the other dataset
 #' falls into the interval constructed.
 #'
-#' @param major The major dataset to match, every key in the major dataset will have a match, unless filtered by \code{dist_max}
-#' @param minor The dataset to match from
-#' @param spatial_single_match Whether each observation in the minor dataset is only allowed to to be matched once, default to `TRUE`
-#' @param spatial_n_keep The number of matching to keep
-#' @param spatial_dist_max The maximum distance allowed between matched pair
-#' @param temporal_matching Whether to perform temporal matching
-#' @param temporal_by The variable used for temporal matching
-#' @param temporal_n_highest The number of highest peak used for temporal matching
-#' @param temporal_independent The dataset used to construct the temporal window,
-#' need to be the name of either major or minor.
-#' @param temporal_window The temporal window allowed to fall in
-#' @param temporal_min_match The minimum number of peak matching for temporal matching
-#' @param match_table The spatial matching table
+#' @param df1,df2 the two cubble objects to match
+#' @param crs a crs object from \code{st_crs}
+#' @param spatial_n_each integer, the number of matched "station" in \code{df2} for each \code{df1} record
+#' @param spatial_n_group integer, the number of matched group (pair) return
+#' @param temporal_matching logical, whether to match temporally
+#' @param temporal_by in the syntax of c("xxx" = "xxx), the variables to match in \code{df1} and \code{df2}
+#' @param data the result from spatial matching
+#' @param temporal_match_fn character, the function name on how two time series should be matched
+#' @param temporal_n_highest numeric, the number of highest peak used for temporal matching in \code{match_peak}
+#' @param temporal_window The temporal window allowed in \code{match_peak}
+#' @param temporal_min_match The minimum number of peak matching for temporal matching in \code{match_peak}
+#' @param ... parameters passing to temporal match
+#' @inheritParams sf::st_distance
 #'
-#'
-#' @return A cubble with matched pairs
 #' @export
 #' @rdname matching
-match_sites <- function(major,
-                        minor,
-                        spatial_n_keep = 1,
-                        spatial_n_pair = 5,
+#' @examples
+#' a1 <- match_spatial(climate_aus, river)
+#' # turn with different distance calculation:
+#' a2 <- match_spatial(climate_aus, river, which = "Hausdorff")
+#' # tune the number of matches in each group
+#' a3 <- match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
+match_sites <- function(df1, df2, crs = sf::st_crs("OGC:CRS84"),
+                        which = NULL, par = 0,
+                        spatial_n_each = 1,
+                        spatial_n_group = 4,
                         temporal_matching = TRUE,
                         temporal_by,
+                        temporal_match_fn = match_peak,
                         temporal_n_highest = 20,
-                        temporal_independent,
                         temporal_window = 5,
-                        temporal_min_match = 10) {
+                        temporal_min_match = 10, ...) {
 
   out <- match_spatial(
-    major,
-    minor,
-    spatial_n_keep = spatial_n_keep,
-    spatial_n_pair = spatial_n_pair
+    df1, df2, crs = crs,
+    which = NULL, par = 0,
+    spatial_n_each = spatial_n_each,
+    spatial_n_group = spatial_n_group
   )
 
-  if (temporal_matching) {
 
-    major_id <- key_data(major) %>%  dplyr::pull(!!key_vars(major))
-    minor_id <- key_data(minor) %>%  dplyr::pull(!!key_vars(minor))
-
-    major_matched <- out %>%  filter(.data$id %in% major_id)
-    minor_matched <- out %>%  filter(.data$id %in% minor_id)
-
-    out <- match_temporal(
-      major_matched,
-      minor_matched,
-      temporal_by = temporal_by,
-      temporal_n_highest = temporal_n_highest,
-      temporal_independent = temporal_independent,
-      temporal_window = temporal_window,
-      temporal_min_match = temporal_min_match
-    )
-
+  if (temporal_matching){
+    out <- out %>%
+      map(~.x %>% match_temporal(
+        temporal_match_fn = match_peak,
+        temporal_by = temporal_by,
+        temporal_window = temporal_window,
+        temporal_n_highest = temporal_n_highest,
+        temporal_min_match = temporal_min_match,
+        ...))
   }
 
   out
@@ -71,87 +67,95 @@ match_sites <- function(major,
 
 #' @export
 #' @rdname matching
-match_spatial <- function(major, minor,
-                          major_crs = "EPSG:4087", minor_crs = "EPSG:4087",
-                          spatial_n_keep = 1,
-                          spatial_n_pair = 10) {
-  stopifnot(is_cubble(major), is_cubble(minor))
+match_spatial <- function(df1, df2,
+                          crs = sf::st_crs("OGC:CRS84"),
+                          which = NULL,
+                          par = 0,
+                          spatial_n_each = 1,
+                          spatial_n_group = 4) {
+  stopifnot(is_cubble(df1), is_cubble(df2))
 
-  key <- key_vars(major)
-  key2 <- key_vars(minor)
-  # check key matches
+  key <- key_vars(df1)
+  key2 <- key_vars(df2)
+  if (key2 != key){df2 <- df2 %>% dplyr::rename(!!key := key2)}
 
-  key_val <- as_tibble(major)[[tidyselect::eval_select(key, major)]]
-  key_val2 <- as_tibble(minor)[[tidyselect::eval_select(key, minor)]]
+  key_val <- as_tibble(df1) %>% dplyr::pull(key)
+  key_val2 <- as_tibble(df2) %>% dplyr::pull(key)
 
-  if (!is_sf(major)) major <- major %>% make_spatial_sf(crs = sf::st_crs(major_crs))
-  if (!is_sf(minor)) minor <- minor %>% make_spatial_sf(crs = sf::st_crs(minor_crs))
-
-  if (sf::st_is_longlat(major) || sf::st_is_longlat(minor)) {
-    cli::cli_inform("Use EPSG:4087 (projected CRS) by default for distance calculation...")
+  if (!is_sf(df1) || !is_sf(df2)) {
+    cli::cli_inform("Use OGC:CRS84 by default for distance calculation...")
   }
 
-  # use the which argument form sf::st_ditance
-  res <- sf::st_distance(major, minor) %>%
+  if (!is_sf(df1)) df1 <- df1 %>% make_spatial_sf(crs = crs)
+  if (!is_sf(df2)) df2 <- df2 %>% make_spatial_sf(crs = crs)
+  if (is.null(which)) which <- ifelse(isTRUE(sf::st_is_longlat(df1)), "Great Circle", "Euclidean")
+
+  dist_df <- sf::st_distance(df1, df2, which = which, par = par) %>%
     as_tibble() %>%
     mutate(from = key_val) %>%
-    rename_with(~ c(key_val2, "from")) %>%
-    tidyr::pivot_longer(cols = -from, names_to = "to", values_to = "dist") %>%
-    dplyr::slice_min(dist, n = spatial_n_keep, by = from) %>%
-    arrange(dist) %>%
-    mutate(group = row_number()) %>%
-    tidyr::pivot_longer(from:to, names_to = "order", values_to = "id")
+    dplyr::rename_with(~ c(key_val2, "from")) %>%
+    tidyr::pivot_longer(cols = -.data$from, names_to = "to", values_to = "dist")
 
-  major %>%
-    inner_join(res %>% filter(order == "from")) %>%
+#
+#   dist_df2 <- dist_df %>%
+#     slice_min(dist, n = spatial_n_each, by = from) %>%
+#     slice_min(dist, n = spatial_n_group) %>%
+#     mutate(group = row_number())
+  # gp_return <- dist_df %>%
+  #   slice_min(dist, n = spatial_n_group) %>%
+  #   mutate(group = row_number())
+  #
+  # dist_df2 <- dist_df %>%
+  #   inner_join(gp_return %>% dplyr::select(from, group), by = "from") %>%
+  #   slice_min(dist, n = spatial_n_each, by = from)
+
+  gp_return <- dist_df %>%
+    dplyr::slice_min(.data$dist, n = 1, by = .data$from) %>%
+    dplyr::slice_min(.data$dist, n = spatial_n_group) %>%
+    mutate(group = dplyr::row_number())
+
+  dist_df2 <- dist_df %>%
+    inner_join(gp_return %>% select(-.data$dist, -.data$to), by = "from") %>%
+    dplyr::slice_min(.data$dist, n = spatial_n_each, by = .data$from)
+
+  res1 <- df1 %>%
+    inner_join(dist_df2 %>% select(.data$from, .data$group) %>% distinct() %>% rename(!!key := .data$from), by = key) %>%
+    update_cubble()
+
+  res2 <- df2 %>%
+    inner_join(dist_df2 %>% select(-.data$from) %>% rename(!!key := .data$to), by = key) %>%
     update_cubble() %>%
-    bind_rows(minor %>% inner_join(res %>% filter(order == "to")) %>% update_cubble()) %>%
-    dplyr::select(-order) %>%
-    filter(group <= spatial_n_pair)
+    arrange(.data$dist)
+
+  bind_rows(res1, res2) %>% dplyr::group_split(.data$group) %>% map(update_cubble)
 }
 
 #' @export
 #' @rdname matching
 #' @importFrom lubridate %within%
-match_temporal <- function(major,
-                           minor,
+match_temporal <- function(data,
                            temporal_by,
+                           temporal_match_fn = match_peak,
                            temporal_n_highest = 20,
-                           temporal_independent,
                            temporal_window = 5,
-                           temporal_min_match = 10) {
-  stopifnot(is_cubble(major), is_cubble(minor))
+                           temporal_min_match = 10,
+                           ...) {
+  var_names <- list(names(temporal_by), unname(temporal_by))
 
-  major_var <- names(temporal_by)
-  minor_var <- unname(temporal_by)
+  data_long <- data %>%
+    dplyr::group_split(.data$type) %>%
+    map2(var_names, ~.x %>%
+           face_temporal() %>%
+           dplyr::select(key_vars(data), index_var(data), .y) %>%
+           rename(matched = .y))
+  data_nest <- data_long %>% map(face_spatial) %>% bind_rows()
+  vecs <- map(data_long, ~.x %>% pull(.data$matched))
 
-  data <- dplyr::bind_rows(fix_data(major, major_var), fix_data(minor, minor_var))
-  key <- key_vars(data)
-
-  if (identical(temporal_independent, major_var)) {
-    temporal_independent <-  "major"
-  } else if (identical(temporal_independent, minor_var)) {
-    temporal_independent <- "minor"
-  } else{
-    cli::cli_abort("The independent set needs to be either the major or minor variable.")
-  }
-
-  res <- data %>%
-    group_split(group) %>%
-    map_dbl(function(x){
-      dt <- x %>% face_temporal() %>%
-              unfold(type) %>%
-              group_split(type) %>%
-              map(~.x$matched_var)
-
-      do.call(match_peak, args = list(list = dt,
+  res <-  do.call(temporal_match_fn, args = list(list = vecs,
         temporal_n_highest = temporal_n_highest,
-        temporal_window = temporal_window))
-    })
+        temporal_window = temporal_window, ...))
 
-  res2 <- tibble(group = sort(unique(data$group)), n_matches = res)
-
-  data %>% left_join(res2) %>% update_cubble()
+  data_nest %>% mutate(n_matches = res)
 
 }
 
@@ -159,18 +163,9 @@ match_peak <- function(list, temporal_n_highest, temporal_window){
 
   ts1_top <- sort(diff(list[[1]]), decreasing = TRUE, index.return = TRUE)$ix[1:temporal_n_highest]
   ts2_top <- sort(diff(list[[2]]), decreasing = TRUE, index.return = TRUE)$ix[1:temporal_n_highest]
-  ts2_rg <- map(ts2_top, ~.x +1:temporal_window) %>% unlist() %>% unique()
-  sum(ts1_top %in% ts2_rg)
+  ts1_rg <- map(ts1_top, ~.x +0:temporal_window) %>% unlist() %>% unique()
+  sum(ts2_top %in% ts1_rg)
 
 }
 
 
-
-fix_data <- function(data, chosen_var){
-  stopifnot(is_cubble(data))
-  data %>%
-    face_temporal() %>%
-    dplyr::select(key_vars(data), index(data), chosen_var) %>%
-    dplyr::rename(matched_var = chosen_var) %>%
-    face_spatial()
-}
