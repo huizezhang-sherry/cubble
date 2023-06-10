@@ -30,12 +30,16 @@ match_spatial(
   which = NULL,
   par = 0,
   spatial_n_each = 1,
-  spatial_n_group = 4
+  spatial_n_group = 4,
+  return_cubble = FALSE
 )
 
 match_temporal(
   data,
+  data_id,
+  match_id,
   temporal_by,
+  return_cubble = FALSE,
   temporal_match_fn = match_peak,
   temporal_n_highest = 20,
   temporal_window = 5,
@@ -70,7 +74,13 @@ match_temporal(
 
 \item{...}{parameters passing to temporal match}
 
+\item{return_cubble}{logical (default to false), whether to return the cubble object or a matching summary table}
+
 \item{data}{the result from spatial matching}
+
+\item{data_id}{variable name that separates \code{df1} and \code{df2}}
+
+\item{match_id}{variable name that groups the same match}
 }
 \description{
 The function includes both spatial and temporal matching. The spatial matching

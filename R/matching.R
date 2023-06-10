@@ -14,7 +14,10 @@
 #' @param spatial_n_group integer, the number of matched group (pair) return
 #' @param temporal_matching logical, whether to match temporally
 #' @param temporal_by in the syntax of c("xxx" = "xxx), the variables to match in \code{df1} and \code{df2}
+#' @param return_cubble logical (default to false), whether to return the cubble object or a matching summary table
 #' @param data the result from spatial matching
+#' @param data_id variable name that separates \code{df1} and \code{df2}
+#' @param match_id variable name that groups the same match
 #' @param temporal_match_fn character, the function name on how two time series should be matched
 #' @param temporal_n_highest numeric, the number of highest peak used for temporal matching in \code{match_peak}
 #' @param temporal_window The temporal window allowed in \code{match_peak}
@@ -72,7 +75,8 @@ match_spatial <- function(df1, df2,
                           which = NULL,
                           par = 0,
                           spatial_n_each = 1,
-                          spatial_n_group = 4) {
+                          spatial_n_group = 4,
+                          return_cubble = FALSE) {
   stopifnot(is_cubble(df1), is_cubble(df2))
 
   key <- key_vars(df1)
@@ -96,19 +100,6 @@ match_spatial <- function(df1, df2,
     dplyr::rename_with(~ c(key_val2, "from")) %>%
     tidyr::pivot_longer(cols = -.data$from, names_to = "to", values_to = "dist")
 
-#
-#   dist_df2 <- dist_df %>%
-#     slice_min(dist, n = spatial_n_each, by = from) %>%
-#     slice_min(dist, n = spatial_n_group) %>%
-#     mutate(group = row_number())
-  # gp_return <- dist_df %>%
-  #   slice_min(dist, n = spatial_n_group) %>%
-  #   mutate(group = row_number())
-  #
-  # dist_df2 <- dist_df %>%
-  #   inner_join(gp_return %>% dplyr::select(from, group), by = "from") %>%
-  #   slice_min(dist, n = spatial_n_each, by = from)
-
   gp_return <- dist_df %>%
     dplyr::slice_min(.data$dist, n = 1, by = .data$from) %>%
     dplyr::slice_min(.data$dist, n = spatial_n_group) %>%
@@ -116,46 +107,73 @@ match_spatial <- function(df1, df2,
 
   dist_df2 <- dist_df %>%
     inner_join(gp_return %>% select(-.data$dist, -.data$to), by = "from") %>%
-    dplyr::slice_min(.data$dist, n = spatial_n_each, by = .data$from)
+    dplyr::slice_min(.data$dist, n = spatial_n_each, by = .data$from) %>%
+    arrange(group)
 
-  res1 <- df1 %>%
-    inner_join(dist_df2 %>% select(.data$from, .data$group) %>% distinct() %>% rename(!!key := .data$from), by = key) %>%
-    update_cubble()
+  if (return_cubble){
 
-  res2 <- df2 %>%
-    inner_join(dist_df2 %>% select(-.data$from) %>% rename(!!key := .data$to), by = key) %>%
-    update_cubble() %>%
-    arrange(.data$dist)
+    res1 <- df1 %>%
+      inner_join(dist_df2 %>% select(.data$from, .data$group) %>% distinct() %>% rename(!!key := .data$from), by = key) %>%
+      update_cubble()
 
-  bind_rows(res1, res2) %>% dplyr::group_split(.data$group) %>% map(update_cubble)
+    res2 <- df2 %>%
+      inner_join(dist_df2 %>% select(-.data$from) %>% rename(!!key := .data$to), by = key) %>%
+      update_cubble() %>%
+      arrange(.data$dist)
+
+    dist_df2 <- bind_rows(res1, res2) %>% dplyr::group_split(.data$group) %>% map(update_cubble)
+  }
+
+  return(dist_df2)
 }
 
 #' @export
 #' @rdname matching
-#' @importFrom lubridate %within%
 match_temporal <- function(data,
+                           data_id, match_id,
                            temporal_by,
+                           return_cubble = FALSE,
                            temporal_match_fn = match_peak,
                            temporal_n_highest = 20,
                            temporal_window = 5,
                            temporal_min_match = 10,
                            ...) {
+
+  match_id <- enquo(match_id)
+  data_id <- enquo(data_id)
   var_names <- list(names(temporal_by), unname(temporal_by))
 
   data_long <- data %>%
-    dplyr::group_split(.data$type) %>%
-    map2(var_names, ~.x %>%
-           face_temporal() %>%
-           dplyr::select(key_vars(data), index_var(data), .y) %>%
-           rename(matched = .y))
-  data_nest <- data_long %>% map(face_spatial) %>% bind_rows()
-  vecs <- map(data_long, ~.x %>% pull(.data$matched))
+    dplyr::arrange(!!match_id) %>%
+    dplyr::group_split(!!match_id) %>%
+    map(~.x %>%
+          dplyr::group_split(!!data_id) %>%
+          purrr::map2(var_names, ~.x %>%
+                 face_temporal() %>%
+                 dplyr::select(key_vars(data), index_var(data), .y) %>%
+                 dplyr::rename(matched = .y)))
 
-  res <-  do.call(temporal_match_fn, args = list(list = vecs,
-        temporal_n_highest = temporal_n_highest,
-        temporal_window = temporal_window, ...))
+  vecs <- data_long %>% map(~map(.x, ~.x$matched))
 
-  data_nest %>% mutate(n_matches = res)
+  res <- map_dbl(vecs, function(x)
+    do.call(temporal_match_fn,
+            args = list(list = x,
+                        temporal_n_highest = temporal_n_highest,
+                        temporal_window = temporal_window, ...)))
+
+  res <- tibble(
+    !!match_id :=data %>% dplyr::pull(!!match_id) %>% unique() %>% sort(),
+    n_matches = res) %>%
+    dplyr::arrange(-n_matches)
+
+  if (return_cubble){
+    res <- data_long %>%
+      map(~map(.x, ~face_spatial(.x))) %>%
+      bind_rows() %>%
+      left_join(res)
+  }
+
+  return(res)
 
 }
 
