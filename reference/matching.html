@@ -88,96 +88,114 @@ falls into the interval constructed.</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">match_sites</span><span class="op">(</span></span>
-<span>  <span class="va">major</span>,</span>
-<span>  <span class="va">minor</span>,</span>
-<span>  spatial_n_keep <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  spatial_n_pair <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  <span class="va">df1</span>,</span>
+<span>  <span class="va">df2</span>,</span>
+<span>  crs <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="st">"OGC:CRS84"</span><span class="op">)</span>,</span>
+<span>  which <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  par <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  spatial_n_each <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  spatial_n_group <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  temporal_matching <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">temporal_by</span>,</span>
+<span>  temporal_match_fn <span class="op">=</span> <span class="va">match_peak</span>,</span>
 <span>  temporal_n_highest <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  <span class="va">temporal_independent</span>,</span>
 <span>  temporal_window <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  temporal_min_match <span class="op">=</span> <span class="fl">10</span></span>
+<span>  temporal_min_match <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">match_spatial</span><span class="op">(</span></span>
-<span>  <span class="va">major</span>,</span>
-<span>  <span class="va">minor</span>,</span>
-<span>  major_crs <span class="op">=</span> <span class="st">"EPSG:4087"</span>,</span>
-<span>  minor_crs <span class="op">=</span> <span class="st">"EPSG:4087"</span>,</span>
-<span>  spatial_n_keep <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  spatial_n_pair <span class="op">=</span> <span class="fl">10</span></span>
+<span>  <span class="va">df1</span>,</span>
+<span>  <span class="va">df2</span>,</span>
+<span>  crs <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="st">"OGC:CRS84"</span><span class="op">)</span>,</span>
+<span>  which <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  par <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  spatial_n_each <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  spatial_n_group <span class="op">=</span> <span class="fl">4</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">match_temporal</span><span class="op">(</span></span>
-<span>  <span class="va">major</span>,</span>
-<span>  <span class="va">minor</span>,</span>
+<span>  <span class="va">data</span>,</span>
 <span>  <span class="va">temporal_by</span>,</span>
+<span>  temporal_match_fn <span class="op">=</span> <span class="va">match_peak</span>,</span>
 <span>  temporal_n_highest <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  <span class="va">temporal_independent</span>,</span>
 <span>  temporal_window <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  temporal_min_match <span class="op">=</span> <span class="fl">10</span></span>
+<span>  temporal_min_match <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>major</dt>
-<dd><p>The major dataset to match, every key in the major dataset will have a match, unless filtered by <code>dist_max</code></p></dd>
+    <dl><dt>df1, df2</dt>
+<dd><p>the two cubble objects to match</p></dd>
 
 
-<dt>minor</dt>
-<dd><p>The dataset to match from</p></dd>
+<dt>crs</dt>
+<dd><p>a crs object from <code>st_crs</code></p></dd>
 
 
-<dt>spatial_n_keep</dt>
-<dd><p>The number of matching to keep</p></dd>
+<dt>which</dt>
+<dd><p>character; for Cartesian coordinates only: one of <code>Euclidean</code>, <code>Hausdorff</code> or <code>Frechet</code>; for geodetic coordinates, great circle distances are computed; see details</p></dd>
+
+
+<dt>par</dt>
+<dd><p>for <code>which</code> equal to <code>Hausdorff</code> or <code>Frechet</code>, optionally use a value between 0 and 1 to densify the geometry</p></dd>
+
+
+<dt>spatial_n_each</dt>
+<dd><p>integer, the number of matched "station" in <code>df2</code> for each <code>df1</code> record</p></dd>
+
+
+<dt>spatial_n_group</dt>
+<dd><p>integer, the number of matched group (pair) return</p></dd>
 
 
 <dt>temporal_matching</dt>
-<dd><p>Whether to perform temporal matching</p></dd>
+<dd><p>logical, whether to match temporally</p></dd>
 
 
 <dt>temporal_by</dt>
-<dd><p>The variable used for temporal matching</p></dd>
+<dd><p>in the syntax of c("xxx" = "xxx), the variables to match in <code>df1</code> and <code>df2</code></p></dd>
+
+
+<dt>temporal_match_fn</dt>
+<dd><p>character, the function name on how two time series should be matched</p></dd>
 
 
 <dt>temporal_n_highest</dt>
-<dd><p>The number of highest peak used for temporal matching</p></dd>
-
-
-<dt>temporal_independent</dt>
-<dd><p>The dataset used to construct the temporal window,
-need to be the name of either major or minor.</p></dd>
+<dd><p>numeric, the number of highest peak used for temporal matching in <code>match_peak</code></p></dd>
 
 
 <dt>temporal_window</dt>
-<dd><p>The temporal window allowed to fall in</p></dd>
+<dd><p>The temporal window allowed in <code>match_peak</code></p></dd>
 
 
 <dt>temporal_min_match</dt>
-<dd><p>The minimum number of peak matching for temporal matching</p></dd>
+<dd><p>The minimum number of peak matching for temporal matching in <code>match_peak</code></p></dd>
 
 
-<dt>spatial_single_match</dt>
-<dd><p>Whether each observation in the minor dataset is only allowed to to be matched once, default to <code>TRUE</code></p></dd>
+<dt>...</dt>
+<dd><p>parameters passing to temporal match</p></dd>
 
 
-<dt>spatial_dist_max</dt>
-<dd><p>The maximum distance allowed between matched pair</p></dd>
-
-
-<dt>match_table</dt>
-<dd><p>The spatial matching table</p></dd>
+<dt>data</dt>
+<dd><p>the result from spatial matching</p></dd>
 
 </dl></div>
-    <div id="value">
-    <h2>Value</h2>
-    
 
-<p>A cubble with matched pairs</p>
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu">match_spatial</span><span class="op">(</span><span class="va">climate_aus</span>, <span class="va">river</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Use OGC:CRS84 by default for distance calculation...</span>
+<span class="r-in"><span><span class="co"># turn with different distance calculation:</span></span></span>
+<span class="r-in"><span><span class="va">a2</span> <span class="op">&lt;-</span> <span class="fu">match_spatial</span><span class="op">(</span><span class="va">climate_aus</span>, <span class="va">river</span>, which <span class="op">=</span> <span class="st">"Hausdorff"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Use OGC:CRS84 by default for distance calculation...</span>
+<span class="r-in"><span><span class="co"># tune the number of matches in each group</span></span></span>
+<span class="r-in"><span><span class="va">a3</span> <span class="op">&lt;-</span> <span class="fu">match_spatial</span><span class="op">(</span><span class="va">climate_aus</span>, <span class="va">river</span>, spatial_n_each <span class="op">=</span> <span class="fl">5</span>, spatial_n_group <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Use OGC:CRS84 by default for distance calculation...</span>
+</code></pre></div>
     </div>
-
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
