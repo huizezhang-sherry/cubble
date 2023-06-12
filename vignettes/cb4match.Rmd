@@ -28,12 +28,12 @@ This vignette introduces how to spatially and spatio-temporally match sites with
 Bureau of Meteorology collects [water data](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full) from river gauges and this includes variables: electrical conductivity, turbidity, water course discharge, water course level, and water temperature. In particular, water level will interactive with precipitation from the climate data since rainfall will raise the water level in the river. Here is the location of available weather station and water gauges in Victoria:
 
 ```{r echo = FALSE}
-river <- river %>%  mutate(type = "river-level")
+river <- river %>%  mutate(type = "river-level") %>% rename(id = station)
 
 climate_vic <- climate_aus %>%  
   # subset for Victoria stations
   filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 76, 90)) %>%  
-  mutate(type = "weather")
+  mutate(type = "climate")
 
 vic_map <- ozmaps::abs_ste %>%  filter(NAME == "Victoria")
 
@@ -50,6 +50,13 @@ ggplot() +
 In cubble, `match_sites()` houses `match_spatial()` and `match_temporal()`. For a spatial-only matching, you can use `match_sites(temporal_matching = FALSE)` or simply `match_spatial()`.
 
 Any matching requires two datasets in the cubble and we call them `major` and `minor`. Major and minor dataset differs from how distance is calculated. Spatial matching calculates the spherical distance using the Vincenty formula and this distance is calculated from *each* site in the `major` dataset is to *every* site in the `minor` dataset. 
+
+```{r}
+res_sp <- match_spatial(climate_vic, river, 
+                        spatial_n_group = 10, return_cubble = TRUE)
+(res_sp <- res_sp[-c(5, 8)] %>% bind_rows())
+```
+
 
 Once the distance is calculated, three arguments are available to refine the matching results: 
 
@@ -117,48 +124,37 @@ We first find the `n` peaks in each series (3 peaks here). A variable needs to b
 In the river level and precipitation example, `Water_course_level` in `river` will be matched to `prcp` in `climate`. This can be specified in `temporal_by`, an analogue to  the `by` syntax in `join`. The goal in this example is to see if precipitation will be reflected by the water level in the river and this puts precipitation `prcp`, as the independent. Given there is one year worth of data, the number of peak (`temporal_n_highest`) to consider is slightly raised from a default 20 to 30 and `temporal_min_match` is raised accordingly. 
 
 ```{r}
-res_sp <- match_spatial(climate_vic, river, spatial_n_group = 10) 
-res_sp <- res_sp %>% 
-  filter(!group %in% c(5, 8)) %>% 
-  tidyr::pivot_longer(from:to, names_to = "order", values_to = "id") %>%
-  select(-order)
-
-res_sp <- bind_rows(climate_vic, river %>% rename(id = station)) %>% 
-  inner_join(res_sp) 
-
 res_tm <- res_sp %>% 
   match_temporal(
-    match_id = group,
     data_id = type,
-    #return_cubble = TRUE, 
-    temporal_by = c("prcp" = "Water_course_level"),
-    temporal_n_highest = 30,
-    temporal_min_match = 15)
+    match_id = group,
+    return_cubble = TRUE,
+    temporal_by = c("prcp" = "Water_course_level"))
+res_tm[[1]]
+
 ```
 
 The output from temporal matching is also a cubble with `n_match` for the number of matched temporal peaks (on top of the `dist` and `group` from spatial matching)： 
 
 ```{r}
-res_tm <- res_tm %>% filter(group %in% c(1, 7, 6, 9))
+res_tm <- res_tm %>% bind_rows() %>% filter(group %in% c(1, 7, 6, 9))
 ```
 
 We can look at the matched pair on the map:
 
 ```{r}
-
 vic_map <- ozmaps::abs_ste |> 
-  filter(NAME == "Victoria") |> 
-  rmapshaper::ms_simplify()  
+  filter(NAME == "Victoria") 
 
 ggplot() + 
   geom_sf(data = vic_map, fill = "grey95", color = "white") + 
   geom_point(data = dplyr::bind_rows(river, climate_vic), 
              aes(x = long, y = lat, color = type), alpha = 0.2, fill = 0.2) +
-  geom_point(data = res_tm, aes(x = long, y = lat, color = type)) +
+  geom_point(data = res_tm %>% as_tibble() , aes(x = long, y = lat, color = type)) +
   ggrepel::geom_label_repel(
-    data = res_tm |> filter(type == "river"), aes(x = long, y = lat, label = group)) +
+    data = res_tm |> filter(type == "river") %>% as_tibble(), aes(x = long, y = lat, label = group)) +
   scale_color_brewer(palette = "Dark2")  + 
-  ggthemes::theme_map() +
+  theme_void() + 
   ggplot2::theme(legend.position = "bottom",
                  legend.text = element_text(size = 15),
                  legend.title = element_text(size = 15)) +

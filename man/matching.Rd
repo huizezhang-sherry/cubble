@@ -37,13 +37,12 @@ match_spatial(
 match_temporal(
   data,
   data_id,
-  match_id,
+  match_id = NULL,
   temporal_by,
   return_cubble = FALSE,
   temporal_match_fn = match_peak,
-  temporal_n_highest = 20,
+  temporal_n_highest = 30,
   temporal_window = 5,
-  temporal_min_match = 10,
   ...
 )
 }
@@ -76,7 +75,7 @@ match_temporal(
 
 \item{return_cubble}{logical (default to false), whether to return the cubble object or a matching summary table}
 
-\item{data}{the result from spatial matching}
+\item{data}{the resulting object from spatial matching}
 
 \item{data_id}{variable name that separates \code{df1} and \code{df2}}
 

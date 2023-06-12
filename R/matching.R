@@ -15,7 +15,7 @@
 #' @param temporal_matching logical, whether to match temporally
 #' @param temporal_by in the syntax of c("xxx" = "xxx), the variables to match in \code{df1} and \code{df2}
 #' @param return_cubble logical (default to false), whether to return the cubble object or a matching summary table
-#' @param data the result from spatial matching
+#' @param data the resulting object from spatial matching
 #' @param data_id variable name that separates \code{df1} and \code{df2}
 #' @param match_id variable name that groups the same match
 #' @param temporal_match_fn character, the function name on how two time series should be matched
@@ -108,12 +108,12 @@ match_spatial <- function(df1, df2,
   dist_df2 <- dist_df %>%
     inner_join(gp_return %>% select(-.data$dist, -.data$to), by = "from") %>%
     dplyr::slice_min(.data$dist, n = spatial_n_each, by = .data$from) %>%
-    arrange(group)
+    arrange(.data$group)
 
   if (return_cubble){
 
     res1 <- df1 %>%
-      inner_join(dist_df2 %>% select(.data$from, .data$group) %>% distinct() %>% rename(!!key := .data$from), by = key) %>%
+      inner_join(dist_df2 %>% select(.data$from, .data$group) %>% rename(!!key := .data$from), by = key) %>%
       update_cubble()
 
     res2 <- df2 %>%
@@ -130,27 +130,39 @@ match_spatial <- function(df1, df2,
 #' @export
 #' @rdname matching
 match_temporal <- function(data,
-                           data_id, match_id,
+                           data_id, match_id = NULL,
                            temporal_by,
                            return_cubble = FALSE,
                            temporal_match_fn = match_peak,
-                           temporal_n_highest = 20,
+                           temporal_n_highest = 30,
                            temporal_window = 5,
-                           temporal_min_match = 10,
                            ...) {
-
   match_id <- enquo(match_id)
   data_id <- enquo(data_id)
   var_names <- list(names(temporal_by), unname(temporal_by))
+  key <- key_vars(data)
+  index <- index_var(data)
 
-  data_long <- data %>%
-    dplyr::arrange(!!match_id) %>%
-    dplyr::group_split(!!match_id) %>%
+  multiple_match <- any(data %>% group_by(!!match_id) %>% dplyr::group_size() != 2)
+  if (multiple_match){
+    data <- data %>%
+      dplyr::group_split(!!match_id) %>%
+      map(~.x %>% update_cubble() %>% group_by(type) %>%
+            mutate(group2 = dplyr::row_number()) %>%
+            dplyr::group_split(.data$group2)) %>%
+      unlist(recursive = FALSE) %>%
+      map(update_cubble)
+  } else{
+    data <- data %>%
+      dplyr::group_split(!!match_id)
+  }
+
+  data_long <-  data %>%
     map(~.x %>%
           dplyr::group_split(!!data_id) %>%
           purrr::map2(var_names, ~.x %>%
                  face_temporal() %>%
-                 dplyr::select(key_vars(data), index_var(data), .y) %>%
+                 dplyr::select(key, index, .y) %>%
                  dplyr::rename(matched = .y)))
 
   vecs <- data_long %>% map(~map(.x, ~.x$matched))
@@ -161,23 +173,25 @@ match_temporal <- function(data,
                         temporal_n_highest = temporal_n_highest,
                         temporal_window = temporal_window, ...)))
 
-  res <- tibble(
-    !!match_id :=data %>% dplyr::pull(!!match_id) %>% unique() %>% sort(),
-    n_matches = res) %>%
-    dplyr::arrange(-n_matches)
+  out <- bind_rows(data) %>% as_tibble()
+  if (multiple_match){
+    out <- out %>% distinct(!!match_id, .data$group2)
+  } else{
+    out <- out %>% distinct(!!match_id)
+  }
+  res <- out %>% dplyr::bind_cols(match_res = res)
 
   if (return_cubble){
     res <- data_long %>%
-      map(~map(.x, ~face_spatial(.x))) %>%
-      bind_rows() %>%
-      left_join(res)
+      map(~map(.x, ~face_spatial(.x)) %>% bind_rows) %>%
+      map2(res$match_res, ~.x %>% mutate(match_res = .y))
   }
 
   return(res)
 
 }
 
-match_peak <- function(list, temporal_n_highest, temporal_window){
+match_peak <- function(list, temporal_n_highest, temporal_window, ...){
 
   ts1_top <- sort(diff(list[[1]]), decreasing = TRUE, index.return = TRUE)$ix[1:temporal_n_highest]
   ts2_top <- sort(diff(list[[2]]), decreasing = TRUE, index.return = TRUE)$ix[1:temporal_n_highest]
@@ -185,5 +199,6 @@ match_peak <- function(list, temporal_n_highest, temporal_window){
   sum(ts2_top %in% ts1_rg)
 
 }
+
 
 
