@@ -111,16 +111,19 @@ falls into the interval constructed.</p>
 <span>  which <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  par <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  spatial_n_each <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  spatial_n_group <span class="op">=</span> <span class="fl">4</span></span>
+<span>  spatial_n_group <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  return_cubble <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">match_temporal</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
+<span>  <span class="va">data_id</span>,</span>
+<span>  match_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">temporal_by</span>,</span>
+<span>  return_cubble <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  temporal_match_fn <span class="op">=</span> <span class="va">match_peak</span>,</span>
-<span>  temporal_n_highest <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  temporal_n_highest <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  temporal_window <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  temporal_min_match <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -179,8 +182,20 @@ falls into the interval constructed.</p>
 <dd><p>parameters passing to temporal match</p></dd>
 
 
+<dt>return_cubble</dt>
+<dd><p>logical (default to false), whether to return the cubble object or a matching summary table</p></dd>
+
+
 <dt>data</dt>
-<dd><p>the result from spatial matching</p></dd>
+<dd><p>the resulting object from spatial matching</p></dd>
+
+
+<dt>data_id</dt>
+<dd><p>variable name that separates <code>df1</code> and <code>df2</code></p></dd>
+
+
+<dt>match_id</dt>
+<dd><p>variable name that groups the same match</p></dd>
 
 </dl></div>
 
