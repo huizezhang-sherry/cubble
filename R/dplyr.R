@@ -379,8 +379,6 @@ dplyr_reconstruct.spatial_cubble_df <- function(data, template) {
 #' @rdname dplyr
 #' @export
 dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
-  #browser()
-
   key_var <- key_vars(template)
   key_vals <- unique(data[[key_var]])
   index_var <-  index_var(template)
