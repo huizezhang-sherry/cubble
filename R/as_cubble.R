@@ -229,7 +229,7 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
 
 }
 
-globalVariables(c(".", ".val", "id"))
+globalVariables(c(".", "id"))
 
 
 

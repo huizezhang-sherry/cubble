@@ -35,8 +35,6 @@ tbl_sum.spatial_cubble_df <- function(x){
   x_is_sf <- is_sf(x)
   if (!x_is_sf) {
     coord_vars <- coords(x)
-    # when there are two keys
-    if (all(!coord_vars %in% names(x))) x <- x %>% unnest(.val)
     x <- as_tibble(x) %>% sf::st_as_sf(coords = coord_vars)
   }
 

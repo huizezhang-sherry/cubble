@@ -51,8 +51,6 @@ face_temporal.spatial_cubble_df <- function(data, col){
 
   # organise spatial variables into `spatial`
   class(data) <- class(data)[class(data) != "cubble_df"]
-  if (".val" %in% colnames(data)) data <- as_tibble(data)
-  if (".val" %in% colnames(spatial)) spatial <- spatial %>%  tidyr::unnest(.data$.val)
 
   if (is_tsibble){
     out <- out %>% tsibble::as_tsibble(key = !!cur_key, index = index)
@@ -87,25 +85,16 @@ face_spatial.temporal_cubble_df <- function(data) {
   key_name <- map_chr(key, rlang::as_name)
   index <- data %@% "index"
   coords <- coords(data)
-
   spatial <- spatial(data)
-  if (length(key) == 1){
-    tvars <- colnames(data)[colnames(data) != key_name]
-    tvars <- tvars[!tvars %in% colnames(spatial)]
 
-    unfoldd_var <- intersect(names(data), names(spatial)) %>%
-      setdiff(key_name)
+  tvars <- colnames(data)[colnames(data) != key_name]
+  tvars <- tvars[!tvars %in% colnames(spatial)]
+  unfoldd_var <- intersect(names(data), names(spatial)) %>%
+    setdiff(key_name)
 
-    class(data) <- setdiff(class(data), cb_temporal_cls)
-    temporal <- data %>% remove_attrs() %>% tidyr::nest(ts = -key_name)
-
-    out <- spatial %>% dplyr::left_join(temporal, by = key_name)
-
-  } else if (length(key) == 2){
-    spatial <- spatial %>%  tidyr::nest(.val = -key_name[1])
-    temporal <-data %>%  tidyr::nest(ts = -key_name[1])
-    out <- left_join(spatial, temporal, by = key_name[1])
-  }
+  class(data) <- setdiff(class(data), cb_temporal_cls)
+  temporal <- data %>% remove_attrs() %>% tidyr::nest(ts = -key_name)
+  out <- spatial %>% dplyr::left_join(temporal, by = key_name)
 
   new_spatial_cubble(
     out, key = key_name, index = index, coords = coords
