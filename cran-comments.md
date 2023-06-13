@@ -1,4 +1,4 @@
-── R CMD check results ─────────────────────────────────── cubble 0.2.0 ────
+── R CMD check results ─────────────────────────────────── cubble 0.3.0 ────
 
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 

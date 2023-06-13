@@ -18,7 +18,7 @@
 #' @param data the resulting cubble object from spatial matching (with
 #'  \code{return_cubble = TRUE} in spatial matching)
 #' @param data_id a character (or symbol), the variable differentiates \code{df1} and \code{df2}
-#' @param match_id a character (or symbol), the variable differentiate each group of mathing
+#' @param match_id a character (or symbol), the variable differentiate each group of match
 #' @param temporal_match_fn character, the function name on how two time series should be matched
 #' @param temporal_n_highest numeric, the number of highest peak used for temporal matching in \code{match_peak}
 #' @param temporal_window The temporal window allowed in \code{match_peak}

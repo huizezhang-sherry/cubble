@@ -47,7 +47,7 @@ nested <- climate_flat %>% as_cubble(key = id, index = date, coords = c(long, la
 nested
 ```
 
-Check the vignette [1. The cubble class](articles/cb1class.html) for more details on the class deisgn. 
+Check the vignette [1. The cubble class](articles/cb1class.html) for more details on the class design. 
 
 You can also create a cubble object by supplying the spatial and temporal component separately in `make_cubble()`. This allows you to use an `sf` object for the spatial component and a `tsibble` object for the temporal component. The `sf` and `tsibble` class will be carried over to the cubble object: 
 

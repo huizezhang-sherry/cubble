@@ -44,8 +44,8 @@ library(dplyr)
 nested <- climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
 nested
 #> # cubble:   key: id [3], index: date, nested form
-#> # extent:   [144.8321, -37.98, 145.0964, -37.6655]
-#> # temporal: prcp [dbl], tmax [dbl], tmin [dbl]
+#> # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+#> # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
 #>   id           long   lat  elev name              wmo_id ts               
 #>   <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
 #> 1 ASN00086038  145. -37.7  78.4 essendon airport   95866 <tibble [10 × 4]>
@@ -54,7 +54,7 @@ nested
 ```
 
 Check the vignette [1. The cubble class](articles/cb1class.html) for
-more details on the class deisgn.
+more details on the class design.
 
 You can also create a cubble object by supplying the spatial and
 temporal component separately in `make_cubble()`. This allows you to use

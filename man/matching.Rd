@@ -63,7 +63,7 @@ for each \code{df1} record}
 
 \item{data_id}{a character (or symbol), the variable differentiates \code{df1} and \code{df2}}
 
-\item{match_id}{a character (or symbol), the variable differentiate each group of mathing}
+\item{match_id}{a character (or symbol), the variable differentiate each group of match}
 
 \item{temporal_matching}{logical, whether to match temporally}
 

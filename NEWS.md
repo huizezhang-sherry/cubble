@@ -1,3 +1,12 @@
+# cubble 0.3.0
+
+* new `make_cubble()` for constructing a cubble object from separate spatial & temporal components (replace `as_cubble(list(spatial = ..., temporal = ...))` syntax)
+* `as_cubble()` for stars and sftime objects (#5)
+* refactor the cubble class: nested cubble has class: `spatial_cubble_df` and `cubble_df`,
+the long cubble has class: `temporal_cubble_df` and `cubble_df`. 
+* refactor the matching function
+* better integration with sf and tsibble 
+
 # cubble 0.2.2
 
 * `as_cubble()` method for `sftime` objects
