@@ -14,7 +14,8 @@ created from an \code{sf} object if not supplied).}
 \item{temporal}{a tibble object or a tsibble object, the temporal component
 containing the \code{key} and \code{index} variable.}
 
-\item{by}{in the syntax of the \code{by} argument in \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}, used in \code{make_cubble()} when the key variable has different names in the
+\item{by}{in the syntax of the \code{by} argument in \code{\link[dplyr:mutate-joins]{dplyr::left_join()}},
+used in \code{make_cubble()} when the key variable has different names in the
 \code{spatial} and \code{temporal} data.}
 }
 \value{
@@ -25,10 +26,10 @@ be matched in a list: others$temporal and others$spatial
 }
 \description{
 When creating a cubble from separate spatial and temporal component,
-\code{\link[=make_cubble]{make_cubble()}} will informed users about potential disagreement of
-the key values in the two datasets (some sites appear in one table but not the
-other). This function summarises the key values into those match, potentially
-can be matched, and can't be matched.
+\code{\link[=make_cubble]{make_cubble()}} will informed users about potential disagreement
+of the key values in the two datasets (some sites appear in one table
+but not the other). This function summarises the key values into those
+match, potentially can be matched, and can't be matched.
 }
 \examples{
 check_key(stations, meteo)

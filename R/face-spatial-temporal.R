@@ -2,7 +2,8 @@
 #'
 #' While `face_temporal()` switches a cubble object into a long cubble,
 #' suitable for temporal operations, `face_spatial()` turns a long cubble back
-#' into a nest cubble for spatial operations. The two operations are exact inverse.
+#' into a nest cubble for spatial operations. The two operations are exact
+#' inverse.
 #' @param data a cubble object
 #' @param col a character (or a symbol), the list column to be expanded,
 #' `col` is required to be specified if there are more than one list column
@@ -47,7 +48,9 @@ face_temporal.spatial_cubble_df <- function(data, col){
 
   # unnest the temporal variables
   if (is_tsibble) data$ts <- map(data$ts, tibble::as_tibble)
-  out <- as_tibble(data) %>%  dplyr::select(!!cur_key, !!col) %>%  tidyr::unnest(c(!!col))
+  out <- as_tibble(data) %>%
+    dplyr::select(!!cur_key, !!col) %>%
+    tidyr::unnest(c(!!col))
 
   # organise spatial variables into `spatial`
   class(data) <- class(data)[class(data) != "cubble_df"]
@@ -59,7 +62,8 @@ face_temporal.spatial_cubble_df <- function(data, col){
   }
 
   new_temporal_cubble(
-    out, key = map_chr(key, as_name), index = index, coords = coords, spatial = spatial
+    out, key = map_chr(key, as_name), index = index,
+    coords = coords, spatial = spatial
   )
 }
 

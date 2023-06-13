@@ -5,7 +5,8 @@
 #' variables into the long form for these transformations.
 #'
 #' @param data a long cubble object
-#' @param ... spatial variables to move into the long form, support tidyselect syntax
+#' @param ... spatial variables to move into the long form,
+#' support tidyselect syntax
 #' @return a cubble object in the long form
 #' @examples
 #' climate_mel %>% face_temporal() %>% unfold(long, lat)

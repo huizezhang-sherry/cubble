@@ -1,13 +1,15 @@
 #' Accessors to a cubble object
 #' @details
-#' For nested cubbles, `[` will return a cubble object if the \code{key} variable,
-#' the\code{coords} variables, and the \code{ts} column all present. If the cubble
-#' object is also an sf object, the sticky select behavior on the sf column will preserve.
-#' For long cubbles, `[` will return a cubble object if the \code{key} and \code{index}
-#' variable both present. When a cubble can't be created and the data is not an sf class,
+#' For nested cubbles, `[` will return a cubble object if the \code{key}
+#' variable, the\code{coords} variables, and the \code{ts} column all present.
+#' If the cubble object is also an sf object, the sticky select behavior on
+#' the sf column will preserve. For long cubbles, `[` will return a cubble
+#' object if the \code{key} and \code{index} variable both present.
+#' When a cubble can't be created and the data is not an sf class,
 #' `[` will always return a tibble, even with single index selection.
 #'
-#' @param data an object of class \code{spatial_cubble_df} or \code{temporal_cubble_df}
+#' @param data an object of class \code{spatial_cubble_df} or
+#' \code{temporal_cubble_df}
 #' @param i,j row and column selector
 #' @inheritParams base::`[.data.frame`
 #' @examples
@@ -137,7 +139,8 @@
 `names<-.temporal_cubble_df`<- function(x, value){
   out <- `names<-`(as_tibble(x), value)
   spatial <- spatial(x)
-  names(spatial)[which(key_vars(x)==names(spatial))] <- value[which(names(x) == key_vars(x))]
+  names(spatial)[which(key_vars(x)==names(spatial))] <-
+    value[which(names(x) == key_vars(x))]
 
   new_temporal_cubble(
     out, key = value[which(names(x) == key_vars(x))],

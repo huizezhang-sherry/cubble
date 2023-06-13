@@ -15,7 +15,8 @@ extract_time(data)
 \arguments{
 \item{data}{a NetCDF file read in from \code{ncdf4::nc_open()}}
 
-\item{vars}{variables to read, see the variables in your data with \code{names(data$var)}}
+\item{vars}{variables to read, see the variables in your data with
+\code{names(data$var)}}
 }
 \value{
 extracted netcdf4 components

@@ -15,9 +15,10 @@ make_cubble(spatial, temporal, by = NULL, key, index, coords)
 
 \item{key}{a character (or symbol), the spatial identifier.}
 
-\item{index}{a character (or symbol), the temporal identifier. Currently support
-base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
-tsibble's \code{\link[tsibble:year-month]{tsibble::yearmonth()}}, \code{\link[tsibble:year-week]{tsibble::yearweek()}}, and [tsibble::yearquarter() class.}
+\item{index}{a character (or symbol), the temporal identifier.
+Currently support base R classes \code{Date}, \code{POSIXlt},
+\code{POSIXct} and tsibble's \code{\link[tsibble:year-month]{tsibble::yearmonth()}}, \code{\link[tsibble:year-week]{tsibble::yearweek()}},
+and [tsibble::yearquarter() class.}
 
 \item{coords}{a vector of character (or symbol) of length 2, in the order of
 longitude first and then latitude, the argument can be omitted if created
@@ -31,7 +32,8 @@ created from an \code{sf} object if not supplied).}
 \item{temporal}{a tibble object or a tsibble object, the temporal component
 containing the \code{key} and \code{index} variable.}
 
-\item{by}{in the syntax of the \code{by} argument in \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}, used in \code{make_cubble()} when the key variable has different names in the
+\item{by}{in the syntax of the \code{by} argument in \code{\link[dplyr:mutate-joins]{dplyr::left_join()}},
+used in \code{make_cubble()} when the key variable has different names in the
 \code{spatial} and \code{temporal} data.}
 }
 \value{

@@ -16,7 +16,8 @@ find_invariant <- function(data, key) {
   if (length(list_col) > 10000){
     list_col <- list_col[1]
     cli::cli_alert_info(
-      "More than 10,000 keys: only use the first key to test spatial & temporal variables."
+      "More than 10,000 keys: only use the first key to test spatial &
+      temporal variables."
       )
   }
 

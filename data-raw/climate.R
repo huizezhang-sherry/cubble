@@ -21,10 +21,11 @@ aus_stations <- ghcnd_stations() |>
 # the first time)
 aus_climate_raw <- aus_stations |>
   rowwise() |>
-  mutate(ts = list(meteo_pull_monitors(monitors = id, var = c("PRCP", "TMAX", "TMIN"),
-                                       date_min = "2020-01-01",
-                                       date_max = "2020-12-31") |>
-                     select(-id))) |>
+  mutate(ts = list(meteo_pull_monitors(
+    monitors = id, var = c("PRCP", "TMAX", "TMIN"),
+    date_min = "2020-01-01",
+    date_max = "2020-12-31") |>
+      select(-id))) |>
   rename(lat = latitude, long = longitude, elev = elevation)
 
 clean <- aus_climate_raw |>

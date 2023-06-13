@@ -7,7 +7,8 @@ test_that("Apply face_temporal on nest should get long and vice versa",{
 })
 
 
-test_that("Apply face_temporal & face_temporal should result in the identical object", {
+test_that("Apply face_temporal & face_temporal should result
+          in the identical object", {
   expect_identical(cb_nested %>% face_temporal() %>% face_spatial(), cb_nested)
   expect_identical(cb_long %>% face_spatial() %>% face_temporal(), cb_long)
 })

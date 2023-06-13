@@ -15,7 +15,8 @@ unfold(data, ...)
 \arguments{
 \item{data}{a long cubble object}
 
-\item{...}{spatial variables to move into the long form, support tidyselect syntax}
+\item{...}{spatial variables to move into the long form,
+support tidyselect syntax}
 }
 \value{
 a cubble object in the long form

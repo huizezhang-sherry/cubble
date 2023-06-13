@@ -1,12 +1,17 @@
 #' Coerce foreign objects into a cubble object
 #' @param ... other arguments.
 #' @param data an object to be converted into an cubble object.
-#' @param key a character (symbol), the spatial identifier, see [cubble::make_cubble()].
-#' @param index a character (symbol), the temporal identifier, see [cubble::make_cubble()].
-#' @param coords a vector of character (symbol) of length 2, see [cubble::make_cubble()].
-#' @param vars a vector of variables to read in (with quote), used in `as_cubble.netcdf()`
+#' @param key a character (symbol), the spatial identifier,
+#' see [cubble::make_cubble()].
+#' @param index a character (symbol), the temporal identifier,
+#' see [cubble::make_cubble()].
+#' @param coords a vector of character (symbol) of length 2,
+#' see [cubble::make_cubble()].
+#' @param vars a vector of variables to read in (with quote),
+#' used in `as_cubble.netcdf()`
 #' to select the variable to read in.
-#' @param lat_range,long_range in the syntax of `seq(FROM, TO, BY)` to downsample
+#' @param lat_range,long_range in the syntax of `seq(FROM, TO, BY)`
+#' to downsample
 #' the data to read in `as_cubble.netcdf()`.
 #' @importFrom tidyr unchop
 #' @importFrom tsibble index
@@ -67,7 +72,8 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
 
   } else{
     listcol_var <- listcol_var[1]
-    if (listcol_var != "ts") colnames(data)[colnames(data) == listcol_var] <- "ts"
+    if (listcol_var != "ts")
+      colnames(data)[colnames(data) == listcol_var] <- "ts"
     chopped <- data %>% tidyr::unchop("ts")
     already <- as_name(index) %in% names(chopped[["ts"]])
     if (!already) cli::cli_abort(
@@ -82,18 +88,18 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
 
 #' @rdname as_cubble
 #' @export
-as_cubble.sf = function(data, key, index,...) {
-	cc = sf::st_coordinates(sf::st_centroid(data))
-	colnames(cc) = if (sf::st_is_longlat(data))
+as_cubble.sf <-  function(data, key, index,...) {
+	cc <-  sf::st_coordinates(sf::st_centroid(data))
+	colnames(cc) <-  if (sf::st_is_longlat(data))
 			c("long", "lat")
 		else
 			c("x", "y")
-	sf_column = attr(data, "sf_column")
-	data = cbind(data, cc)
-	data = as_tibble(data)
-	key = enquo(key)
-	index = enquo(index)
-	cu = as_cubble(data, key = !!key, index = !!index, coords = colnames(cc))
+	sf_column <-  attr(data, "sf_column")
+	data <-  cbind(data, cc)
+	data <-  as_tibble(data)
+	key <-  enquo(key)
+	index <-  enquo(index)
+	cu <-  as_cubble(data, key = !!key, index = !!index, coords = colnames(cc))
 	structure(cu, class = c("cubble_df", "sf", setdiff(class(cu), "cubble_df")),
               sf_column = sf_column)
 }
@@ -123,7 +129,8 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
   raw_data <- var$var %>%  map(~.x[long_idx, lat_idx,])
 
   # define dimension and grid
-  dim_order <- c(length(long_raw), length(lat_raw) , length(time_raw), length(var$name))
+  dim_order <- c(length(long_raw), length(lat_raw) ,
+                 length(time_raw), length(var$name))
   latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>%
     dplyr::mutate(id = dplyr::row_number())
   mapping <- tidyr::expand_grid(var = var$name, time = time_raw) %>%
@@ -134,7 +141,8 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
     as.data.frame.table() %>%
     as_tibble() %>%
     dplyr::bind_cols(mapping) %>%
-    dplyr::select(.data$id, .data$long, .data$lat, .data$time, .data$var, .data$Freq) %>%
+    dplyr::select(.data$id, .data$long, .data$lat,
+                  .data$time, .data$var, .data$Freq) %>%
     dplyr::arrange(.data$id) %>%
     tidyr::pivot_wider(names_from = .data$var, values_from = .data$Freq)
 
@@ -154,18 +162,20 @@ as_cubble.stars <- function(data, key, index, coords, ...){
   # making the assumption that long/lat are the first two dimensions
   # time is the third
   if (is.na(stars::st_raster_type(data))) { # vector data cube
-	stopifnot(is.null(data$id), inherits(stars::st_get_dimension_values(data, 1), "sfc"))
-    data$id = seq_len(dim(data)[1]) # recycles
-    data = sf::st_as_sf(data, long = TRUE)
-    key = enquo(key)
-    index = enquo(index)
+	stopifnot(is.null(data$id),
+	          inherits(stars::st_get_dimension_values(data, 1), "sfc"))
+    data$id <- seq_len(dim(data)[1]) # recycles
+    data <-  sf::st_as_sf(data, long = TRUE)
+    key <-  enquo(key)
+    index <-  enquo(index)
 	as_cubble(data, key=!!key, index=!!index)
   } else { # raster data cube
     longlat <- names(stars::st_dimensions(data))[1:2]
     time <- names(stars::st_dimensions(data))[3]
 
     as_tibble(data) %>%
-      mutate(id = as.integer(interaction(!!sym(longlat[[1]]), !!sym(longlat[[2]])))) %>%
+      mutate(id = as.integer(interaction(!!sym(longlat[[1]]),
+                                         !!sym(longlat[[2]])))) %>%
       as_cubble(key = id, index = time, coords = longlat)
   }
 }
@@ -175,15 +185,19 @@ parse_dimension <- function(obj){
 
     if (!is.null(obj$value)) {
       out <- obj$value
-    } else if (is.numeric(obj$from) & is.numeric(obj$to) & inherits(obj$delta, "numeric")){
-      out <- seq(obj$offset, obj$offset + (obj$to - 1) * obj$delta, by = obj$delta)
+    } else if (is.numeric(obj$from) &
+               is.numeric(obj$to) &
+               inherits(obj$delta, "numeric")){
+      out <- seq(obj$offset, obj$offset +
+                   (obj$to - 1) * obj$delta, by = obj$delta)
     } else if (!is.na(obj$refsys)){
       if (obj$refsys == "udunits"){
       tstring <- attr(obj$offset, "units")$numerator
       origin <- parse_time(tstring)
 
       if (is.null(origin))
-        cli::cli_abort("The units is currently too complex for {.field cubble} to parse.")
+        cli::cli_abort(
+          "The units is currently too complex for {.field cubble} to parse.")
 
       tperiod <- sub(" .*", "\\1", tstring)
       time <- seq(obj$from,obj$to, as.numeric(obj$delta))
@@ -192,7 +206,8 @@ parse_dimension <- function(obj){
         out <- obj$value
       }
     } else{
-      cli::cli_abort("The units is currently too complex for {.field cubble} to parse.")
+      cli::cli_abort(
+        "The units is currently too complex for {.field cubble} to parse.")
     }
 
   out
@@ -211,7 +226,7 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
     mutate(long = sf::st_coordinates(.)[,1], lat = sf::st_coordinates(.)[,2])
 
   if (quo_is_missing(coords)){
-    coords = quo(c("long", "lat"))
+    coords <-  quo(c("long", "lat"))
   }
   coords <- as.list(quo_get_expr(coords))[-1]
   coords <- unlist(map(coords, as_string))

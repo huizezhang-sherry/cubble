@@ -118,14 +118,20 @@ test_that("dplyr verbs work on nest/long cubble", {
   expect_error(a %>% rowwise(), NA)
   expect_error(b %>% rowwise(), NA)
 
-  # group_by & ungroup - group_by/ungroup.spatial_cubble_df, xxx.temporal_cubble_df
-  expect_error((res <- cb_nested %>% mutate(group1 = c(1, 1, 2)) %>% group_by(group1)), NA)
+  # group_by & ungroup - spatial_cubble_df, temporal_cubble_df
+  expect_error((res <- cb_nested %>%
+                  mutate(group1 = c(1, 1, 2)) %>%
+                  group_by(group1)), NA)
   expect_error(res %>% ungroup(), NA)
-  expect_error((res2 <- res %>% face_temporal() %>% unfold(group1) %>% group_by(group1)), NA)
+  expect_error((res2 <- res %>%
+                  face_temporal() %>%
+                  unfold(group1) %>%
+                  group_by(group1)), NA)
   expect_error(res2 %>% ungroup(), NA)
-  expect_error(res2 %>% mutate(first5 = ifelse(lubridate::day(date) <= 5, 1, 6)) %>%
-    group_by(first5) %>%
-    ungroup(group1), NA)
+  expect_error(res2 %>%
+                 mutate(first5 = ifelse(lubridate::day(date) <= 5, 1, 6)) %>%
+                 group_by(first5) %>%
+                 ungroup(group1), NA)
 })
 
 

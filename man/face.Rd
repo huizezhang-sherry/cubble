@@ -34,7 +34,8 @@ a cubble object
 \description{
 While \code{face_temporal()} switches a cubble object into a long cubble,
 suitable for temporal operations, \code{face_spatial()} turns a long cubble back
-into a nest cubble for spatial operations. The two operations are exact inverse.
+into a nest cubble for spatial operations. The two operations are exact
+inverse.
 }
 \examples{
 cb_long <- climate_mel \%>\% face_temporal()

@@ -2,15 +2,18 @@
 #'
 #' Verbs supported for both nested and long cubble include:
 #' [dplyr::mutate()], [dplyr::filter()],  [dplyr::arrange()], [dplyr::select()],
-#' [dplyr::group_by()], [dplyr::ungroup()], [dplyr::summarise()],. [dplyr::rename()],
-#' [dplyr::bind_cols()], [dplyr::rowwise()],
-#' \code{dplyr::slice_*()}, \code{dplyr::*_join()}, [dplyr::relocate()], [dplyr::pull()]
+#' [dplyr::group_by()], [dplyr::ungroup()], [dplyr::summarise()],.
+#' [dplyr::rename()], [dplyr::bind_cols()], [dplyr::rowwise()],
+#' \code{dplyr::slice_*()}, \code{dplyr::*_join()}, [dplyr::relocate()],
+#' [dplyr::pull()]
 #'
 #' You may find not all the verbs have a \code{verb.spatial_cubble_df} or
 #' \code{verb.temporal_cubble_df} implemented. These verbs call
-#' the dplyr extending trios: \code{dplyr_row_slice}, \code{dplyr_col_modify}, and
-#' \code{dplyr_reconstruct} under the hood. See https://dplyr.tidyverse.org/reference/dplyr_extending.html
-#' @param data,.data a cubble object of class \code{spatial_cubble_df} or \code{temporal_cubble_df}
+#' the dplyr extending trios: \code{dplyr_row_slice}, \code{dplyr_col_modify},
+#'  and \code{dplyr_reconstruct} under the hood.
+#'  See https://dplyr.tidyverse.org/reference/dplyr_extending.html
+#' @param data,.data a cubble object of class \code{spatial_cubble_df} or
+#' \code{temporal_cubble_df}
 #' @inheritParams dplyr::group_by
 #' @inheritParams dplyr::dplyr_row_slice
 #' @inheritParams dplyr::dplyr_col_modify
@@ -93,7 +96,7 @@
 #' cb_nested %>% rowwise()
 #' cb_long %>% rowwise()
 #'
-#' # group_by & ungroup - group_by/ungroup.spatial_cubble_df, xxx.temporal_cubble_df
+#' # group_by & ungroup -
 #' (res <- cb_nested %>% mutate(group1 = c(1, 1, 2)) %>% group_by(group1))
 #' res %>% ungroup()
 #' (res2 <- res %>% face_temporal() %>% unfold(group1) %>% group_by(group1))
@@ -119,7 +122,8 @@ select.spatial_cubble_df <- function(.data, ...){
   if (any(attrs_no_in)){
     attr_missing <- cb_attrs[which(attrs_no_in)]
     loc <- c(tidyselect::eval_select(attr_missing, data = .data), loc)
-    cli::cli_alert_info("Missing attribute {.code {attr_missing}}, add it back.")
+    cli::cli_alert_info(
+      "Missing attribute {.code {attr_missing}}, add it back.")
   }
 
   out <- select(.data, loc)
@@ -141,7 +145,8 @@ select.temporal_cubble_df <- function(.data, ...){
   if (any(attrs_no_in)){
     attr_missing <- cb_attrs[which(attrs_no_in)]
     loc <- c(tidyselect::eval_select(attr_missing, data = .data), loc)
-    cli::cli_alert_info("Missing attribute {.code {attr_missing}}, add it back.")
+    cli::cli_alert_info(
+      "Missing attribute {.code {attr_missing}}, add it back.")
   }
   out <- select(.data, loc)
   dplyr_reconstruct(out, data)
@@ -157,8 +162,8 @@ group_by.spatial_cubble_df <- function(.data, ..., .add, .drop){
   groups <- out %@% groups
 
   new_spatial_cubble(
-    out, key = key_vars(.data), index = index_var(.data), coords = coords(.data),
-    groups = groups
+    out, key = key_vars(.data), index = index_var(.data),
+    coords = coords(.data), groups = groups
   )
 }
 
@@ -172,8 +177,8 @@ group_by.temporal_cubble_df <- function(.data, ..., .add, .drop){
   groups <- out %@% groups
 
   new_temporal_cubble(
-    out, key = key_vars(.data), index = index_var(.data), coords = coords(.data),
-    spatial = spatial(.data), groups = groups
+    out, key = key_vars(.data), index = index_var(.data),
+    coords = coords(.data), spatial = spatial(.data), groups = groups
   )
 
 }
@@ -208,18 +213,21 @@ ungroup.temporal_cubble_df <- function(x, ...){
 
 #' @rdname dplyr
 #' @export
-summarise.spatial_cubble_df <- function(.data, ..., .by = NULL, .groups = NULL){
+summarise.spatial_cubble_df <- function(.data, ..., .by = NULL,
+                                        .groups = NULL){
   vars <- enquos(..., .named = TRUE)
   out <- NextMethod()
 
   new_spatial_cubble(
-    out, key = key_vars(.data), index = index_var(.data), coords = coords(.data)
+    out, key = key_vars(.data), index = index_var(.data),
+    coords = coords(.data)
   )
 }
 
 #' @rdname dplyr
 #' @export
-summarise.temporal_cubble_df <- function(.data, ..., .by = key_vars(.data), .groups = NULL){
+summarise.temporal_cubble_df <- function(.data, ..., .by = key_vars(.data),
+                                         .groups = NULL){
   vars <- enquos(..., .named = TRUE)
   index <- index_var(.data)
   key <- key_vars(.data)
@@ -298,15 +306,19 @@ bind_rows.temporal_cubble_df <- function(..., .id = NULL){
   if (!all_temporal_cubble)
     cli::cli_abort("All the objects needs to be temporal cubbles to bind.")
 
-  if (!same_key) cli::cli_abort("All the objects needs to have the same key")
-  if (!same_index) cli::cli_abort("All the objects needs to have the same index")
-  if (!same_coords) cli::cli_abort("All the objects needs to have the same coords")
+  if (!same_key)
+    cli::cli_abort("All the objects needs to have the same key")
+  if (!same_index)
+    cli::cli_abort("All the objects needs to have the same index")
+  if (!same_coords)
+    cli::cli_abort("All the objects needs to have the same coords")
 
   class(.data) <- setdiff(class(.data), cb_temporal_cls)
   res <- NextMethod()
   spatial <- map(dots, spatial) %>% reduce(bind_rows)
   new_temporal_cubble(
-    res, key = same_key, index = same_index, coords = same_coords, spatial = spatial)
+    res, key = same_key, index = same_index, coords = same_coords,
+    spatial = spatial)
 
 }
 
@@ -386,7 +398,8 @@ dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
 
   if (is_tsibble(template)){
     suppressWarnings(
-      data <- tsibble::build_tsibble(data, key = key_var, index = index_var, ordered = FALSE)
+      data <- tsibble::build_tsibble(data, key = key_var,
+                                     index = index_var, ordered = FALSE)
     )
 
   }

@@ -3,9 +3,10 @@
 #' @param ... a set of name-value pairs to create a cubble, need to include the
 #' `key`, `index`, and `coords` variables.
 #' @param key a character (or symbol), the spatial identifier.
-#' @param index a character (or symbol), the temporal identifier. Currently support
-#' base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
-#' tsibble's [tsibble::yearmonth()], [tsibble::yearweek()], and [tsibble::yearquarter() class.
+#' @param index a character (or symbol), the temporal identifier.
+#' Currently support base R classes \code{Date}, \code{POSIXlt},
+#' \code{POSIXct} and tsibble's [tsibble::yearmonth()], [tsibble::yearweek()],
+#' and [tsibble::yearquarter() class.
 #' @param coords a vector of character (or symbol) of length 2, in the order of
 #' longitude first and then latitude, the argument can be omitted if created
 #' from an sf and its subclasses. In case the sf geometry column is not POINT,
@@ -15,7 +16,8 @@
 #' created from an `sf` object if not supplied).
 #' @param temporal a tibble object or a tsibble object, the temporal component
 #' containing the `key` and `index` variable.
-#' @param by in the syntax of the \code{by} argument in [dplyr::left_join()], used in `make_cubble()` when the key variable has different names in the
+#' @param by in the syntax of the \code{by} argument in [dplyr::left_join()],
+#'  used in `make_cubble()` when the key variable has different names in the
 #' `spatial` and `temporal` data.
 #' @rdname cubble-class
 #' @return a cubble object
@@ -77,12 +79,17 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   if (quo_is_missing(coords)){
     if (is_sf(spatial)){
       cc <- sf::st_coordinates(sf::st_centroid(spatial))
-      colnames(cc) = if (sf::st_is_longlat(spatial)) c("long", "lat") else c("x", "y")
+      colnames(cc) <-  if (sf::st_is_longlat(spatial))
+        c("long", "lat")
+      else
+        c("x", "y")
       spatial <- cbind(spatial, cc)
       coords <- colnames(cc)
     } else{
-      cli::cli_abort("Please supply the {.code coords} argument in the syntax of
-      {.code coords = c(LONG, LAT)}, or use an {.code sf} object as the spatial compoenent")
+      cli::cli_abort(
+      "Please supply the {.code coords} argument in the syntax of
+      {.code coords = c(LONG, LAT)}, or
+      use an {.code sf} object as the spatial compoenent")
     }
   } else{
     coords <- coords2strvec(coords)
@@ -123,7 +130,8 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
 
   if (has_unmatch) cli::cli_alert_warning(
     'Use {.fn check_key} to check on the unmatched key
-    The cubble is created only with sites having both spatial and temporal information'
+    The cubble is created only with sites having both spatial and
+    temporal information'
   )
 
   # only create when have both spatial & temporal info
@@ -143,7 +151,9 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
 
   temporal <- temporal %>% filter(!by %in% only_temporal) %>%
     select(as_name(index), setdiff(colnames(temporal), as_name(index)))
-  out <- suppressMessages(dplyr::inner_join(spatial, temporal %>% nest(ts = -by)) )
+  out <- suppressMessages(
+    dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
+    )
 
   new_spatial_cubble(
     out, key = by, index = index, coords = coords
@@ -191,7 +201,8 @@ validate_spatial_cubble <- function(data, args){
 
   if (any(dup_index)){
     where_dup <- which(dup_index, TRUE)
-    cli::cli_abort("Duplicated index values found with {args$key} = {x[[args$key]][where_dup]}, please fix.")
+    cli::cli_abort("Duplicated index values found with {args$key}
+                   = {x[[args$key]][where_dup]}, please fix.")
   }
 
   if (any(index_na)){
@@ -201,7 +212,8 @@ validate_spatial_cubble <- function(data, args){
 
   # check coords present
   if (any(!args$coords %in% colnames(data))){
-    cli::cli_abort("At least one of the coordinate columns not present, please fix")
+    cli::cli_abort(
+      "At least one of the coordinate columns not present, please fix")
   }
 
 }
@@ -213,12 +225,15 @@ validate_temporal_cubble <- function(data, args){
   }
 
   x <- as_tibble(data)
-  dup_index <- split(x, x[[args$key]]) %>% map_lgl(~vec_duplicate_any(.x[[args$index]]))
+  dup_index <- split(x, x[[args$key]]) %>%
+    map_lgl(~vec_duplicate_any(.x[[args$index]]))
   index_na <- any(is.na(x[[args$index]]))
 
   if (any(dup_index)){
     where_dup <- which(dup_index, TRUE)
-    cli::cli_abort("Duplicated index values found with {args$key} = {x[[args$key]][where_dup]}, please fix.")
+    cli::cli_abort(
+      "Duplicated index values found with {args$key} =
+      {x[[args$key]][where_dup]}, please fix.")
   }
 
   if (any(index_na)){

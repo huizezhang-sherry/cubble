@@ -13,7 +13,8 @@ make_temporal_tsibble <- function(x){
   x <- as_tibble(x) %>% remove_attrs()
   out <- tsibble::as_tsibble(x, key = key, index = index)
   new_temporal_cubble(
-    out, key = key_vars(out), index = index_var(out), coords = coords, spatial = spatial)
+    out, key = key_vars(out), index = index_var(out),
+    coords = coords, spatial = spatial)
 
 }
 

@@ -3,7 +3,8 @@
 #' add geometry list column to cubble_df object
 #' @param x object of class \code{spatial_cubble_df}
 #' @param sfc object of class \code{sfc} (see package sf)
-#' @param crs object of class \code{crs} (see package sf); if missing 'OGC:CRS84' is assumed (WGS84) and a message is emitted
+#' @param crs object of class \code{crs} (see package sf); if missing
+#' 'OGC:CRS84' is assumed (WGS84) and a message is emitted
 #' @param silent logical; suppress message?
 #' @export
 #' @seealso [make_temporal_tsibble]
@@ -20,10 +21,11 @@ make_spatial_sf <-  function(x, sfc = NULL, crs, silent = FALSE) {
 		if (missing(crs)) {
 			if (!silent)
 				message("CRS missing: using OGC:CRS84 (WGS84) as default")
-			crs = sf::st_crs("OGC:CRS84")
+			crs <-  sf::st_crs("OGC:CRS84")
 		}
-		sfc = sf::st_geometry(sf::st_as_sf(as_tibble(x), coords = coords(x), crs = crs))
+		sfc <-  sf::st_geometry(sf::st_as_sf(as_tibble(x),
+		                                     coords = coords(x), crs = crs))
 	}
-	x$geometry = sfc
+	x$geometry <-  sfc
 	x %>% sf::st_as_sf() %>% update_cubble()
 }

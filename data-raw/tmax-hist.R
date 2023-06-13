@@ -16,16 +16,18 @@ cand <- all_stations %>%
 
 historical_tmax <- cand %>%
   rowwise() %>%
-  mutate(ts = list(meteo_pull_monitors(monitors = id, var = "TMAX",
-                                       date_min = glue::glue("{first_year}-01-01"),
-                                       date_max = glue::glue("{last_year}-12-31")) |>
-                     select(-id))) %>%
+  mutate(ts = list(meteo_pull_monitors(
+    monitors = id, var = "TMAX",
+    date_min = glue::glue("{first_year}-01-01"),
+    date_max = glue::glue("{last_year}-12-31")) |>
+      select(-id))) %>%
   as_cubble(index = date, key = id, coords = c(longitude, latitude))
 
 tmax_hist <- historical_tmax |>
   face_temporal() |>
   mutate(tmax = tmax / 10) |>
-  filter(between(lubridate::year(date), 1970, 1975) | lubridate::year(date) > 2015) |>
+  filter(between(lubridate::year(date), 1970, 1975) |
+           lubridate::year(date) > 2015) |>
   mutate(yearmonth = tsibble::yearmonth(date)) |>
   group_by(yearmonth) |>
   summarise(tmax = mean(tmax, na.rm = TRUE)) |>

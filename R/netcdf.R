@@ -1,6 +1,7 @@
 #' Functions to extract NetCDF dimension and variables
 #' @param data a NetCDF file read in from \code{ncdf4::nc_open()}
-#' @param vars variables to read, see the variables in your data with \code{names(data$var)}
+#' @param vars variables to read, see the variables in your data with
+#' \code{names(data$var)}
 #' @importFrom ncdf4 ncvar_get
 #' @rdname netcdf
 #' @return extracted netcdf4 components
@@ -25,11 +26,6 @@ extract_longlat <- function(data){
 
   lat_name <- c("lat", "latitude")
   if (any(dims %in% lat_name)) lat_idx <- which(dims %in% lat_name)
-
-  # if (all(!dims %in% c("longitude", "latitude", "time"))){
-  #   abort("Dimension supported by cubble from NetCDF file: long, lat, and time.")
-  # }
-
 
   long <- ncdf4::ncvar_get(data, dims[long_idx]) %>% as.vector()
   lat <- ncdf4::ncvar_get(data, dims[lat_idx]) %>% as.vector()

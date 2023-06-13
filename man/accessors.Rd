@@ -19,7 +19,8 @@
 \method{[[}{cubble_df}(x, i) <- value
 }
 \arguments{
-\item{data}{an object of class \code{spatial_cubble_df} or \code{temporal_cubble_df}}
+\item{data}{an object of class \code{spatial_cubble_df} or
+\code{temporal_cubble_df}}
 
 \item{i, j}{row and column selector}
 
@@ -38,11 +39,12 @@
 Accessors to a cubble object
 }
 \details{
-For nested cubbles, \code{[} will return a cubble object if the \code{key} variable,
-the\code{coords} variables, and the \code{ts} column all present. If the cubble
-object is also an sf object, the sticky select behavior on the sf column will preserve.
-For long cubbles, \code{[} will return a cubble object if the \code{key} and \code{index}
-variable both present. When a cubble can't be created and the data is not an sf class,
+For nested cubbles, \code{[} will return a cubble object if the \code{key}
+variable, the\code{coords} variables, and the \code{ts} column all present.
+If the cubble object is also an sf object, the sticky select behavior on
+the sf column will preserve. For long cubbles, \code{[} will return a cubble
+object if the \code{key} and \code{index} variable both present.
+When a cubble can't be created and the data is not an sf class,
 \code{[} will always return a tibble, even with single index selection.
 }
 \examples{

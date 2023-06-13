@@ -26,9 +26,12 @@ Victoria Local Government Area (LGA) spatial geometry in an sf object
 \item{date}{date object, from 2022-01-01 to 2020-03-23}
 \item{lga}{Victoria Local Government Area (LGA) in Australia}
 \item{n}{COVID-19 case count}
-\item{avg_7day}{rolling mean of \code{n} in a 7 day window. Calculate with \code{mutate(avg_7day = slider::slide_dbl(n, mean, .before = 6))}}
+\item{avg_7day}{rolling mean of \code{n} in a 7 day window.
+Calculate with \code{mutate(avg_7day = slider::slide_dbl(n,
+  mean, .before = 6))}}
 \item{lga_name_2018}{LGA encoding by Australia Bureau of Statistics,
-slightly differ from the encoding used by the Department of Health in the \code{covid} data}
+slightly differ from the encoding used by the Department of Health
+in the \code{covid} data}
 \item{geometry}{multipolygon geometry of each LGA}
 }
 }

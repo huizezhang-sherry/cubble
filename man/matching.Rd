@@ -61,34 +61,38 @@ for each \code{df1} record}
 
 \item{spatial_n_group}{integer, the number of matched group (pair) return}
 
-\item{data_id}{a character (or symbol), the variable differentiates \code{df1} and \code{df2}}
+\item{data_id}{a character (or symbol), the variable differentiates
+\code{df1} and \code{df2}}
 
-\item{match_id}{a character (or symbol), the variable differentiate each group of match}
+\item{match_id}{a character (or symbol), the variable differentiate
+each group of match}
 
 \item{temporal_matching}{logical, whether to match temporally}
 
 \item{temporal_by}{in the \code{by} syntax in \code{dplyr::*_join()},
 the variables to match temporally in \code{df1} and \code{df2}.}
 
-\item{temporal_match_fn}{character, the function name on how two time series should be matched}
+\item{temporal_match_fn}{character, the function name on how two time
+series should be matched}
 
-\item{temporal_n_highest}{numeric, the number of highest peak used for temporal matching in \code{match_peak}}
+\item{temporal_n_highest}{numeric, the number of highest peak used for
+temporal matching in \code{match_peak}}
 
 \item{temporal_window}{The temporal window allowed in \code{match_peak}}
 
 \item{...}{parameters passing to temporal match}
 
-\item{return_cubble}{logical (default to false), whether to return the cubble
-object or a matching summary table}
+\item{return_cubble}{logical (default to false), whether to return the
+cubble object or a matching summary table}
 
 \item{data}{the resulting cubble object from spatial matching (with
 \code{return_cubble = TRUE} in spatial matching)}
 }
 \description{
 The spatial matching is calculated using \code{\link[sf:geos_measures]{sf::st_distance()}} with different
-distance (in meter or degree) available depending on the coordinate reference system
-and parameter (\code{which} and \code{par}). The temporal matching is based on a temporal
-matching function (\code{temporal_match_fn}) that can be customised.
+distance (in meter or degree) available depending on the coordinate reference
+system and parameter (\code{which} and \code{par}). The temporal matching is based on
+a temporal matching function (\code{temporal_match_fn}) that can be customised.
 }
 \examples{
 library(dplyr)

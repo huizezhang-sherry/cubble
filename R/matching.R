@@ -1,9 +1,9 @@
 #' Match stations in two cubbles by spatial distance/ temporal similarity
 #'
 #' The spatial matching is calculated using [sf::st_distance()] with different
-#' distance (in meter or degree) available depending on the coordinate reference system
-#' and parameter (`which` and `par`). The temporal matching is based on a temporal
-#' matching function (`temporal_match_fn`) that can be customised.
+#' distance (in meter or degree) available depending on the coordinate reference
+#' system and parameter (`which` and `par`). The temporal matching is based on
+#' a temporal matching function (`temporal_match_fn`) that can be customised.
 #'
 #' @param df1,df2 the two cubble objects to match
 #' @param crs a crs object from [sf::st_crs()]
@@ -13,14 +13,18 @@
 #' @param temporal_matching logical, whether to match temporally
 #' @param temporal_by in the \code{by} syntax in \code{dplyr::*_join()},
 #'  the variables to match temporally in \code{df1} and \code{df2}.
-#' @param return_cubble logical (default to false), whether to return the cubble
-#' object or a matching summary table
+#' @param return_cubble logical (default to false), whether to return the
+#' cubble object or a matching summary table
 #' @param data the resulting cubble object from spatial matching (with
 #'  \code{return_cubble = TRUE} in spatial matching)
-#' @param data_id a character (or symbol), the variable differentiates \code{df1} and \code{df2}
-#' @param match_id a character (or symbol), the variable differentiate each group of match
-#' @param temporal_match_fn character, the function name on how two time series should be matched
-#' @param temporal_n_highest numeric, the number of highest peak used for temporal matching in \code{match_peak}
+#' @param data_id a character (or symbol), the variable differentiates
+#' \code{df1} and \code{df2}
+#' @param match_id a character (or symbol), the variable differentiate
+#' each group of match
+#' @param temporal_match_fn character, the function name on how two time
+#' series should be matched
+#' @param temporal_n_highest numeric, the number of highest peak used for
+#' temporal matching in \code{match_peak}
 #' @param temporal_window The temporal window allowed in \code{match_peak}
 #' @param ... parameters passing to temporal match
 #' @inheritParams sf::st_distance
@@ -102,7 +106,8 @@ match_spatial <- function(df1, df2,
 
   if (!is_sf(df1)) df1 <- df1 %>% make_spatial_sf(crs = crs)
   if (!is_sf(df2)) df2 <- df2 %>% make_spatial_sf(crs = crs)
-  if (is.null(which)) which <- ifelse(isTRUE(sf::st_is_longlat(df1)), "Great Circle", "Euclidean")
+  if (is.null(which)) which <- ifelse(isTRUE(sf::st_is_longlat(df1)),
+                                      "Great Circle", "Euclidean")
 
   dist_df <- sf::st_distance(df1, df2, which = which, par = par) %>%
     as_tibble() %>%
@@ -123,15 +128,23 @@ match_spatial <- function(df1, df2,
   if (return_cubble){
 
     res1 <- df1 %>%
-      inner_join(dist_df2 %>% select(.data$from, .data$group) %>% rename(!!key := .data$from), by = key) %>%
+      inner_join(dist_df2 %>%
+                   select(.data$from, .data$group) %>%
+                   rename(!!key := .data$from),
+                 by = key) %>%
       update_cubble()
 
     res2 <- df2 %>%
-      inner_join(dist_df2 %>% select(-.data$from) %>% rename(!!key := .data$to), by = key) %>%
+      inner_join(dist_df2 %>%
+                   select(-.data$from) %>%
+                   rename(!!key := .data$to),
+                 by = key) %>%
       update_cubble() %>%
       arrange(.data$dist)
 
-    dist_df2 <- bind_rows(res1, res2) %>% dplyr::group_split(.data$group) %>% map(update_cubble)
+    dist_df2 <- bind_rows(res1, res2) %>%
+      dplyr::group_split(.data$group) %>%
+      map(update_cubble)
   }
 
   return(dist_df2)
@@ -153,7 +166,9 @@ match_temporal <- function(data,
   key <- key_vars(data)
   index <- index_var(data)
 
-  multiple_match <- any(data %>% group_by(!!match_id) %>% dplyr::group_size() != 2)
+  multiple_match <- any(data %>%
+                          group_by(!!match_id) %>%
+                          dplyr::group_size() != 2)
   if (multiple_match){
     data <- data %>%
       dplyr::group_split(!!match_id) %>%
@@ -203,8 +218,12 @@ match_temporal <- function(data,
 
 match_peak <- function(list, temporal_n_highest, temporal_window, ...){
 
-  ts1_top <- sort(diff(list[[1]]), decreasing = TRUE, index.return = TRUE)$ix[1:temporal_n_highest]
-  ts2_top <- sort(diff(list[[2]]), decreasing = TRUE, index.return = TRUE)$ix[1:temporal_n_highest]
+  sort_index <- function(x){
+    sort(x, decreasing = TRUE, index.return = TRUE)
+  }
+
+  ts1_top <- sort_index(diff(list[[1]]))$ix[1:temporal_n_highest]
+  ts2_top <- sort_index(diff(list[[2]]))$ix[1:temporal_n_highest]
   ts1_rg <- map(ts1_top, ~.x +0:temporal_window) %>% unlist() %>% unique()
   sum(ts2_top %in% ts1_rg)
 

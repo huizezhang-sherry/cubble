@@ -11,7 +11,8 @@ make_spatial_sf(x, sfc = NULL, crs, silent = FALSE)
 
 \item{sfc}{object of class \code{sfc} (see package sf)}
 
-\item{crs}{object of class \code{crs} (see package sf); if missing 'OGC:CRS84' is assumed (WGS84) and a message is emitted}
+\item{crs}{object of class \code{crs} (see package sf); if missing
+'OGC:CRS84' is assumed (WGS84) and a message is emitted}
 
 \item{silent}{logical; suppress message?}
 }

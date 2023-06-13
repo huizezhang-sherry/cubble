@@ -1,10 +1,10 @@
 #' Check on key when create cubble from two components (spatial/temporal)
 #'
 #' When creating a cubble from separate spatial and temporal component,
-#' [cubble::make_cubble()] will informed users about potential disagreement of
-#' the key values in the two datasets (some sites appear in one table but not the
-#' other). This function summarises the key values into those match, potentially
-#' can be matched, and can't be matched.
+#' [cubble::make_cubble()] will informed users about potential disagreement
+#' of the key values in the two datasets (some sites appear in one table
+#' but not the other). This function summarises the key values into those
+#'  match, potentially can be matched, and can't be matched.
 #'
 #' @inheritParams make_cubble
 #' @export

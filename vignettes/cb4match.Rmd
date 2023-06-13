@@ -105,9 +105,11 @@ ggplot() +
   geom_sf(data = vic_map, fill = "grey95", color = "white") + 
   geom_point(data = dplyr::bind_rows(river, climate_vic), 
              aes(x = long, y = lat, color = type), alpha = 0.2, fill = 0.2) +
-  geom_point(data = res_tm %>% as_tibble() , aes(x = long, y = lat, color = type)) +
+  geom_point(data = res_tm %>% as_tibble() , 
+             aes(x = long, y = lat, color = type)) +
   ggrepel::geom_label_repel(
-    data = res_tm |> filter(type == "river") %>% as_tibble(), aes(x = long, y = lat, label = group)) +
+    data = res_tm |> filter(type == "river") %>% as_tibble(), 
+    aes(x = long, y = lat, label = group)) +
   scale_color_brewer(palette = "Dark2")  + 
   theme_void() + 
   ggplot2::theme(legend.position = "bottom",
@@ -126,7 +128,8 @@ res_tm_long <- res_tm %>%
   unfold(group, type) %>%  
   rename(prcp = matched) %>%  
   group_by(group, type) %>%
-  mutate(prcp = (prcp - min(prcp, na.rm = TRUE))/ (max(prcp, na.rm = TRUE) - min(prcp, na.rm = TRUE))) 
+  mutate(prcp = (prcp - min(prcp, na.rm = TRUE))/ 
+           (max(prcp, na.rm = TRUE) - min(prcp, na.rm = TRUE))) 
 
 res_tm_long %>%  
   ggplot(aes(x = date, y = prcp, group = type,color = type)) + 

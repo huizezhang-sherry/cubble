@@ -11,22 +11,25 @@ An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \co
 climate_aus
 }
 \description{
-Daily measure on precipitation (\code{prcp}), maximum temperature (\code{tmax}), and
-minimum temperature (\code{tmin}) in 2020 for 639 stations.
+Daily measure on precipitation (\code{prcp}), maximum temperature
+(\code{tmax}), and minimum temperature (\code{tmin}) in 2020 for
+639 stations.
 }
 \details{
 \describe{
-\item{id}{station ID, "ASN000" are international paddings, the next two digits
-(digit 8-9) indicates the states the station is in: Western Australia: 01-13,
-Northern Territory: 14-15, South Australia: 16-26, Queensland: 27-45,
-New South Wales: 46-75, Victoria: 76-90, Tasmania: 91-99.
+\item{id}{station ID, "ASN000" are international paddings, the next
+two digits (digit 8-9) indicates the states the station is in:
+Western Australia: 01-13, Northern Territory: 14-15, South Australia:
+16-26, Queensland: 27-45, New South Wales: 46-75, Victoria: 76-90,
+Tasmania: 91-99.
 See http://www.bom.gov.au/climate/cdo/about/site-num.shtml}
 \item{lat}{latitude of the stations, in degree}
 \item{long}{longitude of the stations, in degree}
 \item{elev}{elevation of the stations}
 \item{name}{station name}
 \item{wmo_id}{the world meteorological organisation (WMO) station number}
-\item{ts}{a list-column that nests all the temporal variables: date, prcp, tmax, and tmin}
+\item{ts}{a list-column that nests all the temporal variables:
+date, prcp, tmax, and tmin}
 }
 }
 \examples{

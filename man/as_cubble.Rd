@@ -33,18 +33,23 @@ as_cubble(data, key, index, coords, ...)
 \arguments{
 \item{data}{an object to be converted into an cubble object.}
 
-\item{key}{a character (symbol), the spatial identifier, see \code{\link[=make_cubble]{make_cubble()}}.}
+\item{key}{a character (symbol), the spatial identifier,
+see \code{\link[=make_cubble]{make_cubble()}}.}
 
-\item{index}{a character (symbol), the temporal identifier, see \code{\link[=make_cubble]{make_cubble()}}.}
+\item{index}{a character (symbol), the temporal identifier,
+see \code{\link[=make_cubble]{make_cubble()}}.}
 
-\item{coords}{a vector of character (symbol) of length 2, see \code{\link[=make_cubble]{make_cubble()}}.}
+\item{coords}{a vector of character (symbol) of length 2,
+see \code{\link[=make_cubble]{make_cubble()}}.}
 
 \item{...}{other arguments.}
 
-\item{vars}{a vector of variables to read in (with quote), used in \code{as_cubble.netcdf()}
+\item{vars}{a vector of variables to read in (with quote),
+used in \code{as_cubble.netcdf()}
 to select the variable to read in.}
 
-\item{lat_range, long_range}{in the syntax of \code{seq(FROM, TO, BY)} to downsample
+\item{lat_range, long_range}{in the syntax of \code{seq(FROM, TO, BY)}
+to downsample
 the data to read in \code{as_cubble.netcdf()}.}
 }
 \value{

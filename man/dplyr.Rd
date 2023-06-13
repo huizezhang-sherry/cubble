@@ -134,7 +134,8 @@ names if available, otherwise it will use positions.}
 \code{"check_unique"}. See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the meaning of these
 options.}
 
-\item{data, .data}{a cubble object of class \code{spatial_cubble_df} or \code{temporal_cubble_df}}
+\item{data, .data}{a cubble object of class \code{spatial_cubble_df} or
+\code{temporal_cubble_df}}
 
 \item{cols}{A named list used to modify columns. A \code{NULL} value should remove
 an existing column.}
@@ -146,15 +147,17 @@ an existing column.}
 \description{
 Verbs supported for both nested and long cubble include:
 \code{\link[dplyr:mutate]{dplyr::mutate()}}, \code{\link[dplyr:filter]{dplyr::filter()}},  \code{\link[dplyr:arrange]{dplyr::arrange()}}, \code{\link[dplyr:select]{dplyr::select()}},
-\code{\link[dplyr:group_by]{dplyr::group_by()}}, \code{\link[dplyr:group_by]{dplyr::ungroup()}}, \code{\link[dplyr:summarise]{dplyr::summarise()}},. \code{\link[dplyr:rename]{dplyr::rename()}},
-\code{\link[dplyr:bind_cols]{dplyr::bind_cols()}}, \code{\link[dplyr:rowwise]{dplyr::rowwise()}},
-\code{dplyr::slice_*()}, \code{dplyr::*_join()}, \code{\link[dplyr:relocate]{dplyr::relocate()}}, \code{\link[dplyr:pull]{dplyr::pull()}}
+\code{\link[dplyr:group_by]{dplyr::group_by()}}, \code{\link[dplyr:group_by]{dplyr::ungroup()}}, \code{\link[dplyr:summarise]{dplyr::summarise()}},.
+\code{\link[dplyr:rename]{dplyr::rename()}}, \code{\link[dplyr:bind_cols]{dplyr::bind_cols()}}, \code{\link[dplyr:rowwise]{dplyr::rowwise()}},
+\code{dplyr::slice_*()}, \code{dplyr::*_join()}, \code{\link[dplyr:relocate]{dplyr::relocate()}},
+\code{\link[dplyr:pull]{dplyr::pull()}}
 }
 \details{
 You may find not all the verbs have a \code{verb.spatial_cubble_df} or
 \code{verb.temporal_cubble_df} implemented. These verbs call
-the dplyr extending trios: \code{dplyr_row_slice}, \code{dplyr_col_modify}, and
-\code{dplyr_reconstruct} under the hood. See https://dplyr.tidyverse.org/reference/dplyr_extending.html
+the dplyr extending trios: \code{dplyr_row_slice}, \code{dplyr_col_modify},
+and \code{dplyr_reconstruct} under the hood.
+See https://dplyr.tidyverse.org/reference/dplyr_extending.html
 }
 \examples{
 library(dplyr)
@@ -227,7 +230,7 @@ cb_nested \%>\% slice_sample(n = 2)
 cb_nested \%>\% rowwise()
 cb_long \%>\% rowwise()
 
-# group_by & ungroup - group_by/ungroup.spatial_cubble_df, xxx.temporal_cubble_df
+# group_by & ungroup -
 (res <- cb_nested \%>\% mutate(group1 = c(1, 1, 2)) \%>\% group_by(group1))
 res \%>\% ungroup()
 (res2 <- res \%>\% face_temporal() \%>\% unfold(group1) \%>\% group_by(group1))
