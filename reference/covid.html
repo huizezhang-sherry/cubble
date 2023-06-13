@@ -107,11 +107,14 @@ Victoria Local Government Area (LGA) spatial geometry in an sf object
 <dd><p>COVID-19 case count</p></dd>
 
 <dt>avg_7day</dt>
-<dd><p>rolling mean of <code>n</code> in a 7 day window. Calculate with <code>mutate(avg_7day = slider::slide_dbl(n, mean, .before = 6))</code></p></dd>
+<dd><p>rolling mean of <code>n</code> in a 7 day window.
+Calculate with <code>mutate(avg_7day = slider::slide_dbl(n,
+  mean, .before = 6))</code></p></dd>
 
 <dt>lga_name_2018</dt>
 <dd><p>LGA encoding by Australia Bureau of Statistics,
-slightly differ from the encoding used by the Department of Health in the <code>covid</code> data</p></dd>
+slightly differ from the encoding used by the Department of Health
+in the <code>covid</code> data</p></dd>
 
 <dt>geometry</dt>
 <dd><p>multipolygon geometry of each LGA</p></dd>
@@ -138,7 +141,8 @@ slightly differ from the encoding used by the Department of Health in the <code>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Some sites in the spatial table don't have temporal information</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Some sites in the temporal table don't have spatial information</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Use `check_key()` to check on the unmatched key</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The cubble is created only with sites having both spatial and temporal information</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The cubble is created only with sites having both spatial and</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> temporal information</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   key: lga [78], index: date, nested form, [sf]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial:  [140.961682, -39.1591895, 149.976291, -33.9804256], WGS 84</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], n [dbl], avg_7day [dbl]</span></span>

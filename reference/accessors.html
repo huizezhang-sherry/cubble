@@ -97,7 +97,8 @@ names(x) &lt;- value
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
-<dd><p>an object of class <code>spatial_cubble_df</code> or <code>temporal_cubble_df</code></p></dd>
+<dd><p>an object of class <code>spatial_cubble_df</code> or
+<code>temporal_cubble_df</code></p></dd>
 
 
 <dt>i, j</dt>
@@ -123,11 +124,12 @@ names(x) &lt;- value
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>For nested cubbles, <code>[</code> will return a cubble object if the <code>key</code> variable,
-the<code>coords</code> variables, and the <code>ts</code> column all present. If the cubble
-object is also an sf object, the sticky select behavior on the sf column will preserve.
-For long cubbles, <code>[</code> will return a cubble object if the <code>key</code> and <code>index</code>
-variable both present. When a cubble can't be created and the data is not an sf class,
+    <p>For nested cubbles, <code>[</code> will return a cubble object if the <code>key</code>
+variable, the<code>coords</code> variables, and the <code>ts</code> column all present.
+If the cubble object is also an sf object, the sticky select behavior on
+the sf column will preserve. For long cubbles, <code>[</code> will return a cubble
+object if the <code>key</code> and <code>index</code> variable both present.
+When a cubble can't be created and the data is not an sf class,
 <code>[</code> will always return a tibble, even with single index selection.</p>
     </div>
 
