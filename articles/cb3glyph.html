@@ -71,6 +71,9 @@
     <li>
       <a href="../articles/cb4match.html">4. Matching different data sources</a>
     </li>
+    <li>
+      <a href="../articles/cb5interactive.html">5. Interactive graphics</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -179,7 +182,7 @@ that does not use the four glyph map aesthetics, the argument
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/glyph.html">geom_glyph</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
 <p>Taking the output from the <a href="cubble.html">Get started</a>
-page, we can visualise the different in avergae temperature curve
+page, we can visualise the different in average temperature curve
 between 1971 - 1975 and 2016 - 2020 using the glyph map:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vic_map</span> <span class="op">&lt;-</span> <span class="fu">ozmaps</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ozmaps/man/abs-data.html" class="external-link">abs_ste</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Victoria"</span><span class="op">)</span><span class="op">)</span></span>
