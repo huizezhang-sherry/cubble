@@ -1,15 +1,15 @@
-#' Access to dplyr verbs
+#' `dplyr` methods
 #'
 #' Verbs supported for both nested and long cubble include:
 #' [dplyr::mutate()], [dplyr::filter()],  [dplyr::arrange()], [dplyr::select()],
 #' [dplyr::group_by()], [dplyr::ungroup()], [dplyr::summarise()],. [dplyr::rename()],
 #' [dplyr::bind_cols()], [dplyr::rowwise()],
-#' \code{dplyr::slice_*()}, \code{dplyr::*_join())}, [dplyr::relocate()], [dplyr::pull()]
+#' \code{dplyr::slice_*()}, \code{dplyr::*_join()}, [dplyr::relocate()], [dplyr::pull()]
 #'
 #' You may find not all the verbs have a \code{verb.spatial_cubble_df} or
-#' \code{verb.temporal_cubble_df} implemented. These verbs under the hood call
+#' \code{verb.temporal_cubble_df} implemented. These verbs call
 #' the dplyr extending trios: \code{dplyr_row_slice}, \code{dplyr_col_modify}, and
-#' \code{dplyr_reconstruct}. See https://dplyr.tidyverse.org/reference/dplyr_extending.html
+#' \code{dplyr_reconstruct} under the hood. See https://dplyr.tidyverse.org/reference/dplyr_extending.html
 #' @param data,.data a cubble object of class \code{spatial_cubble_df} or \code{temporal_cubble_df}
 #' @inheritParams dplyr::group_by
 #' @inheritParams dplyr::dplyr_row_slice
@@ -400,7 +400,7 @@ dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
 
 }
 
-globalVariables(c("groups"))
+globalVariables(c("groups", "dots"))
 
 
 # those should ideally not needed

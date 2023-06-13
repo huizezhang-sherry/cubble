@@ -2,21 +2,16 @@
 % Please edit documentation in R/tsibble.R
 \name{make_temporal_tsibble}
 \alias{make_temporal_tsibble}
-\title{Promote the temporal component in cubble to an tsibble object after creation}
+\title{Update the temporal cubble to include the tsibble class (\code{tbl_ts})}
 \usage{
-make_temporal_tsibble(x, ...)
+make_temporal_tsibble(x)
 }
 \arguments{
 \item{x}{object of class \code{temporal_cubble_df}}
-
-\item{...}{not used}
 }
 \description{
-Promote the temporal component in cubble to an tsibble object after creation
+Update the temporal cubble to include the tsibble class (\code{tbl_ts})
 }
 \examples{
 climate_mel \%>\% face_temporal() \%>\% make_temporal_tsibble()
-}
-\seealso{
-\link{make_spatial_sf}
 }

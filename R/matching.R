@@ -1,65 +1,75 @@
-#' Matching sites from two data sources
+#' Match stations in two cubbles by spatial distance/ temporal similarity
 #'
-#' The function includes both spatial and temporal matching. The spatial matching
-#' is based on the distance and the distance is calculated using the Vincenty
-#' formula assuming earth is sphere with a radius of 6371 km. The temporal matching
-#' first filters out the `n` largest increases, determined by `temporal_n_highest`,
-#' in both datasets,  constructs an interval of length `temporal_window` from
-#' one dataset and count the number that large increase from the other dataset
-#' falls into the interval constructed.
+#' The spatial matching is calculated using [sf::st_distance()] with different
+#' distance (in meter or degree) available depending on the coordinate reference system
+#' and parameter (`which` and `par`). The temporal matching is based on a temporal
+#' matching function (`temporal_match_fn`) that can be customised.
 #'
 #' @param df1,df2 the two cubble objects to match
-#' @param crs a crs object from \code{st_crs}
-#' @param spatial_n_each integer, the number of matched "station" in \code{df2} for each \code{df1} record
+#' @param crs a crs object from [sf::st_crs()]
+#' @param spatial_n_each integer, the number of matched "station" in \code{df2}
+#' for each \code{df1} record
 #' @param spatial_n_group integer, the number of matched group (pair) return
 #' @param temporal_matching logical, whether to match temporally
-#' @param temporal_by in the syntax of c("xxx" = "xxx), the variables to match in \code{df1} and \code{df2}
-#' @param return_cubble logical (default to false), whether to return the cubble object or a matching summary table
-#' @param data the resulting object from spatial matching
-#' @param data_id variable name that separates \code{df1} and \code{df2}
-#' @param match_id variable name that groups the same match
+#' @param temporal_by in the \code{by} syntax in \code{dplyr::*_join()},
+#'  the variables to match temporally in \code{df1} and \code{df2}.
+#' @param return_cubble logical (default to false), whether to return the cubble
+#' object or a matching summary table
+#' @param data the resulting cubble object from spatial matching (with
+#'  \code{return_cubble = TRUE} in spatial matching)
+#' @param data_id a character (or symbol), the variable differentiates \code{df1} and \code{df2}
+#' @param match_id a character (or symbol), the variable differentiate each group of mathing
 #' @param temporal_match_fn character, the function name on how two time series should be matched
 #' @param temporal_n_highest numeric, the number of highest peak used for temporal matching in \code{match_peak}
 #' @param temporal_window The temporal window allowed in \code{match_peak}
-#' @param temporal_min_match The minimum number of peak matching for temporal matching in \code{match_peak}
 #' @param ... parameters passing to temporal match
 #' @inheritParams sf::st_distance
 #'
 #' @export
 #' @rdname matching
 #' @examples
-#' a1 <- match_spatial(climate_aus, river)
+#' library(dplyr)
+#' climate_aus <- mutate(climate_aus, type = "climate")
+#' match_spatial(climate_aus, river)
 #' # turn with different distance calculation:
-#' a2 <- match_spatial(climate_aus, river, which = "Hausdorff")
+#' match_spatial(climate_aus, river, which = "Hausdorff")
 #' # tune the number of matches in each group
-#' a3 <- match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
+#' match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
+#'
+#' a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) %>% bind_rows()
+#' match_temporal(a1, data_id = type, match_id = group,
+#' temporal_by = c("prcp" = "Water_course_level"))
+#' match_temporal(a1, data_id = type, match_id = group,
+#' temporal_by = c("prcp" = "Water_course_level"), return = TRUE)
 match_sites <- function(df1, df2, crs = sf::st_crs("OGC:CRS84"),
                         which = NULL, par = 0,
                         spatial_n_each = 1,
                         spatial_n_group = 4,
+                        data_id, match_id,
                         temporal_matching = TRUE,
                         temporal_by,
                         temporal_match_fn = match_peak,
                         temporal_n_highest = 20,
-                        temporal_window = 5,
-                        temporal_min_match = 10, ...) {
+                        temporal_window = 5, ...) {
 
   out <- match_spatial(
     df1, df2, crs = crs,
     which = NULL, par = 0,
     spatial_n_each = spatial_n_each,
-    spatial_n_group = spatial_n_group
+    spatial_n_group = spatial_n_group,
+    return_cubble = TRUE
   )
 
 
   if (temporal_matching){
     out <- out %>%
       map(~.x %>% match_temporal(
+        data_id = !!enquo(data_id), match_id = !!enquo(match_id),
         temporal_match_fn = match_peak,
         temporal_by = temporal_by,
         temporal_window = temporal_window,
         temporal_n_highest = temporal_n_highest,
-        temporal_min_match = temporal_min_match,
+        return_cubble = TRUE,
         ...))
   }
 

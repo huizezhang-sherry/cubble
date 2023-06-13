@@ -2,32 +2,32 @@
 % Please edit documentation in R/cubble-print.R
 \name{print.cubble_df}
 \alias{print.cubble_df}
-\alias{tbl_sum.cubble_df}
 \alias{tbl_sum.spatial_cubble_df}
 \alias{tbl_sum.temporal_cubble_df}
-\title{print a cubble object}
+\title{Print methods}
 \usage{
-\method{print}{cubble_df}(
-  x,
-  width = NULL,
-  ...,
-  n_extra = NULL,
-  n = NULL,
-  max_extra_cols = NULL,
-  max_footer_lines = NULL
-)
-
-\method{tbl_sum}{cubble_df}(x)
+\method{print}{cubble_df}(x, width = NULL, ...)
 
 \method{tbl_sum}{spatial_cubble_df}(x)
 
 \method{tbl_sum}{temporal_cubble_df}(x)
 }
 \arguments{
-\item{x, width, n_extra, n, max_extra_cols, max_footer_lines}{see pillar tbl-format.R}
+\item{x}{any \R object (conceptually); typically numeric.}
 
-\item{...}{other argument to pass into \code{format()}}
+\item{width}{\code{default} method: the \emph{minimum} field width or
+    \code{NULL} or \code{0} for no restriction.
+
+    \code{AsIs} method: the \emph{maximum} field width for non-character
+    objects.  \code{NULL} corresponds to the default \code{12}.
+  }
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
-print a cubble object
+Print methods
+}
+\examples{
+climate_mel # a nested/spatial cubble
+face_temporal(climate_mel) # a long/temporal cubble
 }

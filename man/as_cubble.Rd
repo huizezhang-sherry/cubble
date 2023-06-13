@@ -31,28 +31,21 @@ as_cubble(data, key, index, coords, ...)
 \method{as_cubble}{sftime}(data, key, index, coords, ...)
 }
 \arguments{
-\item{data}{object to be converted into an object of class \code{cubble_df}}
+\item{data}{an object to be converted into an cubble object.}
 
-\item{key}{the spatial identifying variable(s), it can be a single variable, i.e.
-\code{key = id}, or a vector of two variables: \code{key = c(cluster, id)}
-(see the example in \code{switch_key})}
+\item{key}{a character (symbol), the spatial identifier, see \code{\link[=make_cubble]{make_cubble()}}.}
 
-\item{index}{the single temporal identifying variable, currently support
-base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
-tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class}
+\item{index}{a character (symbol), the temporal identifier, see \code{\link[=make_cubble]{make_cubble()}}.}
 
-\item{coords}{the coordinate columns, in the form of \code{c(LONGITUDE, LATITUDE)}
-the argument can be omitted if created from an sf and its subclasses.
-In the case that the sf geometry column is not POINT, cubble will use the centroid
-coordinates as LONGITUDE and LATITUDE}
+\item{coords}{a vector of character (symbol) of length 2, see \code{\link[=make_cubble]{make_cubble()}}.}
 
-\item{...}{other arguments}
+\item{...}{other arguments.}
 
-\item{vars}{used in \code{as_cubble.netcdf()} to select the variable to read in,
-use \code{c()} for multiple variables (see examples)}
+\item{vars}{a vector of variables to read in (with quote), used in \code{as_cubble.netcdf()}
+to select the variable to read in.}
 
-\item{lat_range, long_range}{used in \code{as_cubble.netcdf()} to downsample the data to read,
-specify in the syntax of \code{seq(FROM, TO, BY)}(see examples)}
+\item{lat_range, long_range}{in the syntax of \code{seq(FROM, TO, BY)} to downsample
+the data to read in \code{as_cubble.netcdf()}.}
 }
 \value{
 a cubble object

@@ -32,7 +32,4 @@ See http://www.bom.gov.au/climate/cdo/about/site-num.shtml}
 \examples{
 climate_aus \%>\% face_temporal() \%>\% face_spatial()
 }
-\seealso{
-stations, climate, climate_flat, climate_mel
-}
 \keyword{datasets}

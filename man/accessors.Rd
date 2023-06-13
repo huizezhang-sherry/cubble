@@ -6,7 +6,7 @@
 \alias{names<-.spatial_cubble_df}
 \alias{names<-.temporal_cubble_df}
 \alias{[[<-.cubble_df}
-\title{Accessors of the cubble class}
+\title{Accessors to a cubble object}
 \usage{
 \method{[}{spatial_cubble_df}(data, i, j, drop = FALSE)
 
@@ -35,7 +35,7 @@
     column is selected.}
 }
 \description{
-Accessors of the cubble class
+Accessors to a cubble object
 }
 \details{
 For nested cubbles, \code{[} will return a cubble object if the \code{key} variable,

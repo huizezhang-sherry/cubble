@@ -2,7 +2,7 @@
 % Please edit documentation in R/sf.R
 \name{make_spatial_sf}
 \alias{make_spatial_sf}
-\title{Promote the spatial component in cubble to an sf object after creation}
+\title{Update the spatial cubble to include the sf class}
 \usage{
 make_spatial_sf(x, sfc = NULL, crs, silent = FALSE)
 }

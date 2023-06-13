@@ -1,15 +1,15 @@
-#' Move spatial variables into the long form
+#' Augment spatial component into the long (temporal) form
 #'
 #' Some spatio-temporal transformation, i.e. glyph maps, uses both spatial
 #' and temporal variables. `unfold()` allows you to temporarily moves spatial
 #' variables into the long form for these transformations.
 #'
 #' @param data a long cubble object
-#' @param ... spatial variables to move into the long form
+#' @param ... spatial variables to move into the long form, support tidyselect syntax
 #' @return a cubble object in the long form
 #' @examples
-#' climate_mel %>% face_temporal() %>%  unfold(long, lat)
-#'
+#' climate_mel %>% face_temporal() %>% unfold(long, lat)
+#' climate_mel %>% face_temporal() %>% unfold(dplyr::starts_with("l"))
 #' @rdname unfold
 #' @export
 unfold <- function(data, ...) {
@@ -27,18 +27,12 @@ unfold.spatial_cubble_df <- function(data, ...){
 #' @rdname unfold
 #' @export
 unfold.temporal_cubble_df <- function(data, ...){
-  dots <- enquos(..., .named = TRUE)
   sp <- spatial(data)
   key <- key_vars(data)
   index <- index(data)
   coords <- coords(data)
-  in_spatial <- map_lgl(names(dots), ~.x %in% names(sp))
-  if (!all(in_spatial)){
-    cli::cli_inform(
-      "{.code {names(dots)[!in_spatial]}} does not exist as a spaital variable. No migration")
-  }
 
-  to_join <- sp %>% as_tibble() |> select(key_vars(data), names(dots)[in_spatial])
+  to_join <- sp %>% as_tibble() |> select(c(key_vars(data), ...))
   out <- as_tibble(data) |> left_join(to_join, by = key)
 
   if (nrow(out) != nrow(data)){

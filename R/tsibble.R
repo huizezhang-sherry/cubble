@@ -1,11 +1,9 @@
-#' Promote the temporal component in cubble to an tsibble object after creation
+#' Update the temporal cubble to include the tsibble class (`tbl_ts`)
 #' @param x object of class \code{temporal_cubble_df}
-#' @param ... not used
 #' @export
-#' @seealso [make_spatial_sf]
 #' @examples
 #' climate_mel %>% face_temporal() %>% make_temporal_tsibble()
-make_temporal_tsibble <- function(x, ...){
+make_temporal_tsibble <- function(x){
 
   stopifnot(is_cubble_temporal(x))
   key <- key_vars(x)
@@ -19,9 +17,8 @@ make_temporal_tsibble <- function(x, ...){
 
 }
 
-
-#' `tsibble` functions implemented in cubble
-#' @param .data,...,.full,.start,.end see \code{tsibble} documentation
+#' Gap-filling on the temporal component of a cubble object
+#' @inheritParams tsibble::fill_gaps
 #' @importFrom tsibble fill_gaps scan_gaps
 #' @return a cubble object
 #' @rdname tsibble

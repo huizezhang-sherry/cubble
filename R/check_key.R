@@ -1,15 +1,12 @@
-#' Check key matching from multiple data sources
+#' Check on key when create cubble from two components (spatial/temporal)
 #'
-#' When creating a cubble from two sources (spatial and temporal data) with
-#' \code{make_cubble(spatial = ..., temporal = ..., ...)}, \code{make_cubble()} will
-#' informed users about potential disagreement of the key values in the two datasets
-#' (some sites appear in one table but not the other). This function summarises
-#' the key values into those match, potentially can be matched, and can't be matched.
+#' When creating a cubble from separate spatial and temporal component,
+#' [cubble::make_cubble()] will informed users about potential disagreement of
+#' the key values in the two datasets (some sites appear in one table but not the
+#' other). This function summarises the key values into those match, potentially
+#' can be matched, and can't be matched.
 #'
-#' @param spatial a tibble
-#' @param temporal a tibble
-#' @param by in the syntax of \code{by} in \code{left_join()} to specify the key
-#' when they have different names in the spatial and temporal data
+#' @inheritParams make_cubble
 #' @export
 #' @return a list with three elements: 1) paired: a tibble of paired ID from
 #' spatial and temporal data, 2) potential_pairs: a tibble of pairs that could
@@ -18,8 +15,9 @@
 #' @examples
 #' check_key(stations, meteo)
 #'
-#' meteo2 <- meteo %>% dplyr::rename(station = id)
-#' check_key(spatial = stations, temporal = meteo2, by = c("id" = "station"))
+#' # make_cubble() will prompt to use check_key if there are key mis-match:
+#' make_cubble(spatial = lga, temporal = covid, by = c("lga_name_2018" = "lga"))
+#' check_key(lga, covid, by = c("lga_name_2018" = "lga"))
 check_key <- function(spatial, temporal, by = NULL) {
   common_cols <- intersect(names(spatial), names(temporal))
   if (!is_null(by)) {

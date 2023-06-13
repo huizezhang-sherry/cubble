@@ -4,7 +4,7 @@
 \alias{match_sites}
 \alias{match_spatial}
 \alias{match_temporal}
-\title{Matching sites from two data sources}
+\title{Match stations in two cubbles by spatial distance/ temporal similarity}
 \usage{
 match_sites(
   df1,
@@ -14,12 +14,13 @@ match_sites(
   par = 0,
   spatial_n_each = 1,
   spatial_n_group = 4,
+  data_id,
+  match_id,
   temporal_matching = TRUE,
   temporal_by,
   temporal_match_fn = match_peak,
   temporal_n_highest = 20,
   temporal_window = 5,
-  temporal_min_match = 10,
   ...
 )
 
@@ -49,19 +50,25 @@ match_temporal(
 \arguments{
 \item{df1, df2}{the two cubble objects to match}
 
-\item{crs}{a crs object from \code{st_crs}}
+\item{crs}{a crs object from \code{\link[sf:st_crs]{sf::st_crs()}}}
 
 \item{which}{character; for Cartesian coordinates only: one of \code{Euclidean}, \code{Hausdorff} or \code{Frechet}; for geodetic coordinates, great circle distances are computed; see details}
 
 \item{par}{for \code{which} equal to \code{Hausdorff} or \code{Frechet}, optionally use a value between 0 and 1 to densify the geometry}
 
-\item{spatial_n_each}{integer, the number of matched "station" in \code{df2} for each \code{df1} record}
+\item{spatial_n_each}{integer, the number of matched "station" in \code{df2}
+for each \code{df1} record}
 
 \item{spatial_n_group}{integer, the number of matched group (pair) return}
 
+\item{data_id}{a character (or symbol), the variable differentiates \code{df1} and \code{df2}}
+
+\item{match_id}{a character (or symbol), the variable differentiate each group of mathing}
+
 \item{temporal_matching}{logical, whether to match temporally}
 
-\item{temporal_by}{in the syntax of c("xxx" = "xxx), the variables to match in \code{df1} and \code{df2}}
+\item{temporal_by}{in the \code{by} syntax in \code{dplyr::*_join()},
+the variables to match temporally in \code{df1} and \code{df2}.}
 
 \item{temporal_match_fn}{character, the function name on how two time series should be matched}
 
@@ -69,31 +76,32 @@ match_temporal(
 
 \item{temporal_window}{The temporal window allowed in \code{match_peak}}
 
-\item{temporal_min_match}{The minimum number of peak matching for temporal matching in \code{match_peak}}
-
 \item{...}{parameters passing to temporal match}
 
-\item{return_cubble}{logical (default to false), whether to return the cubble object or a matching summary table}
+\item{return_cubble}{logical (default to false), whether to return the cubble
+object or a matching summary table}
 
-\item{data}{the resulting object from spatial matching}
-
-\item{data_id}{variable name that separates \code{df1} and \code{df2}}
-
-\item{match_id}{variable name that groups the same match}
+\item{data}{the resulting cubble object from spatial matching (with
+\code{return_cubble = TRUE} in spatial matching)}
 }
 \description{
-The function includes both spatial and temporal matching. The spatial matching
-is based on the distance and the distance is calculated using the Vincenty
-formula assuming earth is sphere with a radius of 6371 km. The temporal matching
-first filters out the \code{n} largest increases, determined by \code{temporal_n_highest},
-in both datasets,  constructs an interval of length \code{temporal_window} from
-one dataset and count the number that large increase from the other dataset
-falls into the interval constructed.
+The spatial matching is calculated using \code{\link[sf:geos_measures]{sf::st_distance()}} with different
+distance (in meter or degree) available depending on the coordinate reference system
+and parameter (\code{which} and \code{par}). The temporal matching is based on a temporal
+matching function (\code{temporal_match_fn}) that can be customised.
 }
 \examples{
-a1 <- match_spatial(climate_aus, river)
+library(dplyr)
+climate_aus <- mutate(climate_aus, type = "climate")
+match_spatial(climate_aus, river)
 # turn with different distance calculation:
-a2 <- match_spatial(climate_aus, river, which = "Hausdorff")
+match_spatial(climate_aus, river, which = "Hausdorff")
 # tune the number of matches in each group
-a3 <- match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
+match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
+
+a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) \%>\% bind_rows()
+match_temporal(a1, data_id = type, match_id = group,
+temporal_by = c("prcp" = "Water_course_level"))
+match_temporal(a1, data_id = type, match_id = group,
+temporal_by = c("prcp" = "Water_course_level"), return = TRUE)
 }

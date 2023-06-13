@@ -1,24 +1,15 @@
-#' print a cubble object
-#' @param x,width,n_extra,n,max_extra_cols,max_footer_lines see pillar tbl-format.R
-#' @param ... other argument to pass into `format()`
+#' Print methods
+#' @inheritParams base::format
+#' @inheritParams base::print
 #' @importFrom  tibble tbl_sum
 #' @rdname cubble-print
 #' @export
-print.cubble_df <- function(x, width = NULL, ...,
-                            n_extra = NULL,
-                            n = NULL, max_extra_cols = NULL, max_footer_lines = NULL){
+#' @examples
+#' climate_mel # a nested/spatial cubble
+#' face_temporal(climate_mel) # a long/temporal cubble
+print.cubble_df <- function(x, width = NULL, ...){
   # ref: https://github.com/r-lib/pillar/blob/main/R/tbl-format.R
-  writeLines(format(
-    x,
-    width = width, ...,
-    n = n, max_extra_cols = max_extra_cols, max_footer_lines = max_footer_lines
-  ))
-}
-
-#' @rdname cubble-print
-#' @export
-tbl_sum.cubble_df <- function(x) {
-  NextMethod()
+  writeLines(format(x, width = width, ...))
 }
 
 #' @rdname cubble-print
@@ -112,9 +103,9 @@ tbl_sum.temporal_cubble_df <- function(x){
 }
 
 
-#' Check if the object is a cubble or its subclass
-#' @param data the object to test
-#' @return a TRUE/FALSE predicate
+#' Predicate functions on the object class
+#' @param data an object to test for the class
+#' @return a logical value of TRUE/FALSE
 #' @rdname check-class
 #' @export
 #' @examples

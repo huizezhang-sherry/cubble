@@ -3,20 +3,38 @@
 \name{fill_gaps.temporal_cubble_df}
 \alias{fill_gaps.temporal_cubble_df}
 \alias{scan_gaps.temporal_cubble_df}
-\title{\code{tsibble} functions implemented in cubble}
+\title{Gap-filling on the temporal component of a cubble object}
 \usage{
 \method{fill_gaps}{temporal_cubble_df}(.data, ..., .full = FALSE, .start = NULL, .end = NULL)
 
 \method{scan_gaps}{temporal_cubble_df}(.data, ...)
 }
 \arguments{
-\item{.data, ..., .full, .start, .end}{see \code{tsibble} documentation}
+\item{.data}{A tsibble.}
+
+\item{...}{A set of name-value pairs. The values provided will only replace
+missing values that were marked as "implicit", and will leave previously
+existing \code{NA} untouched.
+\itemize{
+\item empty: filled with default \code{NA}.
+\item filled by values or functions.
+}}
+
+\item{.full}{\itemize{
+\item \code{FALSE} inserts \code{NA} for each keyed unit within its own period.
+\item \code{TRUE} fills \code{NA} over the entire time span of the data (a.k.a. fully balanced panel).
+\item \code{start()} pad \code{NA} to the same starting point (i.e. \verb{min(<index>)}) across units.
+\item \code{end()} pad \code{NA} to the same ending point (i.e. \verb{max(<index>)}) across units.
+}}
+
+\item{.start, .end}{Set custom starting/ending time that allows to expand the
+existing time spans.}
 }
 \value{
 a cubble object
 }
 \description{
-\code{tsibble} functions implemented in cubble
+Gap-filling on the temporal component of a cubble object
 }
 \examples{
 library(tsibble)

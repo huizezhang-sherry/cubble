@@ -7,7 +7,7 @@
 \alias{face_spatial}
 \alias{face_spatial.spatial_cubble_df}
 \alias{face_spatial.temporal_cubble_df}
-\title{Switch a cubble object between the nested (spatial) form and the long (temporal) form}
+\title{Pivot a cubble object between the nested/long (spatial/temporal) form}
 \usage{
 face_temporal(data, col)
 
@@ -24,8 +24,9 @@ face_spatial(data)
 \arguments{
 \item{data}{a cubble object}
 
-\item{col}{the list column to be expanded, \code{col} is required to be specified
-if there are more than one list column and the list column name is not \code{ts}}
+\item{col}{a character (or a symbol), the list column to be expanded,
+\code{col} is required to be specified if there are more than one list column
+and the list column name is not \code{ts}.}
 }
 \value{
 a cubble object

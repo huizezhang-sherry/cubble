@@ -8,7 +8,7 @@
 \alias{meteo_ts}
 \alias{climate_flat}
 \alias{climate_mel}
-\title{Toy climate data for internal testing}
+\title{Toy climate data}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 3 rows and 6 columns.
 

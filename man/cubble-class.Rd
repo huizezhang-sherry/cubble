@@ -10,26 +10,29 @@ cubble(..., key, index, coords)
 make_cubble(spatial, temporal, by = NULL, key, index, coords)
 }
 \arguments{
-\item{...}{a list object to create new cubble}
+\item{...}{a set of name-value pairs to create a cubble, need to include the
+\code{key}, \code{index}, and \code{coords} variables.}
 
-\item{key}{the variable(s) that identifies the spatial location.}
+\item{key}{a character (or symbol), the spatial identifier.}
 
-\item{index}{the single variable that identifies time, currently support
+\item{index}{a character (or symbol), the temporal identifier. Currently support
 base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
-tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class,
-supply in non-standard evaluation}
+tsibble's \code{\link[tsibble:year-month]{tsibble::yearmonth()}}, \code{\link[tsibble:year-week]{tsibble::yearweek()}}, and [tsibble::yearquarter() class.}
 
-\item{coords}{the coordinate columns, in the form of \code{c(LONGITUDE, LATITUDE)}
-the argument can be omitted if created from an sf and its subclasses.
-In case the sf geometry column is not POINT, cubble will use the centroid
-coordinates as LONGITUDE and LATITUDE}
+\item{coords}{a vector of character (or symbol) of length 2, in the order of
+longitude first and then latitude, the argument can be omitted if created
+from an sf and its subclasses. In case the sf geometry column is not POINT,
+coords will be the centroid coordinates.}
 
-\item{spatial}{a tibble of spatial variables, contain key and the two coords columns}
+\item{spatial}{a tibble object or an sf object, the spatial component
+containing the \code{key} and \code{coords} variable (\code{coords} can be automatically
+created from an \code{sf} object if not supplied).}
 
-\item{temporal}{a tibble of temporal variables, contain key and index}
+\item{temporal}{a tibble object or a tsibble object, the temporal component
+containing the \code{key} and \code{index} variable.}
 
-\item{by}{used in \code{make_cubble} when the key variable has different names in the
-spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples)}
+\item{by}{in the syntax of the \code{by} argument in \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}, used in \code{make_cubble()} when the key variable has different names in the
+\code{spatial} and \code{temporal} data.}
 }
 \value{
 a cubble object

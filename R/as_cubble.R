@@ -1,20 +1,13 @@
 #' Coerce foreign objects into a cubble object
-#' @param ... other arguments
-#' @param data object to be converted into an object of class \code{cubble_df}
-#' @param key the spatial identifying variable(s), it can be a single variable, i.e.
-#' \code{key = id}, or a vector of two variables: \code{key = c(cluster, id)}
-#' (see the example in \code{switch_key})
-#' @param index the single temporal identifying variable, currently support
-#' base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
-#' tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class
-#' @param coords the coordinate columns, in the form of \code{c(LONGITUDE, LATITUDE)}
-#' the argument can be omitted if created from an sf and its subclasses.
-#' In the case that the sf geometry column is not POINT, cubble will use the centroid
-#' coordinates as LONGITUDE and LATITUDE
-#' @param vars used in `as_cubble.netcdf()` to select the variable to read in,
-#'  use `c()` for multiple variables (see examples)
-#' @param lat_range,long_range used in `as_cubble.netcdf()` to downsample the data to read,
-#' specify in the syntax of `seq(FROM, TO, BY)`(see examples)
+#' @param ... other arguments.
+#' @param data an object to be converted into an cubble object.
+#' @param key a character (symbol), the spatial identifier, see [cubble::make_cubble()].
+#' @param index a character (symbol), the temporal identifier, see [cubble::make_cubble()].
+#' @param coords a vector of character (symbol) of length 2, see [cubble::make_cubble()].
+#' @param vars a vector of variables to read in (with quote), used in `as_cubble.netcdf()`
+#' to select the variable to read in.
+#' @param lat_range,long_range in the syntax of `seq(FROM, TO, BY)` to downsample
+#' the data to read in `as_cubble.netcdf()`.
 #' @importFrom tidyr unchop
 #' @importFrom tsibble index
 #' @export

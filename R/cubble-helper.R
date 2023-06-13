@@ -1,25 +1,3 @@
-#' Remove the rowwise grouping of a cubble
-#'
-#' @param data a cubble object
-#' @examples
-#' library(dplyr)
-#' # row number is not properly added since each row is a separate group
-#' climate_aus |> mutate(.id = row_number())
-#'
-#' # proper id after removing the grouping structure
-#' climate_aus |> strip_rowwise() |> mutate(.id = row_number())
-#' @return a cubble object
-#' @export
-strip_rowwise <- function(data){
-
-  is_cubble(data)
-  attr(data, "groups") <- NULL
-  attr(data, "class") <- attr(data, "class")[attr(data, "class") != "rowwise_df"]
-
-  data
-}
-
-
 find_invariant <- function(data, key) {
   key <- as_name(enquo(key))
   data <- tibble::as_tibble(data)
@@ -72,15 +50,3 @@ get_listcol <- function(data){
 }
 
 
-key_level <- function(data, key){
-   map_dbl(key, ~unique(data[[.x]]) |> length())
-}
-
-# tsibble_from_cubble <- function(data){
-#   test_cubble(data)
-#   long <- is_long(data) && "tbl_ts" %in% class(data)
-#   nested <- is_nested(data) && "tbl_ts" %in% unlist(map(data$ts[1], class))
-#
-#   long | nested
-# }
-#

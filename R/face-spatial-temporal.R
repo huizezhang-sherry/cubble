@@ -1,11 +1,12 @@
-#' Switch a cubble object between the nested (spatial) form and the long (temporal) form
+#' Pivot a cubble object between the nested/long (spatial/temporal) form
 #'
 #' While `face_temporal()` switches a cubble object into a long cubble,
 #' suitable for temporal operations, `face_spatial()` turns a long cubble back
 #' into a nest cubble for spatial operations. The two operations are exact inverse.
 #' @param data a cubble object
-#' @param col the list column to be expanded, `col` is required to be specified
-#' if there are more than one list column and the list column name is not `ts`
+#' @param col a character (or a symbol), the list column to be expanded,
+#' `col` is required to be specified if there are more than one list column
+#' and the list column name is not `ts`.
 #' @return a cubble object
 #' @rdname face
 #' @export

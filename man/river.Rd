@@ -13,4 +13,7 @@ river
 \description{
 Australia river data
 }
+\examples{
+river
+}
 \keyword{datasets}

@@ -23,3 +23,4 @@ extracted netcdf4 components
 \description{
 Functions to extract NetCDF dimension and variables
 }
+\keyword{internal}

@@ -6,7 +6,7 @@
 \alias{is_cubble_temporal}
 \alias{is_sf}
 \alias{is_tsibble}
-\title{Check if the object is a cubble or its subclass}
+\title{Predicate functions on the object class}
 \usage{
 is_cubble(data)
 
@@ -19,13 +19,13 @@ is_sf(data)
 is_tsibble(data)
 }
 \arguments{
-\item{data}{the object to test}
+\item{data}{an object to test for the class}
 }
 \value{
-a TRUE/FALSE predicate
+a logical value of TRUE/FALSE
 }
 \description{
-Check if the object is a cubble or its subclass
+Predicate functions on the object class
 }
 \examples{
 is_cubble(stations)

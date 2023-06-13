@@ -2,36 +2,60 @@ template:
   params:
     bootswatch: cosmo
 
-# reference:
-# - title: "The cubble class"
-# - contents:
-#   - cubble
-#   - as_cubble
-#   - is_cubble
-#   - print
-# - title: "Extract cubble attributes"
-# - contents:
-#   - key
-#   - index
-#   - coords
-#   - spatial
-# - title: "Dplyr functions"
-# - contents:
-#   - arrange
-# - title: "Cubble functions"
-# - contents:
-#   - face_temporal
-#   - unfold
-# - title: "Visualisation with cubble"
-# - contents:
-#   - geom_glyph
-# - title: "In-built data"
-# - contents:
-#   - climate_aus
-#   - stations
-#   - river
-# - title: "Misc"
-# - contents:
-#   - add_geometry_column
-#   - check_key
-#   - strip_rowwise
+reference:
+- title: "The cubble class"
+  desc: >
+    A cubble object can be created from separate spatial and temporal component
+    with `make_cubble()`. Coercion from `tbl_df`, `ncdf4`, `stars` and `sftime`
+    objects is made available in `as_cubble()`.
+  contents:
+   - cubble
+   - as_cubble
+   - is_cubble
+   - print.cubble_df
+   - "[.spatial_cubble_df"
+     - key_vars.cubble_df
+- title: "Main functionalities"
+  desc: >
+    A cubble object allows you to wrangle spatio-temporal data through pivoting
+    the data into its spatial and temporal component.
+- contents:
+  - check_key
+  - face_temporal
+  - unfold
+  - match_sites
+  - geom_glyph
+- title: "Compatibility with dplyr"
+  desc: >
+    The cubble class support on the following dplyr verbs: `mutate()`,
+    `filter()`,  `arrange()`, `select()`, `group_by()`, `ungroup()`,
+    `summarise()`. `rename()`, `bind_cols()` `rowwise()`,  `relocate()`,
+    the slice family (`slice_head()`, `slice_tail()`, `slice_max()`,
+    `slice_min()`, `slice_sample()`) and the join family (`left_join()`,
+    `right_join()`, `inner_join()`, `full_join()`, `anti_join()`, `semi_join()`)
+- contents:
+  - arrange.temporal_cubble_df
+- title: "Compatibility with sf and tsibble "
+  desc: >
+    You can promote the spatial component of a cubble object to also include
+    the sf class with `make_spatial_sf()` (or create initially with an sf object
+    in `make_cubble()`). The `sf` functionalities that work on the sf column
+    carry over to a cubble object. Similarly, the temporal component of a cubble
+    object can be updated to a tsibble object with `make_temporal_tsibble()`
+    (or created originally with a tsibble object in `make_cubble()`).
+    Functionalities applied to the tsibble class can then be applied to a temporal
+    cubble object.
+- contents:
+  - make_spatial_sf
+  - make_temporal_tsibble
+  - fill_gaps.temporal_cubble_df
+- title: "In-built data"
+- contents:
+  - climate_aus
+  - stations
+  - river
+  - covid
+- title: "Misc"
+- contents:
+  - update_cubble
+

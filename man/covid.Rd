@@ -4,7 +4,7 @@
 \name{covid}
 \alias{covid}
 \alias{lga}
-\title{Daily COVID count data and Victoria LGA}
+\title{Daily COVID count data (in \code{tsibble}) and Victoria LGA (in \code{sf})}
 \format{
 An object of class \code{tbl_ts} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 6806 rows and 4 columns.
 

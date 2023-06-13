@@ -1,19 +1,22 @@
 #' Create a cubble object
 #'
-#' @param ... a list object to create new cubble
-#' @param spatial a tibble of spatial variables, contain key and the two coords columns
-#' @param temporal a tibble of temporal variables, contain key and index
-#' @param key the variable(s) that identifies the spatial location.
-#' @param index the single variable that identifies time, currently support
+#' @param ... a set of name-value pairs to create a cubble, need to include the
+#' `key`, `index`, and `coords` variables.
+#' @param key a character (or symbol), the spatial identifier.
+#' @param index a character (or symbol), the temporal identifier. Currently support
 #' base R classes \code{Date}, \code{POSIXlt}, \code{POSIXct} and
-#' tsibble's \code{yearmonth}, \code{yearweek}, and \code{yearquarter} class,
-#' supply in non-standard evaluation
-#' @param coords the coordinate columns, in the form of \code{c(LONGITUDE, LATITUDE)}
-#' the argument can be omitted if created from an sf and its subclasses.
-#' In case the sf geometry column is not POINT, cubble will use the centroid
-#' coordinates as LONGITUDE and LATITUDE
-#' @param by used in `make_cubble` when the key variable has different names in the
-#' spatial and temporal data, in the syntax of the \code{by} argument in \code{left_join}  (see examples)
+#' tsibble's [tsibble::yearmonth()], [tsibble::yearweek()], and [tsibble::yearquarter() class.
+#' @param coords a vector of character (or symbol) of length 2, in the order of
+#' longitude first and then latitude, the argument can be omitted if created
+#' from an sf and its subclasses. In case the sf geometry column is not POINT,
+#' coords will be the centroid coordinates.
+#' @param spatial a tibble object or an sf object, the spatial component
+#' containing the `key` and `coords` variable (`coords` can be automatically
+#' created from an `sf` object if not supplied).
+#' @param temporal a tibble object or a tsibble object, the temporal component
+#' containing the `key` and `index` variable.
+#' @param by in the syntax of the \code{by} argument in [dplyr::left_join()], used in `make_cubble()` when the key variable has different names in the
+#' `spatial` and `temporal` data.
 #' @rdname cubble-class
 #' @return a cubble object
 #' @export

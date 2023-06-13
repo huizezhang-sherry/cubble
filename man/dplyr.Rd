@@ -25,7 +25,7 @@
 \alias{mutate.spatial_cubble_df}
 \alias{filter.spatial_cubble_df}
 \alias{arrange.spatial_cubble_df}
-\title{Access to dplyr verbs}
+\title{\code{dplyr} methods}
 \usage{
 \method{arrange}{temporal_cubble_df}(.data, ...)
 
@@ -148,13 +148,13 @@ Verbs supported for both nested and long cubble include:
 \code{\link[dplyr:mutate]{dplyr::mutate()}}, \code{\link[dplyr:filter]{dplyr::filter()}},  \code{\link[dplyr:arrange]{dplyr::arrange()}}, \code{\link[dplyr:select]{dplyr::select()}},
 \code{\link[dplyr:group_by]{dplyr::group_by()}}, \code{\link[dplyr:group_by]{dplyr::ungroup()}}, \code{\link[dplyr:summarise]{dplyr::summarise()}},. \code{\link[dplyr:rename]{dplyr::rename()}},
 \code{\link[dplyr:bind_cols]{dplyr::bind_cols()}}, \code{\link[dplyr:rowwise]{dplyr::rowwise()}},
-\code{dplyr::slice_*()}, \code{dplyr::*_join())}, \code{\link[dplyr:relocate]{dplyr::relocate()}}, \code{\link[dplyr:pull]{dplyr::pull()}}
+\code{dplyr::slice_*()}, \code{dplyr::*_join()}, \code{\link[dplyr:relocate]{dplyr::relocate()}}, \code{\link[dplyr:pull]{dplyr::pull()}}
 }
 \details{
 You may find not all the verbs have a \code{verb.spatial_cubble_df} or
-\code{verb.temporal_cubble_df} implemented. These verbs under the hood call
+\code{verb.temporal_cubble_df} implemented. These verbs call
 the dplyr extending trios: \code{dplyr_row_slice}, \code{dplyr_col_modify}, and
-\code{dplyr_reconstruct}. See https://dplyr.tidyverse.org/reference/dplyr_extending.html
+\code{dplyr_reconstruct} under the hood. See https://dplyr.tidyverse.org/reference/dplyr_extending.html
 }
 \examples{
 library(dplyr)

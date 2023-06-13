@@ -18,10 +18,9 @@
 #' }
 #' @examples
 #' climate_aus %>% face_temporal() %>% face_spatial()
-#' @seealso stations, climate, climate_flat, climate_mel
 "climate_aus"
 
-#' Toy climate data for internal testing
+#' Toy climate data
 #'
 #' Daily measure (2020-01-01 to 2020-01-10) on precipitation (prcp),
 #' maximum temperature (tmax), and minimum temperature (tmin)
@@ -58,11 +57,13 @@
 "climate_mel"
 
 #' Australia river data
+#' @examples
+#' river
 "river"
 
 
 
-#' Daily COVID count data and Victoria LGA
+#' Daily COVID count data (in `tsibble`) and Victoria LGA (in `sf`)
 #'
 #' Daily COVID count data (\code{covid}) from 2022-01-01 to 2020-03-23 in a
 #' tsibble object (\code{date}, \code{lga}, \code{n}, and \code{avg_7day}).

@@ -1,6 +1,6 @@
-#' extract key related components in a cubble
-#' @param x,.data a cubble object
-#' @rdname key
+#' Extract cubble attributes
+#' @param x,.data,data a cubble object
+#' @rdname attr
 #' @importFrom tsibble key_vars key key_data
 #' @export
 #' @examples
@@ -8,30 +8,29 @@
 #' key(climate_mel)
 #' key_vars(climate_mel)
 #' key_data(climate_mel)
+#' cubble::index(climate_mel)
+#' cubble::index_var(climate_mel)
+#' coords(climate_mel)
+#' spatial(climate_mel)
 key_vars.cubble_df <- function(x){
   keys <- key_data(x)
   head(names(keys), -1L)
 }
 
-#' @rdname key
+#' @rdname attr
 #' @export
 key.cubble_df <- function(x){
   syms(key_vars(x))
 }
 
-#' @rdname key
+#' @rdname attr
 #' @export
 key_data.cubble_df <- function(.data){
-  # a tsibble object has the key attributes defined as the groups attribute
-  # in a cubble
   .data %@% "key"
 }
 
-#' extract the coords attribute from a cubble
-#' @param data a cubble object
+#' @rdname attr
 #' @export
-#' @examples
-#' coords(climate_mel)
 coords <- function(data){
   is_cubble(data)
   data %@% "coords"
@@ -51,45 +50,34 @@ coords2strvec <- function(coords){
   unlist(map(coords, as_string))
 }
 
-
-#' extract the spatial component from a cubble
-#' @param data a cubble object
-#' @rdname spatial
+#' @rdname attr
 #' @export
-#' @examples
-#' spatial(climate_mel)
 spatial <- function(data){
   UseMethod("spatial")
 }
 
-#' @rdname spatial
+#' @rdname attr
 #' @export
 spatial.spatial_cubble_df <- function(data){
   class(data) <- setdiff(class(data), c("spatial_cubble_df","cubble_df"))
   data %>% select(-"ts") %>% remove_attrs()
 }
 
-#' @rdname spatial
+#' @rdname attr
 #' @export
 spatial.temporal_cubble_df <- function(data){
   remove_attrs(data %@% "spatial")
 }
 
-
-#' extract index related components in a cubble
-#' @param data a cubble object
-#' @rdname index
+#' @rdname attr
 #' @export
-#' @examples
-#' index(climate_mel)
-#' index_var(climate_mel)
 index <- function(data) {
   # not sure why tsibble doesn't have index() as an S3 method as key does
   is_cubble(data)
   sym(index_var(data))
 }
 
-#' @rdname index
+#' @rdname attr
 #' @export
 index_var <- function(data) {
   is_cubble(data)

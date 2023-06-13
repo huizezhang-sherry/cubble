@@ -4,8 +4,7 @@
 \alias{update_cubble}
 \alias{update_cubble.spatial_cubble_df}
 \alias{update_cubble.temporal_cubble_df}
-\title{update
-when the data is already a cubble object but need update on attributes}
+\title{Temporary update cubble if the sf class take precedent of cubble classes}
 \usage{
 update_cubble(data, key, index, coords, ...)
 
@@ -24,6 +23,5 @@ update_cubble(data, key, index, coords, ...)
 \item{data, key, index, coords, spatial, ...}{skdflsjkd}
 }
 \description{
-update
-when the data is already a cubble object but need update on attributes
+When the data is already a cubble object but need update on attributes
 }

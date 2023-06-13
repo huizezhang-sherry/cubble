@@ -4,7 +4,7 @@
 \alias{unfold}
 \alias{unfold.spatial_cubble_df}
 \alias{unfold.temporal_cubble_df}
-\title{Move spatial variables into the long form}
+\title{Augment spatial component into the long (temporal) form}
 \usage{
 unfold(data, ...)
 
@@ -15,7 +15,7 @@ unfold(data, ...)
 \arguments{
 \item{data}{a long cubble object}
 
-\item{...}{spatial variables to move into the long form}
+\item{...}{spatial variables to move into the long form, support tidyselect syntax}
 }
 \value{
 a cubble object in the long form
@@ -26,6 +26,6 @@ and temporal variables. \code{unfold()} allows you to temporarily moves spatial
 variables into the long form for these transformations.
 }
 \examples{
-climate_mel \%>\% face_temporal() \%>\%  unfold(long, lat)
-
+climate_mel \%>\% face_temporal() \%>\% unfold(long, lat)
+climate_mel \%>\% face_temporal() \%>\% unfold(dplyr::starts_with("l"))
 }

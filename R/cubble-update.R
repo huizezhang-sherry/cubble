@@ -1,5 +1,6 @@
-#' update
-#' when the data is already a cubble object but need update on attributes
+#' Temporary update cubble if the sf class take precedent of cubble classes
+#'
+#' When the data is already a cubble object but need update on attributes
 #' @param data,key,index,coords,spatial,... skdflsjkd
 #' @rdname update
 #' @export

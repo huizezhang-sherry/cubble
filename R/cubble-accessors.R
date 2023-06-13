@@ -1,4 +1,4 @@
-#' Accessors of the cubble class
+#' Accessors to a cubble object
 #' @details
 #' For nested cubbles, `[` will return a cubble object if the \code{key} variable,
 #' the\code{coords} variables, and the \code{ts} column all present. If the cubble
