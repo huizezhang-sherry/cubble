@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -69,6 +69,15 @@
       <small>Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3.0" id="cubble-030">cubble 0.3.0<a class="anchor" aria-label="anchor" href="#cubble-030"></a></h2>
+<ul><li>new <code><a href="../reference/cubble-class.html">make_cubble()</a></code> for constructing a cubble object from separate spatial &amp; temporal components (replace <code>as_cubble(list(spatial = ..., temporal = ...))</code> syntax)</li>
+<li>
+<code><a href="../reference/as_cubble.html">as_cubble()</a></code> for stars and sftime objects (<a href="https://github.com/huizezhang-sherry/cubble/issues/5" class="external-link">#5</a>)</li>
+<li>refactor the cubble class: nested cubble has class: <code>spatial_cubble_df</code> and <code>cubble_df</code>, the long cubble has class: <code>temporal_cubble_df</code> and <code>cubble_df</code>.</li>
+<li>refactor the matching function</li>
+<li>better integration with sf and tsibble</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.2" id="cubble-022">cubble 0.2.2<a class="anchor" aria-label="anchor" href="#cubble-022"></a></h2>
 <ul><li>

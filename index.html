@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cubble</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -124,14 +124,14 @@
 <span><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nested</span></span>
 <span><span class="co">#&gt; # cubble:   key: id [3], index: date, nested form</span></span>
-<span><span class="co">#&gt; # extent:   [144.8321, -37.98, 145.0964, -37.6655]</span></span>
-<span><span class="co">#&gt; # temporal: prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
+<span><span class="co">#&gt; # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span>
+<span><span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name              wmo_id ts               </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt; &lt;list&gt;           </span></span>
 <span><span class="co">#&gt; 1 ASN00086038  145. -37.7  78.4 essendon airport   95866 &lt;tibble [10 × 4]&gt;</span></span>
 <span><span class="co">#&gt; 2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 &lt;tibble [10 × 4]&gt;</span></span>
 <span><span class="co">#&gt; 3 ASN00086282  145. -37.7 113.  melbourne airport  94866 &lt;tibble [10 × 4]&gt;</span></span></code></pre></div>
-<p>Check the vignette <a href="articles/cb1class.html">1. The cubble class</a> for more details on the class deisgn.</p>
+<p>Check the vignette <a href="articles/cb1class.html">1. The cubble class</a> for more details on the class design.</p>
 <p>You can also create a cubble object by supplying the spatial and temporal component separately in <code><a href="reference/cubble-class.html">make_cubble()</a></code>. This allows you to use an <code>sf</code> object for the spatial component and a <code>tsibble</code> object for the temporal component. The <code>sf</code> and <code>tsibble</code> class will be carried over to the cubble object:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cb_nested</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations_sf</span>, temporal <span class="op">=</span> <span class="va">meteo_ts</span><span class="op">)</span></span>
