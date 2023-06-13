@@ -14,7 +14,7 @@ reference:
    - is_cubble
    - print.cubble_df
    - "[.spatial_cubble_df"
-     - key_vars.cubble_df
+   - key_vars.cubble_df
 - title: "Main functionalities"
   desc: >
     A cubble object allows you to wrangle spatio-temporal data through pivoting
