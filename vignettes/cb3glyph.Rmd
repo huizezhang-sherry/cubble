@@ -82,7 +82,7 @@ data |>
   geom_glyph_line() + 
   geom_glyph()
 ```
-Taking the output from the [Get started](cubble.html) page, we can visualise the different in avergae temperature curve between 1971 - 1975 and 2016 - 2020 using the glyph map:
+Taking the output from the [Get started](cubble.html) page, we can visualise the different in average temperature curve between 1971 - 1975 and 2016 - 2020 using the glyph map:
 
 ```{r echo = FALSE}
 df <- climate_aus %>% 

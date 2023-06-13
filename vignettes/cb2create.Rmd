@@ -45,7 +45,7 @@ class(res)
 class(res$ts[[1]])
 ```
   
-# Coerce from foregin objects
+# Coerce from foreign objects
 
 ## a `tibble` object
 
