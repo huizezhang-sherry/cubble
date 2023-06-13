@@ -83,38 +83,41 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>...</dt>
-<dd><p>a list object to create new cubble</p></dd>
+<dd><p>a set of name-value pairs to create a cubble, need to include the
+<code>key</code>, <code>index</code>, and <code>coords</code> variables.</p></dd>
 
 
 <dt>key</dt>
-<dd><p>the variable(s) that identifies the spatial location.</p></dd>
+<dd><p>a character (or symbol), the spatial identifier.</p></dd>
 
 
 <dt>index</dt>
-<dd><p>the single variable that identifies time, currently support
+<dd><p>a character (or symbol), the temporal identifier. Currently support
 base R classes <code>Date</code>, <code>POSIXlt</code>, <code>POSIXct</code> and
-tsibble's <code>yearmonth</code>, <code>yearweek</code>, and <code>yearquarter</code> class,
-supply in non-standard evaluation</p></dd>
+tsibble's <code><a href="https://tsibble.tidyverts.org/reference/year-month.html" class="external-link">tsibble::yearmonth()</a></code>, <code><a href="https://tsibble.tidyverts.org/reference/year-week.html" class="external-link">tsibble::yearweek()</a></code>, and [tsibble::yearquarter() class.</p></dd>
 
 
 <dt>coords</dt>
-<dd><p>the coordinate columns, in the form of <code>c(LONGITUDE, LATITUDE)</code>
-the argument can be omitted if created from an sf and its subclasses.
-In case the sf geometry column is not POINT, cubble will use the centroid
-coordinates as LONGITUDE and LATITUDE</p></dd>
+<dd><p>a vector of character (or symbol) of length 2, in the order of
+longitude first and then latitude, the argument can be omitted if created
+from an sf and its subclasses. In case the sf geometry column is not POINT,
+coords will be the centroid coordinates.</p></dd>
 
 
 <dt>spatial</dt>
-<dd><p>a tibble of spatial variables, contain key and the two coords columns</p></dd>
+<dd><p>a tibble object or an sf object, the spatial component
+containing the <code>key</code> and <code>coords</code> variable (<code>coords</code> can be automatically
+created from an <code>sf</code> object if not supplied).</p></dd>
 
 
 <dt>temporal</dt>
-<dd><p>a tibble of temporal variables, contain key and index</p></dd>
+<dd><p>a tibble object or a tsibble object, the temporal component
+containing the <code>key</code> and <code>index</code> variable.</p></dd>
 
 
 <dt>by</dt>
-<dd><p>used in <code>make_cubble</code> when the key variable has different names in the
-spatial and temporal data, in the syntax of the <code>by</code> argument in <code>left_join</code>  (see examples)</p></dd>
+<dd><p>in the syntax of the <code>by</code> argument in <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">dplyr::left_join()</a></code>, used in <code>make_cubble()</code> when the key variable has different names in the
+<code>spatial</code> and <code>temporal</code> data.</p></dd>
 
 </dl></div>
     <div id="value">

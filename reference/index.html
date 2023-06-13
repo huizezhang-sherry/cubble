@@ -69,13 +69,13 @@
     </div>
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
-          <h2 id="all-functions">All functions <a href="#all-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p>
+          <h2 id="the-cubble-class">The cubble class <a href="#the-cubble-class" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>A cubble object can be created from separate spatial and temporal component with <code><a href="../reference/cubble-class.html">make_cubble()</a></code>. Coercion from <code>tbl_df</code>, <code>ncdf4</code>, <code>stars</code> and <code>sftime</code> objects is made available in <code><a href="../reference/as_cubble.html">as_cubble()</a></code>.</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="accessors.html">`[`(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`[`(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`names&lt;-`(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`names&lt;-`(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`[[&lt;-`(<i>&lt;cubble_df&gt;</i>)</a></code> </p>
+          <p><code><a href="cubble-class.html">cubble()</a></code> <code><a href="cubble-class.html">make_cubble()</a></code> </p>
         </td>
-        <td><p>Accessors of the cubble class</p></td>
+        <td><p>Create a cubble object</p></td>
       </tr><tr><td>
           <p><code><a href="as_cubble.html">as_cubble()</a></code> </p>
         </td>
@@ -83,96 +83,95 @@
       </tr><tr><td>
           <p><code><a href="check-class.html">is_cubble()</a></code> <code><a href="check-class.html">is_cubble_spatial()</a></code> <code><a href="check-class.html">is_cubble_temporal()</a></code> <code><a href="check-class.html">is_sf()</a></code> <code><a href="check-class.html">is_tsibble()</a></code> </p>
         </td>
-        <td><p>Check if the object is a cubble or its subclass</p></td>
+        <td><p>Predicate functions on the object class</p></td>
       </tr><tr><td>
+          <p><code><a href="cubble-print.html">print(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="cubble-print.html">tbl_sum(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="cubble-print.html">tbl_sum(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print methods</p></td>
+      </tr><tr><td>
+          <p><code><a href="accessors.html">`[`(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`[`(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`names&lt;-`(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`names&lt;-`(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="accessors.html">`[[&lt;-`(<i>&lt;cubble_df&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Accessors to a cubble object</p></td>
+      </tr><tr><td>
+          <p><code><a href="attr.html">key_vars(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="attr.html">key(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="attr.html">key_data(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="attr.html">coords()</a></code> <code><a href="attr.html">spatial()</a></code> <code><a href="attr.html">index()</a></code> <code><a href="attr.html">index_var()</a></code> </p>
+        </td>
+        <td><p>Extract cubble attributes</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="main-functionalities">Main functionalities <a href="#main-functionalities" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>A cubble object allows you to wrangle spatio-temporal data through pivoting the data into its spatial and temporal component.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
           <p><code><a href="check_key.html">check_key()</a></code> </p>
         </td>
-        <td><p>Check key matching from multiple data sources</p></td>
-      </tr><tr><td>
-          <p><code><a href="climate_aus.html">climate_aus</a></code> </p>
-        </td>
-        <td><p>Australia climate data</p></td>
-      </tr><tr><td>
-          <p><code><a href="coords.html">coords()</a></code> </p>
-        </td>
-        <td><p>extract the coords attribute from a cubble</p></td>
-      </tr><tr><td>
-          <p><code><a href="covid.html">covid</a></code> <code><a href="covid.html">lga</a></code> </p>
-        </td>
-        <td><p>Daily COVID count data and Victoria LGA</p></td>
-      </tr><tr><td>
-          <p><code><a href="cubble-class.html">cubble()</a></code> <code><a href="cubble-class.html">make_cubble()</a></code> </p>
-        </td>
-        <td><p>Create a cubble object</p></td>
-      </tr><tr><td>
-          <p><code><a href="cubble-print.html">print(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="cubble-print.html">tbl_sum(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="cubble-print.html">tbl_sum(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="cubble-print.html">tbl_sum(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>print a cubble object</p></td>
-      </tr><tr><td>
-          <p><code><a href="dplyr.html">arrange(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">select(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">select(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">group_by(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">group_by(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">ungroup(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">ungroup(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">summarise(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">summarise(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">rename(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">rename(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">bind_rows.temporal_cubble_df()</a></code> <code><a href="dplyr.html">bind_cols.spatial_cubble_df()</a></code> <code><a href="dplyr.html">bind_cols.temporal_cubble_df()</a></code> <code><a href="dplyr.html">rowwise(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">rowwise(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_col_modify(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_row_slice(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_row_slice(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_reconstruct(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_reconstruct(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">mutate(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">filter(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">arrange(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Access to dplyr verbs</p></td>
+        <td><p>Check on key when create cubble from two components (spatial/temporal)</p></td>
       </tr><tr><td>
           <p><code><a href="face.html">face_temporal()</a></code> <code><a href="face.html">face_spatial()</a></code> </p>
         </td>
-        <td><p>Switch a cubble object between the nested (spatial) form and the long (temporal) form</p></td>
+        <td><p>Pivot a cubble object between the nested/long (spatial/temporal) form</p></td>
+      </tr><tr><td>
+          <p><code><a href="unfold.html">unfold()</a></code> </p>
+        </td>
+        <td><p>Augment spatial component into the long (temporal) form</p></td>
+      </tr><tr><td>
+          <p><code><a href="matching.html">match_sites()</a></code> <code><a href="matching.html">match_spatial()</a></code> <code><a href="matching.html">match_temporal()</a></code> </p>
+        </td>
+        <td><p>Match stations in two cubbles by spatial distance/ temporal similarity</p></td>
       </tr><tr><td>
           <p><code><a href="glyph.html">geom_glyph()</a></code> <code><a href="glyph.html">geom_glyph_line()</a></code> <code><a href="glyph.html">geom_glyph_box()</a></code> </p>
         </td>
         <td><p>Create glyph map with ggplot2</p></td>
-      </tr><tr><td>
-          <p><code><a href="index-topic.html">index()</a></code> <code><a href="index-topic.html">index_var()</a></code> </p>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="compatibility-with-dplyr">Compatibility with dplyr <a href="#compatibility-with-dplyr" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>The cubble class support on the following dplyr verbs: <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code>. <code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols()</a></code> <code><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate()</a></code>, the slice family (<code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_tail()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_min()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample()</a></code>) and the join family (<code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">right_join()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">semi_join()</a></code>)</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="dplyr.html">arrange(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">select(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">select(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">group_by(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">group_by(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">ungroup(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">ungroup(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">summarise(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">summarise(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">rename(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">rename(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">bind_rows.temporal_cubble_df()</a></code> <code><a href="dplyr.html">bind_cols.spatial_cubble_df()</a></code> <code><a href="dplyr.html">bind_cols.temporal_cubble_df()</a></code> <code><a href="dplyr.html">rowwise(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">rowwise(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_col_modify(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_row_slice(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_row_slice(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_reconstruct(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">dplyr_reconstruct(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">mutate(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">filter(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> <code><a href="dplyr.html">arrange(<i>&lt;spatial_cubble_df&gt;</i>)</a></code> </p>
         </td>
-        <td><p>extract index related components in a cubble</p></td>
-      </tr><tr><td>
-          <p><code><a href="key.html">key_vars(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="key.html">key(<i>&lt;cubble_df&gt;</i>)</a></code> <code><a href="key.html">key_data(<i>&lt;cubble_df&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>extract key related components in a cubble</p></td>
-      </tr><tr><td>
+        <td><p><code>dplyr</code> methods</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="compatibility-with-sf-and-tsibble-">Compatibility with sf and tsibble <a href="#compatibility-with-sf-and-tsibble-" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>You can promote the spatial component of a cubble object to also include the sf class with <code><a href="../reference/make_spatial_sf.html">make_spatial_sf()</a></code> (or create initially with an sf object in <code><a href="../reference/cubble-class.html">make_cubble()</a></code>). The <code>sf</code> functionalities that work on the sf column carry over to a cubble object. Similarly, the temporal component of a cubble object can be updated to a tsibble object with <code><a href="../reference/make_temporal_tsibble.html">make_temporal_tsibble()</a></code> (or created originally with a tsibble object in <code><a href="../reference/cubble-class.html">make_cubble()</a></code>). Functionalities applied to the tsibble class can then be applied to a temporal cubble object.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
           <p><code><a href="make_spatial_sf.html">make_spatial_sf()</a></code> </p>
         </td>
-        <td><p>Promote the spatial component in cubble to an sf object after creation</p></td>
+        <td><p>Update the spatial cubble to include the sf class</p></td>
       </tr><tr><td>
           <p><code><a href="make_temporal_tsibble.html">make_temporal_tsibble()</a></code> </p>
         </td>
-        <td><p>Promote the temporal component in cubble to an tsibble object after creation</p></td>
+        <td><p>Update the temporal cubble to include the tsibble class (<code>tbl_ts</code>)</p></td>
       </tr><tr><td>
-          <p><code><a href="matching.html">match_sites()</a></code> <code><a href="matching.html">match_spatial()</a></code> <code><a href="matching.html">match_temporal()</a></code> </p>
+          <p><code><a href="tsibble.html">fill_gaps(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="tsibble.html">scan_gaps(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Matching sites from two data sources</p></td>
+        <td><p>Gap-filling on the temporal component of a cubble object</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="in-built-data">In-built data <a href="#in-built-data" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="climate_aus.html">climate_aus</a></code> </p>
+        </td>
+        <td><p>Australia climate data</p></td>
       </tr><tr><td>
-          <p><code><a href="netcdf.html">extract_var()</a></code> <code><a href="netcdf.html">extract_longlat()</a></code> <code><a href="netcdf.html">extract_time()</a></code> </p>
+          <p><code><a href="test-data.html">stations</a></code> <code><a href="test-data.html">stations_sf</a></code> <code><a href="test-data.html">meteo</a></code> <code><a href="test-data.html">meteo_ts</a></code> <code><a href="test-data.html">climate_flat</a></code> <code><a href="test-data.html">climate_mel</a></code> </p>
         </td>
-        <td><p>Functions to extract NetCDF dimension and variables</p></td>
+        <td><p>Toy climate data</p></td>
       </tr><tr><td>
           <p><code><a href="river.html">river</a></code> </p>
         </td>
         <td><p>Australia river data</p></td>
       </tr><tr><td>
-          <p><code><a href="spatial.html">spatial()</a></code> </p>
+          <p><code><a href="covid.html">covid</a></code> <code><a href="covid.html">lga</a></code> </p>
         </td>
-        <td><p>extract the spatial component from a cubble</p></td>
-      </tr><tr><td>
-          <p><code><a href="strip_rowwise.html">strip_rowwise()</a></code> </p>
-        </td>
-        <td><p>Remove the rowwise grouping of a cubble</p></td>
-      </tr><tr><td>
-          <p><code><a href="test-data.html">stations</a></code> <code><a href="test-data.html">stations_sf</a></code> <code><a href="test-data.html">meteo</a></code> <code><a href="test-data.html">meteo_ts</a></code> <code><a href="test-data.html">climate_flat</a></code> <code><a href="test-data.html">climate_mel</a></code> </p>
-        </td>
-        <td><p>Toy climate data for internal testing</p></td>
-      </tr><tr><td>
-          <p><code><a href="tsibble.html">fill_gaps(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> <code><a href="tsibble.html">scan_gaps(<i>&lt;temporal_cubble_df&gt;</i>)</a></code> </p>
-        </td>
-        <td><p><code>tsibble</code> functions implemented in cubble</p></td>
-      </tr><tr><td>
-          <p><code><a href="unfold.html">unfold()</a></code> </p>
-        </td>
-        <td><p>Move spatial variables into the long form</p></td>
-      </tr><tr><td>
+        <td><p>Daily COVID count data (in <code>tsibble</code>) and Victoria LGA (in <code>sf</code>)</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="misc">Misc <a href="#misc" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
           <p><code><a href="update.html">update_cubble()</a></code> </p>
         </td>
-        <td><p>update
-when the data is already a cubble object but need update on attributes</p></td>
+        <td><p>Temporary update cubble if the sf class take precedent of cubble classes</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

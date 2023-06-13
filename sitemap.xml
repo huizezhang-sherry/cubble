@@ -43,6 +43,9 @@
     <loc>/reference/as_cubble.html</loc>
   </url>
   <url>
+    <loc>/reference/attr.html</loc>
+  </url>
+  <url>
     <loc>/reference/check-class.html</loc>
   </url>
   <url>
@@ -50,9 +53,6 @@
   </url>
   <url>
     <loc>/reference/climate_aus.html</loc>
-  </url>
-  <url>
-    <loc>/reference/coords.html</loc>
   </url>
   <url>
     <loc>/reference/covid.html</loc>
@@ -76,13 +76,7 @@
     <loc>/reference/glyph.html</loc>
   </url>
   <url>
-    <loc>/reference/index-topic.html</loc>
-  </url>
-  <url>
     <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/key.html</loc>
   </url>
   <url>
     <loc>/reference/make_spatial_sf.html</loc>
@@ -104,12 +98,6 @@
   </url>
   <url>
     <loc>/reference/river.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spatial.html</loc>
-  </url>
-  <url>
-    <loc>/reference/strip_rowwise.html</loc>
   </url>
   <url>
     <loc>/reference/test-data.html</loc>

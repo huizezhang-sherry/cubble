@@ -105,40 +105,33 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
-<dd><p>object to be converted into an object of class <code>cubble_df</code></p></dd>
+<dd><p>an object to be converted into an cubble object.</p></dd>
 
 
 <dt>key</dt>
-<dd><p>the spatial identifying variable(s), it can be a single variable, i.e.
-<code>key = id</code>, or a vector of two variables: <code>key = c(cluster, id)</code>
-(see the example in <code>switch_key</code>)</p></dd>
+<dd><p>a character (symbol), the spatial identifier, see <code><a href="cubble-class.html">make_cubble()</a></code>.</p></dd>
 
 
 <dt>index</dt>
-<dd><p>the single temporal identifying variable, currently support
-base R classes <code>Date</code>, <code>POSIXlt</code>, <code>POSIXct</code> and
-tsibble's <code>yearmonth</code>, <code>yearweek</code>, and <code>yearquarter</code> class</p></dd>
+<dd><p>a character (symbol), the temporal identifier, see <code><a href="cubble-class.html">make_cubble()</a></code>.</p></dd>
 
 
 <dt>coords</dt>
-<dd><p>the coordinate columns, in the form of <code>c(LONGITUDE, LATITUDE)</code>
-the argument can be omitted if created from an sf and its subclasses.
-In the case that the sf geometry column is not POINT, cubble will use the centroid
-coordinates as LONGITUDE and LATITUDE</p></dd>
+<dd><p>a vector of character (symbol) of length 2, see <code><a href="cubble-class.html">make_cubble()</a></code>.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>other arguments</p></dd>
+<dd><p>other arguments.</p></dd>
 
 
 <dt>vars</dt>
-<dd><p>used in <code>as_cubble.netcdf()</code> to select the variable to read in,
-use <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> for multiple variables (see examples)</p></dd>
+<dd><p>a vector of variables to read in (with quote), used in <code>as_cubble.netcdf()</code>
+to select the variable to read in.</p></dd>
 
 
 <dt>lat_range, long_range</dt>
-<dd><p>used in <code>as_cubble.netcdf()</code> to downsample the data to read,
-specify in the syntax of <code>seq(FROM, TO, BY)</code>(see examples)</p></dd>
+<dd><p>in the syntax of <code>seq(FROM, TO, BY)</code> to downsample
+the data to read in <code>as_cubble.netcdf()</code>.</p></dd>
 
 </dl></div>
     <div id="value">

@@ -271,9 +271,9 @@ these variables won’t get lost.</p>
 <p>Apart from the usual <code>%@%</code> or
 <code>attr(DATA, "ATTRIBUTE")</code> to extract class attributes, cubble
 provides functions with the corresponding attribute name for easier
-extraction: <code><a href="../reference/index.html">index()</a></code>, <code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars()</a></code>,
-<code><a href="https://tsibble.tidyverts.org/reference/key-data.html" class="external-link">key_data()</a></code>, <code><a href="../reference/coords.html">coords()</a></code>, and
-<code><a href="../reference/spatial.html">spatial()</a></code> can be used to extract the relevant component in
+extraction: <code><a href="../reference/attr.html">index()</a></code>, <code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars()</a></code>,
+<code><a href="https://tsibble.tidyverts.org/reference/key-data.html" class="external-link">key_data()</a></code>, <code><a href="../reference/attr.html">coords()</a></code>, and
+<code><a href="../reference/attr.html">spatial()</a></code> can be used to extract the relevant component in
 both forms:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
@@ -285,7 +285,7 @@ both forms:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038        <span style="color: #949494;">[10]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077        <span style="color: #949494;">[10]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282        <span style="color: #949494;">[10]</span></span></span>
-<span><span class="fu"><a href="../reference/spatial.html">spatial</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/attr.html">spatial</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">#&gt;   id           long   lat  elev name              wmo_id</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
