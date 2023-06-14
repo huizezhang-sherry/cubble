@@ -110,39 +110,36 @@
 
     
     
-<p>This vignette provides some details on the <code>cubble_df</code>
-class. Here is a diagram that summarises the attributes associated with
-a nested and long cubble:</p>
-<p><img src="cluster-diagram/cubble-design.png" width="704" style="display: block; margin: auto;"></p>
-<p>Here the attributes can be divided into four categories:</p>
-<ul>
-<li>
-<code>class</code>, <code>row.names</code>, <code>names</code> are
-attributes inherited from a <code>tibble</code> class,</li>
-<li>
-<code>groups</code> is inherited from <code>rowwise_df</code> or
-<code>grouped_df</code> a nested or long cubble is built,</li>
-<li>
-<code>index</code>, <code>coords</code>, and <code>form</code> are
-<code>cubble</code> specific attributes, and</li>
-<li>
-<code>spatial</code> is a special attribute that only the long
-cubble has</li>
-</ul>
-<p>Now we look into these attributes through two examples, one for
-nested cubble and one for long cubble:</p>
+<p>Spatio-temporal data comes various spatial and temporal
+characteristics and requires different data structures to wrangle:
+climate weather stations are recorded at fixed point location but with
+potential temporal data quality issue (missingness on the day); GPS data
+tracks unique point locations at different timestamps; satellite
+imageries captures snapshots of landscape at selected time. The type of
+spatio-temporal data cubble tackles are those collected at unique fixed
+locations while allowed for irregularity in the temporal dimension, like
+the weather station data. In the four layouts presented by the spacetime
+paper <span class="citation">(Pebesma 2012)</span>, cubble handles full
+space-time and sparse space-time layouts.</p>
+<p><img src="cb1class_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <div class="section level2">
-<h2 id="nested-cubble">Nested cubble<a class="anchor" aria-label="anchor" href="#nested-cubble"></a>
+<h2 id="the-cubble-object">The cubble object<a class="anchor" aria-label="anchor" href="#the-cubble-object"></a>
 </h2>
-<p>A nested cubble is built on top of a <code>rowwise_df</code>, which
-comes with the <code>groups</code> attributes, as well as the usual
-<code>names</code>, <code>row.names</code>, and <code>class</code>. Note
-that the <code>class</code> attribute contains the history class that a
-<code>rowwise_df</code> is built upon: <code>tbl_df</code>,
-<code>tbl</code> and <code>data.frame</code>. This is an example of the
-attributes for a nested cubble:</p>
+<p>The cubble class is an S3 class, built on tibble, to pivot
+spatio-temporal data into a nested/spatial form and a long/temporal
+form. It has two subclasses:</p>
+<ul>
+<li>a nested/ spatial cubble has class
+<code>c("spatial_cubble_df", "cubble_df")</code>
+</li>
+<li>a long/ temporal cubble has class
+<code>c("temporal_cubble_df", "cubble_df")</code>
+</li>
+</ul>
+<p>A nested cubble arranges spatial variables in columns and nests
+temporal variables in a specialised <code>ts</code> column:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">climate_mel</span></span>
+<code class="sourceCode R"><span><span class="va">cb_nested</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
@@ -151,7 +148,79 @@ attributes for a nested cubble:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moorabbin airport  <span style="text-decoration: underline;">94</span>870 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbourne airport  <span style="text-decoration: underline;">94</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">climate_mel</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">cb_nested</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "spatial_cubble_df" "cubble_df"         "tbl_df"           </span></span>
+<span><span class="co">#&gt; [4] "tbl"               "data.frame"</span></span></code></pre></div>
+<p>This toy dataset is a subset of a larger data
+<code>climate_aus</code> from Global Historical Climatology Network
+Daily (GHCND). The three airport stations in Melbourne are recorded with
+station metadata: station ID, longitude, latitude, elevation, station
+name, world meteorology organisation ID. The temporal variables are
+precipitation, maximum and minimum temperature, which can be read from
+the cubble header.</p>
+<p>A long cubble expands the temporal variables into the long form and
+stores the spatial variables as a data attribute:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cb_long</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, long form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: 2020-01-01 -- 2020-01-10 [1D], no gaps</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
+<span><span class="co">#&gt;    id          date        prcp  tmax  tmin</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00086038 2020-01-01     0  26.8  11  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00086038 2020-01-02     0  26.3  12.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00086038 2020-01-03     0  34.5  12.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00086038 2020-01-04     0  29.3  18.8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00086038 2020-01-05    18  16.1  12.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00086038 2020-01-06   104  17.5  11.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00086038 2020-01-07    14  20.7  12.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00086038 2020-01-08     0  26.4  16.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00086038 2020-01-09     0  33.1  17.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00086038 2020-01-10     0  34    19.6</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 20 more rows</span></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">cb_long</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "temporal_cubble_df" "cubble_df"          "tbl_df"            </span></span>
+<span><span class="co">#&gt; [4] "tbl"                "data.frame"</span></span></code></pre></div>
+<p>The cubble header now shows the recorded temporal period (2020-01-01
+to 2020-01-10), the interval (1 day), and there is no gaps in the
+data.</p>
+</div>
+<div class="section level2">
+<h2 id="the-cubble-attributes">The cubble attributes<a class="anchor" aria-label="anchor" href="#the-cubble-attributes"></a>
+</h2>
+<p>A cubble object inherits the attributes from tibble (and its
+subclasses): <code>class</code>, <code>row.names</code>, and
+<code>names</code>, in addition to three specialised attributes:</p>
+<ul>
+<li>
+<code>key</code>: the spatial identifier</li>
+<li>
+<code>index</code>: the temporal identifier</li>
+<li>
+<code>coords</code>: a pair of ordered coordinates associated with
+the location</li>
+</ul>
+<p>Readers known the <code>key</code> and <code>index</code> attributes
+from the <code>tsibble</code> package would already be familiar the two
+arguments. In cubble, the <code>key</code> attribute identifies the row
+in the nested cubble, and together with the <code>index</code> argument,
+identifies the row in the long cubble. Currently, cubble only supports
+one variable as the key and the accepted temporal class for index
+includes the base R class <code>Date</code>, <code>POSIXlt</code>,
+<code>POSIXct</code> and tsibble’s <code><a href="https://tsibble.tidyverts.org/reference/year-month.html" class="external-link">tsibble::yearmonth()</a></code>,
+<code><a href="https://tsibble.tidyverts.org/reference/year-week.html" class="external-link">tsibble::yearweek()</a></code>, and
+<code><a href="https://tsibble.tidyverts.org/reference/year-quarter.html" class="external-link">tsibble::yearquarter()</a></code> class.</p>
+<p>The <code>coords</code> attribute takes an ordered pair of
+coordinate. It can be a unprojected pair of longitude and latitude, or a
+projected easting and northing values. Under the hood, the
+<code>sf</code> package is used to calculate the bounding box, shown in
+the header of a nested cubble, and other spatial operations.</p>
+<p>The long cubble has a special attribute <code>spatial</code> to store
+the spatial variables: all the variables in the nested cubble, except
+for the <code>ts</code> column. Below we print the attributes for
+<code>cb_nested</code> and <code>cb_long</code>, shown previously:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cb_nested</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $class</span></span>
 <span><span class="co">#&gt; [1] "spatial_cubble_df" "cubble_df"         "tbl_df"           </span></span>
 <span><span class="co">#&gt; [4] "tbl"               "data.frame"       </span></span>
@@ -174,59 +243,8 @@ attributes for a nested cubble:</p>
 <span><span class="co">#&gt; [1] "date"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $coords</span></span>
-<span><span class="co">#&gt; [1] "long" "lat"</span></span></code></pre></div>
-<p>In this example, four stations are recorded at four time points: 1st
-to 4th Jan 2020. The <code>key</code> specified is mapped to the
-<code>groups</code> while <code>index</code> and <code>coords</code> are
-stored as the variable name in a cubble. This attribute will be the same
-as <code>key</code> most of the time but a useful piece of information
-to record later in the hierarchical data structure.</p>
-<p>The <code>rowwise_df</code> class uses a <code>group</code> attribute
-to ensure each row is in its own group and this structure makes it
-simpler to calculate on the list. For example calculating the number of
-non-raining day can be done by:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">climate_mel</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tmax_avg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">tmax</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
-<span><span class="co">#&gt;   id           long   lat  elev name              wmo_id ts       tmax_avg</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866 <span style="color: #949494;">&lt;tibble&gt;</span>       <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moorabbin airport  <span style="text-decoration: underline;">94</span>870 <span style="color: #949494;">&lt;tibble&gt;</span>       <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbourne airport  <span style="text-decoration: underline;">94</span>866 <span style="color: #949494;">&lt;tibble&gt;</span>       <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
-<p>which matches the basic mutate style of calculation, so it is easier
-to remember than the <code>purrr</code> style syntax:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">DATA</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rain <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">.x</span><span class="op">$</span><span class="va">prcp</span> <span class="op">!=</span> <span class="fl">0</span>, na.rm<span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="long-cubble">Long cubble<a class="anchor" aria-label="anchor" href="#long-cubble"></a>
-</h2>
-<p>A long form cubble is built from the <code>grouped_df</code> class
-where observations from the same site forms a group. Below prints a long
-cubble along with its attributes:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">climate_mel</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="../reference/face.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">long</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, long form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># temporal: 2020-01-01 -- 2020-01-10 [1D], no gaps</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span></span>
-<span><span class="co">#&gt;    id          date        prcp  tmax  tmin</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ASN00086038 2020-01-01     0  26.8  11  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> ASN00086038 2020-01-02     0  26.3  12.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ASN00086038 2020-01-03     0  34.5  12.7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> ASN00086038 2020-01-04     0  29.3  18.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> ASN00086038 2020-01-05    18  16.1  12.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ASN00086038 2020-01-06   104  17.5  11.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ASN00086038 2020-01-07    14  20.7  12.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00086038 2020-01-08     0  26.4  16.4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00086038 2020-01-09     0  33.1  17.4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00086038 2020-01-10     0  34    19.6</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 20 more rows</span></span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "long" "lat"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cb_long</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $class</span></span>
 <span><span class="co">#&gt; [1] "temporal_cubble_df" "cubble_df"          "tbl_df"            </span></span>
 <span><span class="co">#&gt; [4] "tbl"                "data.frame"        </span></span>
@@ -259,42 +277,42 @@ cubble along with its attributes:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moorabbin airport  <span style="text-decoration: underline;">94</span>870</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbourne airport  <span style="text-decoration: underline;">94</span>866</span></span></code></pre></div>
-<p>The <code>spatial</code> attribute records the time-invariant
-variables in the data, so that when switch back to the nested form,
-these variables won’t get lost.</p>
+<p>The shortcut function are available to extract components in the
+attributes:</p>
+<ul>
+<li>
+<code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars()</a></code>: the name of the key attribute as a string ,
+i.e. <code>"id"</code>,</li>
+<li>
+<code><a href="https://tsibble.tidyverts.org/reference/key-data.html" class="external-link">key_data()</a></code>: the tibble object stored in the key
+attribute,</li>
+<li>
+<code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key()</a></code>: the name of the key attribute as a symbol, in a
+list, i.e. <code>[[1]] id</code>,</li>
+<li>
+<code><a href="../reference/attr.html">index()</a></code>: the index attribute as a symbol,
+i.e. <code>date</code>,</li>
+<li>
+<code><a href="../reference/attr.html">index_var()</a></code>: the index attribute as a string,
+i.e. <code>"date"</code>,</li>
+<li>
+<code><a href="../reference/attr.html">coords()</a></code>: a character vector of length two for the
+coordinate pairs, i.e. <code>"long" "lat"</code>, and</li>
+<li>
+<code><a href="../reference/attr.html">spatial()</a></code>: the tibble object for the spatial
+variables.</li>
+</ul>
 </div>
 <div class="section level2">
-<h2 id="switching-between-the-nested-and-long-cubble">Switching between the nested and long cubble<a class="anchor" aria-label="anchor" href="#switching-between-the-nested-and-long-cubble"></a>
+<h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
 </h2>
-<p><img src="cluster-diagram/cubble-operations.png" width="1078" style="display: block; margin: auto;"></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-spacetime" class="csl-entry">
+Pebesma, Edzer. 2012. <span>“<span class="nocase">spacetime</span>:
+Spatio-Temporal Data in <span>R</span>.”</span> <em>Journal of
+Statistical Software</em> 51 (7): 1–30. <a href="https://www.jstatsoft.org/v51/i07/" class="external-link">https://www.jstatsoft.org/v51/i07/</a>.
 </div>
-<div class="section level2">
-<h2 id="access-cubble-attributes">Access cubble attributes<a class="anchor" aria-label="anchor" href="#access-cubble-attributes"></a>
-</h2>
-<p>Apart from the usual <code>%@%</code> or
-<code>attr(DATA, "ATTRIBUTE")</code> to extract class attributes, cubble
-provides functions with the corresponding attribute name for easier
-extraction: <code><a href="../reference/attr.html">index()</a></code>, <code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars()</a></code>,
-<code><a href="https://tsibble.tidyverts.org/reference/key-data.html" class="external-link">key_data()</a></code>, <code><a href="../reference/attr.html">coords()</a></code>, and
-<code><a href="../reference/attr.html">spatial()</a></code> can be used to extract the relevant component in
-both forms:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "id"</span></span>
-<span><span class="fu"><a href="https://tsibble.tidyverts.org/reference/key-data.html" class="external-link">key_data</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
-<span><span class="co">#&gt;   id                .rows</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&lt;int&gt;&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038        <span style="color: #949494;">[10]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077        <span style="color: #949494;">[10]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282        <span style="color: #949494;">[10]</span></span></span>
-<span><span class="fu"><a href="../reference/attr.html">spatial</a></span><span class="op">(</span><span class="va">long</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
-<span><span class="co">#&gt;   id           long   lat  elev name              wmo_id</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moorabbin airport  <span style="text-decoration: underline;">94</span>870</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbourne airport  <span style="text-decoration: underline;">94</span>866</span></span></code></pre></div>
+</div>
 </div>
   </div>
 
