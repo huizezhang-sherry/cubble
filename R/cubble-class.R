@@ -6,8 +6,8 @@
 #' @param index a character (or symbol), the temporal identifier.
 #' Currently support base R classes \code{Date}, \code{POSIXlt},
 #' \code{POSIXct} and tsibble's [tsibble::yearmonth()], [tsibble::yearweek()],
-#' and [tsibble::yearquarter() class.
-#' @param coords a vector of character (or symbol) of length 2, in the order of
+#' and [tsibble::yearquarter()] class.
+#' @param coords a vector of character (or symbol) of length two, in the order of
 #' longitude first and then latitude, the argument can be omitted if created
 #' from an sf and its subclasses. In case the sf geometry column is not POINT,
 #' coords will be the centroid coordinates.

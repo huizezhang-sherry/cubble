@@ -1,6 +1,9 @@
 ---
 title: "1. The cubble class"
-output: rmarkdown::html_vignette
+output: 
+  bookdown::html_document2:
+      base_format: rmarkdown::html_vignette
+bibliography: '`r system.file("reference.bib", package = "cubble")`'
 vignette: >
   %\VignetteIndexEntry{1. class}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,73 +21,109 @@ knitr::opts_chunk$set(
 
 ```{r setup, echo = FALSE}
 library(cubble)
+library(tsibble)
+library(tibble)
+library(ggplot2)
 library(dplyr)
 library(tsibble)
+library(patchwork)
 ```
 
-This vignette provides some details on the `cubble_df` class. Here is a diagram that summarises the attributes associated with a nested and long cubble:
+Spatio-temporal data comes various spatial and temporal characteristics and requires different data structures to wrangle: climate weather stations are recorded at fixed point location but with potential temporal data quality issue (missingness on the day); GPS data tracks unique point locations at different timestamps; satellite imageries captures snapshots of landscape at selected time. The type of spatio-temporal data cubble tackles are those collected at unique fixed locations while allowed for irregularity in the temporal dimension, like the weather station data. In the four layouts presented by the spacetime paper [@spacetime], cubble handles full space-time and sparse space-time layouts.
 
-```{r echo = FALSE, fig.align='center'}
-knitr::include_graphics("cluster-diagram/cubble-design.png")
+```{r echo = FALSE}
+p1 <- tibble(
+  id = 1:12,
+  x = rep(1:4, each = 3),
+  y = rep(1:3, 4)
+) %>% 
+  ggplot(aes(x = as.factor(x) ,y = as.factor(y))) + 
+  geom_point() + 
+  geom_text(aes(y = y - 0.2, label = id)) + 
+  theme_bw() + 
+  theme(aspect.ratio = 1) + 
+  scale_x_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
+  scale_y_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
+  labs(x = "Time points", y = "Spatial features", title = "STF: full grid layout") 
+
+p2 <- tibble(
+  id = 1:7,
+  x = c(1, 1, 1, 2, 2, 3, 4),
+  y = c(1, 2, 3, 2, 3, 1, 2),
+  label = c("1[1,1]", "2[1,2]", "3[1,3]", "4[2,2]", "5[3,2]", "6[1,3]", "7[2,4]")
+) %>% 
+  ggplot(aes(x = as.factor(x) ,y = as.factor(y))) + 
+  geom_point() + 
+  geom_text(aes(y = y - 0.2, label = label)) + 
+  theme_bw() + 
+  theme(aspect.ratio = 1) + 
+  scale_x_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
+  scale_y_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
+  labs(x = "Time points", y = "Spatial features", title = "STS: sparse grid layout") 
+
+p1 | p2
 ```
 
-Here the attributes can be divided into four categories:
+# The cubble object
+
+The cubble class is an S3 class, built on tibble, to pivot spatio-temporal data into a nested/spatial form and a long/temporal form. It has two subclasses: 
+
+  - a nested/ spatial cubble has class `c("spatial_cubble_df", "cubble_df")`
+  - a long/ temporal cubble has class `c("temporal_cubble_df", "cubble_df")`
+
+A nested cubble arranges spatial variables in columns and nests temporal variables in a specialised `ts` column: 
+
+```{r echo = FALSE}
+cb_nested <- climate_mel
+```
+
+```{r}
+cb_nested
+class(cb_nested)
+```
+
+This toy dataset is a subset of a larger data `climate_aus` from Global Historical Climatology Network Daily (GHCND). The three airport stations in Melbourne are recorded with station metadata: station ID, longitude, latitude, elevation, station name, world meteorology organisation ID. The temporal variables are precipitation, maximum and minimum temperature, which can be read from the cubble header. 
+
+A long cubble expands the temporal variables into the long form and stores the spatial variables as a data attribute: 
+
+```{r echo = FALSE}
+cb_long <- climate_mel %>% face_temporal()
+```
+
+```{r}
+cb_long
+class(cb_long)
+```
+
+The cubble header now shows the recorded temporal period (2020-01-01 to 2020-01-10), the interval (1 day), and there is no gaps in the data.
+
+# The cubble attributes
+
+A cubble object inherits the attributes from tibble (and its subclasses): `class`, `row.names`, and `names`, in addition to three specialised attributes: 
+
+  - `key`: the spatial identifier
+  - `index`: the temporal identifier
+  - `coords`: a pair of ordered coordinates associated with the location
   
-  - `class`, `row.names`, `names` are attributes inherited from a `tibble` class,
-  - `groups` is inherited from `rowwise_df` or `grouped_df` a nested or long cubble is built,
-  - `index`, `coords`, and `form` are `cubble` specific attributes, and
-  - `spatial` is a special attribute that only the long cubble has
-  
-Now we look into these attributes through two examples, one for nested cubble and one for long cubble:
+Readers known the `key` and `index` attributes from the `tsibble` package would already be familiar the two arguments. In cubble, the `key` attribute identifies the row in the nested cubble, and together with the `index` argument, identifies the row in the long cubble. Currently, cubble only supports one variable as the key and the accepted temporal class for index includes the base R class `Date`, `POSIXlt`, `POSIXct` and tsibble's `tsibble::yearmonth()`, `tsibble::yearweek()`, and `tsibble::yearquarter()` class.
 
-# Nested cubble
+The `coords` attribute takes an ordered pair of coordinate. It can be a unprojected pair of longitude and latitude, or a projected easting and northing values. Under the hood, the `sf` package is used to calculate the bounding box, shown in the header of a nested cubble, and other spatial operations.
 
-A nested cubble is built on top of a `rowwise_df`, which comes with the `groups` attributes, as well as the usual `names`, `row.names`, and `class`. Note that the `class` attribute contains the history class that a `rowwise_df` is built upon: `tbl_df`, `tbl` and `data.frame`. This is an example of the attributes for a nested cubble: 
+The long cubble has a special attribute `spatial` to store the spatial variables: all the variables in the nested cubble, except for the `ts` column. Below we print the attributes for `cb_nested` and `cb_long`, shown previously:
 
 ```{r}
-climate_mel
-attributes(climate_mel)
+attributes(cb_nested)
+attributes(cb_long)
 ```
 
-In this example, four stations are recorded at four time points: 1st to 4th Jan 2020. The `key` specified is mapped to the `groups` while `index` and `coords` are stored as the variable name in a cubble. This attribute will be the same as `key` most of the time but a useful piece of information to record later in the hierarchical data structure.
+The shortcut function are available to extract components in the attributes:
 
-The `rowwise_df` class uses a `group` attribute to ensure each row is in its own group and this structure makes it simpler to calculate on the list. For example calculating the number of non-raining day can be done by: 
+  - `key_vars()`: the name of the key attribute as a string , i.e. `"id"`, 
+  - `key_data()`: the tibble object stored in the key attribute,
+  - `key()`: the name of the key attribute as a symbol, in a list, i.e. `[[1]] id`,
+  - `index()`: the index attribute as a symbol, i.e. `date`,
+  - `index_var()`: the index attribute as a string, i.e. `"date"`,
+  - `coords()`: a character vector of length two for the coordinate pairs, i.e. `"long" "lat"`, and
+  - `spatial()`: the tibble object for the spatial variables.
 
-```{r}
-climate_mel %>% mutate(tmax_avg = mean(ts$tmax, na.rm = TRUE))
-```
-
-which matches the basic mutate style of calculation, so it is easier to remember than the `purrr` style syntax: 
-
-```{r eval = FALSE}
-DATA %>% 
-  mutate(rain = purrr::map_dbl(data, ~sum(.x$prcp != 0, na.rm= TRUE)))
-```
-
-# Long cubble
-
-A long form cubble is built from the `grouped_df` class where observations from the same site forms a group. Below prints a long cubble along with its attributes:
-
-```{r}
-long <- climate_mel %>%  face_temporal()
-long
-attributes(long)
-```
-
-The `spatial` attribute records the time-invariant variables in the data, so that when switch back to the nested form, these variables won't get lost. 
-
-# Switching between the nested and long cubble
-
-```{r echo = FALSE, fig.align='center'}
-knitr::include_graphics("cluster-diagram/cubble-operations.png")
-```
-
-# Access cubble attributes
-
-Apart from the usual `%@%` or `attr(DATA, "ATTRIBUTE")` to extract class attributes, cubble provides functions with the corresponding attribute name for easier extraction: `index()`, `key_vars()`, `key_data()`, `coords()`, and `spatial()` can be used to extract the relevant component in both forms:
-
-```{r}
-key_vars(long)
-key_data(long)
-spatial(long)
-```
+# Reference
