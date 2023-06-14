@@ -18,9 +18,9 @@ make_cubble(spatial, temporal, by = NULL, key, index, coords)
 \item{index}{a character (or symbol), the temporal identifier.
 Currently support base R classes \code{Date}, \code{POSIXlt},
 \code{POSIXct} and tsibble's \code{\link[tsibble:year-month]{tsibble::yearmonth()}}, \code{\link[tsibble:year-week]{tsibble::yearweek()}},
-and [tsibble::yearquarter() class.}
+and \code{\link[tsibble:year-quarter]{tsibble::yearquarter()}} class.}
 
-\item{coords}{a vector of character (or symbol) of length 2, in the order of
+\item{coords}{a vector of character (or symbol) of length two, in the order of
 longitude first and then latitude, the argument can be omitted if created
 from an sf and its subclasses. In case the sf geometry column is not POINT,
 coords will be the centroid coordinates.}

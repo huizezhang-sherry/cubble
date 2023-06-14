@@ -48,7 +48,8 @@ Suggests:
     concaveman,
     colorspace,
     vdiffr,
-    sftime
+    sftime,
+    patchwork
 VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
