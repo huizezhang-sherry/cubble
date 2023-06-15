@@ -1,5 +1,5 @@
 ---
-title: "5. Interactive graphics"
+title: "6. Interactive graphics"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{interactive-vis}

@@ -1,0 +1,82 @@
+---
+title: "3. Compatibility with tsibble and sf"
+output: rmarkdown::html_vignette
+bibliography: '`r system.file("reference.bib", package = "cubble")`'
+vignette: >
+  %\VignetteIndexEntry{cb3tsibblesf}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(cubble)
+library(tsibble)
+library(sf)
+```
+
+
+Analysts often have their own preferred spatial or temporal data structure, which they may wish to keep for spatio-temporal analysis. For example, the `tbl_ts` class from the tsibble package [@tsibble] is commonly used in time series forecasting and similarly, the sf class [@sf] is often used in spatial data science. In cubble, analysts can combine these two structures together by allowing the spatial component to also be an sf object and the temporal component to also be a tsibble object.
+
+# A temporal component with tsibble
+
+The `key` and `index` arguments in a cubble object corresponds to the tsibble counterparts and they can be safely omitted, if the temporal component is a tsibble object, i.e. `meteo_ts` in the example below. The tsibble class from the input will be carried over to the cubble object:
+
+```{r echo = TRUE}
+ts_nested <- make_cubble(
+  spatial = stations, temporal = meteo_ts, coords = c(long, lat))
+(ts_long <- face_temporal(ts_nested))
+class(ts_long)
+```
+
+The long cubble shows `[tsibble]` in the header to indicate the object also being in a `tbl_ts` class. Methods applies to the `tbl_ts` class can also be applied to the temporal cubble objects, for example, checking whether the data contain temporal gaps:
+
+```{r echo = TRUE}
+ts_long %>% has_gaps()
+```
+
+An existing cubble object can promote its temporal component to a tsibble object by applying `make_temporal_tsibble()`. The promoted cubble object (`ts_long2`) will be the same as the one created with a tsibble component initially (`ts_long`):
+
+```{r echo = TRUE}
+ts_long2 <- make_cubble(
+  stations, meteo, 
+  key = id, index = date, coords = c(long, lat)) %>% 
+  face_temporal() %>% 
+  make_temporal_tsibble() 
+identical(ts_long2, ts_long)
+```
+
+# A spatial component with sf
+
+Similarly, an sf object can be supplied as the spatial component to create a cubble object, with the `coords` argument being omitted. This opens up the possibility to represent fixed area with polygons or multipolygons and the `coords` argument will be calculated as the centroids of the (multi)polygons. The `[sf]` print in the cubble header suggest an spatial component being also a sf object:
+
+```{r echo = TRUE}
+(sf_nested <- make_cubble(
+  spatial = stations_sf, temporal = meteo, 
+  key = id, index = date))
+class(sf_nested)
+```
+
+The following code shows how to perform coordinate transformation with `st_transform` on a cubble object:
+
+```{r echo =TRUE, message=FALSE}
+sf_nested %>% sf::st_transform(crs = "EPSG:3857")
+```
+
+The counterpart to promote the spatial component in an existing cubble to be an sf object is `make_spatial_sf()`:
+
+```{r echo = TRUE}
+sf_nested <- make_cubble(
+  stations, meteo, 
+  key = id, index = date, coords = c(long, lat)) %>% 
+  make_spatial_sf() 
+all.equal(sf_nested, sf_nested)
+```
+
+# Reference

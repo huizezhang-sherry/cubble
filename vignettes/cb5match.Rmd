@@ -1,8 +1,8 @@
 ---
-title: "4. Matching different data sources"
+title: "5. Matching different data sources"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{matching}
+  %\VignetteIndexEntry{5matching}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
