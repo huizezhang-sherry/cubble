@@ -114,8 +114,7 @@ res_tm_long <- res_tm %>%
   mutate(matched = (matched - min(matched, na.rm = TRUE))/ (max(matched, na.rm = TRUE) - min(matched, na.rm = TRUE))) 
 
 vic_map <- ozmaps::abs_ste |> 
-  filter(NAME == "Victoria") |> 
-  rmapshaper::ms_simplify()  
+  filter(NAME == "Victoria")
 
 p1 <-ggplot() + 
   geom_sf(data = vic_map, fill = "grey95", color = "white") + 
