@@ -8,13 +8,15 @@
 [![R-CMD-check](https://github.com/huizezhang-sherry/cubble/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions)
 <!-- badges: end -->
 
-Cubble provides a data structure to manipulate spatio-temporal vector
-data in two forms: nested form (spatial cubble) and long form (temporal
-cubble). The nested cubble shows spatial variables as columns and nests
-temporal variables in a `ts` column. The long cubble presents temporal
-variables as columns and stores spatial variables as an attribute. The
-two forms can be switched back and forth for manipulation on the spatial
-and temporal dimension of the data.
+The term spatio-temporal data can incorporate various spatial and
+temporal characteristics and different data may require different data
+structures for wrangling and analysis. The spatio-temporal data that
+cubble addresses are those collected at unique fixed locations, allowing
+for irregularity in the temporal dimension, such as the weather station
+data. This corresponds to the full space-time and sparse space-time
+layouts in the spacetime paper (Pebesma 2012):
+
+<img src="man/figures/README-layout-1.png" width="100%" />
 
 ## Installation
 
@@ -32,60 +34,70 @@ And the development version from [GitHub](https://github.com/) with:
 remotes::install_github("huizezhang-sherry/cubble")
 ```
 
-## Create a cubble
+## How cubble organises spatio-temporal data
 
-`as_cubble()` creates a cubble in the nested form by supplying the
-spatial identifier, `key`, temporal identifier, `index`, and the spatial
-coordinates that defines the site, `coords`.
+Cubble organises spatio-temporal data in two structures: In a nested
+cubble, spatial variables are organised as columns and temporal
+variables are nested within a specialised `ts` column:
 
-``` r
-library(cubble)
-library(dplyr)
-nested <- climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
-nested
-#> # cubble:   key: id [3], index: date, nested form
-#> # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
-#> # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
-#>   id           long   lat  elev name              wmo_id ts               
-#>   <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
-#> 1 ASN00086038  145. -37.7  78.4 essendon airport   95866 <tibble [10 × 4]>
-#> 2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 <tibble [10 × 4]>
-#> 3 ASN00086282  145. -37.7 113.  melbourne airport  94866 <tibble [10 × 4]>
-```
+    #> # cubble:   key: id [3], index: date, nested form
+    #> # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+    #> # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
+    #>   id           long   lat  elev name              wmo_id ts               
+    #>   <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
+    #> 1 ASN00086038  145. -37.7  78.4 essendon airport   95866 <tibble [10 × 4]>
+    #> 2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 <tibble [10 × 4]>
+    #> 3 ASN00086282  145. -37.7 113.  melbourne airport  94866 <tibble [10 × 4]>
 
-Check the vignette [1. The cubble class](articles/cb1class.html) for
-more details on the class design.
+In a long cubble, the temporal variables are expanded into the long
+form, while the spatial variables are stored as a data attribute:
 
-You can also create a cubble object by supplying the spatial and
-temporal component separately in `make_cubble()`. This allows you to use
-an `sf` object for the spatial component and a `tsibble` object for the
-temporal component. The `sf` and `tsibble` class will be carried over to
-the cubble object:
+    #> # cubble:   key: id [3], index: date, long form
+    #> # temporal: 2020-01-01 -- 2020-01-10 [1D], no gaps
+    #> # spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]
+    #>    id          date        prcp  tmax  tmin
+    #>    <chr>       <date>     <dbl> <dbl> <dbl>
+    #>  1 ASN00086038 2020-01-01     0  26.8  11  
+    #>  2 ASN00086038 2020-01-02     0  26.3  12.2
+    #>  3 ASN00086038 2020-01-03     0  34.5  12.7
+    #>  4 ASN00086038 2020-01-04     0  29.3  18.8
+    #>  5 ASN00086038 2020-01-05    18  16.1  12.5
+    #>  6 ASN00086038 2020-01-06   104  17.5  11.1
+    #>  7 ASN00086038 2020-01-07    14  20.7  12.1
+    #>  8 ASN00086038 2020-01-08     0  26.4  16.4
+    #>  9 ASN00086038 2020-01-09     0  33.1  17.4
+    #> 10 ASN00086038 2020-01-10     0  34    19.6
+    #> # ℹ 20 more rows
 
-``` r
-cb_nested <- make_cubble(spatial = stations_sf, temporal = meteo_ts)
-class(cb_nested)
-#> [1] "spatial_cubble_df" "cubble_df"         "sf"               
-#> [4] "tbl_df"            "tbl"               "data.frame"
-class(cb_nested$ts[[1]])
-#> [1] "tbl_ts"     "tbl_df"     "tbl"        "data.frame"
-```
+The two forms can be pivoted back and forth with the pair of verb:
+`face_spatial()` and `face_temporal()`.
 
-Check the vignette [2. Creation and coercion](articles/cb2create.html)
-for more on `make_cubble()` and coerce from other objects: netcdf,
-[stars objects](https://r-spatial.github.io/stars/), and [sftime
-objects](https://r-spatial.github.io/sftime/).
+<img src="man/figures/cubble-operations.png" width="80%" style="display: block; margin: auto;" />
 
-## Pivot between the spatial and temporal cubble
+## Roadmap
 
-The pair of verbs, `face_temporal()` and `face_spatial()`, pivot the
-cubble object between the spatial and temporal sides.
+-   To learn more about the cubble class: [1. The cubble
+    class](articles/cb1class.html)
+-   To create a cubble or coerce an existing R object into a cubble: [2.
+    Creation and coercion](articles/cb2create.html)
+-   To incoporate sf or tsibble in a cubble: [3. Compatibility with
+    tsibble and sf](articles/cb3tsibblesf.html)
+-   To create glyph map, match multiple data sources, and create
+    interactive graphics with cubble: [4. Making a glyph
+    map](articles/cb4glyph.html), [5. Matching different data
+    sources](articles/cb5match.html), and [6. Interactive
+    graphics](articles/cb6interactive.html)
 
-Check [Getting started](articles/cubble.html) and the vignette [3.
-Making a glyph map](articles/cb3glyph.html) for operating on the spatial
-and temporal cubble to make spatio-temporal visualisation.
+## Reference
 
-## Misc
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-Cubble stands for “cubical tibble” as in a *tibble* object for
-multivariate spatio-temporal data *cube*.
+<div id="ref-spacetime" class="csl-entry">
+
+Pebesma, Edzer. 2012. “<span class="nocase">spacetime</span>:
+Spatio-Temporal Data in R.” *Journal of Statistical Software* 51 (7):
+1–30. <https://www.jstatsoft.org/v51/i07/>.
+
+</div>
+
+</div>

@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(cubble)
 library(ggplot2)
+library(tsibble)
 ```
 
 Sometimes, we wish to communicate spatial and temporal information collectively through visualisation. This can be achieved through several graphical displays: one can make faceted maps across time, creating map animations, or constructing interactive graphics to link between map and time series plot. While interactive graphics will be the main focus of vignette [6. Interactive graphics](cb6interactive.hml), this vignette will introduce a specific type of spatio-temporal plot called glyph maps.
@@ -65,32 +66,47 @@ data |>
   geom_glyph_line() + 
   geom_glyph()
 ```
-Taking the output from the [Get started](cubble.html) page, we can visualise the different in average temperature curve between 1971 - 1975 and 2016 - 2020 using the glyph map:
 
-```{r echo = FALSE}
-df <- climate_aus %>% 
-  rowwise() %>% 
-  filter(nrow(ts) == 366, id != "ASN00086127") %>% 
-  filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 76, 90)) %>% 
-  face_temporal() %>% 
-  group_by(month = lubridate::month(date)) %>%
-  summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
-  unfold(long, lat)
-```
+# Monthly average maximum temperature in Victoria, Australia
+
+Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset `climate_aus` stores climate variables (prcipitation, maximum and minimum temperature) for `r nrow(climate_aus)` Australian stations in 2020. This is a lot of stations to work with and we will start with a randomly sample 80 stations (since not all the stations have the full year record, we will only consider those that have 366 days for 2020): 
 
 ```{r}
-vic_map <- ozmaps::abs_ste %>%  filter(NAME %in% c("Victoria"))
-df %>% 
+set.seed(12345)
+(tmax <- climate_aus %>% 
+    rowwise() %>% 
+    filter(nrow(ts) == 366) %>% 
+    slice_sample(n = 80))
+```
+
+Next, we would like to summarise the daily maximum temperature into monthly. This can be done with the dplyr `group_by` + `summarise`:
+
+```{r}
+(tmax <- tmax %>%
+  face_temporal() %>%
+  group_by(month = tsibble::yearmonth(date)) %>%
+  summarise(tmax = mean(tmax, na.rm = TRUE)))
+```
+
+One requirement for the data to be plot with ggplot2 is that all the variables mapped to aesthetics need to be store in the same table. In cubble, you can move the spaital variables (e.g. `long` and `lat`) into the temporal cubble with `unfold()`:
+
+```{r}
+(tmax <- tmax %>% unfold(long, lat))
+```
+
+Using the glyph map syntax introduced in this vignette, we can then create a glyph map: 
+
+```{r}
+tmax %>% 
   ggplot(aes(x_major = long, y_major = lat, 
              x_minor = month, y_minor = tmax))  + 
-  geom_sf(data = vic_map, 
+  geom_sf(data = ozmaps::abs_ste, 
           fill = "grey95", color = "white",
           inherit.aes = FALSE) + 
-  geom_glyph_box(width = 0.3, height = 0.08) + 
-  geom_glyph(width = 0.3, height = 0.08) + 
-  scale_color_brewer(palette = "Dark2") + 
-  coord_sf(xlim = c(141, 150)) + 
-  theme_bw() + 
+  geom_glyph_box(width = 1, height = 0.5) + 
+  geom_glyph(width = 1,  height = 0.5) + 
+  coord_sf(xlim = c(110, 155)) + 
+  theme_void() + 
   theme(legend.position = "bottom") + 
   labs(x = "Longitude", y = "Latitude")
 ```

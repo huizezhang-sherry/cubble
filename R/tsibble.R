@@ -36,8 +36,9 @@ fill_gaps.temporal_cubble_df <- function(.data, ..., .full = FALSE,
   index <-  index_var(.data)
   coords <- coords(.data)
   spatial <- spatial(.data)
-  .data <- as_tsibble(.data, key = key , index = index)
-  res <- fill_gaps(.data, ...)
+  data <- as_tsibble(.data, key = key , index = index)
+  res <- fill_gaps(data, ...)
+  if (!inherits(.data, "tbl_ts")) class(res) <- setdiff(class(res), "tbl_ts")
 
   new_temporal_cubble(
     res, key = key, index = index, coords = coords(.data), spatial = spatial)

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(cubble)
 ```
 
-This article demonstrates how to create a cubble from various types of data. From the README page, you have already seen examples of constructing a cubble from a tibble. Here we provide additional examples of creating a cubble from:  
+This article demonstrates how to create a cubble from various types of data. We will create a cubble from:  
 
   - separate spatial and temporal tables
   - a `tibble` object

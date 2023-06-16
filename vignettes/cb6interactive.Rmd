@@ -68,7 +68,7 @@ long <- clean |>
   SharedData$new(~id, group = "cubble")
 ```
 
-# Create maps with leaflet
+# Creating maps with leaflet
 
 To create a basic leaflet map showing station location, we can use `addTiles()` to  create an underlying map and `addCircleMarkers()` to add points representing the stations:
 
@@ -128,7 +128,7 @@ ts_interactive <- ggplotly(ts_static, width = 600, height = 300) %>%
 ```
 
 
-# Assemble into a linked plot
+# Assembling into a linked plot
 
 `crosstalk::bscols()` combines multiple interactive graphics in columns:
 
