@@ -37,8 +37,8 @@ remotes::install_github("huizezhang-sherry/cubble")
 ## How cubble organises spatio-temporal data
 
 Cubble organises spatio-temporal data in two structures: In a nested
-cubble, spatial variables are organised as columns and temporal
-variables are nested within a specialised `ts` column:
+cubble (spatial cubble), spatial variables are organised as columns and
+temporal variables are nested within a specialised `ts` column:
 
     #> # cubble:   key: id [3], index: date, nested form
     #> # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
@@ -49,8 +49,9 @@ variables are nested within a specialised `ts` column:
     #> 2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 <tibble [10 × 4]>
     #> 3 ASN00086282  145. -37.7 113.  melbourne airport  94866 <tibble [10 × 4]>
 
-In a long cubble, the temporal variables are expanded into the long
-form, while the spatial variables are stored as a data attribute:
+In a long cubble (temporal cubble), the temporal variables are expanded
+into the long form, while the spatial variables are stored as a data
+attribute:
 
     #> # cubble:   key: id [3], index: date, long form
     #> # temporal: 2020-01-01 -- 2020-01-10 [1D], no gaps
@@ -77,16 +78,20 @@ The two forms can be pivoted back and forth with the pair of verb:
 ## Roadmap
 
 -   To learn more about the cubble class: [1. The cubble
-    class](articles/cb1class.html)
+    class](https://huizezhang-sherry.github.io/cubble/articles/cb1class.html)
 -   To create a cubble or coerce an existing R object into a cubble: [2.
-    Creation and coercion](articles/cb2create.html)
--   To incoporate sf or tsibble in a cubble: [3. Compatibility with
-    tsibble and sf](articles/cb3tsibblesf.html)
+    Creation and
+    coercion](https://huizezhang-sherry.github.io/cubble/articles/cb2create.html)
+-   To incorporate sf or tsibble in a cubble: [3. Compatibility with
+    tsibble and
+    sf](https://huizezhang-sherry.github.io/cubble/articles/cb3tsibblesf.html)
 -   To create glyph map, match multiple data sources, and create
     interactive graphics with cubble: [4. Making a glyph
-    map](articles/cb4glyph.html), [5. Matching different data
-    sources](articles/cb5match.html), and [6. Interactive
-    graphics](articles/cb6interactive.html)
+    map](https://huizezhang-sherry.github.io/cubble/articles/cb4glyph.html),
+    [5. Matching different data
+    sources](https://huizezhang-sherry.github.io/cubble/articles/cb5match.html),
+    and [6. Interactive
+    graphics](https://huizezhang-sherry.github.io/cubble/articles/cb6interactive.html)
 
 ## Reference
 

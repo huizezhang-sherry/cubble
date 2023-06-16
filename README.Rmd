@@ -97,9 +97,9 @@ knitr::include_graphics("man/figures/cubble-operations.png")
 
 ## Roadmap
 
-  * To learn more about the cubble class: [1. The cubble class](articles/cb1class.html)
-  * To create a cubble or coerce an existing R object into a cubble: [2. Creation and coercion](articles/cb2create.html)
-  * To incorporate sf or tsibble in a cubble: [3. Compatibility with tsibble and sf](articles/cb3tsibblesf.html)
-  * To create glyph map, match multiple data sources, and create interactive graphics with cubble: [4. Making a glyph map](articles/cb4glyph.html), [5. Matching different data sources](articles/cb5match.html), and [6. Interactive graphics](articles/cb6interactive.html)
+  * To learn more about the cubble class: [1. The cubble class](https://huizezhang-sherry.github.io/cubble/articles/cb1class.html)
+  * To create a cubble or coerce an existing R object into a cubble: [2. Creation and coercion](https://huizezhang-sherry.github.io/cubble/articles/cb2create.html)
+  * To incorporate sf or tsibble in a cubble: [3. Compatibility with tsibble and sf](https://huizezhang-sherry.github.io/cubble/articles/cb3tsibblesf.html)
+  * To create glyph map, match multiple data sources, and create interactive graphics with cubble: [4. Making a glyph map](https://huizezhang-sherry.github.io/cubble/articles/cb4glyph.html), [5. Matching different data sources](https://huizezhang-sherry.github.io/cubble/articles/cb5match.html), and [6. Interactive graphics](https://huizezhang-sherry.github.io/cubble/articles/cb6interactive.html)
 
 ## Reference
