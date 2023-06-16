@@ -121,7 +121,7 @@
 <div class="section level2">
 <h2 id="how-cubble-organises-spatio-temporal-data">How cubble organises spatio-temporal data<a class="anchor" aria-label="anchor" href="#how-cubble-organises-spatio-temporal-data"></a>
 </h2>
-<p>Cubble organises spatio-temporal data in two structures: In a nested cubble, spatial variables are organised as columns and temporal variables are nested within a specialised <code>ts</code> column:</p>
+<p>Cubble organises spatio-temporal data in two structures: In a nested cubble (spatial cubble), spatial variables are organised as columns and temporal variables are nested within a specialised <code>ts</code> column:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # cubble:   key: id [3], index: date, nested form</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
@@ -130,7 +130,7 @@
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 ASN00086038  145. -37.7  78.4 essendon airport   95866 &lt;tibble [10 × 4]&gt;</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 &lt;tibble [10 × 4]&gt;</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 ASN00086282  145. -37.7 113.  melbourne airport  94866 &lt;tibble [10 × 4]&gt;</span></span></code></pre></div>
-<p>In a long cubble, the temporal variables are expanded into the long form, while the spatial variables are stored as a data attribute:</p>
+<p>In a long cubble (temporal cubble), the temporal variables are expanded into the long form, while the spatial variables are stored as a data attribute:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # cubble:   key: id [3], index: date, long form</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # temporal: 2020-01-01 -- 2020-01-10 [1D], no gaps</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # spatial:  long [dbl], lat [dbl], elev [dbl], name [chr], wmo_id [dbl]</span></span>
@@ -154,13 +154,13 @@
 <h2 id="roadmap">Roadmap<a class="anchor" aria-label="anchor" href="#roadmap"></a>
 </h2>
 <ul>
-<li>To learn more about the cubble class: <a href="articles/cb1class.html">1. The cubble class</a>
+<li>To learn more about the cubble class: <a href="https://huizezhang-sherry.github.io/cubble/articles/cb1class.html" class="external-link">1. The cubble class</a>
 </li>
-<li>To create a cubble or coerce an existing R object into a cubble: <a href="articles/cb2create.html">2. Creation and coercion</a>
+<li>To create a cubble or coerce an existing R object into a cubble: <a href="https://huizezhang-sherry.github.io/cubble/articles/cb2create.html" class="external-link">2. Creation and coercion</a>
 </li>
-<li>To incoporate sf or tsibble in a cubble: <a href="articles/cb3tsibblesf.html">3. Compatibility with tsibble and sf</a>
+<li>To incorporate sf or tsibble in a cubble: <a href="https://huizezhang-sherry.github.io/cubble/articles/cb3tsibblesf.html" class="external-link">3. Compatibility with tsibble and sf</a>
 </li>
-<li>To create glyph map, match multiple data sources, and create interactive graphics with cubble: <a href="articles/cb4glyph.html">4. Making a glyph map</a>, <a href="articles/cb5match.html">5. Matching different data sources</a>, and <a href="articles/cb6interactive.html">6. Interactive graphics</a>
+<li>To create glyph map, match multiple data sources, and create interactive graphics with cubble: <a href="https://huizezhang-sherry.github.io/cubble/articles/cb4glyph.html" class="external-link">4. Making a glyph map</a>, <a href="https://huizezhang-sherry.github.io/cubble/articles/cb5match.html" class="external-link">5. Matching different data sources</a>, and <a href="https://huizezhang-sherry.github.io/cubble/articles/cb6interactive.html" class="external-link">6. Interactive graphics</a>
 </li>
 </ul>
 </div>
