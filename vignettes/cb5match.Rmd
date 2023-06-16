@@ -84,7 +84,7 @@ res_sp[[1]]
 
 # Temporal matching
 
-For temporal matching, we match teh variable `Water_course_level` from the river data to `prcp` in the weather station data. The variable `group` and `types` identify the matching group and the two datasets:
+For temporal matching, we match the variable `Water_course_level` from the river data to `prcp` in the weather station data. The variable `group` and `types` identify the matching group and the two datasets:
 
 ```{r}
 (res_tm <- res_sp %>% 

@@ -69,7 +69,7 @@ data |>
 
 # Monthly average maximum temperature in Victoria, Australia
 
-Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset `climate_aus` stores climate variables (prcipitation, maximum and minimum temperature) for `r nrow(climate_aus)` Australian stations in 2020. This is a lot of stations to work with and we will start with a randomly sample 80 stations (since not all the stations have the full year record, we will only consider those that have 366 days for 2020): 
+Global Historical Climatology Network (GHCN) provides daily climate measures from stations across the world. The dataset `climate_aus` stores climate variables (precipitation, maximum and minimum temperature) for `r nrow(climate_aus)` Australian stations in 2020. This is a lot of stations to work with and we will start with a randomly sample 80 stations (since not all the stations have the full year record, we will only consider those that have 366 days for 2020): 
 
 ```{r}
 set.seed(12345)
@@ -88,7 +88,7 @@ Next, we would like to summarise the daily maximum temperature into monthly. Thi
   summarise(tmax = mean(tmax, na.rm = TRUE)))
 ```
 
-One requirement for the data to be plot with ggplot2 is that all the variables mapped to aesthetics need to be store in the same table. In cubble, you can move the spaital variables (e.g. `long` and `lat`) into the temporal cubble with `unfold()`:
+One requirement for the data to be plot with ggplot2 is that all the variables mapped to aesthetics need to be store in the same table. In cubble, you can move the spatial variables (e.g. `long` and `lat`) into the temporal cubble with `unfold()`:
 
 ```{r}
 (tmax <- tmax %>% unfold(long, lat))

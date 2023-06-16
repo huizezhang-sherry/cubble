@@ -28,7 +28,7 @@ library(patchwork)
 
 # The cubble object
 
-The cubble class is an S3 class built on tibble that allows the spatio-temporal data to be wrnagled in two forms: a nested/spatial form and a long/temporal form. It consists of two subclasses: 
+The cubble class is an S3 class built on tibble that allows the spatio-temporal data to be wrangled in two forms: a nested/spatial form and a long/temporal form. It consists of two subclasses: 
 
   - a nested/ spatial cubble is represented by the class `c("spatial_cubble_df", "cubble_df")`
   - a long/ temporal cubble is represented by the class `c("temporal_cubble_df", "cubble_df")`

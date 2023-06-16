@@ -45,7 +45,7 @@ class(res)
 class(res$ts[[1]])
 ```
   
-The viegnette [3. Compatibility with tsibble and sf](cb3tsibblesf.html) will introduce more on the cubble's compatibility with tsibble and sf. 
+The vignette [3. Compatibility with tsibble and sf](cb3tsibblesf.html) will introduce more on the cubble's compatibility with tsibble and sf. 
 
 # Coerce from foreign objects
 
