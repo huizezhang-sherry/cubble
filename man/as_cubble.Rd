@@ -69,15 +69,17 @@ dt \%>\%  as_cubble(coords = c(long, lat))
 path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
 raw <- ncdf4::nc_open(path)
 dt <- as_cubble(raw)
-# read at every degree
+# subset degree
 dt <- as_cubble(raw,vars = c("q", "z"),
-                long_range = seq(113, 153, 1),
-                lat_range = seq(-53, -12, 1))
+                long_range = seq(113, 153, 3),
+                lat_range = seq(-53, -12, 3))
 
-# stars
-tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = stars::read_stars(tif)
+\dontrun{
+# stars - take a few seconds to run
+tif <- system.file("tif/L7_ETMs.tif", package = "stars")
+x <-  stars::read_stars(tif)
 x \%>\% as_cubble()
+}
 
 # don't have to supply coords if create from a sftime
 dt <- climate_flat \%>\%

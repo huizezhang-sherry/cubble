@@ -104,7 +104,7 @@ res_tm <- res_sp %>%
 (res_tm <- res_tm %>% bind_rows() %>% filter(group %in% c(1, 7, 6, 9)))
 ```
 
-And then we can visialise them in space or across time: 
+And then we can visualise them in space or across time: 
 
 ```{r echo = FALSE}
 res_tm_long <- res_tm %>%  
