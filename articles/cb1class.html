@@ -113,34 +113,36 @@
 
     
     
-<p>Spatio-temporal data comes various spatial and temporal
-characteristics and requires different data structures to wrangle:
-climate weather stations are recorded at fixed point location but with
-potential temporal data quality issue (missingness on the day); GPS data
-tracks unique point locations at different timestamps; satellite
-imageries captures snapshots of landscape at selected time. The type of
-spatio-temporal data cubble tackles are those collected at unique fixed
-locations while allowed for irregularity in the temporal dimension, like
-the weather station data. In the four layouts presented by the spacetime
-paper <span class="citation">(Pebesma 2012)</span>, cubble handles full
-space-time and sparse space-time layouts.</p>
+<p>The term spatio-temporal data can incorporate various spatial and
+temporal characteristics and different data may require different data
+structures for wrangling and analysis: climate weather stations records
+data at fixed point location but may suffer from potential temporal data
+quality issue such as missing data for certain days. GPS data tracks
+unique point locations at different timestamps and can be organised as
+trajectories; satellite imagery captures snapshots of landscapes at
+selected times and is commonly structured as rasters. The
+spatio-temporal data that cubble addresses are those collected at unique
+fixed locations, allowing for irregularity in the temporal dimension,
+such as the weather station data. This corresponds to the full
+space-time and sparse space-time layouts in the spacetime paper <span class="citation">(Pebesma 2012)</span>:</p>
 <p><img src="cb1class_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <div class="section level2">
 <h2 id="the-cubble-object">The cubble object<a class="anchor" aria-label="anchor" href="#the-cubble-object"></a>
 </h2>
-<p>The cubble class is an S3 class, built on tibble, to pivot
-spatio-temporal data into a nested/spatial form and a long/temporal
-form. It has two subclasses:</p>
+<p>The cubble class is an S3 class built on tibble that allows the
+spatio-temporal data to be wrnagled in two forms: a nested/spatial form
+and a long/temporal form. It consists of two subclasses:</p>
 <ul>
-<li>a nested/ spatial cubble has class
+<li>a nested/ spatial cubble is represented by the class
 <code>c("spatial_cubble_df", "cubble_df")</code>
 </li>
-<li>a long/ temporal cubble has class
+<li>a long/ temporal cubble is represented by the class
 <code>c("temporal_cubble_df", "cubble_df")</code>
 </li>
 </ul>
-<p>A nested cubble arranges spatial variables in columns and nests
-temporal variables in a specialised <code>ts</code> column:</p>
+<p>In a nested cubble, spatial variables are organised as columns and
+temporal variables are nested within a specialised <code>ts</code>
+column:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cb_nested</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
@@ -155,14 +157,15 @@ temporal variables in a specialised <code>ts</code> column:</p>
 <span><span class="co">#&gt; [1] "spatial_cubble_df" "cubble_df"         "tbl_df"           </span></span>
 <span><span class="co">#&gt; [4] "tbl"               "data.frame"</span></span></code></pre></div>
 <p>This toy dataset is a subset of a larger data
-<code>climate_aus</code> from Global Historical Climatology Network
-Daily (GHCND). The three airport stations in Melbourne are recorded with
-station metadata: station ID, longitude, latitude, elevation, station
-name, world meteorology organisation ID. The temporal variables are
+<code>climate_aus</code> sourced from the Global Historical Climatology
+Network Daily (GHCND). It records three airport stations located in
+Melbourne, Australia and includes spatial variables such as station ID,
+longitude, latitude, elevation, station name, World Meteorology
+Organisation ID. The dataset contains temporal variables including
 precipitation, maximum and minimum temperature, which can be read from
 the cubble header.</p>
-<p>A long cubble expands the temporal variables into the long form and
-stores the spatial variables as a data attribute:</p>
+<p>In a long cubble, the temporal variables are expanded into the long
+form, while the spatial variables are stored as a data attribute:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cb_long</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, long form</span></span></span>
@@ -193,7 +196,8 @@ data.</p>
 </h2>
 <p>A cubble object inherits the attributes from tibble (and its
 subclasses): <code>class</code>, <code>row.names</code>, and
-<code>names</code>, in addition to three specialised attributes:</p>
+<code>names</code>. Additionally, it has three specialised
+attributes:</p>
 <ul>
 <li>
 <code>key</code>: the spatial identifier</li>
@@ -203,25 +207,27 @@ subclasses): <code>class</code>, <code>row.names</code>, and
 <code>coords</code>: a pair of ordered coordinates associated with
 the location</li>
 </ul>
-<p>Readers known the <code>key</code> and <code>index</code> attributes
-from the <code>tsibble</code> package would already be familiar the two
-arguments. In cubble, the <code>key</code> attribute identifies the row
-in the nested cubble, and together with the <code>index</code> argument,
-identifies the row in the long cubble. Currently, cubble only supports
-one variable as the key and the accepted temporal class for index
-includes the base R class <code>Date</code>, <code>POSIXlt</code>,
-<code>POSIXct</code> and tsibble’s <code><a href="https://tsibble.tidyverts.org/reference/year-month.html" class="external-link">tsibble::yearmonth()</a></code>,
-<code><a href="https://tsibble.tidyverts.org/reference/year-week.html" class="external-link">tsibble::yearweek()</a></code>, and
-<code><a href="https://tsibble.tidyverts.org/reference/year-quarter.html" class="external-link">tsibble::yearquarter()</a></code> class.</p>
-<p>The <code>coords</code> attribute takes an ordered pair of
-coordinate. It can be a unprojected pair of longitude and latitude, or a
-projected easting and northing values. Under the hood, the
-<code>sf</code> package is used to calculate the bounding box, shown in
-the header of a nested cubble, and other spatial operations.</p>
-<p>The long cubble has a special attribute <code>spatial</code> to store
-the spatial variables: all the variables in the nested cubble, except
-for the <code>ts</code> column. Below we print the attributes for
-<code>cb_nested</code> and <code>cb_long</code>, shown previously:</p>
+<p>Readers familiar with the <code>key</code> and <code>index</code>
+attributes from the <code>tsibble</code> package will already know the
+two arguments. In cubble, the <code>key</code> attribute identifies the
+row in the nested cubble, and when combined with the <code>index</code>
+argument, it identifies the row in the long cubble. Currently, cubble
+only supports one variable as the key, and the accepted temporal classes
+for the index include the base R classes <code>Date</code>,
+<code>POSIXlt</code>, <code>POSIXct</code> as well as tsibble’s
+<code><a href="https://tsibble.tidyverts.org/reference/year-month.html" class="external-link">tsibble::yearmonth()</a></code>, <code><a href="https://tsibble.tidyverts.org/reference/year-week.html" class="external-link">tsibble::yearweek()</a></code>, and
+<code><a href="https://tsibble.tidyverts.org/reference/year-quarter.html" class="external-link">tsibble::yearquarter()</a></code> classes.</p>
+<p>The <code>coords</code> attribute represents an ordered pair of
+coordinates. It can be either an unprojected pair of longitude and
+latitude or a projected easting and northing value. The <code>sf</code>
+package is used under the hood to calculate the bounding box, displayed
+in the header of a nested cubble, and perform other spatial
+operations.</p>
+<p>The long cubble has a special attribute called <code>spatial</code>
+to store the spatial variables, which includes all the variables from
+the nested cubble except for the <code>ts</code> column. Below we print
+the attributes information for the previously shown
+<code>cb_nested</code> and <code>cb_long</code> objects:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">cb_nested</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $class</span></span>
@@ -280,8 +286,8 @@ for the <code>ts</code> column. Below we print the attributes for
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moorabbin airport  <span style="text-decoration: underline;">94</span>870</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbourne airport  <span style="text-decoration: underline;">94</span>866</span></span></code></pre></div>
-<p>The shortcut function are available to extract components in the
-attributes:</p>
+<p>The following shortcut functions are available to extract components
+from the attributes:</p>
 <ul>
 <li>
 <code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key_vars()</a></code>: the name of the key attribute as a string ,
@@ -290,7 +296,7 @@ i.e. <code>"id"</code>,</li>
 <code><a href="https://tsibble.tidyverts.org/reference/key-data.html" class="external-link">key_data()</a></code>: the tibble object stored in the key
 attribute,</li>
 <li>
-<code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key()</a></code>: the name of the key attribute as a symbol, in a
+<code><a href="https://tsibble.tidyverts.org/reference/key.html" class="external-link">key()</a></code>: the name of the key attribute as a symbol in a
 list, i.e. <code>[[1]] id</code>,</li>
 <li>
 <code><a href="../reference/attr.html">index()</a></code>: the index attribute as a symbol,
@@ -299,8 +305,8 @@ i.e. <code>date</code>,</li>
 <code><a href="../reference/attr.html">index_var()</a></code>: the index attribute as a string,
 i.e. <code>"date"</code>,</li>
 <li>
-<code><a href="../reference/attr.html">coords()</a></code>: a character vector of length two for the
-coordinate pairs, i.e. <code>"long" "lat"</code>, and</li>
+<code><a href="../reference/attr.html">coords()</a></code>: a character vector of length two representing
+the coordinate pairs, i.e. <code>"long" "lat"</code>, and</li>
 <li>
 <code><a href="../reference/attr.html">spatial()</a></code>: the tibble object for the spatial
 variables.</li>

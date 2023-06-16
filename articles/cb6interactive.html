@@ -113,32 +113,31 @@
 
     
     
-<p>Interactive graphics can be useful because they make it possible to
-look at the data in multiple of ways on-the-fly. This is especially
-important for spatio-temporal data, where we would like to interactively
-connect spatial and temporal displays. This vignette will show you how
-to make an interactive graphic with a cubble object. We will be using
+<p>Interactive graphics can be useful when working with spatio-temporal
+data since they allow for exploring the data from multiple perspective.
+In this vignette, we will demonstrate how to create an interactive
+graphic with cubble objects. We will be using
 <code><a href="https://rdrr.io/pkg/crosstalk/man/bscols.html" class="external-link">crosstalk::bscols()</a></code> to create a linked interactive plot of
-an Australia map, made with leaflet, and a ggplot-turned plotly time
-series plot:</p>
+an Australia map, created with leaflet, and a ggplot plotly time series
+plot:</p>
 <p><img src="cluster-diagram/interactive.png" width="712" style="display: block; margin: auto;"></p>
 <p>This vignette assumes you have gone through <a href="cubble.html">Get
 started</a> and are familiar with basic data wrangling in cubble with
 <code><a href="../reference/face.html">face_temporal()</a></code> and <code><a href="../reference/face.html">face_spatial()</a></code>.</p>
 <div class="section level2">
-<h2 id="variation-of-the-diurnal-temperature-range-in-australia">Variation of the diurnal temperature range in Australia<a class="anchor" aria-label="anchor" href="#variation-of-the-diurnal-temperature-range-in-australia"></a>
+<h2 id="variation-of-diurnal-temperature-range-in-australia">Variation of diurnal temperature range in Australia<a class="anchor" aria-label="anchor" href="#variation-of-diurnal-temperature-range-in-australia"></a>
 </h2>
-<p>Australia occupies a and different temperature patterns can be
-observed. Given the maximum and minimum temperature in the climate data
-in <code>climate_subset</code>, we can compute the average maximum and
-minimum temperature by month at each location. The difference between
-the maximum and minimum temperature, the diurnal temperature range, has
-different variations across the year and its variance will be used as
-the color for our plot. The codes below compute these variables:</p>
+<p>Australia has diverse climate conditions with different temperature
+patterns across its regions. and different temperature patterns can be
+observed. We can compute the average maximum and minimum temperature by
+month at 30 locations sampled from the dataset <code>climate_aus</code>.
+The diurnal temperature range, the difference between the maximum and
+minimum temperature, has different variations throughout the year. We
+will use its variance to color the plot. The codes below calculate these
+variables:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">climate_smaller</span> <span class="op">&lt;-</span> <span class="va">climate_aus</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ASN00003030"</span>, <span class="st">"ASN00004028"</span>, <span class="st">"ASN00006044"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">climate_smaller</span> <span class="op">&lt;-</span> <span class="va">climate_aus</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> </span>
 <span><span class="op">(</span><span class="va">clean</span> <span class="op">&lt;-</span> <span class="va">climate_smaller</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/face.html">face_temporal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span>month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">date</span>, label <span class="op">=</span> <span class="cn">TRUE</span>, abbr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -151,8 +150,8 @@ the color for our plot. The codes below compute these variables:</p>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>temp_diff_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">diff</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [27], index: month, nested form</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [113.67, -25.0544, 128.71, -13.7542], Missing CRS!</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [30], index: month, nested form</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [113.5319, -25.9261, 128.71, -13.7542], Missing CRS!</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: month [ord], tmax [dbl], tmin [dbl], diff [dbl]</span></span></span>
 <span><span class="co">#&gt;    id           long   lat  elev name            wmo_id ts         temp_diff_var</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -166,15 +165,15 @@ the color for our plot. The codes below compute these variables:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00002032  128. -<span style="color: #BB0000;">17.0</span> 203   warmun           <span style="text-decoration: underline;">94</span>213 <span style="color: #949494;">&lt;gropd_df&gt;</span>         3.58 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00002056  129. -<span style="color: #BB0000;">15.8</span>  44   kununurra aero   <span style="text-decoration: underline;">94</span>216 <span style="color: #949494;">&lt;gropd_df&gt;</span>         8.65 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00002064  128. -<span style="color: #BB0000;">16.6</span> 164   argyle aerodro…  <span style="text-decoration: underline;">94</span>217 <span style="color: #949494;">&lt;gropd_df&gt;</span>         2.81 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 17 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 20 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="linking-with-crosstalk">Linking with crosstalk<a class="anchor" aria-label="anchor" href="#linking-with-crosstalk"></a>
 </h2>
-<p>Crosstalk accepts linking between multiple data objects in the same
-group. Here we create two SharedData objects (one using the nested form
-and another using the long form), with <code>id</code> as the key and
-give them the same group name (<code>group = "cubble"</code>):</p>
+<p>We create two SharedData objects in crosstalk - one using the nested
+cubble and another using the long cubble. We will use the
+<code>id</code> as the key and give them the same group name
+(<code>group = "cubble"</code>):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nested</span> <span class="op">&lt;-</span> <span class="va">clean</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="va">SharedData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">~</span><span class="va">id</span>, group <span class="op">=</span> <span class="st">"cubble"</span><span class="op">)</span></span>
 <span><span class="va">long</span> <span class="op">&lt;-</span> <span class="va">clean</span> <span class="op">|&gt;</span></span>
@@ -186,19 +185,19 @@ give them the same group name (<code>group = "cubble"</code>):</p>
 <div class="section level2">
 <h2 id="create-maps-with-leaflet">Create maps with leaflet<a class="anchor" aria-label="anchor" href="#create-maps-with-leaflet"></a>
 </h2>
-<p>A basic leaflet map of stations can be created with an underlying map
-tile (<code>addTiles()</code>) and points to represent stations
-(<code>addCircleMarkers()</code>):</p>
+<p>To create a basic leaflet map showing station location, we can use
+<code>addTiles()</code> to create an underlying map and
+<code>addCircleMarkers()</code> to add points representing the
+stations:</p>
 <pre><code><span><span class="fu">leaflet</span><span class="op">(</span><span class="va">nested</span>, width <span class="op">=</span> <span class="fl">300</span>, height <span class="op">=</span> <span class="fl">300</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">addTiles</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">addCircleMarkers</span><span class="op">(</span><span class="op">)</span></span></code></pre>
-<p>Applying color to the stations requires mapping the variable in the
-data to the color palette. Here the numerical variable
-<code>temp_diff_var</code> is mapped onto a sequential color palette,
-Rocket, with some fine-tuning using <code>colorNumeric()</code>. A popup
-of station names can be added with the <code>popup</code> argument in
-<code>addCircleMarkers()</code> and a <code>~</code> is needed when
-specifying variable name in leaflet syntax:</p>
+<p>To apply colors to the stations, we need to map a variable in the
+data to a color palette. In this example, we map the numerical variable
+<code>temp_diff_var</code> to a sequential color palette, Rocket, with
+some color fine-tuning using <code>colorNumeric()</code>. We also add a
+popup to display the station names using the <code>popup</code> argument
+in <code>addCircleMarkers()</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">domain</span> <span class="op">&lt;-</span> <span class="va">clean</span><span class="op">$</span><span class="va">temp_diff_var</span></span>
 <span><span class="va">pal</span> <span class="op">&lt;-</span> <span class="fu">colorNumeric</span><span class="op">(</span></span>
@@ -212,13 +211,12 @@ specifying variable name in leaflet syntax:</p>
 <span>                   popup <span class="op">=</span> <span class="op">~</span><span class="va">name</span>, fillOpacity <span class="op">=</span> <span class="fl">1</span>, opacity <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="time-series-plot-with-plotly">Time series plot with plotly<a class="anchor" aria-label="anchor" href="#time-series-plot-with-plotly"></a>
+<h2 id="creating-time-series-plot-with-plotly">Creating time series plot with plotly<a class="anchor" aria-label="anchor" href="#creating-time-series-plot-with-plotly"></a>
 </h2>
-<p>The time series plot can show the temperature band of each station,
-allowing for visualising the diurnal temperature range by month. We use
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon()</a></code> to create a temperature band that shows both
-the maximum and minimum temperature and add <code>geom_points()</code>
-to allow selection on the plot:</p>
+<p>The time series plot allows us to visualize the temperature band of
+each station, providing insights into the diurnal temperature range by
+month. We can use geom_ribbon() to create a temperature band that
+displays both the maximum and minimum temperature:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_static</span> <span class="op">&lt;-</span> <span class="va">long</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">month</span>, group <span class="op">=</span> <span class="va">id</span>,</span>
@@ -239,9 +237,9 @@ to allow selection on the plot:</p>
 <span>    panel.grid.major <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    legend.position <span class="op">=</span> <span class="st">"bottom"</span></span>
 <span>    <span class="op">)</span></span></code></pre></div>
-<p>The static ggplot object can be turned into a plotly object with
+<p>The static ggplot object can be converted into a plotly object using
 <code>ggplotly()</code> and <code><a href="https://rdrr.io/pkg/plotly/man/highlight.html" class="external-link">plotly::highlight()</a></code> enable the
-selection with box or lasso (<code>on = "plotly_selected"</code>):</p>
+box or lasso selection (<code>on = "plotly_selected"</code>):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_interactive</span> <span class="op">&lt;-</span> <span class="fu">ggplotly</span><span class="op">(</span><span class="va">ts_static</span>, width <span class="op">=</span> <span class="fl">600</span>, height <span class="op">=</span> <span class="fl">300</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>    <span class="fu">highlight</span><span class="op">(</span>on <span class="op">=</span> <span class="st">"plotly_selected"</span>, opacityDim <span class="op">=</span> <span class="fl">0.012</span><span class="op">)</span></span></code></pre></div>
@@ -249,9 +247,8 @@ selection with box or lasso (<code>on = "plotly_selected"</code>):</p>
 <div class="section level2">
 <h2 id="assemble-into-a-linked-plot">Assemble into a linked plot<a class="anchor" aria-label="anchor" href="#assemble-into-a-linked-plot"></a>
 </h2>
-<p><code><a href="https://rdrr.io/pkg/crosstalk/man/bscols.html" class="external-link">crosstalk::bscols()</a></code> can be thought of as the
-<code>patchwork</code> for interactive graphics, which arranges multiple
-interactive graphics in columns.</p>
+<p><code><a href="https://rdrr.io/pkg/crosstalk/man/bscols.html" class="external-link">crosstalk::bscols()</a></code> combines multiple interactive
+graphics in columns:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bscols</span><span class="op">(</span><span class="va">map</span>, <span class="va">ts_interactive</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Below is a screenshot of the full graphics:</p>
@@ -260,18 +257,19 @@ interactive graphics in columns.</p>
 <div class="section level2">
 <h2 id="making-selection-to-see-the-linking">Making selection to see the linking<a class="anchor" aria-label="anchor" href="#making-selection-to-see-the-linking"></a>
 </h2>
-<p>The selection built in the linked plot goes in both directions. In
-the screenshot below, a lasso selection is made on the time series and
-this links to cygnet bay on the northwest coastline of Australia. The
-area has a larger temperature range in July than in the summer period
+<p>The selection in the linked plot works in both directions. In the
+screenshot below, a lasso selection is made on the time series, linking
+to the Cygnet Bay on the northwest coastline of Australia. In July, this
+area shows a larger temperature range compared to the summer period
 (December - February).</p>
 <p><img src="cluster-diagram/selection1.png" width="150%" style="display: block; margin: auto;"></p>
-<p>Selection on the leaflet map is made through the selection tool below
-the zoom-in/out bottom on the map. Two selections are made on northern
-Australia and inland Queensland. Northern Australia has a narrow
-temperature range constantly 20 degrees throughout the year, while the
-temperature range in inland Queensland is much larger and there is a
-clear difference between the summer and winter periods.</p>
+<p>Selection on the leaflet map can be made using the selection tool
+below the zoom-in/out bottom on the map. In the screenshot, two
+selections are made - one on northern Australia and the other in inland
+Queensland. Northern Australia has a narrow temperature range constantly
+20 degrees throughout the year, while inland Queensland temperature has
+a much larger temperature range with a noticable difference between the
+summer and winter periods.</p>
 <p><img src="cluster-diagram/selection2.png" width="150%" style="display: block; margin: auto;"></p>
 <p><img src="cluster-diagram/selection3.png" width="150%" style="display: block; margin: auto;"></p>
 <p>Now it is your time to view the tooltip on the map and use the

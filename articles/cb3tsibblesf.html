@@ -117,15 +117,15 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/huizezhang-sherry/cubble" class="external-link">cubble</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tsibble.tidyverts.org" class="external-link">tsibble</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></code></pre></div>
-<p>Analysts often have their own preferred spatial or temporal data
-structure, which they may wish to keep for spatio-temporal analysis. For
+<p>Analysts often have their preferred spatial or temporal data
+structure that they prefer to use for spatio-temporal analysis. For
 example, the <code>tbl_ts</code> class from the tsibble package <span class="citation">(Wang, Cook, and Hyndman 2020)</span> is commonly used
-in time series forecasting and similarly, the sf class <span class="citation">(Pebesma 2018)</span> is often used in spatial data
-science. In cubble, analysts can combine these two structures together
-by allowing the spatial component to also be an sf object and the
-temporal component to also be a tsibble object.</p>
+in time series forecasting and the sf class <span class="citation">(Pebesma 2018)</span> is frequently used in spatial
+data science. In cubble, analysts have the flexibility to combine these
+two structures together by allowing the spatial component to be an sf
+object and the temporal component to also be a tsibble object.</p>
 <div class="section level2">
-<h2 id="a-temporal-component-with-tsibble">A temporal component with tsibble<a class="anchor" aria-label="anchor" href="#a-temporal-component-with-tsibble"></a>
+<h2 id="using-a-tsibble-for-the-temporal-component">USing a tsibble for the temporal component<a class="anchor" aria-label="anchor" href="#using-a-tsibble-for-the-temporal-component"></a>
 </h2>
 <p>The <code>key</code> and <code>index</code> arguments in a cubble
 object corresponds to the tsibble counterparts and they can be safely

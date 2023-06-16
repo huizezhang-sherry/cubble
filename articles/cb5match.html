@@ -113,39 +113,38 @@
 
     
     
-<p>One common type of task with spatio-temporal data is to match nearby
-sites. For example, we may want to verify the location of an old list of
-stations with current stations, or we may want to match the data from
-different data sources. This vignette introduces the spatial and
-temporal matching in cubble with an example on matching river level data
-with precipitation in Victoria, Australia.</p>
-<p>In cubble, data can be matched spatially or temporarily with
-<code><a href="../reference/matching.html">match_spatial()</a></code> and <code><a href="../reference/matching.html">match_temporal()</a></code>. The
-function <code><a href="../reference/matching.html">match_spatial()</a></code> calculates the spatial distance
-between observations in two cubbles. Different distances are available
-with projected or unprojected coordinate reference system. Analysts can
-subset the number of matched group to output with argument
-<code>spatial_n_group</code> (by default 4 groups) and the number of
-match per group with argument <code>spatial_n_group</code> (by default
-1, that is, one-to-one matching). The syntax to use
-<code><a href="../reference/matching.html">match_spatial()</a></code> is</p>
+<p>One common task when working with spatio-temporal data is to match
+nearby sites. For example, we may want to verify the location of an old
+list of stations with current stations, or we may want to match the data
+from different data sources. In this vignette, we will introduce the
+spatial and temporal matching in cubble using an example on matching
+river level data with precipitation in Victoria, Australia.</p>
+<p>In cubble, spatial and tmeporal matching are performed using the
+functions <code><a href="../reference/matching.html">match_spatial()</a></code> and
+<code><a href="../reference/matching.html">match_temporal()</a></code>. The <code><a href="../reference/matching.html">match_spatial()</a></code> function
+calculates the spatial distance between observations in two cubble
+objects. Various distance measures are available (check
+<code><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">sf::st_distance</a></code>). Analysts can specify the number of
+matched groups to output using the <code>spatial_n_group</code> argument
+(default to 4 groups) and the number of matches per group using the
+<code>spatial_n_group</code>argument (default to 1, one-to-one
+matching). The syntax to use <code><a href="../reference/matching.html">match_spatial()</a></code> is:</p>
 <pre><code>match_spatial(&lt;cubble_obj1&gt;, &lt;cubble_obj2&gt;, ...)</code></pre>
-<p>The function <code><a href="../reference/matching.html">match_temporal()</a></code> calculates the time series
-similarity between spatially matched groups. Two identifiers needs to be
-specified on the variable separates the each matched group
-(<code>match_id</code>) and the variable separates the two sources
-(<code>data_id</code>). The argument <code>temporal_by</code> uses the
-<code>by</code> syntax from dplyr <code>*_join</code> to specify the
-temporal matching variable.</p>
-<p>The similarity score between two time series in the spatially matched
-group is calculated by a matching function, which analysts can
-customise. The matching function should take two time series in a list
-and output a single numerical score, which allows for interfacing with
-existing time series distance calculation implementation. By default,
-cubble implements a simple peak matching algorithm
-(<code>match_peak</code>) that counts the number of peaks in two time
-series that fall within a specified temporal window. The syntax to use
-<code><a href="../reference/matching.html">match_temporal()</a></code> is</p>
+<p>The function <code><a href="../reference/matching.html">match_temporal()</a></code> calculates the similarity
+between time series within spatially matched groups. Two identifiers are
+required: one for separating each matched group (<code>match_id</code>)
+and one for separating the two data sources (<code>data_id</code>). The
+argument <code>temporal_by</code> uses the <code>by</code> syntax from
+dplyr’s <code>*_join</code> to specify the temporal variables to
+match.</p>
+<p>The similarity score between two time series is calculated using a
+matching function, which can be customised by the analysts. The matching
+function takes two time series as a list and returns a single numerical
+score. This allows for flexibility in using existing time series
+distance calculation implementation. By default, cubble implements a
+simple peak matching algorithm (<code>match_peak</code>) that counts the
+number of peaks in two time series that fall within a specified temporal
+window. The syntax to use <code><a href="../reference/matching.html">match_temporal()</a></code> is</p>
 <pre><code>match_temporal(
   &lt;cubble_obj_from_match_spatial&gt;, 
   data_id = , match_id = , 
@@ -154,16 +153,16 @@ series that fall within a specified temporal window. The syntax to use
 <div class="section level2">
 <h2 id="spatial-matching">Spatial matching<a class="anchor" aria-label="anchor" href="#spatial-matching"></a>
 </h2>
-<p>Bureau of Meteorology collects <a href="http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full" class="external-link">water
-data</a> from river gauges and this includes variables: electrical
-conductivity, turbidity, water course discharge, water course level, and
-water temperature. In particular, water level will interactive with
-precipitation from the climate data since rainfall will raise the water
-level in the river. Here is the location of available weather station
-and water gauges in Victoria:</p>
+<p>Now let’s consider an example of matching water data from river
+gauges with precipitation. The [water level data]((<a href="http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full" class="external-link uri">http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full</a>),
+collected by the Bureau of Meteorology, can be compared with the
+precipitation since rainfall can directly impact water level in river.
+Here is the location of available weather stations and water gauges in
+Victoria, Australia:</p>
 <p><img src="cb5match_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 <p>Both <code>climate_vic</code> and <code>river</code> are cubble
-objects and we can get a summary of the 10 closest pairs:</p>
+objects, and we can obtain a summary of the 10 closest pairs between
+them:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">res_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/matching.html">match_spatial</a></span><span class="op">(</span><span class="va">climate_vic</span>, <span class="va">river</span>, spatial_n_group <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 4</span></span></span>
@@ -179,18 +178,20 @@ objects and we can get a summary of the 10 closest pairs:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00086282 230200 <span style="text-decoration: underline;">6</span>928.     8</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00085279 224217 <span style="text-decoration: underline;">7</span>431.     9</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00080091 406756 <span style="text-decoration: underline;">7</span>460.    10</span></span></code></pre></div>
-<p>The result can also be returned as cubble objects with argument
-<code>return_cubble = TRUE</code>. The output is a list where each
-element is a paired cubble object and you may consider combining all the
-results into a single cubble with <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows()</a></code>. Care needs
-to be taken on in the case when a site is close to two stations since by
-construction, cubble require unique rows in the nested form. From the
-summary table above, river station <code>226027</code> is matched to
-more than one weather station: <code>ASN00085072</code> (group 3) and
-<code>ASN00085298</code> (group 5). (Similarly river station
-<code>230200</code> is matched in group 7 and 8). One can either
-deselect one pair before binding the results, or take the list and work
-with the <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code> syntax:</p>
+<p>The result can also be returned as cubble objects by setting the
+argument <code>return_cubble = TRUE</code>. The output is be a list
+where each element is a paired cubble object. To combine all the results
+into a single cubble, you can use <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows()</a></code>. In the case
+when a site in the second cubble (the <code>river</code> data here) is
+matched to two stations in the first cubble (<code>climate_vic</code>
+here), the binding may not be successful since cubble requires unique
+rows in the nested form. In the summary table above, the river station
+<code>226027</code> is matched to more than one weather station:
+<code>ASN00085072</code> (group 3) and <code>ASN00085298</code> (group
+5). Similarly, the river station <code>230200</code> is matched in group
+7 and 8). In such cases, you can either deselect one pair before
+combining, or work with the list output with the <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code>
+syntax:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/matching.html">match_spatial</a></span><span class="op">(</span><span class="va">climate_vic</span>, <span class="va">river</span>, spatial_n_group <span class="op">=</span> <span class="fl">10</span>, return_cubble <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">res_sp</span>, max.level <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
@@ -231,11 +232,10 @@ with the <code><a href="https://purrr.tidyverse.org/reference/map.html" class="e
 <div class="section level2">
 <h2 id="temporal-matching">Temporal matching<a class="anchor" aria-label="anchor" href="#temporal-matching"></a>
 </h2>
-<p>For temporal matching, the variable water level
-(<code>Water_course_level</code>) from the river data will be matched to
-precipitation (<code>prcp</code>) in the weather station data. The
-variable identifying each matched group is <code>group</code> and the
-variable identifying the two datasets is <code>type</code>:</p>
+<p>For temporal matching, we match teh variable
+<code>Water_course_level</code> from the river data to <code>prcp</code>
+in the weather station data. The variable <code>group</code> and
+<code>types</code> identify the matching group and the two datasets:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">res_tm</span> <span class="op">&lt;-</span> <span class="va">res_sp</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/matching.html">match_temporal</a></span><span class="op">(</span></span>
@@ -252,7 +252,7 @@ variable identifying the two datasets is <code>type</code>:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     7        26</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span>     9        21</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span>    10        14</span></span></code></pre></div>
-<p>Similarly, the cubble output can be returned with the argument
+<p>Similarly, the cubble output can be returned using the argument
 <code>return_cubble = TRUE</code>. Here we select the four pairs with
 the highest number of matching peaks:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">

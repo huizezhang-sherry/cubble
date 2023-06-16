@@ -113,10 +113,10 @@
 
     
     
-<p>This article shows you how to create a cubble from data in the wild.
-You should have already seen examples of constructing a cubble from a
-tibble in the README page and here are more examples that construct a
-cubble from:</p>
+<p>This article demonstrates how to create a cubble from various types
+of data. From the README page, you have already seen examples of
+constructing a cubble from a tibble. Here we provide additional examples
+of creating a cubble from:</p>
 <ul>
 <li>separate spatial and temporal tables</li>
 <li>a <code>tibble</code> object</li>
@@ -127,19 +127,20 @@ cubble from:</p>
 <div class="section level2">
 <h2 id="create-from-separate-spatial-and-temporal-tables">Create from separate spatial and temporal tables<a class="anchor" aria-label="anchor" href="#create-from-separate-spatial-and-temporal-tables"></a>
 </h2>
-<p>Spatio-temporal data may arrives in separate tables for analysts. For
-example, in climate data, analysts may initially receive station data
-containing geographic location information, variables recorded and their
-recording periods. They can then query the temporal variables using the
-stations of interest to obtain the corresponding temporal data.
-Alternatively, analyses may begin as purely spatial or temporal, and
-analysts may obtain additional temporal or spatial data to expand the
-result to spatio-temporal.</p>
+<p>In many cases, spatio-temporal data arrive in separate tables for
+analysis. For example, in climate data, analysts may initially receive
+station data containing geographic location information, recorded
+variables and their recording periods. They can then query the temporal
+variables using the stations of interest to obtain the relevant temporal
+data. Alternatively, analyses may begin as purely spatial or temporal,
+and analysts may obtain additional temporal or spatial data to expand
+the result to spatio-temporal.</p>
 <p>The function <code><a href="../reference/cubble-class.html">make_cubble()</a></code> composes a cubble object from
 a spatial table (<code>spatial</code>) and a temporal table
-(<code>temporal</code>) with the three attributes <code>key</code>,
-<code>index</code>, and <code>coords</code> introduced in <a href="class.html">1. The cubble class</a>. The following code creates
-the nested <code>cubble</code>:</p>
+(<code>temporal</code>), along with the three attributes
+<code>key</code>, <code>index</code>, and <code>coords</code> introduced
+in <a href="cb1class.html">1. The cubble class</a>. The following code
+creates the nested <code>cubble</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations</span>, temporal <span class="op">=</span> <span class="va">meteo</span>,</span>
 <span>            key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
@@ -151,13 +152,12 @@ the nested <code>cubble</code>:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essendon airport   <span style="text-decoration: underline;">95</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moorabbin airport  <span style="text-decoration: underline;">94</span>870 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbourne airport  <span style="text-decoration: underline;">94</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span></code></pre></div>
-<p>The <code>key</code> and <code>index</code> argument comes from the
-same arguments from the tsibble objects and <code>coords</code> derives
-from the geometry column in an sf object. Hence, the corresponding
-argument can be safely omitted, if the spatial data is an sf object,
-i.e. <code>stations_sf</code>, or the temporal data is a tsibble object,
-i.e. <code>meteo_ts</code>. The sf and tsibble class from the input will
-be carried over to the cubble object:</p>
+<p>The <code>coords</code> argument can be safely omitted if the spatial
+data is an sf object (e.g. <code>stations_sf</code>) . Similarly, if the
+temporal object is a tsibble (i.e. <code>meteo_ts</code>), you don’t
+need to specify the <code>key</code> and <code>index</code> arguments.
+The class attributes from sf and tsibble will be carried over to the
+nested and long cubble:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations_sf</span>, temporal <span class="op">=</span> <span class="va">meteo_ts</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form, [sf]</span></span></span>
@@ -173,16 +173,19 @@ be carried over to the cubble object:</p>
 <span><span class="co">#&gt; [4] "tbl_df"            "tbl"               "data.frame"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">ts</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "tbl_ts"     "tbl_df"     "tbl"        "data.frame"</span></span></code></pre></div>
+<p>The viegnette <a href="cb3tsibblesf.html">3. Compatibility with
+tsibble and sf</a> will introduce more on the cubble’s compatibility
+with tsibble and sf.</p>
 </div>
 <div class="section level2">
 <h2 id="coerce-from-foreign-objects">Coerce from foreign objects<a class="anchor" aria-label="anchor" href="#coerce-from-foreign-objects"></a>
 </h2>
 <div class="section level3">
-<h3 id="a-tibble-object">a <code>tibble</code> object<a class="anchor" aria-label="anchor" href="#a-tibble-object"></a>
+<h3 id="the-tibble-objects">The <code>tibble</code> objects<a class="anchor" aria-label="anchor" href="#the-tibble-objects"></a>
 </h3>
-<p>The dataset <code>climate_flat</code> joins the spatial data,
-<code>stations</code>, with the temporal data, <code>meteo</code>, to a
-single tibble object and it can be coerced into a cubble using:</p>
+<p>The dataset <code>climate_flat</code> combines the spatial data,
+<code>stations</code>, with the temporal data, <code>meteo</code>, into
+a single tibble object. It can be coerced into a cubble using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">climate_flat</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
@@ -195,13 +198,12 @@ single tibble object and it can be coerced into a cubble using:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbourne airport  <span style="text-decoration: underline;">94</span>866 <span style="color: #949494;">&lt;tibble [10 × 4]&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="netcdf-data">NetCDF data<a class="anchor" aria-label="anchor" href="#netcdf-data"></a>
+<h3 id="the-netcdf-data">The NetCDF data<a class="anchor" aria-label="anchor" href="#the-netcdf-data"></a>
 </h3>
-<p>In <code>R</code>, packages for wrangling NetCDF data include a
-high-level R interface: <code>ncdf4</code>, a low-level interface that
-calls a C-interface: <code>RNetCDF</code>, and a tidyverse
-implementation: <code>tidync</code>. The code below casts a NetCDF
-object in the ncdf4 class into a cubble object:</p>
+<p>In <code>R</code>, there are several packages available for wrangling
+NetCDF data, including <code>ncdf4</code>, <code>RNetCDF</code>, and
+<code>tidync</code>. The code below converts a NetCDF object of class
+ncdf4 into a cubble object:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ncdf/era5-pressure.nc"</span>, package <span class="op">=</span> <span class="st">"cubble"</span><span class="op">)</span></span>
 <span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="fu">ncdf4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_open.html" class="external-link">nc_open</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
@@ -222,20 +224,16 @@ object in the ncdf4 class into a cubble object:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     9  115    -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    10  115.   -<span style="color: #BB0000;">12</span> <span style="color: #949494;">&lt;tibble [6 × 3]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26,555 more rows</span></span></span></code></pre></div>
-<p>Sometimes, one may want to read in a subset of the NetCDF data and
-the argument <code>vars</code>, <code>long_range</code> and
-<code>lat_range</code> can be used to subset on the variable and the
-grid resolution:</p>
+<p>Sometimes, analysts may choose to read only a subset of the NetCDF
+data. In such cases, the <code>vars</code>, <code>long_range</code> and
+<code>lat_range</code> arguments can be used to subset the data based on
+the variable and the grid resolution:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span><span class="va">raw</span>, vars <span class="op">=</span> <span class="st">"q"</span>,</span>
 <span>          long_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">180</span>, <span class="fl">180</span>, <span class="fl">1</span><span class="op">)</span>, lat_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">90</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We would recommend reducing to about 300 <span class="math inline">\(\times\)</span> 300 grid points for three daily
-variables in one year. A 300 by 300 spatial grid can be a bounding box
-of [100, -80, 180, 0] at 0.25 degree resolution or a global bounding box
-[-180, -90, 180, -90] at 1 degree resolution.</p>
 </div>
 <div class="section level3">
-<h3 id="an-stars-object">An <code>stars</code> object<a class="anchor" aria-label="anchor" href="#an-stars-object"></a>
+<h3 id="the-stars-objects">The <code>stars</code> objects<a class="anchor" aria-label="anchor" href="#the-stars-objects"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
@@ -258,11 +256,12 @@ of [100, -80, 180, 0] at 0.25 degree resolution or a global bounding box
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">289</span>019. 9<span style="text-decoration: underline;">120</span>747. <span style="text-decoration: underline;">122</span>508 <span style="color: #949494;">&lt;tibble [6 × 2]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">289</span>047. 9<span style="text-decoration: underline;">120</span>747. <span style="text-decoration: underline;">122</span>509 <span style="color: #949494;">&lt;tibble [6 × 2]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 122,838 more rows</span></span></span></code></pre></div>
-<p>When the <code>dimensions</code> object is too complex for
-<code>cubble</code> to handle, the package will emit an message.</p>
+<p>When the <code>dimensions</code> object is too complex for the
+<code>cubble</code> package to handle, a warning message will be
+generated.</p>
 </div>
 <div class="section level3">
-<h3 id="an-sftime-object">An <code>sftime</code> object<a class="anchor" aria-label="anchor" href="#an-sftime-object"></a>
+<h3 id="the-sftime-objects">The <code>sftime</code> objects<a class="anchor" aria-label="anchor" href="#the-sftime-objects"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
