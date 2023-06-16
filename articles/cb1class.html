@@ -47,9 +47,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../articles/cubble.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -113,19 +110,6 @@
 
     
     
-<p>The term spatio-temporal data can incorporate various spatial and
-temporal characteristics and different data may require different data
-structures for wrangling and analysis: climate weather stations records
-data at fixed point location but may suffer from potential temporal data
-quality issue such as missing data for certain days. GPS data tracks
-unique point locations at different timestamps and can be organised as
-trajectories; satellite imagery captures snapshots of landscapes at
-selected times and is commonly structured as rasters. The
-spatio-temporal data that cubble addresses are those collected at unique
-fixed locations, allowing for irregularity in the temporal dimension,
-such as the weather station data. This corresponds to the full
-space-time and sparse space-time layouts in the spacetime paper <span class="citation">(Pebesma 2012)</span>:</p>
-<p><img src="cb1class_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <div class="section level2">
 <h2 id="the-cubble-object">The cubble object<a class="anchor" aria-label="anchor" href="#the-cubble-object"></a>
 </h2>
@@ -311,17 +295,6 @@ the coordinate pairs, i.e. <code>"long" "lat"</code>, and</li>
 <code><a href="../reference/attr.html">spatial()</a></code>: the tibble object for the spatial
 variables.</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
-</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-spacetime" class="csl-entry">
-Pebesma, Edzer. 2012. <span>“<span class="nocase">spacetime</span>:
-Spatio-Temporal Data in <span>R</span>.”</span> <em>Journal of
-Statistical Software</em> 51 (7): 1–30. <a href="https://www.jstatsoft.org/v51/i07/" class="external-link">https://www.jstatsoft.org/v51/i07/</a>.
-</div>
-</div>
 </div>
   </div>
 
