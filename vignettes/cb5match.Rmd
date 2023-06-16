@@ -111,7 +111,8 @@ res_tm_long <- res_tm %>%
   face_temporal() %>%  
   unfold(group, type) %>%  
   group_by(group, type) %>%
-  mutate(matched = (matched - min(matched, na.rm = TRUE))/ (max(matched, na.rm = TRUE) - min(matched, na.rm = TRUE))) 
+  mutate(matched = (matched - min(matched, na.rm = TRUE))/ 
+           (max(matched, na.rm = TRUE) - min(matched, na.rm = TRUE))) 
 
 vic_map <- ozmaps::abs_ste |> 
   filter(NAME == "Victoria")
@@ -127,7 +128,7 @@ p1 <-ggplot() +
     data = res_tm %>%  filter(type == "climate") %>% as_tibble(), 
     aes(x = long, y = lat, label = group)) +
   scale_color_brewer(palette = "Dark2")  + 
-  ggthemes::theme_map() +
+  theme_void() + 
   ggplot2::theme(legend.position = "bottom") +
   ggplot2::labs(x = "Longitude", y = "Latitude") 
 
