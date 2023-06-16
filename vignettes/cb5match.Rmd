@@ -21,18 +21,18 @@ library(ggplot2)
 library(patchwork)
 ```
 
-One common type of task with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to match the data from different data sources. This vignette introduces the spatial and temporal matching in cubble with an example on matching river level data with precipitation in Victoria, Australia.
+One common task when working with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to match the data from different data sources. In this vignette, we will introduce the spatial and temporal matching in cubble using an example on matching river level data with precipitation in Victoria, Australia.
 
 
-In cubble, data can be matched spatially or temporarily with `match_spatial()` and `match_temporal()`. The function `match_spatial()` calculates the spatial distance between observations in two cubbles. Different distances are available with projected or unprojected coordinate reference system. Analysts can subset the number of matched group to output with argument `spatial_n_group` (by default 4 groups) and the number of match per group with argument `spatial_n_group` (by default 1, that is, one-to-one matching). The syntax to use `match_spatial()` is
+In cubble, spatial and tmeporal matching are performed using the functions `match_spatial()` and `match_temporal()`. The `match_spatial()` function calculates the spatial distance between observations in two cubble objects. Various distance measures are available (check `sf::st_distance`). Analysts can specify the number of matched groups to output using the `spatial_n_group` argument (default to 4 groups) and the number of matches per group using the `spatial_n_group`argument (default to 1, one-to-one matching). The syntax to use `match_spatial()` is:
   
 ````
 match_spatial(<cubble_obj1>, <cubble_obj2>, ...)
 ````
 
-The function `match_temporal()` calculates the time series similarity between spatially matched groups. Two identifiers needs to be specified on the variable separates the each matched group (`match_id`) and the variable separates the two sources (`data_id`). The argument `temporal_by` uses the `by` syntax from dplyr `*_join` to specify the temporal matching variable. 
+The function `match_temporal()` calculates the similarity between time series within spatially matched groups. Two identifiers are required: one for separating each matched group (`match_id`) and one for separating the two data sources (`data_id`). The argument `temporal_by` uses the `by` syntax from dplyr's `*_join` to specify the temporal variables to match.
   
-  The similarity score between two time series in the spatially matched group is calculated by a matching function, which analysts can customise. The matching function should take two time series in a list and output a single numerical score, which allows for interfacing with existing time series distance calculation implementation. By default, cubble implements a simple peak matching algorithm (`match_peak`) that counts the number of peaks in two time series that fall within a specified temporal window. The syntax to use `match_temporal()` is
+The similarity score between two time series is calculated using a matching function, which can be customised by the analysts. The matching function takes two time series as a list and returns a single numerical score. This allows for flexibility in using existing time series distance calculation implementation. By default, cubble implements a simple peak matching algorithm (`match_peak`) that counts the number of peaks in two time series that fall within a specified temporal window. The syntax to use `match_temporal()` is
   
 ````
 match_temporal(
@@ -44,7 +44,7 @@ match_temporal(
 
 # Spatial matching
 
-Bureau of Meteorology collects [water data](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full) from river gauges and this includes variables: electrical conductivity, turbidity, water course discharge, water course level, and water temperature. In particular, water level will interactive with precipitation from the climate data since rainfall will raise the water level in the river. Here is the location of available weather station and water gauges in Victoria:
+Now let's consider an example of matching water data from river gauges with precipitation. The [water level data]((http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full), collected by the Bureau of Meteorology, can be compared with the precipitation since rainfall can directly impact water level in river. Here is the location of available weather stations and water gauges in Victoria, Australia:
 
 ```{r echo = FALSE}
 river <- cubble::river %>%  mutate(type = "river") %>% rename(id = station)
@@ -66,13 +66,13 @@ ggplot() +
   scale_color_brewer(palette = "Dark2")
 ```
 
-Both `climate_vic` and `river` are cubble objects and we can get a summary of the 10 closest pairs:
+Both `climate_vic` and `river` are cubble objects, and we can obtain a summary of the 10 closest pairs between them:
 
 ```{r}
 (res_sp <- match_spatial(climate_vic, river, spatial_n_group = 10))
 ```
 
-The result can also be returned as cubble objects with argument `return_cubble = TRUE`. The output is a list where each element is a paired cubble object and you may consider combining all the results into a single cubble with `bind_rows()`. Care needs to be taken on in the case when a site is close to two stations since by construction, cubble require unique rows in the nested form. From the summary table above, river station `226027` is matched to more than one weather station: `ASN00085072` (group 3) and `ASN00085298` (group 5). (Similarly river station `230200` is matched in group 7 and 8). One can either deselect one pair before binding the results, or take the list and work with the `purrr::map` syntax:
+The result can also be returned as cubble objects by setting the argument `return_cubble = TRUE`. The output is be a list where each element is a paired cubble object. To combine all the results into a single cubble, you can use `bind_rows()`. In the case when a site in the second cubble (the `river` data here) is matched to two stations in the first cubble (`climate_vic` here), the binding may not be successful since cubble requires unique rows in the nested form. In the summary table above, the river station `226027` is matched to more than one weather station: `ASN00085072` (group 3) and `ASN00085298` (group 5). Similarly, the river station `230200` is matched in group 7 and 8). In such cases, you can either deselect one pair before combining, or work with the list output with the `purrr::map` syntax:
 
 ```{r}
 res_sp <- match_spatial(climate_vic, river, spatial_n_group = 10, return_cubble = TRUE)
@@ -84,7 +84,7 @@ res_sp[[1]]
 
 # Temporal matching
 
-For temporal matching, the variable water level (`Water_course_level`) from the river data will be matched to precipitation (`prcp`) in the weather station data. The variable identifying each matched group is `group` and the variable identifying the two datasets is `type`:
+For temporal matching, we match teh variable `Water_course_level` from the river data to `prcp` in the weather station data. The variable `group` and `types` identify the matching group and the two datasets:
 
 ```{r}
 (res_tm <- res_sp %>% 
@@ -93,7 +93,7 @@ For temporal matching, the variable water level (`Water_course_level`) from the 
     temporal_by = c("prcp" = "Water_course_level")))
 ```
 
-Similarly, the cubble output can be returned with the argument `return_cubble = TRUE`. Here we select the four pairs with the highest number of matching peaks:
+Similarly, the cubble output can be returned using the argument `return_cubble = TRUE`. Here we select the four pairs with the highest number of matching peaks:
 
 ```{r}
 res_tm <- res_sp %>% 

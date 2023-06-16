@@ -22,9 +22,9 @@ library(sf)
 ```
 
 
-Analysts often have their own preferred spatial or temporal data structure, which they may wish to keep for spatio-temporal analysis. For example, the `tbl_ts` class from the tsibble package [@tsibble] is commonly used in time series forecasting and similarly, the sf class [@sf] is often used in spatial data science. In cubble, analysts can combine these two structures together by allowing the spatial component to also be an sf object and the temporal component to also be a tsibble object.
+Analysts often have their preferred spatial or temporal data structure that they prefer to use for spatio-temporal analysis. For example, the `tbl_ts` class from the tsibble package [@tsibble] is commonly used in time series forecasting and the sf class [@sf] is frequently used in spatial data science. In cubble, analysts have the flexibility to combine these two structures together by allowing the spatial component to be an sf object and the temporal component to also be a tsibble object.
 
-# A temporal component with tsibble
+# USing a tsibble for the temporal component
 
 The `key` and `index` arguments in a cubble object corresponds to the tsibble counterparts and they can be safely omitted, if the temporal component is a tsibble object, i.e. `meteo_ts` in the example below. The tsibble class from the input will be carried over to the cubble object:
 

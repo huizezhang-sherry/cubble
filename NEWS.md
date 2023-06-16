@@ -7,11 +7,6 @@ the long cubble has class: `temporal_cubble_df` and `cubble_df`.
 * refactor the matching function
 * better integration with sf and tsibble 
 
-# cubble 0.2.2
-
-* `as_cubble()` method for `sftime` objects
-* new function `add_geometry_column()` to facilitate class cast with `sftime` objects (#15)
-
 # cubble 0.2.1
 
 * add pkg logo

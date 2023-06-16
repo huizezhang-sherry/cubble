@@ -24,37 +24,20 @@ library(cubble)
 library(ggplot2)
 ```
 
-Sometimes, we wish to communicate spatial and temporal information collectively through visualisation. This can be done through making faceted maps across time, creating map animation, or in interactive graphics, constructing linking between maps and time series plot.  
-
-This vignette will introduce a type of spatio-temporal plot, glyph map, which displays spatial and temporal information in a single plot using linear algebra.
+Sometimes, we wish to communicate spatial and temporal information collectively through visualisation. This can be achieved through several graphical displays: one can make faceted maps across time, creating map animations, or constructing interactive graphics to link between map and time series plot. While interactive graphics will be the main focus of vignette [6. Interactive graphics](cb6interactive.hml), this vignette will introduce a specific type of spatio-temporal plot called glyph maps.
 
 
-# What is a glyph map? 
+# Understanding glyph maps
 
-Glyph maps are initially proposed in @Wickham2012-yr and the idea is to transform the temporal coordinates into the spatial coordinates so that time series plot can be displayed on the map. The following diagram illustrates how the transformation works:
+The concept of glyph maps was initially proposed in @Wickham2012-yr. The underlying idea is to transform the temporal coordinates into spatial coordinates so that time series plot can be displayed on the map. The diagram below illustrates how the coordinate transformation:
 
 ```{r echo = FALSE}
 knitr::include_graphics("cluster-diagram/glyph-steps.png")
 ```
 
-Subplot (1) and (2) show the location of a weather station and its associated maximum temperature in 2020. In (3), the same time series is transformed into the spatial coordinates with a defined `height` and `width` using linear algebra (Equation 1 in @Wickham2012-yr). The transformed time series can then be placed on the map in (4). A polar transformation (Equation 2 in @Wickham2012-yr) is also available with wrap the time series plot into a circle and it is useful to visualise seasonality. 
+Subplot (1) show the spatial location of a weather station and subplot (2) displays its associated maximum temperature as time series in 2020. In subplot (3), the temporal coordinates are transformed into the spatial coordinates using linear algebra with a defined `height` and `width` (Equation 1 in @Wickham2012-yr), while the time series glyph remains unchanged. The transformed time series can then be plotted as a layer on the map in (4). 
 
-The package `GGally` initially implement the glyph map. It uses `glyphs()` to calculate the axis transformation and then uses `geom_polygon()` to draw the map.
-
-```
-gly <- glyphs(data, x_major = ..., x_minor = ..., y_major = ..., y_minor = ..., ...)
-
-# `gx`, `gy`, and `gid` are created within `glyphs()`
-ggplot(gly, aes(gx, gy, group = gid)) +
-  geom_path()
-```
-
-Four variables are required to construct a glyph map: `x_major`, `y_major`, `x_minor`, and `y_minor`. The major axes are the coordinates used to create the map and in the illustration above `x_major = long, y_major = lat`. The minor axes are the x/y variable used to construct the time series plot(`x_minor = date, y_minor = tmax` in above).
-
-
-# Glyph map in cubble
-
-The `cubble` package implements the glyph map in a `geom_glyph()`, which perform the linear algebra internally as data transformation before the plot rendering. This allows you to use the conventionally `aes()` syntax within `geom_glyph()` to specify the four major/minor axes:
+The package `GGally` initially implement the glyph map. It uses `glyphs()` to calculate the axis transformation and then uses `geom_polygon()` to draw the map. In cubble, a ggproto implementation `geom_glyph()` performs the linear algebra internally as data transformation . The `geom_glyph()` requires four aesthetics: `x_major`, `y_major`, `x_minor`, and `y_minor`. The major axes are the outer spatial coordinates and the minor axes are the inner/ temporal coordinates: 
 
 ```
 data |> 
@@ -62,7 +45,7 @@ data |>
   geom_glyph(aes(x_major = ..., x_minor = ..., y_major = ..., y_minor = ...))
 ```
 
-Reference line and box can be added by separate geoms (`geom_glyph_box()`, `geom_glyph_line()`) with the same aesthetics (`x_major, x_minor, y_major, y_minor`) and to avoid repetition, you may want specify them collectively in `ggplot()`:
+Reference line and box can be added by separate geoms (`geom_glyph_box()`, `geom_glyph_line()`) with the same aesthetics (`x_major, x_minor, y_major, y_minor`). To avoid repetition, you may want specify the aesthetics collectively inside `ggplot()`:
 
 ```
 data |> 
@@ -72,7 +55,7 @@ data |>
   geom_glyph()
 ```
 
-If you want add additional layer to the plot, i.e. an undelying map, that does not use the four glyph map aesthetics, the argument `inherit.aes = FALSE` is handy: 
+If you want add an undelying map which does not use the four glyph map aesthetics, the argument `inherit.aes = FALSE` is handy: 
 
 ```
 data |> 
@@ -111,8 +94,6 @@ df %>%
   theme(legend.position = "bottom") + 
   labs(x = "Longitude", y = "Latitude")
 ```
-
-
 
 ```{r eval = FALSE, echo = FALSE}
 # script for diagram 
