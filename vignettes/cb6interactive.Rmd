@@ -30,9 +30,6 @@ Interactive graphics can be useful when working with spatio-temporal data since 
 knitr::include_graphics("cluster-diagram/interactive.png")
 ```
 
-
-This vignette assumes you have gone through [Get started](cubble.html) and are familiar with basic data wrangling in cubble with `face_temporal()` and `face_spatial()`. 
-
 # Variation of diurnal temperature range in Australia
 
 Australia has diverse climate conditions with different temperature patterns across its regions. and different temperature patterns can be observed. We can compute the average maximum and minimum temperature by month at 30 locations sampled from the dataset `climate_aus`. The diurnal temperature range, the difference between the maximum and minimum temperature, has different variations throughout the year. We will use its variance to color the plot. The codes below calculate these variables: 
