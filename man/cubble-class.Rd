@@ -13,12 +13,14 @@ make_cubble(spatial, temporal, by = NULL, key, index, coords)
 \item{...}{a set of name-value pairs to create a cubble, need to include the
 \code{key}, \code{index}, and \code{coords} variables.}
 
-\item{key}{a character (or symbol), the spatial identifier.}
+\item{key}{a character (or symbol), the spatial identifier. See the Key
+section in \code{\link[tsibble:as-tsibble]{tsibble::as_tsibble()}}}
 
 \item{index}{a character (or symbol), the temporal identifier.
 Currently support base R classes \code{Date}, \code{POSIXlt},
 \code{POSIXct} and tsibble's \code{\link[tsibble:year-month]{tsibble::yearmonth()}}, \code{\link[tsibble:year-week]{tsibble::yearweek()}},
-and \code{\link[tsibble:year-quarter]{tsibble::yearquarter()}} class.}
+and \code{\link[tsibble:year-quarter]{tsibble::yearquarter()}} class. See the Index section in
+\code{\link[tsibble:as-tsibble]{tsibble::as_tsibble()}}}
 
 \item{coords}{a vector of character (or symbol) of length two, in the order of
 longitude first and then latitude, the argument can be omitted if created

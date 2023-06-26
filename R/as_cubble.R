@@ -1,8 +1,9 @@
 #' Coerce foreign objects into a cubble object
 #' @param ... other arguments.
-#' @param data an object to be converted into an cubble object.
+#' @param data an object to be converted into an cubble object. Currently
+#' support objects of classes `tibble`, `ncdf4`, `stars`, and `sftime`.
 #' @param key a character (symbol), the spatial identifier,
-#' see [cubble::make_cubble()].
+#' see [cubble::make_cubble()]
 #' @param index a character (symbol), the temporal identifier,
 #' see [cubble::make_cubble()].
 #' @param coords a vector of character (symbol) of length 2,
@@ -114,7 +115,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
   # extract variables
   lat_raw <- extract_longlat(data)$lat
   long_raw <- extract_longlat(data)$long
-  time_raw <- extract_time(data)
+  time_raw <- extract_time(data) %>% as.Date()
   var <- extract_var(data, vars)
   lat_idx <- 1:length(lat_raw)
   long_idx <- 1:length(long_raw)

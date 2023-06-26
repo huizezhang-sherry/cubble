@@ -13,6 +13,7 @@
 \alias{rename.spatial_cubble_df}
 \alias{rename.temporal_cubble_df}
 \alias{bind_rows.temporal_cubble_df}
+\alias{bind_rows.spatial_cubble_df}
 \alias{bind_cols.spatial_cubble_df}
 \alias{bind_cols.temporal_cubble_df}
 \alias{rowwise.spatial_cubble_df}
@@ -50,6 +51,8 @@
 \method{rename}{temporal_cubble_df}(.data, ...)
 
 bind_rows.temporal_cubble_df(..., .id = NULL)
+
+bind_rows.spatial_cubble_df(..., .id = NULL)
 
 bind_cols.spatial_cubble_df(..., .name_repair)
 

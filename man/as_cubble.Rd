@@ -31,10 +31,11 @@ as_cubble(data, key, index, coords, ...)
 \method{as_cubble}{sftime}(data, key, index, coords, ...)
 }
 \arguments{
-\item{data}{an object to be converted into an cubble object.}
+\item{data}{an object to be converted into an cubble object. Currently
+support objects of classes \code{tibble}, \code{ncdf4}, \code{stars}, and \code{sftime}.}
 
 \item{key}{a character (symbol), the spatial identifier,
-see \code{\link[=make_cubble]{make_cubble()}}.}
+see \code{\link[=make_cubble]{make_cubble()}}}
 
 \item{index}{a character (symbol), the temporal identifier,
 see \code{\link[=make_cubble]{make_cubble()}}.}

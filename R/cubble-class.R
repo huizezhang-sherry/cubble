@@ -2,11 +2,13 @@
 #'
 #' @param ... a set of name-value pairs to create a cubble, need to include the
 #' `key`, `index`, and `coords` variables.
-#' @param key a character (or symbol), the spatial identifier.
+#' @param key a character (or symbol), the spatial identifier. See the Key
+#' section in [tsibble::as_tsibble()]
 #' @param index a character (or symbol), the temporal identifier.
 #' Currently support base R classes \code{Date}, \code{POSIXlt},
 #' \code{POSIXct} and tsibble's [tsibble::yearmonth()], [tsibble::yearweek()],
-#' and [tsibble::yearquarter()] class.
+#' and [tsibble::yearquarter()] class. See the Index section in
+#' [tsibble::as_tsibble()]
 #' @param coords a vector of character (or symbol) of length two, in the order of
 #' longitude first and then latitude, the argument can be omitted if created
 #' from an sf and its subclasses. In case the sf geometry column is not POINT,

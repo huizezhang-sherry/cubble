@@ -72,11 +72,10 @@ sf_nested %>% sf::st_transform(crs = "EPSG:3857")
 The counterpart to promote the spatial component in an existing cubble to be an sf object is `make_spatial_sf()`:
 
 ```{r echo = TRUE}
-sf_nested2 <- make_cubble(
+(sf_nested2 <- make_cubble(
   stations, meteo, 
   key = id, index = date, coords = c(long, lat)) %>% 
-  make_spatial_sf() 
-all.equal(sf_nested2, sf_nested)
+  make_spatial_sf())
 ```
 
 # Reference

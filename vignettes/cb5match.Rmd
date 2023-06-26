@@ -24,7 +24,7 @@ library(patchwork)
 One common task when working with spatio-temporal data is to match nearby sites. For example, we may want to verify the location of an old list of stations with current stations, or we may want to match the data from different data sources. In this vignette, we will introduce the spatial and temporal matching in cubble using an example on matching river level data with precipitation in Victoria, Australia.
 
 
-In cubble, spatial and tmeporal matching are performed using the functions `match_spatial()` and `match_temporal()`. The `match_spatial()` function calculates the spatial distance between observations in two cubble objects. Various distance measures are available (check `sf::st_distance`). Analysts can specify the number of matched groups to output using the `spatial_n_group` argument (default to 4 groups) and the number of matches per group using the `spatial_n_group`argument (default to 1, one-to-one matching). The syntax to use `match_spatial()` is:
+In cubble, spatial and temporal matching are performed using the functions `match_spatial()` and `match_temporal()`. The `match_spatial()` function calculates the spatial distance between observations in two cubble objects. Various distance measures are available (check `sf::st_distance`). Analysts can specify the number of matched groups to output using the `spatial_n_group` argument (default to 4 groups) and the number of matches per group using the `spatial_n_group` argument (default to 1, one-to-one matching). The syntax to use `match_spatial()` is:
   
 ````
 match_spatial(<cubble_obj1>, <cubble_obj2>, ...)
