@@ -3,17 +3,24 @@
 \docType{data}
 \name{climate_aus}
 \alias{climate_aus}
+\alias{historical_tmax}
 \title{Australia climate data}
 \format{
 An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 639 rows and 7 columns.
+
+An object of class \code{spatial_cubble_df} (inherits from \code{cubble_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 75 rows and 7 columns.
 }
 \usage{
 climate_aus
+
+historical_tmax
 }
 \description{
-Daily measure on precipitation (\code{prcp}), maximum temperature
-(\code{tmax}), and minimum temperature (\code{tmin}) in 2020 for
-639 stations.
+\code{climate_aus}: daily measure on precipitation (\code{prcp}),
+maximum temperature (\code{tmax}), and minimum temperature (\code{tmin})
+in 2020 for 639 stations. \code{historical_tmax}: daily maximum temperature
+(\code{tmax}) for 75 stations in Victoria and New South Wales for two
+periods: 1971-1975 and 2016-2020.
 }
 \details{
 \describe{
@@ -28,8 +35,8 @@ See http://www.bom.gov.au/climate/cdo/about/site-num.shtml}
 \item{elev}{elevation of the stations}
 \item{name}{station name}
 \item{wmo_id}{the world meteorological organisation (WMO) station number}
-\item{ts}{a list-column that nests all the temporal variables:
-date, prcp, tmax, and tmin}
+\item{ts}{For \code{climate_aus}: date, prcp, tmax, and tmin, for
+\code{historical_tmax}: date and tmax}
 }
 }
 \examples{

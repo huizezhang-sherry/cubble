@@ -1,8 +1,11 @@
 #' Australia climate data
 #'
-#' Daily measure on precipitation (\code{prcp}), maximum temperature
-#' (\code{tmax}), and minimum temperature (\code{tmin}) in 2020 for
-#' 639 stations.
+#' \code{climate_aus}: daily measure on precipitation (\code{prcp}),
+#' maximum temperature (\code{tmax}), and minimum temperature (\code{tmin})
+#' in 2020 for 639 stations. \code{historical_tmax}: daily maximum temperature
+#' (\code{tmax}) for 75 stations in Victoria and New South Wales for two
+#' periods: 1971-1975 and 2016-2020.
+#'
 #' @details
 #' \describe{
 #'   \item{id}{station ID, "ASN000" are international paddings, the next
@@ -16,12 +19,16 @@
 #'   \item{elev}{elevation of the stations}
 #'   \item{name}{station name}
 #'   \item{wmo_id}{the world meteorological organisation (WMO) station number}
-#'   \item{ts}{a list-column that nests all the temporal variables:
-#'   date, prcp, tmax, and tmin}
+#'   \item{ts}{For \code{climate_aus}: date, prcp, tmax, and tmin, for
+#'   \code{historical_tmax}: date and tmax}
 #' }
+#' @rdname climate-data
 #' @examples
 #' climate_aus %>% face_temporal() %>% face_spatial()
 "climate_aus"
+
+#' @rdname climate-data
+"historical_tmax"
 
 #' Toy climate data
 #'
