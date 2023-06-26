@@ -222,80 +222,19 @@ with <code>st_transform</code> on a cubble object:</p>
 <p>The counterpart to promote the spatial component in an existing
 cubble to be an sf object is <code><a href="../reference/make_spatial_sf.html">make_spatial_sf()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sf_nested2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">sf_nested2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span></span>
 <span>  <span class="va">stations</span>, <span class="va">meteo</span>, </span>
 <span>  key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/make_spatial_sf.html">make_spatial_sf</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span>  <span class="fu"><a href="../reference/make_spatial_sf.html">make_spatial_sf</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; CRS missing: using OGC:CRS84 (WGS84) as default</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">sf_nested2</span>, <span class="va">sf_nested</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "Names: 7 string mismatches"                                                                 </span></span>
-<span><span class="co">#&gt;  [2] "Attributes: &lt; Component \"agr\": Names: 5 string mismatches &gt;"                              </span></span>
-<span><span class="co">#&gt;  [3] "Component 2: Mean relative difference: 0.5310866"                                           </span></span>
-<span><span class="co">#&gt;  [4] "Component 3: Modes: numeric, character"                                                     </span></span>
-<span><span class="co">#&gt;  [5] "Component 3: target is numeric, current is character"                                       </span></span>
-<span><span class="co">#&gt;  [6] "Component 4: Mean relative difference: 1399.696"                                            </span></span>
-<span><span class="co">#&gt;  [7] "Component 5: Modes: character, numeric"                                                     </span></span>
-<span><span class="co">#&gt;  [8] "Component 5: target is character, current is numeric"                                       </span></span>
-<span><span class="co">#&gt;  [9] "Component 6: Mean relative difference: 1.000397"                                            </span></span>
-<span><span class="co">#&gt; [10] "Component 7: Attributes: &lt; target is NULL, current is list &gt;"                               </span></span>
-<span><span class="co">#&gt; [11] "Component 7: Component 1: Modes: list, numeric"                                             </span></span>
-<span><span class="co">#&gt; [12] "Component 7: Component 1: names for target but not for current"                             </span></span>
-<span><span class="co">#&gt; [13] "Component 7: Component 1: Attributes: &lt; Length mismatch: comparison on first 1 components &gt;"</span></span>
-<span><span class="co">#&gt; [14] "Component 7: Component 1: Attributes: &lt; Component \"class\": 3 string mismatches &gt;"         </span></span>
-<span><span class="co">#&gt; [15] "Component 7: Component 1: Length mismatch: comparison on first 2 components"                </span></span>
-<span><span class="co">#&gt; [16] "Component 7: Component 1: Component 1: Lengths: 10, 1"                                      </span></span>
-<span><span class="co">#&gt; [17] "Component 7: Component 1: Component 1: Attributes: &lt; Modes: list, NULL &gt;"                   </span></span>
-<span><span class="co">#&gt; [18] "Component 7: Component 1: Component 1: Attributes: &lt; Lengths: 1, 0 &gt;"                       </span></span>
-<span><span class="co">#&gt; [19] "Component 7: Component 1: Component 1: Attributes: &lt; names for target but not for current &gt;"</span></span>
-<span><span class="co">#&gt; [20] "Component 7: Component 1: Component 1: Attributes: &lt; current is not list-like &gt;"            </span></span>
-<span><span class="co">#&gt; [21] "Component 7: Component 1: Component 1: target is Date, current is numeric"                  </span></span>
-<span><span class="co">#&gt; [22] "Component 7: Component 1: Component 2: Numeric: lengths (10, 1) differ"                     </span></span>
-<span><span class="co">#&gt; [23] "Component 7: Component 2: Modes: list, numeric"                                             </span></span>
-<span><span class="co">#&gt; [24] "Component 7: Component 2: names for target but not for current"                             </span></span>
-<span><span class="co">#&gt; [25] "Component 7: Component 2: Attributes: &lt; Length mismatch: comparison on first 1 components &gt;"</span></span>
-<span><span class="co">#&gt; [26] "Component 7: Component 2: Attributes: &lt; Component \"class\": 3 string mismatches &gt;"         </span></span>
-<span><span class="co">#&gt; [27] "Component 7: Component 2: Length mismatch: comparison on first 2 components"                </span></span>
-<span><span class="co">#&gt; [28] "Component 7: Component 2: Component 1: Lengths: 10, 1"                                      </span></span>
-<span><span class="co">#&gt; [29] "Component 7: Component 2: Component 1: Attributes: &lt; Modes: list, NULL &gt;"                   </span></span>
-<span><span class="co">#&gt; [30] "Component 7: Component 2: Component 1: Attributes: &lt; Lengths: 1, 0 &gt;"                       </span></span>
-<span><span class="co">#&gt; [31] "Component 7: Component 2: Component 1: Attributes: &lt; names for target but not for current &gt;"</span></span>
-<span><span class="co">#&gt; [32] "Component 7: Component 2: Component 1: Attributes: &lt; current is not list-like &gt;"            </span></span>
-<span><span class="co">#&gt; [33] "Component 7: Component 2: Component 1: target is Date, current is numeric"                  </span></span>
-<span><span class="co">#&gt; [34] "Component 7: Component 2: Component 2: Numeric: lengths (10, 1) differ"                     </span></span>
-<span><span class="co">#&gt; [35] "Component 7: Component 3: Modes: list, numeric"                                             </span></span>
-<span><span class="co">#&gt; [36] "Component 7: Component 3: names for target but not for current"                             </span></span>
-<span><span class="co">#&gt; [37] "Component 7: Component 3: Attributes: &lt; Length mismatch: comparison on first 1 components &gt;"</span></span>
-<span><span class="co">#&gt; [38] "Component 7: Component 3: Attributes: &lt; Component \"class\": 3 string mismatches &gt;"         </span></span>
-<span><span class="co">#&gt; [39] "Component 7: Component 3: Length mismatch: comparison on first 2 components"                </span></span>
-<span><span class="co">#&gt; [40] "Component 7: Component 3: Component 1: Lengths: 10, 1"                                      </span></span>
-<span><span class="co">#&gt; [41] "Component 7: Component 3: Component 1: Attributes: &lt; Modes: list, NULL &gt;"                   </span></span>
-<span><span class="co">#&gt; [42] "Component 7: Component 3: Component 1: Attributes: &lt; Lengths: 1, 0 &gt;"                       </span></span>
-<span><span class="co">#&gt; [43] "Component 7: Component 3: Component 1: Attributes: &lt; names for target but not for current &gt;"</span></span>
-<span><span class="co">#&gt; [44] "Component 7: Component 3: Component 1: Attributes: &lt; current is not list-like &gt;"            </span></span>
-<span><span class="co">#&gt; [45] "Component 7: Component 3: Component 1: target is Date, current is numeric"                  </span></span>
-<span><span class="co">#&gt; [46] "Component 7: Component 3: Component 2: Numeric: lengths (10, 1) differ"                     </span></span>
-<span><span class="co">#&gt; [47] "Component 8: Attributes: &lt; Modes: list, NULL &gt;"                                             </span></span>
-<span><span class="co">#&gt; [48] "Component 8: Attributes: &lt; Lengths: 5, 0 &gt;"                                                 </span></span>
-<span><span class="co">#&gt; [49] "Component 8: Attributes: &lt; names for target but not for current &gt;"                          </span></span>
-<span><span class="co">#&gt; [50] "Component 8: Attributes: &lt; current is not list-like &gt;"                                      </span></span>
-<span><span class="co">#&gt; [51] "Component 8: Component 1: Modes: numeric, list"                                             </span></span>
-<span><span class="co">#&gt; [52] "Component 8: Component 1: Lengths: 2, 4"                                                    </span></span>
-<span><span class="co">#&gt; [53] "Component 8: Component 1: names for current but not for target"                             </span></span>
-<span><span class="co">#&gt; [54] "Component 8: Component 1: Attributes: &lt; Length mismatch: comparison on first 1 components &gt;"</span></span>
-<span><span class="co">#&gt; [55] "Component 8: Component 1: Attributes: &lt; Component 1: 3 string mismatches &gt;"                 </span></span>
-<span><span class="co">#&gt; [56] "Component 8: Component 1: target is XY, current is tbl_df"                                  </span></span>
-<span><span class="co">#&gt; [57] "Component 8: Component 2: Modes: numeric, list"                                             </span></span>
-<span><span class="co">#&gt; [58] "Component 8: Component 2: Lengths: 2, 4"                                                    </span></span>
-<span><span class="co">#&gt; [59] "Component 8: Component 2: names for current but not for target"                             </span></span>
-<span><span class="co">#&gt; [60] "Component 8: Component 2: Attributes: &lt; Length mismatch: comparison on first 1 components &gt;"</span></span>
-<span><span class="co">#&gt; [61] "Component 8: Component 2: Attributes: &lt; Component 1: 3 string mismatches &gt;"                 </span></span>
-<span><span class="co">#&gt; [62] "Component 8: Component 2: target is XY, current is tbl_df"                                  </span></span>
-<span><span class="co">#&gt; [63] "Component 8: Component 3: Modes: numeric, list"                                             </span></span>
-<span><span class="co">#&gt; [64] "Component 8: Component 3: Lengths: 2, 4"                                                    </span></span>
-<span><span class="co">#&gt; [65] "Component 8: Component 3: names for current but not for target"                             </span></span>
-<span><span class="co">#&gt; [66] "Component 8: Component 3: Attributes: &lt; Length mismatch: comparison on first 1 components &gt;"</span></span>
-<span><span class="co">#&gt; [67] "Component 8: Component 3: Attributes: &lt; Component 1: 3 string mismatches &gt;"                 </span></span>
-<span><span class="co">#&gt; [68] "Component 8: Component 3: target is XY, current is tbl_df"</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form, [sf]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
+<span><span class="co">#&gt;   id           long   lat  elev name   wmo_id ts                  geometry</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  145. -<span style="color: #BB0000;">37.7</span>  78.4 essen…  <span style="text-decoration: underline;">95</span>866 <span style="color: #949494;">&lt;tibble&gt;</span> (144.9066 -37.7276)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  145. -<span style="color: #BB0000;">38.0</span>  12.1 moora…  <span style="text-decoration: underline;">94</span>870 <span style="color: #949494;">&lt;tibble&gt;</span>   (145.0964 -37.98)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282  145. -<span style="color: #BB0000;">37.7</span> 113.  melbo…  <span style="text-decoration: underline;">94</span>866 <span style="color: #949494;">&lt;tibble&gt;</span> (144.8321 -37.6655)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
