@@ -8,7 +8,7 @@
 \format{
 An object of class \code{tbl_ts} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 6806 rows and 4 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 82 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 80 rows and 2 columns.
 }
 \usage{
 covid

@@ -23,6 +23,7 @@ usethis::use_data(covid, overwrite = TRUE)
 
 lga <- strayr::read_absmap("lga2018") |>
   filter(state_name_2016 == "Victoria") |>
-  select(lga_name_2018, geometry)
+  select(lga_name_2018, geometry) %>%
+  rmapshaper::ms_simplify(keep = 0.1)
 
 usethis::use_data(lga, overwrite = TRUE)
