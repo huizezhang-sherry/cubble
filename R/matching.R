@@ -42,9 +42,7 @@
 #'
 #' a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) %>% bind_rows()
 #' match_temporal(a1, data_id = type, match_id = group,
-#' temporal_by = c("prcp" = "Water_course_level"))
-#' match_temporal(a1, data_id = type, match_id = group,
-#' temporal_by = c("prcp" = "Water_course_level"), return = TRUE)
+#'                temporal_by = c("prcp" = "Water_course_level"))
 match_sites <- function(df1, df2, crs = sf::st_crs("OGC:CRS84"),
                         which = NULL, par = 0,
                         spatial_n_each = 1,
