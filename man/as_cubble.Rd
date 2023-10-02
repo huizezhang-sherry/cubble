@@ -2,6 +2,7 @@
 % Please edit documentation in R/as_cubble.R
 \name{as_cubble}
 \alias{as_cubble}
+\alias{as_cubble.data.frame}
 \alias{as_cubble.tbl_df}
 \alias{as_cubble.sf}
 \alias{as_cubble.ncdf4}
@@ -10,6 +11,8 @@
 \title{Coerce foreign objects into a cubble object}
 \usage{
 as_cubble(data, key, index, coords, ...)
+
+\method{as_cubble}{data.frame}(data, key, index, coords, ...)
 
 \method{as_cubble}{tbl_df}(data, key, index, coords, ...)
 
