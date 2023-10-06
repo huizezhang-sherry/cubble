@@ -62,8 +62,6 @@ cubble <- function(..., key, index, coords) {
 #' @export
 make_cubble <- function(spatial, temporal, by = NULL, key, index, coords,
                         potential_match = NULL){
-  browser()
-
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
