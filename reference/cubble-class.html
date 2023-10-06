@@ -80,7 +80,15 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cubble</span><span class="op">(</span><span class="va">...</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">make_cubble</span><span class="op">(</span><span class="va">spatial</span>, <span class="va">temporal</span>, by <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">make_cubble</span><span class="op">(</span></span>
+<span>  <span class="va">spatial</span>,</span>
+<span>  <span class="va">temporal</span>,</span>
+<span>  by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">key</span>,</span>
+<span>  <span class="va">index</span>,</span>
+<span>  <span class="va">coords</span>,</span>
+<span>  potential_match <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -126,6 +134,15 @@ containing the <code>key</code> and <code>index</code> variable.</p></dd>
 used in <code>make_cubble()</code> when the key variable has different names in the
 <code>spatial</code> and <code>temporal</code> data.</p></dd>
 
+
+<dt>potential_match</dt>
+<dd><p>a <code>key_tbl</code> object from <code><a href="check_key.html">check_key()</a></code>.
+When unmatched key values appear in spatial and temporal data,
+<code>make_cubble</code> will prompt the user to use <code><a href="check_key.html">check_key()</a></code> for
+checking. This argument allow the check result to be parsed back to
+<code>make_cubble</code> to also match the <code>potential_pairs</code> found by the
+check.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -156,6 +173,92 @@ used in <code>make_cubble()</code> when the key variable has different names in 
 <span class="r-in"><span><span class="co"># stations and climate are in-built data in cubble</span></span></span>
 <span class="r-in"><span><span class="fu">make_cubble</span><span class="op">(</span>spatial <span class="op">=</span> <span class="va">stations</span>, temporal <span class="op">=</span> <span class="va">meteo</span>,</span></span>
 <span class="r-in"><span>            key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: make_cubble(spatial = stations, temporal = meteo, key = id, index = date, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     coords = c(long, lat))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: key &lt;- enquo(key)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: index &lt;- enquo(index)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: coords &lt;- enquo(coords)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (quo_is_missing(key)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_tsibble(temporal)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         key &lt;- key_vars(temporal)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         cli::cli_abort("Please supply the {.code key} argument,\n                     or a {.code tsibble} object as the temporal compoenent")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (quo_is_missing(index)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_tsibble(temporal)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         index &lt;- index(temporal)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         cli::cli_abort("Please supply the {.code index} argument,\n                     or a {.code tsibble} object as the temporal compoenent")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (quo_is_missing(coords)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_sf(spatial)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         cc &lt;- sf::st_coordinates(sf::st_centroid(spatial))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         colnames(cc) &lt;- if (sf::st_is_longlat(spatial)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             c("long", "lat")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else c("x", "y")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         spatial &lt;- cbind(spatial, cc)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         coords &lt;- colnames(cc)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         cli::cli_abort("Please supply the {.code coords} argument in the syntax of\n      {.code coords = c(LONG, LAT)}, or\n      use an {.code sf} object as the spatial compoenent")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     coords &lt;- coords2strvec(coords)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: coords &lt;- coords2strvec(coords)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: common_cols &lt;- intersect(names(spatial), names(temporal))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (!is_null(by)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (by %in% names(temporal) &amp;&amp; names(by) %in% names(spatial)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         names(spatial)[names(spatial) == names(by)] &lt;- by</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else if (length(common_cols) != 0) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     by &lt;- intersect(names(spatial), names(temporal))[1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cli::cli_abort("No shared column found.\n    Please supply the shared key using the {.code by} argument")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (length(common_cols) != 0) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     by &lt;- intersect(names(spatial), names(temporal))[1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cli::cli_abort("No shared column found.\n    Please supply the shared key using the {.code by} argument")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: by &lt;- intersect(names(spatial), names(temporal))[1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (!is.null(potential_match)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!inherits(potential_match, "key_tbl")) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         cli::cli_abort("The {.field potential_key_match} need to be the result\n      from {.fn check_key}.")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     tp &lt;- potential_match$potential_pairs$temporal</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     sp &lt;- potential_match$potential_pairs$spatial</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     idx &lt;- match(temporal[[key]], tp)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     temporal[[key]] &lt;- ifelse(!is.na(idx), sp[idx], temporal[[key]])</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: slvl &lt;- spatial[[by]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: tlvl &lt;- temporal[[by]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: only_spatial &lt;- setdiff(slvl, tlvl)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: only_temporal &lt;- setdiff(tlvl, slvl)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: has_unmatch &lt;- length(only_temporal) != 0 | length(only_spatial) != </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (length(only_spatial) != 0) cli::cli_alert_warning("Some sites in the spatial table don't have temporal information")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (length(only_temporal) != 0) cli::cli_alert_warning("Some sites in the temporal table don't have spatial information")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (has_unmatch) cli::cli_alert_warning("Use {.fn check_key} to check on the unmatched key\n    The cubble is created only with sites having both spatial and\n    temporal information")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: spatial &lt;- spatial %&gt;% filter(!by %in% only_spatial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (is_sf(spatial)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     spatial &lt;- spatial %&gt;% as_tibble() %&gt;% sf::st_as_sf()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: if (is_tsibble(temporal)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     index &lt;- temporal %@% "index"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> } else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     index &lt;- as_name(index)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: index &lt;- as_name(index)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: temporal &lt;- temporal %&gt;% filter(!by %in% only_temporal) %&gt;% select(as_name(index), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setdiff(colnames(temporal), as_name(index)))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: out &lt;- suppressMessages(dplyr::inner_join(spatial, temporal %&gt;% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nest(ts = -by)))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> debug: new_spatial_cubble(out, key = by, index = index, coords = coords)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span>
