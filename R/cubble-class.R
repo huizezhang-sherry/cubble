@@ -21,6 +21,12 @@
 #' @param by in the syntax of the \code{by} argument in [dplyr::left_join()],
 #'  used in `make_cubble()` when the key variable has different names in the
 #' `spatial` and `temporal` data.
+#' @param potential_match a \code{key_tbl} object from [cubble::check_key()].
+#' When unmatched key values appear in spatial and temporal data,
+#' \code{make_cubble} will prompt the user to use [cubble::check_key()] for
+#' checking. This argument allow the check result to be parsed back to
+#' \code{make_cubble} to also match the \code{potential_pairs} found by the
+#' check.
 #' @rdname cubble-class
 #' @return a cubble object
 #' @export
@@ -54,7 +60,9 @@ cubble <- function(..., key, index, coords) {
 
 #' @rdname cubble-class
 #' @export
-make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
+make_cubble <- function(spatial, temporal, by = NULL, key, index, coords,
+                        potential_match = NULL){
+  browser()
 
   key <- enquo(key)
   index <- enquo(index)
@@ -112,6 +120,19 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords){
   } else{
     cli::cli_abort("No shared column found.
     Please supply the shared key using the {.code by} argument")
+  }
+
+  if (!is.null(potential_match)){
+    if (!inherits(potential_match, "key_tbl")){
+      cli::cli_abort(
+      "The {.field potential_key_match} need to be the result
+      from {.fn check_key}.")
+    }
+
+    tp <- potential_match$potential_pairs$temporal
+    sp <- potential_match$potential_pairs$spatial
+    idx <- match(temporal[[key]], tp)
+    temporal[[key]] <- ifelse(!is.na(idx), sp[idx], temporal[[key]])
   }
 
   # find whether there are unmatched spatial and temporal key level

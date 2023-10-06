@@ -35,6 +35,8 @@ match, potentially can be matched, and can't be matched.
 check_key(stations, meteo)
 
 # make_cubble() will prompt to use check_key if there are key mis-match:
-make_cubble(spatial = lga, temporal = covid, by = c("lga_name_2018" = "lga"))
-check_key(lga, covid, by = c("lga_name_2018" = "lga"))
+colnames(lga) <- c("lga", "geometry")
+cb <- make_cubble(spatial = lga, temporal = covid)
+(check_res <- check_key(lga, covid))
+make_cubble(spatial = lga, temporal = covid, potential_match = check_res)
 }

@@ -16,8 +16,10 @@
 #' check_key(stations, meteo)
 #'
 #' # make_cubble() will prompt to use check_key if there are key mis-match:
-#' make_cubble(spatial = lga, temporal = covid, by = c("lga_name_2018" = "lga"))
-#' check_key(lga, covid, by = c("lga_name_2018" = "lga"))
+#' colnames(lga) <- c("lga", "geometry")
+#' cb <- make_cubble(spatial = lga, temporal = covid)
+#' (check_res <- check_key(lga, covid))
+#' make_cubble(spatial = lga, temporal = covid, potential_match = check_res)
 check_key <- function(spatial, temporal, by = NULL) {
   common_cols <- intersect(names(spatial), names(temporal))
   if (!is_null(by)) {
@@ -63,10 +65,13 @@ check_key <- function(spatial, temporal, by = NULL) {
       list(spatial = spatial_v[-s_idx], temporal = temporal_v[-t_idx])
   }
 
-  return(list(
+  res <- list(
     paired = matched_tbl,
     potential_pairs = potential,
     others = others
-  ))
+  )
+
+  class(res) <- c("key_tbl", class(res))
+  return(res)
 
 }

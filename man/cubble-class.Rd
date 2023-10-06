@@ -7,7 +7,15 @@
 \usage{
 cubble(..., key, index, coords)
 
-make_cubble(spatial, temporal, by = NULL, key, index, coords)
+make_cubble(
+  spatial,
+  temporal,
+  by = NULL,
+  key,
+  index,
+  coords,
+  potential_match = NULL
+)
 }
 \arguments{
 \item{...}{a set of name-value pairs to create a cubble, need to include the
@@ -37,6 +45,13 @@ containing the \code{key} and \code{index} variable.}
 \item{by}{in the syntax of the \code{by} argument in \code{\link[dplyr:mutate-joins]{dplyr::left_join()}},
 used in \code{make_cubble()} when the key variable has different names in the
 \code{spatial} and \code{temporal} data.}
+
+\item{potential_match}{a \code{key_tbl} object from \code{\link[=check_key]{check_key()}}.
+When unmatched key values appear in spatial and temporal data,
+\code{make_cubble} will prompt the user to use \code{\link[=check_key]{check_key()}} for
+checking. This argument allow the check result to be parsed back to
+\code{make_cubble} to also match the \code{potential_pairs} found by the
+check.}
 }
 \value{
 a cubble object
