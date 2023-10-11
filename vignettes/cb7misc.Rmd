@@ -1,0 +1,39 @@
+---
+title: "7. Miscellaneous"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cb7misc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(cubble)
+library(dplyr)
+```
+
+This vignette documents miscellaneous examples and questions received regarding 
+the `cubble` package.
+
+# Why summarising of temporal data by station is not in temporal form?
+
+Q: I'm trying to summarise the average maximum temperature by station. I'm not sure why the summarise function is not returning a temporal object. 
+  
+```{r}
+climate_mel |> 
+  face_temporal() |> 
+  summarise(tmax_avg = mean(tmax, na.rm=TRUE))
+```
+
+**A: This operation should be performed in the spatial form. The form to use for an operation depends on the structure of the result. If the result has each key in a row without temporal index, it should be operated in the spatial form (example here):**
+
+```{r}
+climate_mel |> 
+  rowwise() |> 
+  mutate(tmax_avg = mean(ts$tmax, na.rm=TRUE))
+```
+
