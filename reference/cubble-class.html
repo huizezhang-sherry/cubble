@@ -69,7 +69,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a cubble object</h1>
-    <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/R/cubble-class.R" class="external-link"><code>R/cubble-class.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/R/make-cubble.R" class="external-link"><code>R/make-cubble.R</code></a></small>
     <div class="hidden name"><code>cubble-class.Rd</code></div>
     </div>
 
@@ -87,7 +87,8 @@
 <span>  <span class="va">key</span>,</span>
 <span>  <span class="va">index</span>,</span>
 <span>  <span class="va">coords</span>,</span>
-<span>  potential_match <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  potential_match <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  key_use <span class="op">=</span> <span class="st">"temporal"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -142,6 +143,12 @@ When unmatched key values appear in spatial and temporal data,
 checking. This argument allow the check result to be parsed back to
 <code>make_cubble</code> to also match the <code>potential_pairs</code> found by the
 check.</p></dd>
+
+
+<dt>key_use</dt>
+<dd><p>a character of either "spatial" or "temporal". When
+<code>potential_math</code> is activated, this argument specifies which key column
+in the potential match to use. Default to "temporal".</p></dd>
 
 </dl></div>
     <div id="value">
