@@ -27,6 +27,9 @@
 #' checking. This argument allow the check result to be parsed back to
 #' \code{make_cubble} to also match the \code{potential_pairs} found by the
 #' check.
+#' @param key_use a character of either "spatial" or "temporal". When
+#' \code{potential_math} is activated, this argument specifies which key column
+#' in the potential match to use. Default to "temporal".
 #' @rdname cubble-class
 #' @return a cubble object
 #' @export
@@ -61,7 +64,7 @@ cubble <- function(..., key, index, coords) {
 #' @rdname cubble-class
 #' @export
 make_cubble <- function(spatial, temporal, by = NULL, key, index, coords,
-                        potential_match = NULL){
+                        potential_match = NULL, key_use = "temporal"){
   key <- enquo(key)
   index <- enquo(index)
   coords <- enquo(coords)
@@ -121,16 +124,19 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords,
   }
 
   if (!is.null(potential_match)){
-    if (!inherits(potential_match, "key_tbl")){
-      cli::cli_abort(
-      "The {.field potential_key_match} need to be the result
-      from {.fn check_key}.")
-    }
-
+    check_key_tbl(potential_match)
     tp <- potential_match$potential_pairs$temporal
     sp <- potential_match$potential_pairs$spatial
-    idx <- match(temporal[[key]], tp)
-    temporal[[key]] <- ifelse(!is.na(idx), sp[idx], temporal[[key]])
+
+    check_arg_key_use(key_use)
+    if (key_use == "spatial"){
+      idx <- match(temporal[[key]], tp)
+      temporal[[key]] <- ifelse(!is.na(idx), sp[idx], temporal[[key]])
+    } else{
+      idx <- match(spatial[[key]], sp)
+      spatial[[key]] <- ifelse(!is.na(idx), tp[idx], spatial[[key]])
+    }
+
   }
 
   # find whether there are unmatched spatial and temporal key level
