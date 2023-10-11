@@ -14,7 +14,8 @@ make_cubble(
   key,
   index,
   coords,
-  potential_match = NULL
+  potential_match = NULL,
+  key_use = "temporal"
 )
 }
 \arguments{
@@ -52,6 +53,10 @@ When unmatched key values appear in spatial and temporal data,
 checking. This argument allow the check result to be parsed back to
 \code{make_cubble} to also match the \code{potential_pairs} found by the
 check.}
+
+\item{key_use}{a character of either "spatial" or "temporal". When
+\code{potential_math} is activated, this argument specifies which key column
+in the potential match to use. Default to "temporal".}
 }
 \value{
 a cubble object
