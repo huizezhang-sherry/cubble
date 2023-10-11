@@ -1,5 +1,5 @@
 ---
-title: "7. Miscellaneous"
+title: "7. Answers to common questions and extra examples"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{cb7misc}
