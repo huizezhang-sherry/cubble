@@ -72,7 +72,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create glyph map with ggplot2</h1>
-    <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/R/map-glyph.R" class="external-link"><code>R/map-glyph.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/huizezhang-sherry/cubble/blob/HEAD/R/glyph.R" class="external-link"><code>R/glyph.R</code></a></small>
     <div class="hidden name"><code>glyph.Rd</code></div>
     </div>
 
@@ -267,7 +267,7 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># apply a re-scaling on Y and use polar coordinate</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">GGally</span><span class="fu">::</span><span class="va"><a href="https://ggobi.github.io/ggally/reference/nasa.html" class="external-link">nasa</a></span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">GGally</span><span class="fu">::</span><span class="va"><a href="https://ggobi.github.io/ggally/reference/nasa.html" class="external-link">nasa</a></span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x_major <span class="op">=</span> <span class="va">long</span>, x_minor <span class="op">=</span> <span class="va">day</span>,</span></span>
 <span class="r-in"><span>             y_major <span class="op">=</span> <span class="va">lat</span>, y_minor <span class="op">=</span> <span class="va">ozone</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">geom_glyph_box</span><span class="op">(</span>fill<span class="op">=</span><span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span></span>
