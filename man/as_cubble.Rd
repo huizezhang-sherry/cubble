@@ -63,11 +63,11 @@ a cubble object
 Coerce foreign objects into a cubble object
 }
 \examples{
-climate_flat \%>\% as_cubble(key = id, index = date, coords = c(long, lat))
+climate_flat |> as_cubble(key = id, index = date, coords = c(long, lat))
 
 # only need `coords` if create from a tsibble
-dt <- climate_flat \%>\%  tsibble::as_tsibble(key = id, index = date)
-dt \%>\%  as_cubble(coords = c(long, lat))
+dt <- climate_flat |>  tsibble::as_tsibble(key = id, index = date)
+dt |>  as_cubble(coords = c(long, lat))
 
 # netcdf
 path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
@@ -82,12 +82,12 @@ dt <- as_cubble(raw,vars = c("q", "z"),
 # stars - take a few seconds to run
 tif <- system.file("tif/L7_ETMs.tif", package = "stars")
 x <-  stars::read_stars(tif)
-x \%>\% as_cubble()
+x |> as_cubble()
 }
 
 # don't have to supply coords if create from a sftime
 dt <- climate_flat \%>\%
   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) \%>\%
   sftime::st_as_sftime()
-dt \%>\% as_cubble(key = id, index = date)
+dt |> as_cubble(key = id, index = date)
 }

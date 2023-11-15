@@ -19,11 +19,11 @@
 #' @export
 #' @return a cubble object
 #' @examples
-#' climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
+#' climate_flat |> as_cubble(key = id, index = date, coords = c(long, lat))
 #'
 #' # only need `coords` if create from a tsibble
-#' dt <- climate_flat %>%  tsibble::as_tsibble(key = id, index = date)
-#' dt %>%  as_cubble(coords = c(long, lat))
+#' dt <- climate_flat |>  tsibble::as_tsibble(key = id, index = date)
+#' dt |>  as_cubble(coords = c(long, lat))
 #'
 #' # netcdf
 #' path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
@@ -38,14 +38,14 @@
 #'# stars - take a few seconds to run
 #' tif <- system.file("tif/L7_ETMs.tif", package = "stars")
 #' x <-  stars::read_stars(tif)
-#' x %>% as_cubble()
+#' x |> as_cubble()
 #'}
 #'
 #' # don't have to supply coords if create from a sftime
 #' dt <- climate_flat %>%
 #'   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) %>%
 #'   sftime::st_as_sftime()
-#' dt %>% as_cubble(key = id, index = date)
+#' dt |> as_cubble(key = id, index = date)
 as_cubble <- function(data, key, index, coords, ...) {
   UseMethod("as_cubble")
 }
@@ -87,7 +87,7 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
     listcol_var <- listcol_var[1]
     if (listcol_var != "ts")
       colnames(data)[colnames(data) == listcol_var] <- "ts"
-    chopped <- data %>% tidyr::unchop("ts")
+    chopped <- data |> tidyr::unchop("ts")
     already <- as_name(index) %in% names(chopped[["ts"]])
     if (!already) cli::cli_abort(
       "Can't' find the index variable in the data. Please check."
@@ -125,7 +125,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
   # extract variables
   lat_raw <- extract_longlat(data)$lat
   long_raw <- extract_longlat(data)$long
-  time_raw <- extract_time(data) %>% as.Date()
+  time_raw <- extract_time(data) |> as.Date()
   var <- extract_var(data, vars)
   lat_idx <- 1:length(lat_raw)
   long_idx <- 1:length(long_raw)
@@ -139,7 +139,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
     long_idx <- which(long_raw %in% long_range)
     long_raw <- as.vector(long_raw[which(long_raw %in% long_range)])
   }
-  raw_data <- var$var %>%  map(~.x[long_idx, lat_idx,])
+  raw_data <- var$var |>  map(~.x[long_idx, lat_idx,])
 
   # define dimension and grid
   dim_order <- c(length(long_raw), length(lat_raw) ,
@@ -161,7 +161,7 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
 
   key <- "id"
   all_vars <- find_invariant(data, !!key)
-  out <- data %>% tidyr::nest(ts = c(!!!all_vars$variant))
+  out <- data |> tidyr::nest(ts = c(!!!all_vars$variant))
 
   new_spatial_cubble(
     out, key = key, index = "time", coords = c("long", "lat")
@@ -244,12 +244,12 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
   coords <- as.list(quo_get_expr(coords))[-1]
   coords <- unlist(map(coords, as_string))
 
-  all_vars <- data %>% find_invariant(!!key)
-  spatial <- data %>% select(all_vars$invariant, -!!index) %>% distinct()
+  all_vars <- data |> find_invariant(!!key)
+  spatial <- data |> select(all_vars$invariant, -!!index) |> distinct()
   temporal <- as_tibble(data) %>%
     select(!!key, all_vars$variant, !!index) %>%
     nest(ts = all_vars$variant)
-  out <- spatial %>% left_join(temporal, by = as_name(key))
+  out <- spatial |> left_join(temporal, by = as_name(key))
 
   new_spatial_cubble(
     out, key = as_name(key), index = as_name(index), coords = coords

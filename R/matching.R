@@ -40,7 +40,7 @@
 #' # tune the number of matches in each group
 #' match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
 #'
-#' a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) %>% bind_rows()
+#' a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) |> bind_rows()
 #' match_temporal(a1, data_id = type, match_id = group,
 #'                temporal_by = c("prcp" = "Water_course_level"))
 match_sites <- function(df1, df2, crs = sf::st_crs("OGC:CRS84"),
@@ -65,7 +65,7 @@ match_sites <- function(df1, df2, crs = sf::st_crs("OGC:CRS84"),
 
   if (temporal_matching){
     out <- out %>%
-      map(~.x %>% match_temporal(
+      map(~.x |> match_temporal(
         data_id = !!enquo(data_id), match_id = !!enquo(match_id),
         temporal_match_fn = match_peak,
         temporal_by = temporal_by,
@@ -93,17 +93,17 @@ match_spatial <- function(df1, df2,
 
   key <- key_vars(df1)
   key2 <- key_vars(df2)
-  if (key2 != key){df2 <- df2 %>% dplyr::rename(!!key := key2)}
+  if (key2 != key){df2 <- df2 |> dplyr::rename(!!key := key2)}
 
-  key_val <- as_tibble(df1) %>% dplyr::pull(key)
-  key_val2 <- as_tibble(df2) %>% dplyr::pull(key)
+  key_val <- as_tibble(df1) |> dplyr::pull(key)
+  key_val2 <- as_tibble(df2) |> dplyr::pull(key)
 
   if (!is_sf(df1) || !is_sf(df2)) {
     cli::cli_inform("Use OGC:CRS84 by default for distance calculation...")
   }
 
-  if (!is_sf(df1)) df1 <- df1 %>% make_spatial_sf(crs = crs)
-  if (!is_sf(df2)) df2 <- df2 %>% make_spatial_sf(crs = crs)
+  if (!is_sf(df1)) df1 <- df1 |> make_spatial_sf(crs = crs)
+  if (!is_sf(df2)) df2 <- df2 |> make_spatial_sf(crs = crs)
   if (is.null(which)) which <- ifelse(isTRUE(sf::st_is_longlat(df1)),
                                       "Great Circle", "Euclidean")
 
@@ -119,7 +119,7 @@ match_spatial <- function(df1, df2,
     mutate(group = dplyr::row_number())
 
   dist_df2 <- dist_df %>%
-    inner_join(gp_return %>% select(-.data$dist, -.data$to), by = "from") %>%
+    inner_join(gp_return |> select(-.data$dist, -.data$to), by = "from") %>%
     dplyr::slice_min(.data$dist, n = spatial_n_each, by = .data$from) %>%
     arrange(.data$group)
 
@@ -170,7 +170,7 @@ match_temporal <- function(data,
   if (multiple_match){
     data <- data %>%
       dplyr::group_split(!!match_id) %>%
-      map(~.x %>% update_cubble() %>% group_by(type) %>%
+      map(~.x |> update_cubble() |> group_by(type) %>%
             mutate(group2 = dplyr::row_number()) %>%
             dplyr::group_split(.data$group2)) %>%
       unlist(recursive = FALSE) %>%
@@ -188,7 +188,7 @@ match_temporal <- function(data,
                  dplyr::select(key, index, .y) %>%
                  dplyr::rename(matched = .y)))
 
-  vecs <- data_long %>% map(~map(.x, ~.x$matched))
+  vecs <- data_long |> map(~map(.x, ~.x$matched))
 
   res <- map_dbl(vecs, function(x)
     do.call(temporal_match_fn,
@@ -196,18 +196,18 @@ match_temporal <- function(data,
                         temporal_n_highest = temporal_n_highest,
                         temporal_window = temporal_window, ...)))
 
-  out <- bind_rows(data) %>% as_tibble()
+  out <- bind_rows(data) |> as_tibble()
   if (multiple_match){
-    out <- out %>% distinct(!!match_id, .data$group2)
+    out <- out |> distinct(!!match_id, .data$group2)
   } else{
-    out <- out %>% distinct(!!match_id)
+    out <- out |> distinct(!!match_id)
   }
-  res <- out %>% dplyr::bind_cols(match_res = res)
+  res <- out |> dplyr::bind_cols(match_res = res)
 
   if (return_cubble){
     res <- data_long %>%
-      map(~map(.x, ~face_spatial(.x)) %>% bind_rows) %>%
-      map2(res$match_res, ~.x %>% mutate(match_res = .y))
+      map(~map(.x, ~face_spatial(.x)) |> bind_rows()) %>%
+      map2(res$match_res, ~.x |> mutate(match_res = .y))
   }
 
   return(res)
@@ -222,7 +222,7 @@ match_peak <- function(list, temporal_n_highest, temporal_window, ...){
 
   ts1_top <- sort_index(diff(list[[1]]))$ix[1:temporal_n_highest]
   ts2_top <- sort_index(diff(list[[2]]))$ix[1:temporal_n_highest]
-  ts1_rg <- map(ts1_top, ~.x +0:temporal_window) %>% unlist() %>% unique()
+  ts1_rg <- map(ts1_top, ~.x +0:temporal_window) |> unlist() |> unique()
   sum(ts2_top %in% ts1_rg)
 
 }

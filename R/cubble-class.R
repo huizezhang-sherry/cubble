@@ -55,7 +55,7 @@ cubble <- function(..., key, index, coords) {
   coords <- names(data)[tidyselect::eval_select(coords, data)]
 
   all_vars <- find_invariant(data, !!key)
-  data <- data %>% tidyr::nest(ts = c(!!index, !!!all_vars$variant))
+  data <- data |> tidyr::nest(ts = c(!!index, !!!all_vars$variant))
 
   new_spatial_cubble(
     data, key = as_name(key), index = as_name(index), coords = coords)
@@ -162,12 +162,12 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords,
   )
 
   # only create when have both spatial & temporal info
-  spatial <- spatial %>% filter(!by %in% only_spatial)
+  spatial <- spatial |> filter(!by %in% only_spatial)
 
   if (is_sf(spatial)){
     # from discussion: https://github.com/r-spatial/sf/issues/951
     # to ensure the sf is built from a tibble
-    spatial <- spatial %>% as_tibble() %>% sf::st_as_sf()
+    spatial <- spatial |> as_tibble() |> sf::st_as_sf()
   }
 
   if (is_tsibble(temporal)){
@@ -176,10 +176,10 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords,
     index <- as_name(index)
   }
 
-  temporal <- temporal %>% filter(!by %in% only_temporal) %>%
+  temporal <- temporal |> filter(!by %in% only_temporal) %>%
     select(as_name(index), setdiff(colnames(temporal), as_name(index)))
   out <- suppressMessages(
-    dplyr::inner_join(spatial, temporal %>% nest(ts = -by))
+    dplyr::inner_join(spatial, temporal |> nest(ts = -by))
     )
 
   new_spatial_cubble(

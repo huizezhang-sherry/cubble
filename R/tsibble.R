@@ -2,7 +2,7 @@
 #' @param x object of class \code{temporal_cubble_df}
 #' @export
 #' @examples
-#' climate_mel %>% face_temporal() %>% make_temporal_tsibble()
+#' climate_mel |> face_temporal() |> make_temporal_tsibble()
 make_temporal_tsibble <- function(x){
 
   stopifnot(is_cubble_temporal(x))
@@ -10,7 +10,7 @@ make_temporal_tsibble <- function(x){
   index <- index_var(x)
   coords <- coords(x)
   spatial <- spatial(x)
-  x <- as_tibble(x) %>% remove_attrs()
+  x <- as_tibble(x) |> remove_attrs()
   out <- tsibble::as_tsibble(x, key = key, index = index)
   new_temporal_cubble(
     out, key = key_vars(out), index = index_var(out),
@@ -26,8 +26,8 @@ make_temporal_tsibble <- function(x){
 #' @export
 #' @examples
 #' library(tsibble)
-#' climate_aus %>% face_temporal() %>% fill_gaps()
-#' climate_aus %>% face_temporal() %>% scan_gaps()
+#' climate_aus |> face_temporal() |> fill_gaps()
+#' climate_aus |> face_temporal() |> scan_gaps()
 fill_gaps.temporal_cubble_df <- function(.data, ..., .full = FALSE,
                                 .start = NULL, .end = NULL) {
 

@@ -27,8 +27,8 @@ extract_longlat <- function(data){
   lat_name <- c("lat", "latitude")
   if (any(dims %in% lat_name)) lat_idx <- which(dims %in% lat_name)
 
-  long <- ncdf4::ncvar_get(data, dims[long_idx]) %>% as.vector()
-  lat <- ncdf4::ncvar_get(data, dims[lat_idx]) %>% as.vector()
+  long <- ncdf4::ncvar_get(data, dims[long_idx]) |> as.vector()
+  lat <- ncdf4::ncvar_get(data, dims[lat_idx]) |> as.vector()
 
   list(long = long, lat = lat)
 

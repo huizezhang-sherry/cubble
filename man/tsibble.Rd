@@ -38,6 +38,6 @@ Gap-filling on the temporal component of a cubble object
 }
 \examples{
 library(tsibble)
-climate_aus \%>\% face_temporal() \%>\% fill_gaps()
-climate_aus \%>\% face_temporal() \%>\% scan_gaps()
+climate_aus |> face_temporal() |> fill_gaps()
+climate_aus |> face_temporal() |> scan_gaps()
 }

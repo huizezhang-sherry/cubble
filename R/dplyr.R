@@ -31,16 +31,16 @@
 #' cb_long <- face_temporal(climate_mel)
 #'
 #' # filter - currently filter.spatial_cubble_df, dply_row_slice
-#' cb_nested %>% filter(elev > 40)
-#' cb_long %>% filter(prcp > 0)
+#' cb_nested |> filter(elev > 40)
+#' cb_long |> filter(prcp > 0)
 #'
 #' # mutate - curerntly mutate.spatial_cubble_df, dply_col_modify
-#' cb_nested %>% mutate(elev2 = elev + 10)
-#' cb_long %>% mutate(prcp2 = prcp + 10)
+#' cb_nested |> mutate(elev2 = elev + 10)
+#' cb_long |> mutate(prcp2 = prcp + 10)
 #'
 #' # arrange - currently arrange.spatial_cubble_df, arrange.temporal_cubble_df
-#' cb_nested %>% arrange(wmo_id)
-#' cb_long %>% arrange(prcp)
+#' cb_nested |> arrange(wmo_id)
+#' cb_long |> arrange(prcp)
 #'
 #' # summarise - summarise.spatial_cubble_df,  summarise.temporal_cubble_df
 #' cb_long %>%
@@ -51,57 +51,57 @@
 #'   summarise(t = mean(tmax), .by = first_5)
 #'
 #' # select -  select.spatial_cubble_df,  select.temporal_cubble_df
-#' cb_nested %>% select(name)
-#' cb_nested %>% select(-id, -name)
-#' cb_long %>% select(prcp)
-#' cb_long %>% select(-prcp, -date)
+#' cb_nested |> select(name)
+#' cb_nested |> select(-id, -name)
+#' cb_long |> select(prcp)
+#' cb_long |> select(-prcp, -date)
 #'
 #' # rename - rename.spatial_cubble_df, rename.temporal_cubble_df
-#' cb_nested %>% rename(elev2 = elev)
-#' cb_long %>% rename(prcp2 = prcp)
+#' cb_nested |> rename(elev2 = elev)
+#' cb_long |> rename(prcp2 = prcp)
 #' # rename on key attributes
-#' cb_nested %>% rename(id2 = id)
-#' cb_long %>% rename(date2 = date)
+#' cb_nested |> rename(id2 = id)
+#' cb_long |> rename(date2 = date)
 #'
 #' # join - mutate_join - dplyr_reconstruct()
 #' # join - filter_join - dplyr_row_slice()
-#' df1 <- cb_nested %>% as_tibble() %>% select(id, name) %>% head(2)
-#' nested <- cb_nested %>% select(-name)
-#' nested %>% left_join(df1, by = "id")
-#' nested %>% right_join(df1, by = "id")
-#' nested %>% inner_join(df1, by = "id")
-#' nested %>% full_join(df1, by = "id")
-#' nested %>% anti_join(df1, by = "id")
+#' df1 <- cb_nested |> as_tibble() |> select(id, name) |> head(2)
+#' nested <- cb_nested |> select(-name)
+#' nested |> left_join(df1, by = "id")
+#' nested |> right_join(df1, by = "id")
+#' nested |> inner_join(df1, by = "id")
+#' nested |> full_join(df1, by = "id")
+#' nested |> anti_join(df1, by = "id")
 #'
 #' # bind_rows - dplyr_reconstruct, bind_rows.temporal_cubble_df
-#' df1 <- cb_nested %>% head(1)
-#' df2 <- cb_nested %>% tail(2)
+#' df1 <- cb_nested |> head(1)
+#' df2 <- cb_nested |> tail(2)
 #' bind_rows(df1, df2)
-#' df1 <- cb_long %>% head(10)
-#' df2 <- cb_long %>% tail(20)
+#' df1 <- cb_long |> head(10)
+#' df2 <- cb_long |> tail(20)
 #' bind_rows(df1, df2)
 #'
 #' # relocate - dplyr_col_select, dplyr_col_select
-#' cb_nested %>% relocate(ts, .before = name)
-#' cb_nested %>% face_temporal() %>% relocate(tmin)
+#' cb_nested |> relocate(ts, .before = name)
+#' cb_nested |> face_temporal() |> relocate(tmin)
 #'
 #' # slice - all the slice_* uses dplyr::slice(), which uses dplyr_row_slice()
-#' cb_nested %>% slice_head(n = 2)
-#' cb_nested %>% slice_tail(n = 2)
-#' cb_nested %>% slice_max(elev)
-#' cb_nested %>% slice_min(elev)
-#' cb_nested %>% slice_sample(n = 2)
+#' cb_nested |> slice_head(n = 2)
+#' cb_nested |> slice_tail(n = 2)
+#' cb_nested |> slice_max(elev)
+#' cb_nested |> slice_min(elev)
+#' cb_nested |> slice_sample(n = 2)
 #'
 #' # rowwise - rowwise.spatial_cubble_df, rowwise.temporal_cuble_df
-#' cb_nested %>% rowwise()
-#' cb_long %>% rowwise()
+#' cb_nested |> rowwise()
+#' cb_long |> rowwise()
 #'
 #' # group_by & ungroup -
-#' (res <- cb_nested %>% mutate(group1 = c(1, 1, 2)) %>% group_by(group1))
-#' res %>% ungroup()
-#' (res2 <- res %>% face_temporal() %>% unfold(group1) %>% group_by(group1))
-#' res2 %>% ungroup()
-#' res2 %>% mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) %>%
+#' (res <- cb_nested |> mutate(group1 = c(1, 1, 2)) |> group_by(group1))
+#' res |> ungroup()
+#' (res2 <- res |> face_temporal() |> unfold(group1) |> group_by(group1))
+#' res2 |> ungroup()
+#' res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) %>%
 #'   group_by(first_5) %>%
 #'   ungroup(group1)
 arrange.temporal_cubble_df <- function(.data, ...){
@@ -237,14 +237,14 @@ summarise.temporal_cubble_df <- function(.data, ..., .by = key_vars(.data),
   class(.data) <- setdiff(class(.data), cb_temporal_cls)
   if (inherits(.data, "grouped_df")){
     gv <- c(group_vars(.data), .by)
-    .data <- .data %>% group_by(!!!syms(gv))
+    .data <- .data |> group_by(!!!syms(gv))
     out <- summarise(.data, ..., .groups = .groups)
   } else{
     out <- summarise(.data, ..., .by = .by, .groups = .groups)
   }
 
   if (!index %in% colnames(out) && "groups" %in% names(attributes(out))){
-    potential_index <- .data %@% groups %>% colnames() %>% utils::head(-1)
+    potential_index <- .data %@% groups |> colnames() |> utils::head(-1)
     index <- setdiff(potential_index, key)
   }
 
@@ -300,9 +300,9 @@ bind_rows.temporal_cubble_df <- function(..., .id = NULL){
 
   dots <- list2(...)
   all_temporal_cubble <- all(map_lgl(dots, is_cubble_temporal))
-  same_key <- map_chr(dots, key_vars) %>% reduce(identical)
-  same_index <- map_chr(dots, index_var) %>% reduce(identical)
-  same_coords <- map_chr(dots, coords) %>% reduce(identical)
+  same_key <- map_chr(dots, key_vars) |> reduce(identical)
+  same_index <- map_chr(dots, index_var) |> reduce(identical)
+  same_coords <- map_chr(dots, coords) |> reduce(identical)
   if (!all_temporal_cubble)
     cli::cli_abort("All the objects needs to be temporal cubbles to bind.")
 
@@ -315,7 +315,7 @@ bind_rows.temporal_cubble_df <- function(..., .id = NULL){
 
   class(.data) <- setdiff(class(.data), cb_temporal_cls)
   res <- NextMethod()
-  spatial <- map(dots, spatial) %>% reduce(bind_rows)
+  spatial <- map(dots, spatial) |> reduce(bind_rows)
   new_temporal_cubble(
     res, key = same_key, index = same_index, coords = same_coords,
     spatial = spatial)
@@ -394,7 +394,7 @@ dplyr_reconstruct.temporal_cubble_df <- function(data, template) {
   key_var <- key_vars(template)
   key_vals <- unique(data[[key_var]])
   index_var <-  index_var(template)
-  spatial <- spatial(template) %>% filter(!!sym(key_var) %in% key_vals)
+  spatial <- spatial(template) |> filter(!!sym(key_var) %in% key_vals)
 
   if (is_tsibble(template)){
     suppressWarnings(

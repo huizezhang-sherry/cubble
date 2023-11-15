@@ -36,7 +36,7 @@ tbl_sum.spatial_cubble_df <- function(x){
   x_is_sf <- is_sf(x)
   if (!x_is_sf) {
     coord_vars <- coords(x)
-    x <- as_tibble(x) %>% sf::st_as_sf(coords = coord_vars)
+    x <- as_tibble(x) |> sf::st_as_sf(coords = coord_vars)
   }
 
   line2 <- glue::glue("[", paste0(sf::st_bbox(x), collapse = ", "), "]")

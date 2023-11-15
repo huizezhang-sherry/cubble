@@ -103,7 +103,7 @@ match_spatial(climate_aus, river, which = "Hausdorff")
 # tune the number of matches in each group
 match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
 
-a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) \%>\% bind_rows()
+a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) |> bind_rows()
 match_temporal(a1, data_id = type, match_id = group,
                temporal_by = c("prcp" = "Water_course_level"))
 }

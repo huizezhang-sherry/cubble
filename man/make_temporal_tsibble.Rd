@@ -13,5 +13,5 @@ make_temporal_tsibble(x)
 Update the temporal cubble to include the tsibble class (\code{tbl_ts})
 }
 \examples{
-climate_mel \%>\% face_temporal() \%>\% make_temporal_tsibble()
+climate_mel |> face_temporal() |> make_temporal_tsibble()
 }

@@ -13,10 +13,7 @@ temporal characteristics and different data may require different data
 structures for wrangling and analysis. The spatio-temporal data that
 cubble addresses are those collected at unique fixed locations, allowing
 for irregularity in the temporal dimension, such as the weather station
-data. This corresponds to the full space-time and sparse space-time
-layouts in the spacetime paper (Pebesma 2012):
-
-<img src="man/figures/README-layout-1.png" width="100%" />
+data.
 
 ## Installation
 
@@ -77,32 +74,18 @@ The two forms can be pivoted back and forth with the pair of verb:
 
 ## Roadmap
 
--   To learn more about the cubble class: [1. The cubble
-    class](https://huizezhang-sherry.github.io/cubble/articles/cb1class.html)
--   To create a cubble or coerce an existing R object into a cubble: [2.
-    Creation and
-    coercion](https://huizezhang-sherry.github.io/cubble/articles/cb2create.html)
--   To incorporate sf or tsibble in a cubble: [3. Compatibility with
-    tsibble and
-    sf](https://huizezhang-sherry.github.io/cubble/articles/cb3tsibblesf.html)
--   To create glyph map, match multiple data sources, and create
-    interactive graphics with cubble: [4. Making a glyph
-    map](https://huizezhang-sherry.github.io/cubble/articles/cb4glyph.html),
-    [5. Matching different data
-    sources](https://huizezhang-sherry.github.io/cubble/articles/cb5match.html),
-    and [6. Interactive
-    graphics](https://huizezhang-sherry.github.io/cubble/articles/cb6interactive.html)
-
-## Reference
-
-<div id="refs" class="references csl-bib-body hanging-indent">
-
-<div id="ref-spacetime" class="csl-entry">
-
-Pebesma, Edzer. 2012. “<span class="nocase">spacetime</span>:
-Spatio-Temporal Data in R.” *Journal of Statistical Software* 51 (7):
-1–30. <https://www.jstatsoft.org/v51/i07/>.
-
-</div>
-
-</div>
+- To learn more about the cubble class: [1. The cubble
+  class](https://huizezhang-sherry.github.io/cubble/articles/cb1class.html)
+- To create a cubble or coerce an existing R object into a cubble: [2.
+  Creation and
+  coercion](https://huizezhang-sherry.github.io/cubble/articles/cb2create.html)
+- To incorporate sf or tsibble in a cubble: [3. Compatibility with
+  tsibble and
+  sf](https://huizezhang-sherry.github.io/cubble/articles/cb3tsibblesf.html)
+- To create glyph map, match multiple data sources, and create
+  interactive graphics with cubble: [4. Making a glyph
+  map](https://huizezhang-sherry.github.io/cubble/articles/cb4glyph.html),
+  [5. Matching different data
+  sources](https://huizezhang-sherry.github.io/cubble/articles/cb5match.html),
+  and [6. Interactive
+  graphics](https://huizezhang-sherry.github.io/cubble/articles/cb6interactive.html)

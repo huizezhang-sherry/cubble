@@ -40,6 +40,6 @@ See http://www.bom.gov.au/climate/cdo/about/site-num.shtml}
 }
 }
 \examples{
-climate_aus \%>\% face_temporal() \%>\% face_spatial()
+climate_aus |> face_temporal() |> face_spatial()
 }
 \keyword{datasets}

@@ -256,7 +256,7 @@ glyph_data_setup <- function(data, params){
   if (length(unique(data$group)) == 1){
     data$group <- as.integer(interaction(data$x_major, data$y_major,
                                          drop = TRUE))
-    data <- data %>%  dplyr::group_by(.data$group)
+    data <- data |>  dplyr::group_by(.data$group)
   }
 
   if (has_scale(params$x_scale)) {
@@ -295,7 +295,7 @@ glyph_data_setup <- function(data, params){
       )
 
   if (any(data$polar)) {
-    data <- data %>%  dplyr::ungroup()
+    data <- data |>  dplyr::ungroup()
     theta <- 2 * pi * rescale01(data$x_minor)
     r <- rescale01(data$y_minor)
 
@@ -305,14 +305,14 @@ glyph_data_setup <- function(data, params){
       dplyr::arrange(.data$x_major, .data$x_minor)
 
   } else {
-    if (isTRUE(params$global_rescale)) data <- data %>%  dplyr::ungroup()
+    if (isTRUE(params$global_rescale)) data <- data |>  dplyr::ungroup()
     data <- data %>%
       dplyr::mutate(
         x = .data$x_major + rescale11(.data$x_minor) * .data$width / 2,
         y = .data$y_major + rescale11(.data$y_minor) * .data$height / 2)
   }
 
-  data %>% dplyr::ungroup()
+  data |> dplyr::ungroup()
 }
 
 
@@ -321,7 +321,7 @@ calc_ref_line <- function(data, params){
 
   if (any(data$polar)) {
     theta <- seq(0, 2 * pi, length.out = 30)
-    ref_line <- ref_line %>%  dplyr::mutate(
+    ref_line <- ref_line |>  dplyr::mutate(
       group = .data$group,
       x = .data$x_major + .data$width / 4 * sin(theta),
       y = .data$y_major + .data$height / 4 * cos(theta)
@@ -331,7 +331,7 @@ calc_ref_line <- function(data, params){
       dplyr::mutate(group = .data$group,
                     x = .data$x_major + .data$width/ 2,
                     y = .data$y_major) %>%
-      rbind(ref_line %>%  dplyr::mutate(group = .data$group,
+      rbind(ref_line |>  dplyr::mutate(group = .data$group,
                                        x = .data$x_major - .data$width / 2,
                                        y = .data$y_major))
   }

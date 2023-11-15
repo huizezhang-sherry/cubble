@@ -1,6 +1,5 @@
 ---
 output: github_document
-bibliography: '`r system.file("reference.bib", package = "cubble")`'
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -22,42 +21,7 @@ library(cubble)
 [![R-CMD-check](https://github.com/huizezhang-sherry/cubble/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions)
 <!-- badges: end -->
 
-The term spatio-temporal data can incorporate various spatial and temporal characteristics and different data may require different data structures for wrangling and analysis. The spatio-temporal data that cubble addresses are those collected at unique fixed locations, allowing for irregularity in the temporal dimension, such as the weather station data. This corresponds to the full space-time and sparse space-time layouts in the spacetime paper [@spacetime]: 
-
-```{r layout, echo = FALSE, fig.height=3, fig.retina=3}
-library(tidyverse)
-library(patchwork)
-p1 <- tibble(
-  id = 1:12,
-  x = rep(1:4, each = 3),
-  y = rep(1:3, 4)
-) %>% 
-  ggplot(aes(x = as.factor(x) ,y = as.factor(y))) + 
-  geom_point() + 
-  geom_text(aes(y = y - 0.2, label = id)) + 
-  theme_bw() + 
-  theme(aspect.ratio = 1) + 
-  scale_x_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
-  scale_y_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
-  labs(x = "Time points", y = "Spatial features", title = "STF: full grid layout") 
-
-p2 <- tibble(
-  id = 1:7,
-  x = c(1, 1, 1, 2, 2, 3, 4),
-  y = c(1, 2, 3, 2, 3, 1, 2),
-  label = c("1[1,1]", "2[1,2]", "3[1,3]", "4[2,2]", "5[3,2]", "6[1,3]", "7[2,4]")
-) %>% 
-  ggplot(aes(x = as.factor(x) ,y = as.factor(y))) + 
-  geom_point() + 
-  geom_text(aes(y = y - 0.2, label = label)) + 
-  theme_bw() + 
-  theme(aspect.ratio = 1) + 
-  scale_x_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
-  scale_y_discrete(labels = c("1st", "2nd", "3rd", "4th")) + 
-  labs(x = "Time points", y = "Spatial features", title = "STS: sparse grid layout") 
-
-p1 | p2
-```
+The term spatio-temporal data can incorporate various spatial and temporal characteristics and different data may require different data structures for wrangling and analysis. The spatio-temporal data that cubble addresses are those collected at unique fixed locations, allowing for irregularity in the temporal dimension, such as the weather station data. 
 
 ## Installation
 
@@ -101,5 +65,3 @@ knitr::include_graphics("man/figures/cubble-operations.png")
   * To create a cubble or coerce an existing R object into a cubble: [2. Creation and coercion](https://huizezhang-sherry.github.io/cubble/articles/cb2create.html)
   * To incorporate sf or tsibble in a cubble: [3. Compatibility with tsibble and sf](https://huizezhang-sherry.github.io/cubble/articles/cb3tsibblesf.html)
   * To create glyph map, match multiple data sources, and create interactive graphics with cubble: [4. Making a glyph map](https://huizezhang-sherry.github.io/cubble/articles/cb4glyph.html), [5. Matching different data sources](https://huizezhang-sherry.github.io/cubble/articles/cb5match.html), and [6. Interactive graphics](https://huizezhang-sherry.github.io/cubble/articles/cb6interactive.html)
-
-## Reference

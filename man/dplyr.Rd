@@ -165,16 +165,16 @@ cb_nested <- climate_mel
 cb_long <- face_temporal(climate_mel)
 
 # filter - currently filter.spatial_cubble_df, dply_row_slice
-cb_nested \%>\% filter(elev > 40)
-cb_long \%>\% filter(prcp > 0)
+cb_nested |> filter(elev > 40)
+cb_long |> filter(prcp > 0)
 
 # mutate - curerntly mutate.spatial_cubble_df, dply_col_modify
-cb_nested \%>\% mutate(elev2 = elev + 10)
-cb_long \%>\% mutate(prcp2 = prcp + 10)
+cb_nested |> mutate(elev2 = elev + 10)
+cb_long |> mutate(prcp2 = prcp + 10)
 
 # arrange - currently arrange.spatial_cubble_df, arrange.temporal_cubble_df
-cb_nested \%>\% arrange(wmo_id)
-cb_long \%>\% arrange(prcp)
+cb_nested |> arrange(wmo_id)
+cb_long |> arrange(prcp)
 
 # summarise - summarise.spatial_cubble_df,  summarise.temporal_cubble_df
 cb_long \%>\%
@@ -185,57 +185,57 @@ cb_long \%>\%
   summarise(t = mean(tmax), .by = first_5)
 
 # select -  select.spatial_cubble_df,  select.temporal_cubble_df
-cb_nested \%>\% select(name)
-cb_nested \%>\% select(-id, -name)
-cb_long \%>\% select(prcp)
-cb_long \%>\% select(-prcp, -date)
+cb_nested |> select(name)
+cb_nested |> select(-id, -name)
+cb_long |> select(prcp)
+cb_long |> select(-prcp, -date)
 
 # rename - rename.spatial_cubble_df, rename.temporal_cubble_df
-cb_nested \%>\% rename(elev2 = elev)
-cb_long \%>\% rename(prcp2 = prcp)
+cb_nested |> rename(elev2 = elev)
+cb_long |> rename(prcp2 = prcp)
 # rename on key attributes
-cb_nested \%>\% rename(id2 = id)
-cb_long \%>\% rename(date2 = date)
+cb_nested |> rename(id2 = id)
+cb_long |> rename(date2 = date)
 
 # join - mutate_join - dplyr_reconstruct()
 # join - filter_join - dplyr_row_slice()
-df1 <- cb_nested \%>\% as_tibble() \%>\% select(id, name) \%>\% head(2)
-nested <- cb_nested \%>\% select(-name)
-nested \%>\% left_join(df1, by = "id")
-nested \%>\% right_join(df1, by = "id")
-nested \%>\% inner_join(df1, by = "id")
-nested \%>\% full_join(df1, by = "id")
-nested \%>\% anti_join(df1, by = "id")
+df1 <- cb_nested |> as_tibble() |> select(id, name) |> head(2)
+nested <- cb_nested |> select(-name)
+nested |> left_join(df1, by = "id")
+nested |> right_join(df1, by = "id")
+nested |> inner_join(df1, by = "id")
+nested |> full_join(df1, by = "id")
+nested |> anti_join(df1, by = "id")
 
 # bind_rows - dplyr_reconstruct, bind_rows.temporal_cubble_df
-df1 <- cb_nested \%>\% head(1)
-df2 <- cb_nested \%>\% tail(2)
+df1 <- cb_nested |> head(1)
+df2 <- cb_nested |> tail(2)
 bind_rows(df1, df2)
-df1 <- cb_long \%>\% head(10)
-df2 <- cb_long \%>\% tail(20)
+df1 <- cb_long |> head(10)
+df2 <- cb_long |> tail(20)
 bind_rows(df1, df2)
 
 # relocate - dplyr_col_select, dplyr_col_select
-cb_nested \%>\% relocate(ts, .before = name)
-cb_nested \%>\% face_temporal() \%>\% relocate(tmin)
+cb_nested |> relocate(ts, .before = name)
+cb_nested |> face_temporal() |> relocate(tmin)
 
 # slice - all the slice_* uses dplyr::slice(), which uses dplyr_row_slice()
-cb_nested \%>\% slice_head(n = 2)
-cb_nested \%>\% slice_tail(n = 2)
-cb_nested \%>\% slice_max(elev)
-cb_nested \%>\% slice_min(elev)
-cb_nested \%>\% slice_sample(n = 2)
+cb_nested |> slice_head(n = 2)
+cb_nested |> slice_tail(n = 2)
+cb_nested |> slice_max(elev)
+cb_nested |> slice_min(elev)
+cb_nested |> slice_sample(n = 2)
 
 # rowwise - rowwise.spatial_cubble_df, rowwise.temporal_cuble_df
-cb_nested \%>\% rowwise()
-cb_long \%>\% rowwise()
+cb_nested |> rowwise()
+cb_long |> rowwise()
 
 # group_by & ungroup -
-(res <- cb_nested \%>\% mutate(group1 = c(1, 1, 2)) \%>\% group_by(group1))
-res \%>\% ungroup()
-(res2 <- res \%>\% face_temporal() \%>\% unfold(group1) \%>\% group_by(group1))
-res2 \%>\% ungroup()
-res2 \%>\% mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) \%>\%
+(res <- cb_nested |> mutate(group1 = c(1, 1, 2)) |> group_by(group1))
+res |> ungroup()
+(res2 <- res |> face_temporal() |> unfold(group1) |> group_by(group1))
+res2 |> ungroup()
+res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) \%>\%
   group_by(first_5) \%>\%
   ungroup(group1)
 }

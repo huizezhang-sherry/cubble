@@ -27,6 +27,6 @@ and temporal variables. \code{unfold()} allows you to temporarily moves spatial
 variables into the long form for these transformations.
 }
 \examples{
-climate_mel \%>\% face_temporal() \%>\% unfold(long, lat)
-climate_mel \%>\% face_temporal() \%>\% unfold(dplyr::starts_with("l"))
+climate_mel |> face_temporal() |> unfold(long, lat)
+climate_mel |> face_temporal() |> unfold(dplyr::starts_with("l"))
 }

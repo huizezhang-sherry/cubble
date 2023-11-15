@@ -24,7 +24,7 @@
 #' }
 #' @rdname climate-data
 #' @examples
-#' climate_aus %>% face_temporal() %>% face_spatial()
+#' climate_aus |> face_temporal() |> face_spatial()
 "climate_aus"
 
 #' @rdname climate-data

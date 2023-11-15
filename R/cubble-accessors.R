@@ -16,7 +16,7 @@
 #' climate_mel[c(1:3, 7)] # a nested cubble
 #' make_spatial_sf(climate_mel)[1:3] # an sf
 #'
-#' long <- climate_mel %>% face_temporal()
+#' long <- climate_mel |> face_temporal()
 #' long[1:3] # a long cubble
 #'
 #' climate_mel[1:3] # tibble

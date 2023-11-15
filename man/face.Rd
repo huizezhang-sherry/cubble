@@ -38,7 +38,7 @@ into a nest cubble for spatial operations. The two operations are exact
 inverse.
 }
 \examples{
-cb_long <- climate_mel \%>\% face_temporal()
-cb_back <- cb_long \%>\% face_spatial()
+cb_long <- climate_mel |> face_temporal()
+cb_back <- cb_long |> face_spatial()
 identical(climate_mel, cb_back)
 }

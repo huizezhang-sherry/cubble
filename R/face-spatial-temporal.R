@@ -12,8 +12,8 @@
 #' @rdname face
 #' @export
 #' @examples
-#' cb_long <- climate_mel %>% face_temporal()
-#' cb_back <- cb_long %>% face_spatial()
+#' cb_long <- climate_mel |> face_temporal()
+#' cb_back <- cb_long |> face_spatial()
 #' identical(climate_mel, cb_back)
 face_temporal <- function(data, col) {
   UseMethod("face_temporal")
@@ -56,7 +56,7 @@ face_temporal.spatial_cubble_df <- function(data, col){
   class(data) <- class(data)[class(data) != "cubble_df"]
 
   if (is_tsibble){
-    out <- out %>% tsibble::as_tsibble(key = !!cur_key, index = index)
+    out <- out |> tsibble::as_tsibble(key = !!cur_key, index = index)
     tsibble_attr <- attributes(out)
     index <- out %@% "index"
   }
@@ -97,8 +97,8 @@ face_spatial.temporal_cubble_df <- function(data) {
     setdiff(key_name)
 
   class(data) <- setdiff(class(data), cb_temporal_cls)
-  temporal <- data %>% remove_attrs() %>% tidyr::nest(ts = -key_name)
-  out <- spatial %>% dplyr::left_join(temporal, by = key_name)
+  temporal <- data |> remove_attrs() |> tidyr::nest(ts = -key_name)
+  out <- spatial |> dplyr::left_join(temporal, by = key_name)
 
   new_spatial_cubble(
     out, key = key_name, index = index, coords = coords

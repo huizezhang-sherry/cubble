@@ -20,7 +20,7 @@ make_spatial_sf(x, sfc = NULL, crs, silent = FALSE)
 add geometry list column to cubble_df object
 }
 \examples{
-climate_mel \%>\% make_spatial_sf()
+climate_mel |> make_spatial_sf()
 }
 \seealso{
 \link{make_temporal_tsibble}
