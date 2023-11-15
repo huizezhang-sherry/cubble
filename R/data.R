@@ -47,7 +47,7 @@
 #'   key = id, index = date, coords = c(long, lat)
 #' )
 #' identical(cb, climate_mel)
-#' cb2 <- climate_flat %>%
+#' cb2 <- climate_flat |> 
 #'   as_cubble(key = id, index = date, coords = c(long, lat))
 #' identical(cb, climate_mel)
 "stations"

@@ -38,7 +38,7 @@ check_key <- function(spatial, temporal, by = NULL) {
   slvl <- spatial[[by]]
   tlvl <- temporal[[by]]
   matched_tbl <-
-    tibble::tibble(spatial = intersect(unique(tlvl), slvl)) %>%
+    tibble::tibble(spatial = intersect(unique(tlvl), slvl)) |> 
     mutate(temporal = spatial)
   if (nrow(matched_tbl) == 0) {
     matched_tbl <- tibble::tibble()

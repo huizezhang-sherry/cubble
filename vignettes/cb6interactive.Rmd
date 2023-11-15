@@ -57,11 +57,11 @@ climate_smaller <- climate_aus |> head(n = 30)
 We create two SharedData objects in crosstalk - one using the nested cubble and another using the long cubble. We will use the `id` as the key and give them the same group name (`group = "cubble"`):
 
 ```{r}
-nested <- clean %>% SharedData$new(~id, group = "cubble")
+nested <- clean |> SharedData$new(~id, group = "cubble")
 long <- clean |>
   face_temporal() |>
   unfold(temp_diff_var) |>
-  arrange(temp_diff_var) %>% 
+  arrange(temp_diff_var) |> 
   SharedData$new(~id, group = "cubble")
 ```
 
@@ -96,7 +96,7 @@ map <- leaflet(nested, width = 300, height = 300) |>
 The time series plot allows us to visualize the temperature band of each station, providing insights into the diurnal temperature range by month. We can use geom_ribbon() to create a temperature band that displays both the maximum and minimum temperature:
 
 ```{r}
-ts_static <- long %>% 
+ts_static <- long |> 
   ggplot(aes(x = month, group = id,
          fill = temp_diff_var, color = temp_diff_var
          )) +
@@ -120,7 +120,7 @@ ts_static <- long %>%
 The static ggplot object can be converted into a plotly object using `ggplotly()` and `plotly::highlight()` enable the box or lasso selection (`on = "plotly_selected"`):
 
 ```{r}
-ts_interactive <- ggplotly(ts_static, width = 600, height = 300) %>% 
+ts_interactive <- ggplotly(ts_static, width = 600, height = 300) |> 
     highlight(on = "plotly_selected", opacityDim = 0.012)
 ```
 

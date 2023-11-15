@@ -68,8 +68,8 @@ parse_time <- function(tstring){
   if (length(seg_n) == 3) {
     dttm <- stringr::str_remove(tstring, seg_n[3])
     tzone_string <- as.numeric(stringr::str_replace(seg_n[3], ":", "."))
-    tzone_std <- tzone_list %>%
-      dplyr::filter(as.numeric(.data$utc_offset_h) == tzone_string) %>%
+    tzone_std <- tzone_list |> 
+      dplyr::filter(as.numeric(.data$utc_offset_h) == tzone_string) |> 
       dplyr::pull(.data$tz_name)
 
     if (length(tzone_std) == 0){

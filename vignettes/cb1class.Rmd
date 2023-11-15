@@ -49,7 +49,7 @@ This toy dataset is a subset of a larger data `climate_aus` sourced from the Glo
 In a long cubble, the temporal variables are expanded into the long form, while the spatial variables are stored as a data attribute: 
 
 ```{r echo = FALSE}
-cb_long <- climate_mel %>% face_temporal()
+cb_long <- climate_mel |> face_temporal()
 ```
 
 ```{r}

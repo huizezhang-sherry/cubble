@@ -15,7 +15,7 @@ covid <- raw |>
   mutate(n = ifelse(is.na(n), 0, n)) |>
   mutate(avg_7day = slider::slide_dbl(n, mean, .before = 6)) |>
   tsibble::as_tsibble(key = lga, index = date) |>
-  tsibble::fill_gaps(.full = TRUE) %>%
+  tsibble::fill_gaps(.full = TRUE) |> 
   ungroup()
 
 usethis::use_data(covid, overwrite = TRUE)
@@ -23,7 +23,7 @@ usethis::use_data(covid, overwrite = TRUE)
 
 lga <- strayr::read_absmap("lga2018") |>
   filter(state_name_2016 == "Victoria") |>
-  select(lga_name_2018, geometry) %>%
+  select(lga_name_2018, geometry) |> 
   rmapshaper::ms_simplify(keep = 0.1)
 
 usethis::use_data(lga, overwrite = TRUE)

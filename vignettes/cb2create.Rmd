@@ -54,7 +54,7 @@ The vignette [3. Compatibility with tsibble and sf](cb3tsibblesf.html) will intr
 The dataset `climate_flat` combines the spatial data, `stations`, with the temporal data, `meteo`, into a single tibble object. It can be coerced into a cubble using:
 
 ```{r}
-climate_flat %>% as_cubble(key = id, index = date, coords = c(long, lat))
+climate_flat |> as_cubble(key = id, index = date, coords = c(long, lat))
 ```
 
 ## The NetCDF data
@@ -79,7 +79,7 @@ as_cubble(raw, vars = "q",
 ```{r}
 tif <- system.file("tif/L7_ETMs.tif", package = "stars")
 x <- stars::read_stars(tif)
-x %>% as_cubble()
+as_cubble(x)
 ```
 
 When the `dimensions` object is too complex for the `cubble` package to handle, a warning message will be generated.
@@ -87,9 +87,9 @@ When the `dimensions` object is too complex for the `cubble` package to handle, 
 ## The `sftime` objects 
 
 ```{r}
-dt <- climate_flat %>%
-  sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) %>%
+dt <- climate_flat |> 
+  sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) |> 
   sftime::st_as_sftime()
-dt %>% as_cubble(key = id, index = date)
+dt |> as_cubble(key = id, index = date)
 ```
 

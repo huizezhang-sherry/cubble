@@ -3,7 +3,7 @@ test_that("geom_glyph x_scale and y_scale can be functions", {
   library(ggplot2)
 
   p <-
-    GGally::nasa %>%
+    GGally::nasa |> 
     ggplot(aes(x_major = long, x_minor = day,
               y_major = lat, y_minor = ozone)) +
       geom_glyph_box(fill = NA) +

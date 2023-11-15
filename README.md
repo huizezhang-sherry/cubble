@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/huizezhang-sherry/cubble/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions)
+[![test](https://github.com/huizezhang-sherry/cubble/actions/workflows/test.yaml/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions/workflows/test.yaml)
 <!-- badges: end -->
 
 The term spatio-temporal data can incorporate various spatial and

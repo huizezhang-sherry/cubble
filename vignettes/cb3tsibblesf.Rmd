@@ -38,7 +38,7 @@ class(ts_long)
 The long cubble shows `[tsibble]` in the header to indicate the object also being in a `tbl_ts` class. Methods applies to the `tbl_ts` class can also be applied to the temporal cubble objects, for example, checking whether the data contain temporal gaps:
 
 ```{r echo = TRUE}
-ts_long %>% has_gaps()
+ts_long |> has_gaps()
 ```
 
 An existing cubble object can promote its temporal component to a tsibble object by applying `make_temporal_tsibble()`. The promoted cubble object (`ts_long2`) will be the same as the one created with a tsibble component initially (`ts_long`):
@@ -46,8 +46,8 @@ An existing cubble object can promote its temporal component to a tsibble object
 ```{r echo = TRUE}
 ts_long2 <- make_cubble(
   stations, meteo, 
-  key = id, index = date, coords = c(long, lat)) %>% 
-  face_temporal() %>% 
+  key = id, index = date, coords = c(long, lat)) |> 
+  face_temporal() |> 
   make_temporal_tsibble() 
 identical(ts_long2, ts_long)
 ```
@@ -66,7 +66,7 @@ class(sf_nested)
 The following code shows how to perform coordinate transformation with `st_transform` on a cubble object:
 
 ```{r echo =TRUE, message=FALSE}
-sf_nested %>% sf::st_transform(crs = "EPSG:3857")
+sf_nested |> sf::st_transform(crs = "EPSG:3857")
 ```
 
 The counterpart to promote the spatial component in an existing cubble to be an sf object is `make_spatial_sf()`:
@@ -74,7 +74,7 @@ The counterpart to promote the spatial component in an existing cubble to be an 
 ```{r echo = TRUE}
 (sf_nested2 <- make_cubble(
   stations, meteo, 
-  key = id, index = date, coords = c(long, lat)) %>% 
+  key = id, index = date, coords = c(long, lat)) |> 
   make_spatial_sf())
 ```
 

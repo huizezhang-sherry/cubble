@@ -64,7 +64,7 @@ match_sites <- function(df1, df2, crs = sf::st_crs("OGC:CRS84"),
 
 
   if (temporal_matching){
-    out <- out %>%
+    out <- out |> 
       map(~.x |> match_temporal(
         data_id = !!enquo(data_id), match_id = !!enquo(match_id),
         temporal_match_fn = match_peak,
@@ -107,41 +107,41 @@ match_spatial <- function(df1, df2,
   if (is.null(which)) which <- ifelse(isTRUE(sf::st_is_longlat(df1)),
                                       "Great Circle", "Euclidean")
 
-  dist_df <- sf::st_distance(df1, df2, which = which, par = par) %>%
-    as_tibble() %>%
-    mutate(from = key_val) %>%
-    dplyr::rename_with(~ c(key_val2, "from")) %>%
+  dist_df <- sf::st_distance(df1, df2, which = which, par = par) |> 
+    as_tibble() |> 
+    mutate(from = key_val) |> 
+    dplyr::rename_with(~ c(key_val2, "from")) |> 
     tidyr::pivot_longer(cols = -.data$from, names_to = "to", values_to = "dist")
 
-  gp_return <- dist_df %>%
-    dplyr::slice_min(.data$dist, n = 1, by = .data$from) %>%
-    dplyr::slice_min(.data$dist, n = spatial_n_group) %>%
+  gp_return <- dist_df |> 
+    dplyr::slice_min(.data$dist, n = 1, by = .data$from) |> 
+    dplyr::slice_min(.data$dist, n = spatial_n_group) |> 
     mutate(group = dplyr::row_number())
 
-  dist_df2 <- dist_df %>%
-    inner_join(gp_return |> select(-.data$dist, -.data$to), by = "from") %>%
-    dplyr::slice_min(.data$dist, n = spatial_n_each, by = .data$from) %>%
+  dist_df2 <- dist_df |> 
+    inner_join(gp_return |> select(-.data$dist, -.data$to), by = "from") |> 
+    dplyr::slice_min(.data$dist, n = spatial_n_each, by = .data$from) |> 
     arrange(.data$group)
 
   if (return_cubble){
 
-    res1 <- df1 %>%
-      inner_join(dist_df2 %>%
-                   select(.data$from, .data$group) %>%
+    res1 <- df1 |> 
+      inner_join(dist_df2 |> 
+                   select(.data$from, .data$group) |> 
                    rename(!!key := .data$from),
-                 by = key) %>%
+                 by = key) |> 
       update_cubble()
 
-    res2 <- df2 %>%
-      inner_join(dist_df2 %>%
-                   select(-.data$from) %>%
+    res2 <- df2 |> 
+      inner_join(dist_df2 |> 
+                   select(-.data$from) |> 
                    rename(!!key := .data$to),
-                 by = key) %>%
-      update_cubble() %>%
+                 by = key) |> 
+      update_cubble() |> 
       arrange(.data$dist)
 
-    dist_df2 <- bind_rows(res1, res2) %>%
-      dplyr::group_split(.data$group) %>%
+    dist_df2 <- bind_rows(res1, res2) |> 
+      dplyr::group_split(.data$group) |> 
       map(update_cubble)
   }
 
@@ -164,28 +164,28 @@ match_temporal <- function(data,
   key <- key_vars(data)
   index <- index_var(data)
 
-  multiple_match <- any(data %>%
-                          group_by(!!match_id) %>%
+  multiple_match <- any(data |> 
+                          group_by(!!match_id) |> 
                           dplyr::group_size() != 2)
   if (multiple_match){
-    data <- data %>%
-      dplyr::group_split(!!match_id) %>%
-      map(~.x |> update_cubble() |> group_by(type) %>%
-            mutate(group2 = dplyr::row_number()) %>%
-            dplyr::group_split(.data$group2)) %>%
-      unlist(recursive = FALSE) %>%
+    data <- data |> 
+      dplyr::group_split(!!match_id) |> 
+      map(~.x |> update_cubble() |> group_by(type) |> 
+            mutate(group2 = dplyr::row_number()) |> 
+            dplyr::group_split(.data$group2)) |> 
+      unlist(recursive = FALSE) |> 
       map(update_cubble)
   } else{
-    data <- data %>%
+    data <- data |> 
       dplyr::group_split(!!match_id)
   }
 
-  data_long <-  data %>%
-    map(~.x %>%
-          dplyr::group_split(!!data_id) %>%
-          purrr::map2(var_names, ~.x %>%
-                 face_temporal() %>%
-                 dplyr::select(key, index, .y) %>%
+  data_long <-  data |> 
+    map(~.x |> 
+          dplyr::group_split(!!data_id) |> 
+          purrr::map2(var_names, ~.x |> 
+                 face_temporal() |> 
+                 dplyr::select(key, index, .y) |> 
                  dplyr::rename(matched = .y)))
 
   vecs <- data_long |> map(~map(.x, ~.x$matched))
@@ -205,8 +205,8 @@ match_temporal <- function(data,
   res <- out |> dplyr::bind_cols(match_res = res)
 
   if (return_cubble){
-    res <- data_long %>%
-      map(~map(.x, ~face_spatial(.x)) |> bind_rows()) %>%
+    res <- data_long |> 
+      map(~map(.x, ~face_spatial(.x)) |> bind_rows()) |> 
       map2(res$match_res, ~.x |> mutate(match_res = .y))
   }
 

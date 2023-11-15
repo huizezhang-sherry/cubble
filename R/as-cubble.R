@@ -42,8 +42,8 @@
 #'}
 #'
 #' # don't have to supply coords if create from a sftime
-#' dt <- climate_flat %>%
-#'   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) %>%
+#' dt <- climate_flat |>
+#'   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) |>
 #'   sftime::st_as_sftime()
 #' dt |> as_cubble(key = id, index = date)
 as_cubble <- function(data, key, index, coords, ...) {
@@ -80,7 +80,7 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
   if (length(listcol_var) == 0){
     all_vars <- find_invariant(data, !!key)
 
-    data <- data %>%
+    data <- data |>
       tidyr::nest(ts = c(!!!all_vars$variant))
 
   } else{
@@ -144,19 +144,19 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
   # define dimension and grid
   dim_order <- c(length(long_raw), length(lat_raw) ,
                  length(time_raw), length(var$name))
-  latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) %>%
+  latlong_grid <- tidyr::expand_grid(lat = lat_raw, long = long_raw) |>
     dplyr::mutate(id = dplyr::row_number())
-  mapping <- tidyr::expand_grid(var = var$name, time = time_raw) %>%
+  mapping <- tidyr::expand_grid(var = var$name, time = time_raw) |>
     tidyr::expand_grid(latlong_grid)
 
   # restructure data into flat
-  data <- array(unlist(raw_data), dim = dim_order) %>%
-    as.data.frame.table() %>%
-    as_tibble() %>%
-    dplyr::bind_cols(mapping) %>%
+  data <- array(unlist(raw_data), dim = dim_order) |>
+    as.data.frame.table() |>
+    as_tibble() |>
+    dplyr::bind_cols(mapping) |>
     dplyr::select(.data$id, .data$long, .data$lat,
-                  .data$time, .data$var, .data$Freq) %>%
-    dplyr::arrange(.data$id) %>%
+                  .data$time, .data$var, .data$Freq) |>
+    dplyr::arrange(.data$id) |>
     tidyr::pivot_wider(names_from = .data$var, values_from = .data$Freq)
 
   key <- "id"
@@ -186,9 +186,9 @@ as_cubble.stars <- function(data, key, index, coords, ...){
     longlat <- names(stars::st_dimensions(data))[1:2]
     time <- names(stars::st_dimensions(data))[3]
 
-    as_tibble(data) %>%
+    as_tibble(data) |>
       mutate(id = as.integer(interaction(!!sym(longlat[[1]]),
-                                         !!sym(longlat[[2]])))) %>%
+                                         !!sym(longlat[[2]])))) |>
       as_cubble(key = id, index = time, coords = longlat)
   }
 }
@@ -235,8 +235,8 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
   coords <- enquo(coords)
 
   # here assume the geometry column in an sftime object is always sfc_POINT
-  data <- data %>%
-    mutate(long = sf::st_coordinates(.)[,1], lat = sf::st_coordinates(.)[,2])
+  data <- data |>
+    mutate(long = sf::st_coordinates(geometry)[,1], lat = sf::st_coordinates(geometry)[,2])
 
   if (quo_is_missing(coords)){
     coords <-  quo(c("long", "lat"))
@@ -246,8 +246,8 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
 
   all_vars <- data |> find_invariant(!!key)
   spatial <- data |> select(all_vars$invariant, -!!index) |> distinct()
-  temporal <- as_tibble(data) %>%
-    select(!!key, all_vars$variant, !!index) %>%
+  temporal <- as_tibble(data) |>
+    select(!!key, all_vars$variant, !!index) |>
     nest(ts = all_vars$variant)
   out <- spatial |> left_join(temporal, by = as_name(key))
 
@@ -257,7 +257,7 @@ as_cubble.sftime <- function(data, key, index, coords, ...){
 
 }
 
-globalVariables(c(".", "id"))
+globalVariables(c(".", "id", "geometry"))
 
 
 

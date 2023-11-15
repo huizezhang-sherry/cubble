@@ -19,6 +19,7 @@ library(cubble)
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/huizezhang-sherry/cubble/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions)
+[![test](https://github.com/huizezhang-sherry/cubble/actions/workflows/test.yaml/badge.svg)](https://github.com/huizezhang-sherry/cubble/actions/workflows/test.yaml)
 <!-- badges: end -->
 
 The term spatio-temporal data can incorporate various spatial and temporal characteristics and different data may require different data structures for wrangling and analysis. The spatio-temporal data that cubble addresses are those collected at unique fixed locations, allowing for irregularity in the temporal dimension, such as the weather station data. 
@@ -49,7 +50,7 @@ climate_mel
 In a long cubble (temporal cubble), the temporal variables are expanded into the long form, while the spatial variables are stored as a data attribute: 
 
 ```{r echo = FALSE}
-climate_mel %>% face_temporal()
+climate_mel |> face_temporal()
 ```
 
 The two forms can be pivoted back and forth with the pair of verb: `face_spatial()` and `face_temporal()`.

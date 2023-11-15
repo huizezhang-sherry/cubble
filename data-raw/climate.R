@@ -29,7 +29,7 @@ aus_climate_raw <- aus_stations |>
   rename(lat = latitude, long = longitude, elev = elevation)
 
 clean <- aus_climate_raw |>
-  select(id, long, lat, elev, name, wmo_id, ts) %>%
+  select(id, long, lat, elev, name, wmo_id, ts) |> 
   unnest(ts) |>
   mutate(tmax = tmax/10, tmin = tmin/ 10)
 

@@ -176,8 +176,8 @@ make_cubble <- function(spatial, temporal, by = NULL, key, index, coords,
     index <- as_name(index)
   }
 
-  temporal <- temporal |> filter(!by %in% only_temporal) %>%
-    select(as_name(index), setdiff(colnames(temporal), as_name(index)))
+  temporal <- temporal |> filter(!by %in% only_temporal) |>
+    select(dplyr::all_of(c(as_name(index), setdiff(colnames(temporal), as_name(index)))))
   out <- suppressMessages(
     dplyr::inner_join(spatial, temporal |> nest(ts = -by))
     )
@@ -252,7 +252,7 @@ validate_temporal_cubble <- function(data, args){
   }
 
   x <- as_tibble(data)
-  dup_index <- split(x, x[[args$key]]) %>%
+  dup_index <- split(x, x[[args$key]]) |>
     map_lgl(~vec_duplicate_any(.x[[args$index]]))
   index_na <- any(is.na(x[[args$index]]))
 

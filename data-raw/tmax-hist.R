@@ -10,9 +10,9 @@ all_stations <- rnoaa::ghcnd_stations() |>
   rename(long = longitude, lat = latitude, elev = elevation)
 
 tmax_stations <- all_stations |>
-  filter(element == "TMAX", first_year < 1970, !is.na(wmo_id)) %>%
-  filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 46, 90)) %>%
-  filter(!id %in% c("ASN00047048", "ASN00085279", "ASN00085298")) %>%
+  filter(element == "TMAX", first_year < 1970, !is.na(wmo_id)) |> 
+  filter(between(as.numeric(stringr::str_sub(id, 7, 8)), 46, 90)) |> 
+  filter(!id %in% c("ASN00047048", "ASN00085279", "ASN00085298")) |> 
   select(-c(element:last_year))
 
 tmax71 <- rnoaa::meteo_pull_monitors(
@@ -27,9 +27,9 @@ tmax16 <- rnoaa::meteo_pull_monitors(
   date_max = glue::glue("2020-12-31")
 )
 
-tmax <- tmax71 %>%
-  bind_rows(tmax16) %>%
-  arrange(id, date) %>%
+tmax <- tmax71 |> 
+  bind_rows(tmax16) |> 
+  arrange(id, date) |> 
   mutate(tmax = tmax /10)
 
 historical_tmax <- make_cubble(

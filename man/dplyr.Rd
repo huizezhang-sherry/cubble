@@ -177,11 +177,11 @@ cb_nested |> arrange(wmo_id)
 cb_long |> arrange(prcp)
 
 # summarise - summarise.spatial_cubble_df,  summarise.temporal_cubble_df
-cb_long \%>\%
-  group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) \%>\%
+cb_long |> 
+  group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) |> 
   summarise(tmax = mean(tmax))
-cb_long \%>\%
-  mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) \%>\%
+cb_long |> 
+  mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) |> 
   summarise(t = mean(tmax), .by = first_5)
 
 # select -  select.spatial_cubble_df,  select.temporal_cubble_df
@@ -235,7 +235,7 @@ cb_long |> rowwise()
 res |> ungroup()
 (res2 <- res |> face_temporal() |> unfold(group1) |> group_by(group1))
 res2 |> ungroup()
-res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) \%>\%
-  group_by(first_5) \%>\%
+res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) |> 
+  group_by(first_5) |> 
   ungroup(group1)
 }
