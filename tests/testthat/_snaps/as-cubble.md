@@ -30,6 +30,30 @@
 ---
 
     Code
+      as_cubble(nest(climate_flat, data = date:tmin), key = id, index = date, coords = c(
+        long, lat))
+    Output
+      # cubble:   key: id [3], index: date, nested form
+      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
+        id           long   lat  elev name              wmo_id ts               
+        <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
+      1 ASN00086038  145. -37.7  78.4 essendon airport   95866 <tibble [10 x 4]>
+      2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 <tibble [10 x 4]>
+      3 ASN00086282  145. -37.7 113.  melbourne airport  94866 <tibble [10 x 4]>
+
+---
+
+    Code
+      as_cubble(nest(climate_flat, data = prcp:tmin), key = id, index = date, coords = c(
+        long, lat))
+    Condition
+      Error in `as_cubble()`:
+      ! Can't' find the index variable in the data. Please check.
+
+---
+
+    Code
       as_cubble(dt, coords = c(long, lat))
     Output
       # cubble:   key: id [3], index: date, nested form
@@ -64,10 +88,10 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(longlat)
+        data %>% select(longlat)
       
         # Now:
-        data |> select(all_of(longlat))
+        data %>% select(all_of(longlat))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Message
@@ -198,4 +222,17 @@
       1 ASN00086038  78.4 essen~  95866 (144.9066 -37.7276)  145. -37.7 <tibble>
       2 ASN00086077  12.1 moora~  94870   (145.0964 -37.98)  145. -38.0 <tibble>
       3 ASN00086282 113.  melbo~  94866 (144.8321 -37.6655)  145. -37.7 <tibble>
+
+---
+
+    Code
+      as_cubble(data_stars, key = id, index = time)
+    Output
+      # cubble:   key: id [2], index: time, nested form, [sf]
+      # spatial:  [130, -44, 140, -38], WGS 84
+      # temporal: time [date], var1 [dbl]
+           id  long   lat     station ts              
+      * <int> <dbl> <dbl> <POINT [°]> <list>          
+      1     1   130   -38   (130 -38) <tibble [5 x 2]>
+      2     2   140   -44   (140 -44) <tibble [5 x 2]>
 

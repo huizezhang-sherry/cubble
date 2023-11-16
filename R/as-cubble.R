@@ -193,39 +193,6 @@ as_cubble.stars <- function(data, key, index, coords, ...){
   }
 }
 
-
-parse_dimension <- function(obj){
-
-    if (!is.null(obj$value)) {
-      out <- obj$value
-    } else if (is.numeric(obj$from) &
-               is.numeric(obj$to) &
-               inherits(obj$delta, "numeric")){
-      out <- seq(obj$offset, obj$offset +
-                   (obj$to - 1) * obj$delta, by = obj$delta)
-    } else if (!is.na(obj$refsys)){
-      if (obj$refsys == "udunits"){
-      tstring <- attr(obj$offset, "units")$numerator
-      origin <- parse_time(tstring)
-
-      if (is.null(origin))
-        cli::cli_abort(
-          "The units is currently too complex for {.field cubble} to parse.")
-
-      tperiod <- sub(" .*", "\\1", tstring)
-      time <- seq(obj$from,obj$to, as.numeric(obj$delta))
-      out <- origin %m+% do.call(tperiod, list(x = floor(time)))
-      } else if (obj$refsys == "POSIXct"){
-        out <- obj$value
-      }
-    } else{
-      cli::cli_abort(
-        "The units is currently too complex for {.field cubble} to parse.")
-    }
-
-  out
-}
-
 #' @rdname as_cubble
 #' @export
 as_cubble.sftime <- function(data, key, index, coords, ...){

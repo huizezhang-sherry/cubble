@@ -23,16 +23,15 @@ update_cubble.spatial_cubble_df <- function(data, key = NULL,
 }
 
 #' @rdname update
-#' @export
-update_cubble.temporal_cubble_df <- function(data, key = NULL,
-                                             index = NULL, coords = NULL,
-                                             spatial = NULL, ...){
-
-  key <- key_vars(data)
-  index <- index_var(data)
-  coords <- coords(data)
-
-  spatial <- spatial(data)
-  data |> new_temporal_cubble(
-    key = key, index = index, coords = coords, spatial = spatial)
-}
+# update_cubble.temporal_cubble_df <- function(data, key = NULL,
+#                                              index = NULL, coords = NULL,
+#                                              spatial = NULL, ...){
+#
+#   key <- key_vars(data)
+#   index <- index_var(data)
+#   coords <- coords(data)
+#
+#   spatial <- spatial(data)
+#   data |> new_temporal_cubble(
+#     key = key, index = index, coords = coords, spatial = spatial)
+# }

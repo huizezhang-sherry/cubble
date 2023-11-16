@@ -36,15 +36,10 @@ unfold.temporal_cubble_df <- function(data, ...){
   to_join <- sp |> as_tibble() |> select(c(key_vars(data), ...))
   out <- as_tibble(data) |> left_join(to_join, by = key)
 
-  if (nrow(out) != nrow(data)){
-    var <- names(dots)
-    cli::cli_alert_warning(
-      "The key and unfoldd variable{?s} {.field {var}} are not one-to-one."
-    )
-  }
-
   if (is_tsibble(data)){
     index <- data %@% index
+    out <- out |> tsibble::as_tsibble(key = !!key, index = index)
+    tsibble_attr <- attributes(out)
   } else{
     index <- as_name(index)
   }

@@ -7,20 +7,20 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(key)
+        data %>% select(key)
       
         # Now:
-        data |> select(all_of(key))
+        data %>% select(all_of(key))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
       Warning:
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(key)
+        data %>% select(key)
       
         # Now:
-        data |> select(all_of(key))
+        data %>% select(all_of(key))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
@@ -50,10 +50,10 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(key)
+        data %>% select(key)
       
         # Now:
-        data |> select(all_of(key))
+        data %>% select(all_of(key))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
@@ -83,20 +83,20 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(key)
+        data %>% select(key)
       
         # Now:
-        data |> select(all_of(key))
+        data %>% select(all_of(key))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
       Warning:
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(key)
+        data %>% select(key)
       
         # Now:
-        data |> select(all_of(key))
+        data %>% select(all_of(key))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output

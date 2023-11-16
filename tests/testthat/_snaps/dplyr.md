@@ -106,8 +106,8 @@
 ---
 
     Code
-      cb_long |> group_by(first_5 = ifelse(lubridate::day(date) <= 5, 1, 2)) |> 
-        summarise(tmax = mean(tmax))
+      summarise(group_by(cb_long, first_5 = ifelse(lubridate::day(date) <= 5, 1, 2)),
+      tmax = mean(tmax))
     Output
       # cubble:   key: id [3], index: first_5, long form, groups: first_5 [2]
       # temporal: 1 -- 2 [1], no gaps
@@ -124,17 +124,17 @@
 ---
 
     Code
-      cb_long |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 2)) |> 
-        summarise(t = mean(tmax), .by = first_5)
+      summarise(mutate(cb_long, first_5 = ifelse(lubridate::day(date) <= 5, 1, 2)),
+      t = mean(tmax), .by = first_5)
     Condition
       Warning:
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(.by)
+        data %>% select(.by)
       
         # Now:
-        data |> select(all_of(.by))
+        data %>% select(all_of(.by))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
@@ -166,10 +166,10 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(loc)
+        data %>% select(loc)
       
         # Now:
-        data |> select(all_of(loc))
+        data %>% select(all_of(loc))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
@@ -193,10 +193,10 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(loc)
+        data %>% select(loc)
       
         # Now:
-        data |> select(all_of(loc))
+        data %>% select(all_of(loc))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
@@ -220,10 +220,10 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(loc)
+        data %>% select(loc)
       
         # Now:
-        data |> select(all_of(loc))
+        data %>% select(all_of(loc))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
@@ -255,10 +255,10 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(loc)
+        data %>% select(loc)
       
         # Now:
-        data |> select(all_of(loc))
+        data %>% select(all_of(loc))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output

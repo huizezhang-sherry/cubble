@@ -6,11 +6,24 @@ test_that("matching examples work", {
   expect_snapshot(match_spatial(climate_aus, river, which = "Hausdorff"))
   # tune the number of matches in each group
   expect_snapshot(
-    match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2))
+    match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2)
+    )
+  expect_snapshot(
+    match_spatial(climate_aus, river, spatial_n_each = 5, spatial_n_group = 2,
+                  return_cubble = TRUE)
+    )
+
+  expect_snapshot(
+    match_sites(
+      climate_aus, river, data_id = type, match_id = group,
+      temporal_by = c("prcp" = "Water_course_level")
+      )
+  )
 
   a1 <- match_spatial(climate_aus, river, return_cubble = TRUE) |> bind_rows()
   expect_snapshot(
     match_temporal(a1, data_id = type, match_id = group,
                    temporal_by = c("prcp" = "Water_course_level"))
     )
+
 })

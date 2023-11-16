@@ -14,5 +14,5 @@ test_that("creating cubble works", {
                 key = id, index = date, coords = c(long, lat))
   )
 
-
+  expect_snapshot(key(climate_mel))
 })

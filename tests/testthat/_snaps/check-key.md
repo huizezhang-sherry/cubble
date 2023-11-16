@@ -81,10 +81,10 @@
       Using an external vector in selections was deprecated in tidyselect 1.1.0.
       i Please use `all_of()` or `any_of()` instead.
         # Was:
-        data |> select(by)
+        data %>% select(by)
       
         # Now:
-        data |> select(all_of(by))
+        data %>% select(all_of(by))
       
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
