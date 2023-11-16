@@ -29,3 +29,28 @@ make_spatial_sf <-  function(x, sfc = NULL, crs, silent = FALSE) {
 	x$geometry <-  sfc
 	x |> sf::st_as_sf() |> update_cubble()
 }
+
+#' Temporary update cubble if the sf class take precedent of cubble classes
+#'
+#' When the data is already a cubble object but need update on attributes
+#' @param data,key,index,coords,... see \code{make_cubble}
+#' @rdname update
+#' @export
+update_cubble <- function(data, key, index, coords, ...){
+
+  UseMethod("update_cubble")
+}
+
+#' @rdname update
+#' @export
+update_cubble.spatial_cubble_df <- function(data, key = NULL,
+                                            index = NULL, coords = NULL, ...){
+  is_cubble(data)
+  key <- key_vars(data)
+  index <- index_var(data)
+  coords <- coords(data)
+
+  data |> new_spatial_cubble(key = key, index = index, coords = coords)
+
+}
+
