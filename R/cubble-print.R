@@ -79,7 +79,8 @@ tbl_sum.temporal_cubble_df <- function(x){
 
   # line 2: FROM -- TO [BY] HAS_GAP
   if (!is_tsibble(x)) {
-    x_tsibble <- as_tsibble(as_tibble(x), key = key_vars(x), index = index(x))
+    xx <- x # a wired issue raised in issue 21
+    x_tsibble <- as_tsibble(as_tibble(x), key = key_vars(x), index = index(xx))
   } else{
     x_tsibble <- x
   }
