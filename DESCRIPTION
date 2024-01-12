@@ -54,5 +54,5 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Config/testthat/edition: 3
-URL: https://github.com/huizezhang-sherry/cubble
+URL: https://github.com/huizezhang-sherry/cubble, https://huizezhang-sherry.github.io/cubble/
 BugReports: https://github.com/huizezhang-sherry/cubble/issues
