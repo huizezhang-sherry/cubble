@@ -176,7 +176,10 @@ as_cubble.stars <- function(data, key, index, coords, ...){
   # time is the third
   if (is.na(stars::st_raster_type(data))) { # vector data cube
 	stopifnot(is.null(data$id),
-	          inherits(stars::st_get_dimension_values(data, 1), "sfc"))
+	          # Check if any of the dimensions is an sfc
+	          any(sapply(
+	            stars::st_dimensions(data),
+	            function(i) inherits(i$values, "sfc"))))
     data$id <- seq_len(dim(data)[1]) # recycles
     data <-  sf::st_as_sf(data, long = TRUE)
     key <-  enquo(key)
