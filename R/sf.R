@@ -14,7 +14,7 @@ make_spatial_sf <-  function(x, sfc = NULL, crs, silent = FALSE) {
 	stopifnot(is_cubble_spatial(x),
 			  is.null(sfc) || inherits(sfc, "sfc"),
 			  missing(crs) || inherits(crs, "crs"),
-			  all(c("long", "lat") %in% names(x)))
+			  all(c("long", "lat") %in% names(x)) || all(c("x", "y") %in% names(x)))
 	if (! requireNamespace("sf", quietly = TRUE))
 		stop("package sf required, please install it first")
 	if (is.null(sfc)) {
