@@ -79,7 +79,7 @@ as_cubble(raw, vars = "q",
 ```{r}
 tif <- system.file("tif/L7_ETMs.tif", package = "stars")
 x <- stars::read_stars(tif)
-as_cubble(x)
+as_cubble(x, index = band)
 ```
 
 When the `dimensions` object is too complex for the `cubble` package to handle, a warning message will be generated.

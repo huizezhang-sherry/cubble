@@ -38,7 +38,7 @@
 #'# stars - take a few seconds to run
 #' tif <- system.file("tif/L7_ETMs.tif", package = "stars")
 #' x <-  stars::read_stars(tif)
-#' x |> as_cubble()
+#' x |> as_cubble(index = band)
 #'}
 #'
 #' # don't have to supply coords if create from a sftime
@@ -172,24 +172,25 @@ as_cubble.ncdf4 <- function(data, key, index, coords, vars,
 #' @export
 as_cubble.stars <- function(data, key, index, coords, ...){
 
-  # making the assumption that long/lat are the first two dimensions
-  # time is the third
   if (is.na(stars::st_raster_type(data))) { # vector data cube
 	stopifnot(is.null(data$id),
-	          inherits(stars::st_get_dimension_values(data, 1), "sfc"))
+	          # Check if any of the dimensions is an sfc
+	          any(sapply(
+	            stars::st_dimensions(data),
+	            function(i) inherits(i$values, "sfc"))))
     data$id <- seq_len(dim(data)[1]) # recycles
     data <-  sf::st_as_sf(data, long = TRUE)
     key <-  enquo(key)
     index <-  enquo(index)
 	as_cubble(data, key=!!key, index=!!index)
   } else { # raster data cube
+    # making the assumption that long/lat are the first two dimensions
     longlat <- names(stars::st_dimensions(data))[1:2]
-    time <- names(stars::st_dimensions(data))[3]
-
+    index <-  enquo(index)
     as_tibble(data) |>
       mutate(id = as.integer(interaction(!!sym(longlat[[1]]),
                                          !!sym(longlat[[2]])))) |>
-      as_cubble(key = id, index = time, coords = longlat)
+      as_cubble(key = id, index = !!index, coords = longlat)
   }
 }
 
