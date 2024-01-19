@@ -82,23 +82,9 @@
 ---
 
     Code
-      as_cubble(x)
-    Condition
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(longlat)
-      
-        # Now:
-        data %>% select(all_of(longlat))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-    Message
-      i More than 10,000 keys: only use the first key to test spatial &
-      temporal variables.
+      res
     Output
-      # cubble:   key: id [122848], index: time, nested form
+      # cubble:   key: id [122848], index: band, nested form
       # spatial:  [288790.500000803, 9110743.00002899, 298708.50000055,
       #   9120746.50002874], Missing CRS!
       # temporal: band [int], L7_ETMs.tif [dbl]
@@ -115,6 +101,28 @@
        9 289019. 9120747. 122508 <tibble [6 x 2]>
       10 289047. 9120747. 122509 <tibble [6 x 2]>
       # i 122,838 more rows
+
+---
+
+    Code
+      face_temporal(res)
+    Output
+      # cubble:   key: id [122848], index: band, long form
+      # temporal: 1 -- 6 [1], no gaps
+      # spatial:  x [dbl], y [dbl]
+             id  band L7_ETMs.tif
+          <int> <int>       <dbl>
+       1 122500     1          69
+       2 122500     2          56
+       3 122500     3          46
+       4 122500     4          79
+       5 122500     5          86
+       6 122500     6          46
+       7 122501     1          69
+       8 122501     2          57
+       9 122501     3          49
+      10 122501     4          75
+      # i 737,078 more rows
 
 ---
 

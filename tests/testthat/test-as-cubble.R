@@ -34,8 +34,9 @@ test_that("as_cubble() works", {
   # stars
   tif <- system.file("tif/L7_ETMs.tif", package = "stars")
   x <-  stars::read_stars(tif)
-  expect_snapshot(x |> as_cubble())
-
+  res <- x |>  as_cubble(index = band)
+  expect_snapshot(res)
+  expect_snapshot(res |> face_temporal())
 
   # netcdf
   path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
