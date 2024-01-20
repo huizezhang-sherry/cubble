@@ -10,8 +10,7 @@
 #' @seealso [make_temporal_tsibble]
 #' @examples
 #' climate_mel |> make_spatial_sf()
-make_spatial_sf <-  function(x, sfc = NULL, crs,
-                             silent = FALSE) {
+make_spatial_sf <-  function(x, sfc = NULL, crs, silent = FALSE) {
   stopifnot(is_cubble_spatial(x),
 			  is.null(sfc) || inherits(sfc, "sfc"),
 			  missing(crs) || inherits(crs, "crs"),

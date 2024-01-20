@@ -14,7 +14,7 @@ as_cubble(data, key, index, coords, ...)
 
 \method{as_cubble}{data.frame}(data, key, index, coords, ...)
 
-\method{as_cubble}{tbl_df}(data, key, index, coords, ...)
+\method{as_cubble}{tbl_df}(data, key, index, coords, crs, ...)
 
 \method{as_cubble}{sf}(data, key, index, ...)
 
@@ -48,13 +48,15 @@ see \code{\link[=make_cubble]{make_cubble()}}.}
 
 \item{...}{other arguments.}
 
+\item{crs}{used in \code{as_cubble.tbl_df()} to set the crs.
+the data to read in \code{as_cubble.netcdf()}.}
+
 \item{vars}{a vector of variables to read in (with quote),
 used in \code{as_cubble.netcdf()}
 to select the variable to read in.}
 
 \item{lat_range, long_range}{in the syntax of \code{seq(FROM, TO, BY)}
-to downsample
-the data to read in \code{as_cubble.netcdf()}.}
+to downsample}
 }
 \value{
 a cubble object
@@ -82,7 +84,7 @@ dt <- as_cubble(raw,vars = c("q", "z"),
 # stars - take a few seconds to run
 tif <- system.file("tif/L7_ETMs.tif", package = "stars")
 x <-  stars::read_stars(tif)
-x |> as_cubble()
+x |> as_cubble(index = band)
 }
 
 # don't have to supply coords if create from a sftime

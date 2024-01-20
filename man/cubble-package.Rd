@@ -14,6 +14,7 @@ A spatiotemperal data object in a relational data structure to separate the reco
 Useful links:
 \itemize{
   \item \url{https://github.com/huizezhang-sherry/cubble}
+  \item \url{https://huizezhang-sherry.github.io/cubble/}
   \item Report bugs at \url{https://github.com/huizezhang-sherry/cubble/issues}
 }
 

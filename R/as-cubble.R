@@ -13,6 +13,7 @@
 #' to select the variable to read in.
 #' @param lat_range,long_range in the syntax of `seq(FROM, TO, BY)`
 #' to downsample
+#' @param crs used in `as_cubble.tbl_df()` to set the crs.
 #' the data to read in `as_cubble.netcdf()`.
 #' @importFrom tidyr unchop
 #' @importFrom tsibble index
@@ -62,7 +63,7 @@ as_cubble.data.frame <- function(data, key, index, coords, ...){
 
 #' @rdname as_cubble
 #' @export
-as_cubble.tbl_df <- function(data, key, index, coords, ...) {
+as_cubble.tbl_df <- function(data, key, index, coords, crs, ...) {
   if (is_tsibble(data)){
     key <- sym(tsibble::key_vars(data))
     index <- sym(tsibble::index(data))
@@ -94,9 +95,14 @@ as_cubble.tbl_df <- function(data, key, index, coords, ...) {
     )
   }
 
-  new_spatial_cubble(
+  res <- new_spatial_cubble(
     data, key = as_name(key), index = as_name(index), coords = coords
-    )
+  )
+
+  if (!missing(crs)) res <- res |> make_spatial_sf(crs = crs)
+  return(res)
+
+
 }
 
 #' @rdname as_cubble
@@ -113,7 +119,8 @@ as_cubble.sf <-  function(data, key, index,...) {
 	key <-  enquo(key)
 	index <-  enquo(index)
 	cu <-  as_cubble(data, key = !!key, index = !!index, coords = colnames(cc))
-	structure(cu, class = c("cubble_df", "sf", setdiff(class(cu), "cubble_df")),
+	cb_cls <- c("spatial_cubble_df", "cubble_df")
+	structure(cu, class = c(cb_cls, "sf", setdiff(class(cu), cb_cls)),
               sf_column = sf_column)
 }
 
@@ -187,10 +194,13 @@ as_cubble.stars <- function(data, key, index, coords, ...){
     # making the assumption that long/lat are the first two dimensions
     longlat <- names(stars::st_dimensions(data))[1:2]
     index <-  enquo(index)
+    if (quo_is_missing(index)) index <-  quo(!!sym(names(dim(data)[3])))
     as_tibble(data) |>
-      mutate(id = as.integer(interaction(!!sym(longlat[[1]]),
-                                         !!sym(longlat[[2]])))) |>
-      as_cubble(key = id, index = !!index, coords = longlat)
+      group_by(!!!map(longlat, sym)) |>
+      mutate(id = dplyr::cur_group_id()) |>
+      ungroup() |>
+      as_cubble(key = id, index = !!index, coords = longlat) |>
+      make_spatial_sf(crs = sf::st_crs(data))
   }
 }
 

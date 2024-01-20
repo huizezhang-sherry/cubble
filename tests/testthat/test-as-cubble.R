@@ -13,6 +13,11 @@ test_that("as_cubble() works", {
 
   expect_snapshot(
     climate_flat |>
+      as_cubble(key = id, index = date, coords = c(long, lat), crs = sf::st_crs(4326))
+  )
+
+  expect_snapshot(
+    climate_flat |>
       nest(data = date:tmin) |>
       as_cubble(key = id, index = date, coords = c(long, lat))
   )

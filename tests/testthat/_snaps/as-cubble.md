@@ -30,6 +30,21 @@
 ---
 
     Code
+      as_cubble(climate_flat, key = id, index = date, coords = c(long, lat), crs = sf::st_crs(
+        4326))
+    Output
+      # cubble:   key: id [3], index: date, nested form, [sf]
+      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84
+      # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
+        id           long   lat  elev name   wmo_id ts                  geometry
+        <chr>       <dbl> <dbl> <dbl> <chr>   <dbl> <list>           <POINT [°]>
+      1 ASN00086038  145. -37.7  78.4 essen~  95866 <tibble> (144.9066 -37.7276)
+      2 ASN00086077  145. -38.0  12.1 moora~  94870 <tibble>   (145.0964 -37.98)
+      3 ASN00086282  145. -37.7 113.  melbo~  94866 <tibble> (144.8321 -37.6655)
+
+---
+
+    Code
       as_cubble(nest(climate_flat, data = date:tmin), key = id, index = date, coords = c(
         long, lat))
     Output
@@ -84,22 +99,22 @@
     Code
       res
     Output
-      # cubble:   key: id [122848], index: band, nested form
+      # cubble:   key: id [122848], index: band, nested form, [sf]
       # spatial:  [288790.500000803, 9110743.00002899, 298708.50000055,
-      #   9120746.50002874], Missing CRS!
+      #   9120746.50002874], SIRGAS 2000 / UTM zone 25S
       # temporal: band [int], L7_ETMs.tif [dbl]
-               x        y     id ts              
-           <dbl>    <dbl>  <int> <list>          
-       1 288791. 9120747. 122500 <tibble [6 x 2]>
-       2 288819. 9120747. 122501 <tibble [6 x 2]>
-       3 288848. 9120747. 122502 <tibble [6 x 2]>
-       4 288876. 9120747. 122503 <tibble [6 x 2]>
-       5 288905. 9120747. 122504 <tibble [6 x 2]>
-       6 288933. 9120747. 122505 <tibble [6 x 2]>
-       7 288962. 9120747. 122506 <tibble [6 x 2]>
-       8 288990. 9120747. 122507 <tibble [6 x 2]>
-       9 289019. 9120747. 122508 <tibble [6 x 2]>
-      10 289047. 9120747. 122509 <tibble [6 x 2]>
+               x        y    id ts                         geometry
+           <dbl>    <dbl> <int> <list>                  <POINT [m]>
+       1 288791. 9120747.   352 <tibble [6 x 2]> (288790.5 9120747)
+       2 288819. 9120747.   704 <tibble [6 x 2]>   (288819 9120747)
+       3 288848. 9120747.  1056 <tibble [6 x 2]> (288847.5 9120747)
+       4 288876. 9120747.  1408 <tibble [6 x 2]>   (288876 9120747)
+       5 288905. 9120747.  1760 <tibble [6 x 2]> (288904.5 9120747)
+       6 288933. 9120747.  2112 <tibble [6 x 2]>   (288933 9120747)
+       7 288962. 9120747.  2464 <tibble [6 x 2]> (288961.5 9120747)
+       8 288990. 9120747.  2816 <tibble [6 x 2]>   (288990 9120747)
+       9 289019. 9120747.  3168 <tibble [6 x 2]> (289018.5 9120747)
+      10 289047. 9120747.  3520 <tibble [6 x 2]>   (289047 9120747)
       # i 122,838 more rows
 
 ---
@@ -109,19 +124,19 @@
     Output
       # cubble:   key: id [122848], index: band, long form
       # temporal: 1 -- 6 [1], no gaps
-      # spatial:  x [dbl], y [dbl]
-             id  band L7_ETMs.tif
-          <int> <int>       <dbl>
-       1 122500     1          69
-       2 122500     2          56
-       3 122500     3          46
-       4 122500     4          79
-       5 122500     5          86
-       6 122500     6          46
-       7 122501     1          69
-       8 122501     2          57
-       9 122501     3          49
-      10 122501     4          75
+      # spatial:  x [dbl], y [dbl], geometry [POINT [m]]
+            id  band L7_ETMs.tif
+         <int> <int>       <dbl>
+       1   352     1          69
+       2   352     2          56
+       3   352     3          46
+       4   352     4          79
+       5   352     5          86
+       6   352     6          46
+       7   704     1          69
+       8   704     2          57
+       9   704     3          49
+      10   704     4          75
       # i 737,078 more rows
 
 ---
