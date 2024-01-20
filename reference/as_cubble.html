@@ -87,7 +87,7 @@
 <span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for tbl_df</span></span>
-<span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span>, <span class="va">crs</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for sf</span></span>
 <span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -137,6 +137,11 @@ see <code><a href="cubble-class.html">make_cubble()</a></code>.</p></dd>
 <dd><p>other arguments.</p></dd>
 
 
+<dt>crs</dt>
+<dd><p>used in <code>as_cubble.tbl_df()</code> to set the crs.
+the data to read in <code>as_cubble.netcdf()</code>.</p></dd>
+
+
 <dt>vars</dt>
 <dd><p>a vector of variables to read in (with quote),
 used in <code>as_cubble.netcdf()</code>
@@ -145,8 +150,7 @@ to select the variable to read in.</p></dd>
 
 <dt>lat_range, long_range</dt>
 <dd><p>in the syntax of <code>seq(FROM, TO, BY)</code>
-to downsample
-the data to read in <code>as_cubble.netcdf()</code>.</p></dd>
+to downsample</p></dd>
 
 </dl></div>
     <div id="value">
@@ -195,7 +199,7 @@ the data to read in <code>as_cubble.netcdf()</code>.</p></dd>
 <span class="r-in"><span><span class="co"># stars - take a few seconds to run</span></span></span>
 <span class="r-in"><span><span class="va">tif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span>  <span class="fu">stars</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/stars/reference/read_stars.html" class="external-link">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu">as_cubble</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu">as_cubble</span><span class="op">(</span>index <span class="op">=</span> <span class="va">band</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># don't have to supply coords if create from a sftime</span></span></span>
