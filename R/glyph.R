@@ -59,7 +59,7 @@
 #'     geom_glyph(y_scale = GGally::range01, polar = TRUE)
 #' print_p(p)
 geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
-                       position = "identity", ..., x_major = NULL,
+                       position = "jitter", ..., x_major = NULL,
                        x_minor = NULL, y_major = NULL, y_minor = NULL,
                        x_scale = identity, y_scale = identity,
                        polar = FALSE, width = ggplot2::rel(2.1),
