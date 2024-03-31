@@ -3,7 +3,7 @@
 #' @importFrom dplyr filter group_by ungroup summarise mutate select left_join
 #' inner_join arrange
 #' @importFrom dplyr rowwise bind_rows distinct rename group_vars grouped_df
-#'  group_data
+#'  group_data between
 #' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr nest unnest
 #' @importFrom rlang .data quo_is_missing sym as_name
