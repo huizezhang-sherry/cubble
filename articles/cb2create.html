@@ -165,11 +165,13 @@ nested and long cubble:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  78.4 essen…  <span style="text-decoration: underline;">95</span>866  145. -<span style="color: #BB0000;">37.7</span> (144.9066 -37.7276) <span style="color: #949494;">&lt;tbl_ts&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  12.1 moora…  <span style="text-decoration: underline;">94</span>870  145. -<span style="color: #BB0000;">38.0</span>   (145.0964 -37.98) <span style="color: #949494;">&lt;tbl_ts&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282 113.  melbo…  <span style="text-decoration: underline;">94</span>866  145. -<span style="color: #BB0000;">37.7</span> (144.8321 -37.6655) <span style="color: #949494;">&lt;tbl_ts&gt;</span></span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282 113.  melbo…  <span style="text-decoration: underline;">94</span>866  145. -<span style="color: #BB0000;">37.7</span> (144.8321 -37.6655) <span style="color: #949494;">&lt;tbl_ts&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "spatial_cubble_df" "cubble_df"         "sf"               </span></span>
-<span><span class="co">#&gt; [4] "tbl_df"            "tbl"               "data.frame"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">ts</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [4] "tbl_df"            "tbl"               "data.frame"</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">ts</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "tbl_ts"     "tbl_df"     "tbl"        "data.frame"</span></span></code></pre></div>
 <p>The vignette <a href="cb3tsibblesf.html">3. Compatibility with
 tsibble and sf</a> will introduce more on the cubble’s compatibility
@@ -184,7 +186,7 @@ with tsibble and sf.</p>
 <p>The dataset <code>climate_flat</code> combines the spatial data,
 <code>stations</code>, with the temporal data, <code>meteo</code>, into
 a single tibble object. It can be coerced into a cubble using:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">climate_flat</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [3], index: date, nested form</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!</span></span></span>
@@ -202,7 +204,7 @@ a single tibble object. It can be coerced into a cubble using:</p>
 NetCDF data, including <code>ncdf4</code>, <code>RNetCDF</code>, and
 <code>tidync</code>. The code below converts a NetCDF object of class
 ncdf4 into a cubble object:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ncdf/era5-pressure.nc"</span>, package <span class="op">=</span> <span class="st">"cubble"</span><span class="op">)</span></span>
 <span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="fu">ncdf4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_open.html" class="external-link">nc_open</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span><span class="va">raw</span><span class="op">)</span></span>
@@ -226,14 +228,14 @@ ncdf4 into a cubble object:</p>
 data. In such cases, the <code>vars</code>, <code>long_range</code> and
 <code>lat_range</code> arguments can be used to subset the data based on
 the variable and the grid resolution:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span><span class="va">raw</span>, vars <span class="op">=</span> <span class="st">"q"</span>,</span>
 <span>          long_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">180</span>, <span class="fl">180</span>, <span class="fl">1</span><span class="op">)</span>, lat_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">90</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="the-stars-objects">The <code>stars</code> objects<a class="anchor" aria-label="anchor" href="#the-stars-objects"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">stars</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/stars/reference/read_stars.html" class="external-link">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/as_cubble.html">as_cubble</a></span><span class="op">(</span><span class="va">x</span>, index <span class="op">=</span> <span class="va">band</span><span class="op">)</span></span>
@@ -261,7 +263,7 @@ generated.</p>
 <div class="section level3">
 <h3 id="the-sftime-objects">The <code>sftime</code> objects<a class="anchor" aria-label="anchor" href="#the-sftime-objects"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">climate_flat</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"long"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="st">"OGC:CRS84"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">sftime</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sftime/man/st_as_sftime.html" class="external-link">st_as_sftime</a></span><span class="op">(</span><span class="op">)</span></span>

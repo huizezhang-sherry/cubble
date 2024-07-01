@@ -195,8 +195,9 @@ syntax:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/matching.html">match_spatial</a></span><span class="op">(</span><span class="va">climate_vic</span>, <span class="va">river</span>, spatial_n_group <span class="op">=</span> <span class="fl">10</span>, return_cubble <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">res_sp</span>, max.level <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="co">#&gt; List of 10</span></span>
-<span><span class="va">res_sp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt; List of 10</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res_sp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [2], index: date, nested form, [sf]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.5203, -37.0194, 144.540295, -37.015122], WGS 84</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
@@ -204,8 +205,9 @@ syntax:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00…  145. -<span style="color: #BB0000;">37.0</span>   290 rede…  <span style="text-decoration: underline;">94</span>859 <span style="color: #949494;">&lt;tibble&gt;</span> clim…  (144.5203 -37.0194)</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 406213  145. -<span style="color: #BB0000;">37.0</span>    <span style="color: #BB0000;">NA</span> CAMP…     <span style="color: #BB0000;">NA</span> <span style="color: #949494;">&lt;tibble&gt;</span> river (144.5403 -37.01512)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: group &lt;int&gt;, dist [m]</span></span></span>
-<span><span class="op">(</span><span class="va">res_sp</span> <span class="op">&lt;-</span> <span class="va">res_sp</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">8</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: group &lt;int&gt;, dist [m]</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">res_sp</span> <span class="op">&lt;-</span> <span class="va">res_sp</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">8</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># cubble:   key: id [16], index: date, nested form, [sf]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># spatial:  [144.5203, -38.144913, 148.4667, -36.128657], WGS 84</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]</span></span></span>
@@ -236,7 +238,7 @@ syntax:</p>
 <code>Water_course_level</code> from the river data to <code>prcp</code>
 in the weather station data. The variable <code>group</code> and
 <code>types</code> identify the matching group and the two datasets:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">res_tm</span> <span class="op">&lt;-</span> <span class="va">res_sp</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/matching.html">match_temporal</a></span><span class="op">(</span></span>
 <span>    data_id <span class="op">=</span> <span class="va">type</span>, match_id <span class="op">=</span> <span class="va">group</span>,</span>
@@ -255,7 +257,7 @@ in the weather station data. The variable <code>group</code> and
 <p>Similarly, the cubble output can be returned using the argument
 <code>return_cubble = TRUE</code>. Here we select the four pairs with
 the highest number of matching peaks:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_tm</span> <span class="op">&lt;-</span> <span class="va">res_sp</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/matching.html">match_temporal</a></span><span class="op">(</span></span>
 <span>    data_id <span class="op">=</span> <span class="va">type</span>, match_id <span class="op">=</span> <span class="va">group</span>,</span>

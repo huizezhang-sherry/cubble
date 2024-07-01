@@ -151,8 +151,9 @@ the input will be carried over to the cubble object:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ASN00086038 2020-01-08     0  26.4  16.4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ASN00086038 2020-01-09     0  33.1  17.4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ASN00086038 2020-01-10     0  34    19.6</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 20 more rows</span></span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">ts_long</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 20 more rows</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">ts_long</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "temporal_cubble_df" "cubble_df"          "tbl_ts"            </span></span>
 <span><span class="co">#&gt; [4] "tbl_df"             "tbl"                "data.frame"</span></span></code></pre></div>
 <p>The long cubble shows <code>[tsibble]</code> in the header to
@@ -160,7 +161,7 @@ indicate the object also being in a <code>tbl_ts</code> class. Methods
 applies to the <code>tbl_ts</code> class can also be applied to the
 temporal cubble objects, for example, checking whether the data contain
 temporal gaps:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_long</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://tsibble.tidyverts.org/reference/has_gaps.html" class="external-link">has_gaps</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
 <span><span class="co">#&gt;   id          .gaps</span></span>
@@ -173,7 +174,7 @@ tsibble object by applying <code><a href="../reference/make_temporal_tsibble.htm
 promoted cubble object (<code>ts_long2</code>) will be the same as the
 one created with a tsibble component initially
 (<code>ts_long</code>):</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_long2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span></span>
 <span>  <span class="va">stations</span>, <span class="va">meteo</span>, </span>
 <span>  key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -192,7 +193,7 @@ polygons or multipolygons and the <code>coords</code> argument will be
 calculated as the centroids of the (multi)polygons. The
 <code>[sf]</code> print in the cubble header suggest an spatial
 component being also a sf object:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">sf_nested</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span></span>
 <span>  spatial <span class="op">=</span> <span class="va">stations_sf</span>, temporal <span class="op">=</span> <span class="va">meteo</span>, </span>
 <span>  key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
@@ -203,13 +204,14 @@ component being also a sf object:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ASN00086038  78.4 essen…  <span style="text-decoration: underline;">95</span>866  145. -<span style="color: #BB0000;">37.7</span> (144.9066 -37.7276) <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ASN00086077  12.1 moora…  <span style="text-decoration: underline;">94</span>870  145. -<span style="color: #BB0000;">38.0</span>   (145.0964 -37.98) <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282 113.  melbo…  <span style="text-decoration: underline;">94</span>866  145. -<span style="color: #BB0000;">37.7</span> (144.8321 -37.6655) <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">sf_nested</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282 113.  melbo…  <span style="text-decoration: underline;">94</span>866  145. -<span style="color: #BB0000;">37.7</span> (144.8321 -37.6655) <span style="color: #949494;">&lt;tibble&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">sf_nested</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "spatial_cubble_df" "cubble_df"         "sf"               </span></span>
 <span><span class="co">#&gt; [4] "tbl_df"            "tbl"               "data.frame"</span></span></code></pre></div>
 <p>The following code shows how to perform coordinate transformation
 with <code>st_transform</code> on a cubble object:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sf_nested</span> <span class="op">|&gt;</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:3857"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: st_crs&lt;- : replacing crs does not reproject data; use st_transform for</span></span>
 <span><span class="co">#&gt; that</span></span>
@@ -224,7 +226,7 @@ with <code>st_transform</code> on a cubble object:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ASN00086282 113.  melbo…  <span style="text-decoration: underline;">94</span>866  145. -<span style="color: #BB0000;">37.7</span> (16122636 -4532279) <span style="color: #949494;">&lt;tibble&gt;</span></span></span></code></pre></div>
 <p>The counterpart to promote the spatial component in an existing
 cubble to be an sf object is <code><a href="../reference/make_spatial_sf.html">make_spatial_sf()</a></code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">sf_nested2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cubble-class.html">make_cubble</a></span><span class="op">(</span></span>
 <span>  <span class="va">stations</span>, <span class="va">meteo</span>, </span>
 <span>  key <span class="op">=</span> <span class="va">id</span>, index <span class="op">=</span> <span class="va">date</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">long</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
