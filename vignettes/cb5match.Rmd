@@ -44,7 +44,7 @@ match_temporal(
 
 # Spatial matching
 
-Now let's consider an example of matching water data from river gauges with precipitation. The [water level data]((http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full), collected by the Bureau of Meteorology, can be compared with the precipitation since rainfall can directly impact water level in river. Here is the location of available weather stations and water gauges in Victoria, Australia:
+Now let's consider an example of matching water data from river gauges with precipitation. The [water level data](http://www.bom.gov.au/metadata/catalogue/19115/ANZCW0503900528?template=full), collected by the Bureau of Meteorology, can be compared with the precipitation since rainfall can directly impact water level in river. Here is the location of available weather stations and water gauges in Victoria, Australia:
 
 ```{r echo = FALSE}
 river <- cubble::river |>  mutate(type = "river") |> rename(id = station)

@@ -1,3 +1,7 @@
+# cubble 0.3.1
+
+* small fix on `group_by` with temporal cubble, reported from CRAN
+
 # cubble 0.3.0
 
 * new `make_cubble()` for constructing a cubble object from separate spatial & temporal components (replace `as_cubble(list(spatial = ..., temporal = ...))` syntax)
