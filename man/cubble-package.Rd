@@ -3,7 +3,6 @@
 \docType{package}
 \name{cubble-package}
 \alias{cubble-package}
-\alias{_PACKAGE}
 \title{cubble: A Vector Spatio-Temporal Data Structure for Data Analysis}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
@@ -20,14 +19,14 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: H. Sherry Zhang \email{huize.zhang@monash.edu} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID})
+\strong{Maintainer}: H. Sherry Zhang \email{huizezhangsh@gmail.com} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID})
 
 Authors:
 \itemize{
   \item Dianne Cook \email{dicook@monash.edu} (\href{https://orcid.org/0000-0002-3813-7155}{ORCID})
   \item Ursula Laa \email{ursula.laa@boku.ac.at} (\href{https://orcid.org/0000-0002-0249-6439}{ORCID})
   \item Nicolas Langrené \email{nicolas.langrene@csiro.au} (\href{https://orcid.org/0000-0001-7601-4618}{ORCID})
-  \item Patricia Menéndez \email{patricia.menendez@monash.edu} (\href{https://orcid.org/0000-0003-0701-6315}{ORCID})
+  \item Patricia Menéndez \email{patricia.menendez@unimelb.edu.au} (\href{https://orcid.org/0000-0003-0701-6315}{ORCID})
 }
 
 }

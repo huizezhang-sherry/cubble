@@ -23,6 +23,7 @@
 \alias{dplyr_reconstruct.spatial_cubble_df}
 \alias{dplyr_reconstruct.temporal_cubble_df}
 \alias{mutate.spatial_cubble_df}
+\alias{mutate.temporal_cubble_df}
 \alias{filter.spatial_cubble_df}
 \alias{arrange.spatial_cubble_df}
 \title{\code{dplyr} methods}
@@ -70,6 +71,8 @@ bind_cols.temporal_cubble_df(..., .name_repair)
 \method{dplyr_reconstruct}{temporal_cubble_df}(data, template)
 
 \method{mutate}{spatial_cubble_df}(.data, ...)
+
+\method{mutate}{temporal_cubble_df}(.data, ...)
 
 \method{filter}{spatial_cubble_df}(.data, ...)
 
@@ -177,11 +180,11 @@ cb_nested |> arrange(wmo_id)
 cb_long |> arrange(prcp)
 
 # summarise - summarise.spatial_cubble_df,  summarise.temporal_cubble_df
-cb_long |> 
-  group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) |> 
+cb_long |>
+  group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) |>
   summarise(tmax = mean(tmax))
-cb_long |> 
-  mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) |> 
+cb_long |>
+  mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) |>
   summarise(t = mean(tmax), .by = first_5)
 
 # select -  select.spatial_cubble_df,  select.temporal_cubble_df
@@ -233,9 +236,8 @@ cb_long |> rowwise()
 # group_by & ungroup -
 (res <- cb_nested |> mutate(group1 = c(1, 1, 2)) |> group_by(group1))
 res |> ungroup()
-(res2 <- res |> face_temporal() |> unfold(group1) |> group_by(group1))
+(res2 <- res |> face_temporal())
 res2 |> ungroup()
-res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) |> 
-  group_by(first_5) |> 
-  ungroup(group1)
+res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) |>
+  group_by(first_5)
 }

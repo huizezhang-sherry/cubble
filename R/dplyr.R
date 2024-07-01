@@ -43,11 +43,11 @@
 #' cb_long |> arrange(prcp)
 #'
 #' # summarise - summarise.spatial_cubble_df,  summarise.temporal_cubble_df
-#' cb_long |> 
-#'   group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) |> 
+#' cb_long |>
+#'   group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) |>
 #'   summarise(tmax = mean(tmax))
-#' cb_long |> 
-#'   mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) |> 
+#' cb_long |>
+#'   mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) |>
 #'   summarise(t = mean(tmax), .by = first_5)
 #'
 #' # select -  select.spatial_cubble_df,  select.temporal_cubble_df
@@ -99,11 +99,10 @@
 #' # group_by & ungroup -
 #' (res <- cb_nested |> mutate(group1 = c(1, 1, 2)) |> group_by(group1))
 #' res |> ungroup()
-#' (res2 <- res |> face_temporal() |> unfold(group1) |> group_by(group1))
+#' (res2 <- res |> face_temporal())
 #' res2 |> ungroup()
-#' res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) |> 
-#'   group_by(first_5) |> 
-#'   ungroup(group1)
+#' res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) |>
+#'   group_by(first_5)
 arrange.temporal_cubble_df <- function(.data, ...){
   out <- NextMethod()
   dplyr_reconstruct(out, .data)
@@ -423,6 +422,15 @@ mutate.spatial_cubble_df <- function(.data, ...){
 
   data <- .data
   class(.data) <- setdiff(class(.data), cb_spatial_cls)
+  res <- NextMethod()
+  dplyr_reconstruct(res, data)
+}
+
+#' @export
+#' @rdname dplyr
+mutate.temporal_cubble_df <- function(.data, ...){
+  data <- .data
+  class(.data) <- setdiff(class(.data), cb_temporal_cls)
   res <- NextMethod()
   dplyr_reconstruct(res, data)
 }

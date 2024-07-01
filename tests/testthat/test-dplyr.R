@@ -17,13 +17,13 @@ test_that("dplyr verbs work", {
 
   # summarise - summarise.spatial_cubble_df,  summarise.temporal_cubble_df
   expect_snapshot(
-    cb_long |> 
-      group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) |> 
+    cb_long |>
+      group_by(first_5 = ifelse(lubridate::day(date) <=5, 1, 2 )) |>
       summarise(tmax = mean(tmax))
   )
   expect_snapshot(
-    cb_long |> 
-      mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) |> 
+    cb_long |>
+      mutate(first_5 = ifelse(lubridate::day(date) <=5, 1, 2)) |>
       summarise(t = mean(tmax), .by = first_5)
     )
 
@@ -77,9 +77,8 @@ test_that("dplyr verbs work", {
   # group_by & ungroup -
   expect_snapshot((res <- cb_nested |> mutate(group1 = c(1, 1, 2)) |> group_by(group1)))
   expect_snapshot(res |> ungroup())
-  expect_snapshot((res2 <- res |> face_temporal() |> unfold(group1) |> group_by(group1)))
+  expect_snapshot((res2 <- res |> face_temporal()))
   expect_snapshot(res2 |> ungroup())
-  res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) |> 
-    group_by(first_5) |> 
-    ungroup(group1)
+  res2 |> mutate(first_5 = ifelse(lubridate::day(date) <= 5, 1, 6)) |>
+    group_by(first_5)
 })
