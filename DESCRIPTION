@@ -1,6 +1,6 @@
 Package: cubble
 Title: A Vector Spatio-Temporal Data Structure for Data Analysis
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(
     person("H. Sherry","Zhang", email = "huizezhangsh@gmail.com", role = c("aut","cre"), comment = c(ORCID = "0000-0002-7122-1463")),
     person("Dianne", "Cook", email = "dicook@monash.edu", role = "aut", comment = c(ORCID = "0000-0002-3813-7155")),
