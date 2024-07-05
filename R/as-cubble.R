@@ -15,6 +15,7 @@
 #' to downsample
 #' @param crs used in `as_cubble.tbl_df()` to set the crs.
 #' the data to read in `as_cubble.netcdf()`.
+#' @param dimensions used when creating a cubble from a stars object
 #' @importFrom tidyr unchop
 #' @importFrom tsibble index
 #' @export

@@ -14,7 +14,7 @@ as_cubble(data, key, index, coords, ...)
 
 \method{as_cubble}{data.frame}(data, key, index, coords, ...)
 
-\method{as_cubble}{tbl_df}(data, key, index, coords, crs, ...)
+\method{as_cubble}{tbl_df}(data, key, index, coords, crs, dimensions, ...)
 
 \method{as_cubble}{sf}(data, key, index, ...)
 
@@ -50,6 +50,8 @@ see \code{\link[=make_cubble]{make_cubble()}}.}
 
 \item{crs}{used in \code{as_cubble.tbl_df()} to set the crs.
 the data to read in \code{as_cubble.netcdf()}.}
+
+\item{dimensions}{used when creating a cubble from a stars object}
 
 \item{vars}{a vector of variables to read in (with quote),
 used in \code{as_cubble.netcdf()}
