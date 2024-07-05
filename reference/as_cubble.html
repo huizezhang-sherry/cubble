@@ -87,7 +87,7 @@
 <span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for tbl_df</span></span>
-<span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span>, <span class="va">crs</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">coords</span>, <span class="va">crs</span>, <span class="va">dimensions</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for sf</span></span>
 <span><span class="fu">as_cubble</span><span class="op">(</span><span class="va">data</span>, <span class="va">key</span>, <span class="va">index</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -140,6 +140,10 @@ see <code><a href="cubble-class.html">make_cubble()</a></code>.</p></dd>
 <dt>crs</dt>
 <dd><p>used in <code>as_cubble.tbl_df()</code> to set the crs.
 the data to read in <code>as_cubble.netcdf()</code>.</p></dd>
+
+
+<dt>dimensions</dt>
+<dd><p>used when creating a cubble from a stars object</p></dd>
 
 
 <dt>vars</dt>
