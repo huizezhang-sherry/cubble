@@ -63,7 +63,7 @@ as_cubble.data.frame <- function(data, key, index, coords, ...){
 
 #' @rdname as_cubble
 #' @export
-as_cubble.tbl_df <- function(data, key, index, coords, crs, ...) {
+as_cubble.tbl_df <- function(data, key, index, coords, crs, dimensions, ...) {
   if (is_tsibble(data)){
     key <- sym(tsibble::key_vars(data))
     index <- sym(tsibble::index(data))
@@ -99,7 +99,9 @@ as_cubble.tbl_df <- function(data, key, index, coords, crs, ...) {
     data, key = as_name(key), index = as_name(index), coords = coords
   )
 
-  if (!missing(crs)) res <- res |> make_spatial_sf(crs = crs)
+  #if (!missing(crs)) res <- res |> make_spatial_sf(crs = crs)
+  if (!missing(crs)) attr(res, "crs") <- crs
+  if (!missing(dimensions)) attr(res, "dimensions") <- dimensions
   return(res)
 
 
@@ -199,8 +201,7 @@ as_cubble.stars <- function(data, key, index, coords, ...){
       group_by(!!!map(longlat, sym)) |>
       mutate(id = dplyr::cur_group_id()) |>
       ungroup() |>
-      as_cubble(key = id, index = !!index, coords = longlat) |>
-      make_spatial_sf(crs = sf::st_crs(data))
+      as_cubble(key = id, index = !!index, coords = longlat, dimension = stars::st_dimensions(data))
   }
 }
 

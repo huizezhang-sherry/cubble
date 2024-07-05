@@ -39,12 +39,17 @@ tbl_sum.spatial_cubble_df <- function(x){
     x <- as_tibble(x) |> sf::st_as_sf(coords = coord_vars)
   }
 
-  line2 <- glue::glue("[", paste0(sf::st_bbox(x), collapse = ", "), "]")
-  if (!x_is_sf) {
-    line2 <- glue::glue(line2, ", Missing CRS!")
-  } else{
+  line2 <- glue::glue("[", paste0(round(sf::st_bbox(x), 2), collapse = ", "), "]")
+  if (x_is_sf) {
     line2 <- glue::glue(line2, ", {sf::st_crs(x, parameters = TRUE)$Name}")
+  } else if (!is.null(attr(x, "dimensions"))){
+    line2 <- glue::glue(line2, ", {sf::st_crs(attr(x, 'dimensions'))$Name}")
+  } else{
+    line2 <- glue::glue(line2, ", Missing CRS!")
   }
+
+
+
 
   # header line 3: temporal variables
   all <- map(x$ts[[1]], tibble::type_sum)
