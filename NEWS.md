@@ -1,3 +1,7 @@
+# cubble 0.3.2
+
+* fix the conversion between cubble and stars object (#30)
+
 # cubble 0.3.1
 
 * small fix on `group_by` with temporal cubble, reported from CRAN
