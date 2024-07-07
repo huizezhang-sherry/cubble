@@ -39,7 +39,7 @@ cubble (spatial cubble), spatial variables are organised as columns and
 temporal variables are nested within a specialised `ts` column:
 
     #> # cubble:   key: id [3], index: date, nested form
-    #> # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+    #> # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
     #> # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
     #>   id           long   lat  elev name              wmo_id ts               
     #>   <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
