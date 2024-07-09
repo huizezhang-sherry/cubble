@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   cb1class: cb1class.html
@@ -9,5 +9,4 @@ articles:
   cb5match: cb5match.html
   cb6interactive: cb6interactive.html
   cb7misc: cb7misc.html
-last_built: 2024-07-07T16:39Z
-
+last_built: 2024-07-09T17:24Z

@@ -1,117 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cb1class.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cb2create.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cb3tsibblesf.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cb4glyph.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cb5match.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cb6interactive.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cb7misc.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/accessors.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as_cubble.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/check-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/check_key.html</loc>
-  </url>
-  <url>
-    <loc>/reference/climate-data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/covid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cubble-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cubble-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cubble-print.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dplyr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/face.html</loc>
-  </url>
-  <url>
-    <loc>/reference/glyph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_spatial_sf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_temporal_tsibble.html</loc>
-  </url>
-  <url>
-    <loc>/reference/matching.html</loc>
-  </url>
-  <url>
-    <loc>/reference/netcdf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>/reference/river.html</loc>
-  </url>
-  <url>
-    <loc>/reference/test-data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tsibble.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unfold.html</loc>
-  </url>
-  <url>
-    <loc>/reference/update.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/cb1class.html</loc></url>
+<url><loc>/articles/cb2create.html</loc></url>
+<url><loc>/articles/cb3tsibblesf.html</loc></url>
+<url><loc>/articles/cb4glyph.html</loc></url>
+<url><loc>/articles/cb5match.html</loc></url>
+<url><loc>/articles/cb6interactive.html</loc></url>
+<url><loc>/articles/cb7misc.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/accessors.html</loc></url>
+<url><loc>/reference/as_cubble.html</loc></url>
+<url><loc>/reference/attr.html</loc></url>
+<url><loc>/reference/check-class.html</loc></url>
+<url><loc>/reference/check_key.html</loc></url>
+<url><loc>/reference/climate-data.html</loc></url>
+<url><loc>/reference/covid.html</loc></url>
+<url><loc>/reference/cubble-class.html</loc></url>
+<url><loc>/reference/cubble-package.html</loc></url>
+<url><loc>/reference/cubble-print.html</loc></url>
+<url><loc>/reference/dplyr.html</loc></url>
+<url><loc>/reference/face.html</loc></url>
+<url><loc>/reference/glyph.html</loc></url>
+<url><loc>/reference/make_spatial_sf.html</loc></url>
+<url><loc>/reference/make_temporal_tsibble.html</loc></url>
+<url><loc>/reference/matching.html</loc></url>
+<url><loc>/reference/netcdf.html</loc></url>
+<url><loc>/reference/reexports.html</loc></url>
+<url><loc>/reference/river.html</loc></url>
+<url><loc>/reference/test-data.html</loc></url>
+<url><loc>/reference/tsibble.html</loc></url>
+<url><loc>/reference/unfold.html</loc></url>
+<url><loc>/reference/update.html</loc></url>
 </urlset>
+
