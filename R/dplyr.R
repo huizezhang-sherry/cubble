@@ -379,7 +379,10 @@ dplyr_row_slice.temporal_cubble_df <- function(data, i, ...){
 dplyr_reconstruct.spatial_cubble_df <- function(data, template) {
 
   if (!inherits(data, "tbl_df")) data <- as_tibble(data)
-  if (is_sf(template)) data <- sf::st_as_sf(data, crs = sf::st_crs(template))
+  if (is_sf(template)) {
+    new_crs <- data[[attr(template, "sf_column")]] |> sf::st_crs()
+    data <- sf::st_as_sf(data, crs = new_crs)
+  }
 
   new_spatial_cubble(
     data, key = key_vars(template),

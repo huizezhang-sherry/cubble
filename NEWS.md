@@ -1,3 +1,6 @@
+
+* fix the `st_transformation` on `spatial_cubble_df` (#32)
+
 # cubble 0.3.2
 
 * fix the conversion between cubble and stars object (#30)
