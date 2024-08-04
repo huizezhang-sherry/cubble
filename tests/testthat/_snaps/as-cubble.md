@@ -5,7 +5,7 @@
         lat))
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -19,7 +19,7 @@
       as_cubble(climate_flat, key = id, index = date, coords = c(long, lat))
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -33,14 +33,14 @@
       as_cubble(climate_flat, key = id, index = date, coords = c(long, lat), crs = sf::st_crs(
         4326))
     Output
-      # cubble:   key: id [3], index: date, nested form, [sf]
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84
+      # cubble:   key: id [3], index: date, nested form
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
-        id           long   lat  elev name   wmo_id ts                  geometry
-        <chr>       <dbl> <dbl> <dbl> <chr>   <dbl> <list>           <POINT [°]>
-      1 ASN00086038  145. -37.7  78.4 essen~  95866 <tibble> (144.9066 -37.7276)
-      2 ASN00086077  145. -38.0  12.1 moora~  94870 <tibble>   (145.0964 -37.98)
-      3 ASN00086282  145. -37.7 113.  melbo~  94866 <tibble> (144.8321 -37.6655)
+        id           long   lat  elev name              wmo_id ts               
+        <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
+      1 ASN00086038  145. -37.7  78.4 essendon airport   95866 <tibble [10 x 4]>
+      2 ASN00086077  145. -38.0  12.1 moorabbin airport  94870 <tibble [10 x 4]>
+      3 ASN00086282  145. -37.7 113.  melbourne airport  94866 <tibble [10 x 4]>
 
 ---
 
@@ -49,7 +49,7 @@
         long, lat))
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -72,7 +72,7 @@
       as_cubble(dt, coords = c(long, lat))
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -86,7 +86,7 @@
       as_cubble(dt, key = id, index = date)
     Output
       # cubble:   key: id [3], index: date, nested form, [sf]
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84
+      # spatial:  [144.83, -37.98, 145.1, -37.67], WGS 84
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           elev name   wmo_id  long   lat            geometry ts      
       * <chr>       <dbl> <chr>   <dbl> <dbl> <dbl>         <POINT [°]> <list>  
@@ -99,22 +99,22 @@
     Code
       res
     Output
-      # cubble:   key: id [122848], index: band, nested form, [sf]
-      # spatial:  [288790.500000803, 9110743.00002899, 298708.50000055,
-      #   9120746.50002874], SIRGAS 2000 / UTM zone 25S
+      # cubble:   key: id [122848], index: band, nested form
+      # spatial:  [288790.5, 9110743, 298708.5, 9120746.5], SIRGAS 2000 / UTM zone
+      #   25S
       # temporal: band [int], L7_ETMs.tif [dbl]
-               x        y    id ts                         geometry
-           <dbl>    <dbl> <int> <list>                  <POINT [m]>
-       1 288791. 9120747.   352 <tibble [6 x 2]> (288790.5 9120747)
-       2 288819. 9120747.   704 <tibble [6 x 2]>   (288819 9120747)
-       3 288848. 9120747.  1056 <tibble [6 x 2]> (288847.5 9120747)
-       4 288876. 9120747.  1408 <tibble [6 x 2]>   (288876 9120747)
-       5 288905. 9120747.  1760 <tibble [6 x 2]> (288904.5 9120747)
-       6 288933. 9120747.  2112 <tibble [6 x 2]>   (288933 9120747)
-       7 288962. 9120747.  2464 <tibble [6 x 2]> (288961.5 9120747)
-       8 288990. 9120747.  2816 <tibble [6 x 2]>   (288990 9120747)
-       9 289019. 9120747.  3168 <tibble [6 x 2]> (289018.5 9120747)
-      10 289047. 9120747.  3520 <tibble [6 x 2]>   (289047 9120747)
+               x        y    id ts              
+           <dbl>    <dbl> <int> <list>          
+       1 288791. 9120747.   352 <tibble [6 x 2]>
+       2 288819. 9120747.   704 <tibble [6 x 2]>
+       3 288848. 9120747.  1056 <tibble [6 x 2]>
+       4 288876. 9120747.  1408 <tibble [6 x 2]>
+       5 288905. 9120747.  1760 <tibble [6 x 2]>
+       6 288933. 9120747.  2112 <tibble [6 x 2]>
+       7 288962. 9120747.  2464 <tibble [6 x 2]>
+       8 288990. 9120747.  2816 <tibble [6 x 2]>
+       9 289019. 9120747.  3168 <tibble [6 x 2]>
+      10 289047. 9120747.  3520 <tibble [6 x 2]>
       # i 122,838 more rows
 
 ---
@@ -124,7 +124,7 @@
     Output
       # cubble:   key: id [122848], index: band, long form
       # temporal: 1 -- 6 [1], no gaps
-      # spatial:  x [dbl], y [dbl], geometry [POINT [m]]
+      # spatial:  x [dbl], y [dbl]
             id  band L7_ETMs.tif
          <int> <int>       <dbl>
        1   352     1          69
@@ -238,7 +238,7 @@
       as_cubble(dt, key = id, index = date)
     Output
       # cubble:   key: id [3], index: date, nested form, [sf]
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84
+      # spatial:  [144.83, -37.98, 145.1, -37.67], WGS 84
       # temporal: prcp [dbl], tmax [dbl], tmin [dbl], date [date]
         id           elev name   wmo_id            geometry  long   lat ts      
         <chr>       <dbl> <chr>   <dbl>         <POINT [°]> <dbl> <dbl> <list>  

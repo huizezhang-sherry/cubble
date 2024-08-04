@@ -117,3 +117,59 @@
       10 ASN00004090 2020-03-10
       # i 693 more rows
 
+---
+
+    Code
+      res <- tsibble::index_by(face_temporal(make_cubble(stations_sf, meteo_ts)),
+      week = lubridate::week(date))
+    Condition
+      Warning:
+      Using an external vector in selections was deprecated in tidyselect 1.1.0.
+      i Please use `all_of()` or `any_of()` instead.
+        # Was:
+        data %>% select(by)
+      
+        # Now:
+        data %>% select(all_of(by))
+      
+      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+      Warning:
+      Using an external vector in selections was deprecated in tidyselect 1.1.0.
+      i Please use `all_of()` or `any_of()` instead.
+        # Was:
+        data %>% select(key)
+      
+        # Now:
+        data %>% select(all_of(key))
+      
+      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+
+---
+
+    Code
+      summarise(res, tmax = mean(tmax, na.rm = TRUE))
+    Condition
+      Warning:
+      Using an external vector in selections was deprecated in tidyselect 1.1.0.
+      i Please use `all_of()` or `any_of()` instead.
+        # Was:
+        data %>% select(key)
+      
+        # Now:
+        data %>% select(all_of(key))
+      
+      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+    Output
+      # cubble:   key: id [3], index: week, long form, [tsibble]
+      # temporal: 1 -- 2 [1], no gaps
+      # spatial:  elev [dbl], name [chr], wmo_id [dbl], long [dbl], lat [dbl],
+      #   geometry [POINT [°]]
+         week id           tmax
+        <dbl> <chr>       <dbl>
+      1     1 ASN00086038  24.5
+      2     1 ASN00086077  23.7
+      3     1 ASN00086282  24.7
+      4     2 ASN00086038  31.2
+      5     2 ASN00086077  30.5
+      6     2 ASN00086282  31.2
+

@@ -222,7 +222,7 @@
     Output
       [[1]]
       # cubble:   key: id [6], index: date, nested form, [sf]
-      # spatial:  [144.490577, -37.098955, 145.056144, -36.947179], WGS 84
+      # spatial:  [144.49, -37.1, 145.06, -36.95], WGS 84
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
          id     long   lat  elev name  wmo_id ts       type              geometry
          <chr> <dbl> <dbl> <dbl> <chr>  <dbl> <list>   <chr>          <POINT [°]>
@@ -240,7 +240,7 @@
       
       [[2]]
       # cubble:   key: id [6], index: date, nested form, [sf]
-      # spatial:  [147.572223, -37.815, 149.156689, -37.538647], WGS 84
+      # spatial:  [147.57, -37.81, 149.16, -37.54], WGS 84
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
          id     long   lat  elev name  wmo_id ts       type              geometry
          <chr> <dbl> <dbl> <dbl> <chr>  <dbl> <list>   <chr>          <POINT [°]>
@@ -880,7 +880,7 @@
       [[1]]
       [[1]][[1]]
       # cubble:   key: id [2], index: date, nested form, [sf]
-      # spatial:  [144.5203, -37.0194, 144.540295, -37.015122], WGS 84
+      # spatial:  [144.52, -37.02, 144.54, -37.02], WGS 84
       # temporal: date [date], matched [dbl]
         id         long   lat  elev name  wmo_id type              geometry group
         <chr>     <dbl> <dbl> <dbl> <chr>  <dbl> <chr>          <POINT [°]> <int>
@@ -892,7 +892,7 @@
       [[2]]
       [[2]][[1]]
       # cubble:   key: id [2], index: date, nested form, [sf]
-      # spatial:  [148.45095, -37.707393, 148.4667, -37.6922], WGS 84
+      # spatial:  [148.45, -37.71, 148.47, -37.69], WGS 84
       # temporal: date [date], matched [dbl]
         id         long   lat  elev name  wmo_id type             geometry group
         <chr>     <dbl> <dbl> <dbl> <chr>  <dbl> <chr>         <POINT [°]> <int>
@@ -904,7 +904,7 @@
       [[3]]
       [[3]][[1]]
       # cubble:   key: id [2], index: date, nested form, [sf]
-      # spatial:  [147.127818, -38.144913, 147.1322, -38.1156], WGS 84
+      # spatial:  [147.13, -38.14, 147.13, -38.12], WGS 84
       # temporal: date [date], matched [dbl]
         id         long   lat  elev name  wmo_id type              geometry group
         <chr>     <dbl> <dbl> <dbl> <chr>  <dbl> <chr>          <POINT [°]> <int>
@@ -916,7 +916,7 @@
       [[4]]
       [[4]][[1]]
       # cubble:   key: id [2], index: date, nested form, [sf]
-      # spatial:  [144.7642, -36.1647, 144.76931, -36.128657], WGS 84
+      # spatial:  [144.76, -36.16, 144.77, -36.13], WGS 84
       # temporal: date [date], matched [dbl]
         id         long   lat  elev name  wmo_id type              geometry group
         <chr>     <dbl> <dbl> <dbl> <chr>  <dbl> <chr>          <POINT [°]> <int>

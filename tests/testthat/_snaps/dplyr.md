@@ -4,7 +4,7 @@
       filter(cb_nested, elev > 40)
     Output
       # cubble:   key: id [2], index: date, nested form
-      # spatial:  [144.8321, -37.7276, 144.9066, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.73, 144.91, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -37,7 +37,7 @@
       mutate(cb_nested, elev2 = elev + 10)
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts                elev2
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>            <dbl>
@@ -73,7 +73,7 @@
       arrange(cb_nested, wmo_id)
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -174,7 +174,7 @@
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat ts                name             
         <chr>       <dbl> <dbl> <list>            <chr>            
@@ -201,7 +201,7 @@
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev wmo_id ts               
         <chr>       <dbl> <dbl> <dbl>  <dbl> <list>           
@@ -285,7 +285,7 @@
       rename(cb_nested, elev2 = elev)
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat elev2 name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -321,7 +321,7 @@
       rename(cb_nested, id2 = id)
     Output
       # cubble:   key: id2 [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id2          long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -357,7 +357,7 @@
       left_join(nested, df1, by = "id")
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev wmo_id ts                name             
         <chr>       <dbl> <dbl> <dbl>  <dbl> <list>            <chr>            
@@ -371,7 +371,7 @@
       right_join(nested, df1, by = "id")
     Output
       # cubble:   key: id [2], index: date, nested form
-      # spatial:  [144.9066, -37.98, 145.0964, -37.7276], Missing CRS!
+      # spatial:  [144.91, -37.98, 145.1, -37.73], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev wmo_id ts                name             
         <chr>       <dbl> <dbl> <dbl>  <dbl> <list>            <chr>            
@@ -384,7 +384,7 @@
       inner_join(nested, df1, by = "id")
     Output
       # cubble:   key: id [2], index: date, nested form
-      # spatial:  [144.9066, -37.98, 145.0964, -37.7276], Missing CRS!
+      # spatial:  [144.91, -37.98, 145.1, -37.73], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev wmo_id ts                name             
         <chr>       <dbl> <dbl> <dbl>  <dbl> <list>            <chr>            
@@ -397,7 +397,7 @@
       full_join(nested, df1, by = "id")
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev wmo_id ts                name             
         <chr>       <dbl> <dbl> <dbl>  <dbl> <list>            <chr>            
@@ -411,7 +411,7 @@
       anti_join(nested, df1, by = "id")
     Output
       # cubble:   key: id [1], index: date, nested form
-      # spatial:  [144.8321, -37.6655, 144.8321, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.67, 144.83, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev wmo_id ts               
         <chr>       <dbl> <dbl> <dbl>  <dbl> <list>           
@@ -423,7 +423,7 @@
       bind_rows(df1, df2)
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -459,7 +459,7 @@
       relocate(cb_nested, ts, .before = name)
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev ts                name              wmo_id
         <chr>       <dbl> <dbl> <dbl> <list>            <chr>              <dbl>
@@ -495,7 +495,7 @@
       slice_head(cb_nested, n = 2)
     Output
       # cubble:   key: id [2], index: date, nested form
-      # spatial:  [144.9066, -37.98, 145.0964, -37.7276], Missing CRS!
+      # spatial:  [144.91, -37.98, 145.1, -37.73], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -508,7 +508,7 @@
       slice_tail(cb_nested, n = 2)
     Output
       # cubble:   key: id [2], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -521,7 +521,7 @@
       slice_max(cb_nested, elev)
     Output
       # cubble:   key: id [1], index: date, nested form
-      # spatial:  [144.8321, -37.6655, 144.8321, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.67, 144.83, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -533,7 +533,7 @@
       slice_min(cb_nested, elev)
     Output
       # cubble:   key: id [1], index: date, nested form
-      # spatial:  [145.0964, -37.98, 145.0964, -37.98], Missing CRS!
+      # spatial:  [145.1, -37.98, 145.1, -37.98], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -545,7 +545,7 @@
       rowwise(cb_nested)
     Output
       # cubble:   key: id [3], index: date, nested form, groups: rowwise
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts               
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>           
@@ -581,7 +581,7 @@
       (res <- group_by(mutate(cb_nested, group1 = c(1, 1, 2)), group1))
     Output
       # cubble:   key: id [3], index: date, nested form, groups: group1 [2]
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts       group1
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>    <dbl>
@@ -595,7 +595,7 @@
       ungroup(res)
     Output
       # cubble:   key: id [3], index: date, nested form
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], Missing CRS!
+      # spatial:  [144.83, -37.98, 145.1, -37.67], Missing CRS!
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name              wmo_id ts       group1
         <chr>       <dbl> <dbl> <dbl> <chr>              <dbl> <list>    <dbl>

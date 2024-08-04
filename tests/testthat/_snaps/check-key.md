@@ -89,7 +89,7 @@
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # cubble:   key: lga [80], index: date, nested form, [sf]
-      # spatial:  [140.961682, -39.1339581, 149.976291, -33.9960517], WGS 84
+      # spatial:  [140.96, -39.13, 149.98, -34], WGS 84
       # temporal: date [date], n [dbl], avg_7day [dbl]
          lga             long   lat                                  geometry ts      
          <chr>          <dbl> <dbl>                            <GEOMETRY [°]> <list>  

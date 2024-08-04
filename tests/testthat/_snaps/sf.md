@@ -6,7 +6,7 @@
       CRS missing: using OGC:CRS84 (WGS84) as default
     Output
       # cubble:   key: id [3], index: date, nested form, [sf]
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84
+      # spatial:  [144.83, -37.98, 145.1, -37.67], WGS 84
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id           long   lat  elev name   wmo_id ts                  geometry
         <chr>       <dbl> <dbl> <dbl> <chr>   <dbl> <list>           <POINT [°]>
@@ -22,7 +22,7 @@
       CRS missing: using OGC:CRS84 (WGS84) as default
     Output
       # cubble:   key: id [3], index: date, nested form, [sf]
-      # spatial:  [144.8321, -37.98, 145.0964, -37.6655], WGS 84
+      # spatial:  [144.83, -37.98, 145.1, -37.67], WGS 84
       # temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
         id              x     y  elev name   wmo_id ts                  geometry
         <chr>       <dbl> <dbl> <dbl> <chr>   <dbl> <list>           <POINT [°]>
