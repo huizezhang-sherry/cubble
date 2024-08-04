@@ -30,7 +30,7 @@
 
 \item{x}{data frame.}
 
-\item{value}{A suitable replacement value: it will be repeated a whole
+\item{value}{a suitable replacement value: it will be repeated a whole
     number of times if necessary and it may be coerced: see the
     Coercion section.  If \code{NULL}, deletes the column if a single
     column is selected.}

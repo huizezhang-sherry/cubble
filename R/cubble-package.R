@@ -9,6 +9,7 @@
 #' @importFrom rlang .data quo_is_missing sym as_name
 #' @importFrom cli cli_abort cli_inform
 #' @importFrom tsibble index as_tsibble
+#' @importFrom tsibble fill_gaps scan_gaps index_by
 #' @aliases cubble-package
 #' @keywords internal
 "_PACKAGE"

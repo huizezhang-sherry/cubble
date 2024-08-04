@@ -227,6 +227,7 @@ summarise.spatial_cubble_df <- function(.data, ..., .by = NULL,
 #' @export
 summarise.temporal_cubble_df <- function(.data, ..., .by = key_vars(.data),
                                          .groups = NULL){
+  #browser()
   vars <- enquos(..., .named = TRUE)
   index <- index_var(.data)
   key <- key_vars(.data)
@@ -247,8 +248,20 @@ summarise.temporal_cubble_df <- function(.data, ..., .by = key_vars(.data),
     index <- setdiff(potential_index, key)
   }
 
-  if (!index %in% colnames(out) || !key %in% colnames(out)){
+  if (is.null(attr(.data, "index2"))) {
+    idx_in <- index %in% colnames(out)
+  } else{
+    idx_in <- index %in% colnames(out) && attr(.data, "index2") %in% colnames(out)
+  }
+
+  if (!idx_in || !key %in% colnames(out)){
     return(as_tibble(out))
+  }
+
+  index <- if (index %in% colnames(out)){
+    index <- index
+  } else{
+    index <- attr(.data, "index2")
   }
 
   new_temporal_cubble(

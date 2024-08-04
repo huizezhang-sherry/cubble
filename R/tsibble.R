@@ -20,7 +20,6 @@ make_temporal_tsibble <- function(x){
 
 #' Gap-filling on the temporal component of a cubble object
 #' @inheritParams tsibble::fill_gaps
-#' @importFrom tsibble fill_gaps scan_gaps
 #' @return a cubble object
 #' @rdname tsibble
 #' @export
@@ -62,3 +61,22 @@ scan_gaps.temporal_cubble_df <- function(.data, ...){
 
 
 }
+
+#' @rdname tsibble
+#' @export
+index_by.temporal_cubble_df <- function(.data, ...){
+  #browser()
+  stopifnot(is_cubble_temporal(.data))
+  key <- key_vars(.data)
+  index <-  index_var(.data)
+  coords <- coords(.data)
+  spatial <- spatial(.data)
+  .data <- as_tsibble(.data, key = key , index = index)
+  res <- index_by(.data, ...)
+
+  new_temporal_cubble(
+    res, key = key, index = index, coords = coords(.data), spatial = spatial)
+
+
+}
+

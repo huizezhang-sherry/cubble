@@ -3,11 +3,14 @@
 \name{fill_gaps.temporal_cubble_df}
 \alias{fill_gaps.temporal_cubble_df}
 \alias{scan_gaps.temporal_cubble_df}
+\alias{index_by.temporal_cubble_df}
 \title{Gap-filling on the temporal component of a cubble object}
 \usage{
 \method{fill_gaps}{temporal_cubble_df}(.data, ..., .full = FALSE, .start = NULL, .end = NULL)
 
 \method{scan_gaps}{temporal_cubble_df}(.data, ...)
+
+\method{index_by}{temporal_cubble_df}(.data, ...)
 }
 \arguments{
 \item{.data}{A tsibble.}
