@@ -42,3 +42,6 @@ cb_long <- climate_mel |> face_temporal()
 cb_back <- cb_long |> face_spatial()
 identical(climate_mel, cb_back)
 }
+\references{
+\href{doi:10.18637/jss.v110.i07}{cubble: An R Package for Organizing and Wrangling Multivariate Spatio-Temporal Data}
+}

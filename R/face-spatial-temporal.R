@@ -11,6 +11,7 @@
 #' @return a cubble object
 #' @rdname face
 #' @export
+#' @references [cubble: An R Package for Organizing and Wrangling Multivariate Spatio-Temporal Data](doi:10.18637/jss.v110.i07)
 #' @examples
 #' cb_long <- climate_mel |> face_temporal()
 #' cb_back <- cb_long |> face_spatial()
