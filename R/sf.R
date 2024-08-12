@@ -46,9 +46,9 @@ update_cubble <- function(data, key, index, coords, ...){
 update_cubble.spatial_cubble_df <- function(data, key = NULL,
                                             index = NULL, coords = NULL, ...){
   is_cubble(data)
-  key <- key_vars(data)
-  index <- index_var(data)
-  coords <- coords(data)
+  key <- key %||% key_vars(data)
+  index <- index %||% index_var(data)
+  coords <- coords %||% coords(data)
 
   data |> new_spatial_cubble(key = key, index = index, coords = coords)
 
