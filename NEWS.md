@@ -1,4 +1,6 @@
+# cubble 1.0.0
 
+* version update for JSS publication
 * fix the `st_transformation` on `spatial_cubble_df` (#32)
 
 # cubble 0.3.2

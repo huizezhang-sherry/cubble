@@ -2,7 +2,7 @@
 title: "5. Matching different data sources"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{5matching}
+  %\VignetteIndexEntry{5. matching multiple data sources}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

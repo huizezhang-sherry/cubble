@@ -2,7 +2,7 @@
 title: "1. The cubble class"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{class}
+  %\VignetteIndexEntry{1. class description}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

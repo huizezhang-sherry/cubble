@@ -2,7 +2,7 @@
 title: "2. Creation and coercion"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{2. create}
+  %\VignetteIndexEntry{2. create a cubble object}
   %\VignetteEngine{knitr::rmarkdown}
    %\usepackage[utf8]{inputenc}
 ---

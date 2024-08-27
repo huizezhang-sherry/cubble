@@ -2,7 +2,7 @@
 title: "6. Interactive graphics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{interactive-vis}
+  %\VignetteIndexEntry{6. interactive graphics with cubble}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

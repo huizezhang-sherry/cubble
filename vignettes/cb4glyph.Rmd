@@ -3,7 +3,7 @@ title: "4. Making a glyph map"
 output: rmarkdown::html_vignette
 bibliography: '`r system.file("reference.bib", package = "cubble")`'
 vignette: >
-  %\VignetteIndexEntry{4. glyph}
+  %\VignetteIndexEntry{4. making glyph maps}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

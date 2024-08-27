@@ -3,7 +3,7 @@ title: "3. Compatibility with tsibble and sf"
 output: rmarkdown::html_vignette
 bibliography: '`r system.file("reference.bib", package = "cubble")`'
 vignette: >
-  %\VignetteIndexEntry{cb3tsibblesf}
+  %\VignetteIndexEntry{3. work with tsibble and sf}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

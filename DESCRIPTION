@@ -1,6 +1,6 @@
 Package: cubble
 Title: A Vector Spatio-Temporal Data Structure for Data Analysis
-Version: 0.3.2
+Version: 1.0.0
 Authors@R: c(
     person("H. Sherry","Zhang", email = "huizezhangsh@gmail.com", role = c("aut","cre"), comment = c(ORCID = "0000-0002-7122-1463")),
     person("Dianne", "Cook", email = "dicook@monash.edu", role = "aut", comment = c(ORCID = "0000-0002-3813-7155")),
@@ -8,7 +8,7 @@ Authors@R: c(
     person("Nicolas", "Langrené", email = "nicolas.langrene@csiro.au", role = "aut", comment = c(ORCID = "0000-0001-7601-4618")),
     person("Patricia", "Menéndez", email = "patricia.menendez@unimelb.edu.au", role = "aut", comment = c(ORCID = "0000-0003-0701-6315"))
     )
-Description: A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables: <doi:10.18637/jss.v110.i07>.
+Description: A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables. See the Journal of Statistical Software reference: <doi:10.18637/jss.v110.i07>.
 License: MIT + file LICENSE
 Language: en-US
 Encoding: UTF-8

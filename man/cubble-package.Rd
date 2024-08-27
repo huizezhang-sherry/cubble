@@ -7,7 +7,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables: \doi{10.18637/jss.v110.i07}.
+A spatiotemperal data object in a relational data structure to separate the recording of time variant/ invariant variables. See the Journal of Statistical Software reference: \doi{10.18637/jss.v110.i07}.
 }
 \seealso{
 Useful links:

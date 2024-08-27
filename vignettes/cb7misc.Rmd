@@ -2,7 +2,7 @@
 title: "7. Answers to common questions and extra examples"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{cb7misc}
+  %\VignetteIndexEntry{7. Misc. questions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
