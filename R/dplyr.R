@@ -251,7 +251,7 @@ summarise.temporal_cubble_df <- function(.data, ..., .by = key_vars(.data),
   if (is.null(attr(.data, "index2"))) {
     idx_in <- index %in% colnames(out)
   } else{
-    idx_in <- index %in% colnames(out) && attr(.data, "index2") %in% colnames(out)
+    idx_in <- index %in% colnames(out) || attr(.data, "index2") %in% colnames(out)
   }
 
   if (!idx_in || !key %in% colnames(out)){
