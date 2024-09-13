@@ -20,3 +20,12 @@
       10 ASN00086038 2020-01-10     0  34    19.6  145.
       # i 20 more rows
 
+# issue 35
+
+    Code
+      filter(climate_aus, name == "foo")
+    Output
+      # cubble: key: id [0], index: date, nested form
+      # i 7 variables: id <chr>, long <dbl>, lat <dbl>, elev <dbl>, name <chr>,
+      #   wmo_id <dbl>, ts <list>
+
