@@ -33,28 +33,38 @@ tbl_sum.spatial_cubble_df <- function(x){
 
 
   # header line 2 - print bbox
-  x_is_sf <- is_sf(x)
-  if (!x_is_sf) {
-    coord_vars <- coords(x)
-    x <- as_tibble(x) |> sf::st_as_sf(coords = coord_vars)
+  if (is_empty(x$ts)){
+    line2 <- NULL
+  } else{
+    x_is_sf <- is_sf(x)
+    if (!x_is_sf) {
+      coord_vars <- coords(x)
+      x <- as_tibble(x) |> sf::st_as_sf(coords = coord_vars)
+    }
+
+    line2 <- glue::glue("[", paste0(round(sf::st_bbox(x), 2), collapse = ", "), "]")
+    if (x_is_sf) {
+      line2 <- glue::glue(line2, ", {sf::st_crs(x, parameters = TRUE)$Name}")
+    } else if (!is.null(attr(x, "dimensions"))){
+      line2 <- glue::glue(line2, ", {sf::st_crs(attr(x, 'dimensions'))$Name}")
+    } else{
+      line2 <- glue::glue(line2, ", Missing CRS!")
+    }
   }
 
-  line2 <- glue::glue("[", paste0(round(sf::st_bbox(x), 2), collapse = ", "), "]")
-  if (x_is_sf) {
-    line2 <- glue::glue(line2, ", {sf::st_crs(x, parameters = TRUE)$Name}")
-  } else if (!is.null(attr(x, "dimensions"))){
-    line2 <- glue::glue(line2, ", {sf::st_crs(attr(x, 'dimensions'))$Name}")
-  } else{
-    line2 <- glue::glue(line2, ", Missing CRS!")
-  }
 
 
 
 
   # header line 3: temporal variables
-  all <- map(x$ts[[1]], tibble::type_sum)
-  line3 <- glue::glue_collapse(
-    glue::glue("{names(all)} [{all}]"), sep = ", ")
+  if (is_empty(x$ts)) {
+    line3 <- NULL
+  } else{
+    all <- map(x$ts[[1]], tibble::type_sum)
+    line3 <- glue::glue_collapse(
+      glue::glue("{names(all)} [{all}]"), sep = ", ")
+  }
+
 
   c("cubble" = line1, "spatial" = line2, "temporal" = line3)
 

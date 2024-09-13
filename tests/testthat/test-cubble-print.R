@@ -6,3 +6,7 @@ test_that("from issue 21", {
 
   expect_snapshot(a)
 })
+
+test_that("issue 35",{
+  expect_snapshot(climate_aus |> filter(name == "foo"))
+})
