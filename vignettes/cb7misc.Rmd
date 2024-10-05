@@ -37,3 +37,4 @@ climate_mel |>
   mutate(tmax_avg = mean(ts$tmax, na.rm=TRUE))
 ```
 
+The same treatment applies, if your spatial cubble is also an sf object.
