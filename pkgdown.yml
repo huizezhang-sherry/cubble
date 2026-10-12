@@ -1,12 +1,13 @@
-pandoc: 3.1.11
-pkgdown: 2.1.1
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   cb1class: cb1class.html
-  cb2create: cb2create.html
-  cb3tsibblesf: cb3tsibblesf.html
-  cb4glyph: cb4glyph.html
-  cb5match: cb5match.html
-  cb6interactive: cb6interactive.html
-  cb7misc: cb7misc.html
-last_built: 2024-10-05T14:46Z
+  cb2match: cb2match.html
+  cb3glyph: cb3glyph.html
+  cb4glyphexample: cb4glyphexample.html
+  cb5interactive: cb5interactive.html
+last_built: 2026-10-12T02:58Z
+urls:
+  reference: https://huizezhang-sherry.github.io/cubble/reference
+  article: https://huizezhang-sherry.github.io/cubble/articles
