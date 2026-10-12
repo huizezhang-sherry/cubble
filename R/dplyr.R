@@ -227,7 +227,6 @@ summarise.spatial_cubble_df <- function(.data, ..., .by = NULL,
 #' @export
 summarise.temporal_cubble_df <- function(.data, ..., .by = key_vars(.data),
                                          .groups = NULL){
-  #browser()
   vars <- enquos(..., .named = TRUE)
   index <- index_var(.data)
   key <- key_vars(.data)

@@ -1,8 +1,8 @@
 ---
-title: "6. Interactive graphics"
+title: "5. Visualization: interactive graphics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{6. interactive graphics with cubble}
+  %\VignetteIndexEntry{5. Visualization: interactive graphics with cubble}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

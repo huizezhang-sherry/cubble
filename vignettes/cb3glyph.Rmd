@@ -1,0 +1,191 @@
+---
+title: "3. Visualization: glyph map basics"
+output: rmarkdown::html_vignette
+bibliography: '`r system.file("reference.bib", package = "cubble")`'
+vignette: >
+  %\VignetteIndexEntry{3. Visualization: glyph map basics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE, 
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+```{r setup, echo = FALSE}
+library(dplyr)
+library(cubble)
+library(ggplot2)
+```
+
+Environmental data often come as many time series recorded at many locations, and a common way to display them is a series of maps faceted by time. This vignette shows why such data can benefit from a glyph map, which draws each location's time series as a small plot at that location, and how to make one with `geom_glyph()`. More examples of glyph maps are in [4. Visualization: glyph map examples](https://huizezhang-sherry.github.io/cubble/articles/cb4glyphexample.html). Interactive graphics, another way to link maps and time series, are covered in [5. Visualization: interactive graphics](https://huizezhang-sherry.github.io/cubble/articles/cb5interactive.html).
+
+# Why glyph maps?
+
+## From facets to a glyph map
+
+The `nasa` data from the GGally package records monthly atmospheric measurements on a 24 x 24 grid over Central America from 1995 to 2000. Below we remove the trend and the seasonal pattern from the surface temperature in each grid cell and show the de-seasonalised temperature for 1997 and 1998, one map per month:
+
+```{r nasa-prep, echo = FALSE}
+nasa_ds <- GGally::nasa |>
+  group_by(long, lat) |>
+  mutate(diff = residuals(lm(surftemp ~ year + factor(month)))) |>
+  ungroup() |>
+  filter(year %in% 1997:1998)
+
+lim_x <- range(nasa_ds$long) + c(-1.3, 1.3)
+lim_y <- range(nasa_ds$lat) + c(-1.3, 1.3)
+w <- 4.4; h <- 3.6                                   # glyph size (degrees)
+cell <- nasa_ds |> filter(x == 7, y == 9)            # a cell in the Pacific
+cell_box <- function(...) annotate(
+  "rect", xmin = cell$long[1] - w / 2, xmax = cell$long[1] + w / 2,
+  ymin = cell$lat[1] - h / 2, ymax = cell$lat[1] + h / 2, fill = NA, ...)
+
+# land outline from Natural Earth (see data-raw/central-america-land.R)
+land <- sf::st_read(
+  system.file("extdata/central-america-land.geojson", package = "cubble"),
+  quiet = TRUE)
+```
+
+```{r nasa-facet, echo = FALSE, fig.width = 8, fig.height = 7, out.width = "90%"}
+nasa_ds |>
+  mutate(panel = factor(format(date, "%b %y"),
+                        levels = unique(format(sort(date), "%b %y")))) |>
+  ggplot(aes(long, lat, fill = diff)) +
+  geom_tile() +
+  geom_sf(data = land, fill = NA, colour = "grey25", linewidth = 0.3,
+          inherit.aes = FALSE) +
+  cell_box(colour = "black", linewidth = 0.35) +
+  scale_fill_gradient2(low = "#005F86", mid = "white", high = "#BF5700",
+                       name = "De-seasonalised temperature (K)") +
+  facet_wrap(~panel, ncol = 6) +
+  coord_sf(xlim = lim_x, ylim = lim_y, expand = FALSE) +
+  theme_void() +
+  theme(legend.position = "bottom", legend.title.position = "top",
+        legend.key.width = unit(1.4, "cm"))
+```
+
+Faceted maps are good at showing the spatial pattern within a month, but it is hard to see how a single location changes over time. To get the time series of the boxed cell, you need to follow it through all 24 panels:
+
+```{r nasa-cell, echo = FALSE, fig.width = 5, fig.height = 2.5, out.width = "55%"}
+ggplot(cell, aes(as.Date(date), diff)) +
+  geom_line() +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %y") +
+  labs(x = NULL, y = "De-seasonalised\ntemperature (K)") +
+  theme_bw()
+```
+
+A glyph map [@Wickham2012-yr] draws this time series as a small plot at the cell's location. Doing this for every location (here, every other grid cell in each direction, so that the glyphs don't overlap) gives the full glyph map:
+
+```{r nasa-glyph, echo = FALSE, fig.width = 7, fig.height = 6.5, out.width = "70%"}
+nasa_ds |>
+  filter(x %% 2 == 1, y %% 2 == 1) |>
+  ggplot() +
+  geom_sf(data = land, fill = "grey90", colour = "white", linewidth = 0.2,
+          inherit.aes = FALSE) +
+  cell_box(colour = "#BF5700", linewidth = 0.6) +
+  geom_glyph(aes(x_major = long, y_major = lat, x_minor = time, y_minor = diff),
+             width = w, height = h, linewidth = 0.3) +
+  coord_sf(xlim = lim_x, ylim = lim_y, expand = FALSE) +
+  theme_void()
+```
+
+## What the glyph map shows
+
+Some patterns can be seen in both displays. The 1997–98 El Niño, the warming of the eastern Pacific, is clear in the faceted maps as the band of warm cells along the equator in late 1997, and in the glyph map as the single hump shared by the glyphs in the equatorial eastern Pacific, which rises through 1997, peaks in late 1997, and falls back in 1998. Other patterns are much easier to see in the glyph map. The glyphs over land vary much more from month to month than those over the sea, where the temperature changes smoothly over time. This difference is hard to see in the faceted maps, since it requires comparing how each cell changes from one panel to the next. Because each glyph shows the full time series at its location, a glyph map lets you see the spatial and temporal patterns at once.
+
+# The glyph map syntax
+
+Glyph maps were first implemented in the GGally package, where `GGally::glyphs()` computes the glyph coordinates as a separate data step before plotting. cubble now makes glyph maps native to ggplot2 by providing a ggplot2 extension, `geom_glyph()`, and associated tools, `geom_glyph_box()` and `geom_glyph_line()`, so a glyph map can be built layer by layer like any other ggplot.
+
+## `geom_glyph()` and its four aesthetics
+
+The underlying idea of a glyph map is to transform the temporal coordinates into spatial coordinates, so that a time series plot can be displayed on the map. In cubble, `geom_glyph()` performs this transformation internally (Equation 1 in @Wickham2012-yr) and requires four aesthetics: 
+
+  - `x_major` and `y_major`: the spatial coordinates of each location, e.g. longitude and latitude, which place the glyph on the map, and 
+  - `x_minor` and `y_minor`: the coordinates of the time series inside the glyph, e.g. time and the measured variable.
+
+```
+data |> 
+  ggplot() +
+  geom_glyph(aes(x_major = ..., y_major = ..., x_minor = ..., y_minor = ...))
+```
+
+The figure below illustrates the two sets of axes with the boxed grid cell from the glyph map above. On the left is its time series, drawn on the minor axes: time on `x_minor` and the de-seasonalised temperature on `y_minor`. On the right, `geom_glyph()` rescales this time series into a box of the given `width` and `height`, and places the box on the map, centred at the cell's longitude (`x_major`) and latitude (`y_major`), as the boxed glyph in the full glyph map. The shape of the time series remains unchanged, so each glyph can be read as a small time series plot at its location: 
+
+```{r glyph-axes, echo = FALSE, fig.width = 10, fig.height = 4.6, out.width = "100%"}
+p_minor <- ggplot(cell, aes(as.Date(date), diff)) +
+  geom_line() +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %y") +
+  labs(x = "x_minor: time", y = "y_minor: temperature (K)",
+       title = "Minor axes: one time series") +
+  theme_bw() +
+  theme(axis.title = element_text(colour = "#005F86", face = "bold"),
+        aspect.ratio = h / w)   # same shape as the glyph box
+
+p_major <- nasa_ds |>
+  filter(x %% 2 == 1, y %% 2 == 1) |>
+  ggplot(aes(x_major = long, y_major = lat,
+             x_minor = time, y_minor = diff, group = id)) +
+  geom_sf(data = land, fill = "grey90", colour = "white", linewidth = 0.2,
+          inherit.aes = FALSE) +
+  geom_glyph(width = w, height = h, linewidth = 0.3) +
+  cell_box(colour = "#BF5700", linewidth = 0.8) +
+  coord_sf(xlim = lim_x, ylim = lim_y, expand = FALSE) +
+  labs(x = "x_major: longitude", y = "y_major: latitude",
+       title = "Major axes: glyphs placed on the map") +
+  theme_bw() +
+  theme(axis.title = element_text(colour = "#BF5700", face = "bold"))
+
+patchwork::wrap_plots(p_minor, p_major, nrow = 1, widths = c(1, 1.3))
+```
+
+## Reference boxes and lines
+
+A reference box around each glyph and a reference line through its middle can be added with `geom_glyph_box()` and `geom_glyph_line()`. Since all three geoms use the same four aesthetics, we recommend specifying the aesthetics once, inside `ggplot()`:
+
+```
+data |> 
+  ggplot(aes(x_major = ..., y_major = ..., x_minor = ..., y_minor = ...)) +
+  geom_glyph_box() + 
+  geom_glyph_line() + 
+  geom_glyph()
+```
+
+## Adding other layers
+
+With the glyph aesthetics specified in `ggplot()`, every other layer will inherit them. For layers that don't use the four glyph aesthetics, such as an underlying map drawn with `geom_sf()`, set `inherit.aes = FALSE`: 
+
+```
+data |> 
+  ggplot(aes(x_major = ..., y_major = ..., x_minor = ..., y_minor = ...)) +
+  geom_sf(data = MAP_DATA, inherit.aes = FALSE) +
+  geom_glyph_box() + 
+  geom_glyph_line() + 
+  geom_glyph()
+```
+
+## Everything else in ggplot2
+
+Since `geom_glyph()` is a ggplot2 layer, everything else in the ggplot2 framework works as usual. For example, you can map a variable to colour with `aes(colour = ...)`, change the colours with a `scale_colour_*()` function, and customise the look of the plot with `theme()`:
+
+```
+data |> 
+  ggplot(aes(x_major = ..., y_major = ..., x_minor = ..., y_minor = ..., 
+             colour = ..., group = ...)) +
+  geom_sf(data = MAP_DATA, inherit.aes = FALSE) +
+  geom_glyph_box() + 
+  geom_glyph() + 
+  scale_colour_brewer(...) + 
+  theme(...)
+```
+
+When mapping a discrete variable to colour, also set `group` to the location ID, so that each location is drawn as its own glyph rather than one line per colour. See [4. Visualization: glyph map examples](https://huizezhang-sherry.github.io/cubble/articles/cb4glyphexample.html) for a full example.
+
+# Reference

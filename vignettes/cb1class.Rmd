@@ -1,10 +1,11 @@
 ---
 title: "1. The cubble class"
 output: rmarkdown::html_vignette
+bibliography: '`r system.file("reference.bib", package = "cubble")`'
 vignette: >
-  %\VignetteIndexEntry{1. class description}
+  %\VignetteIndexEntry{1. The cubble class}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -19,12 +20,14 @@ knitr::opts_chunk$set(
 ```{r setup, echo = FALSE}
 library(cubble)
 library(tsibble)
+library(sf)
 library(tibble)
 library(ggplot2)
 library(dplyr)
-library(tsibble)
 library(patchwork)
 ```
+
+This article introduces the cubble class, demonstrates how to create a cubble from various types of data, and shows how a cubble works with the tsibble and sf classes. It ends with answers to common questions.
 
 # The cubble object
 
@@ -59,7 +62,7 @@ class(cb_long)
 
 The cubble header now shows the recorded temporal period (2020-01-01 to 2020-01-10), the interval (1 day), and there is no gaps in the data.
 
-# The cubble attributes
+## The cubble attributes
 
 A cubble object inherits the attributes from tibble (and its subclasses): `class`, `row.names`, and `names`. Additionally, it has three specialised attributes: 
 
@@ -87,3 +90,162 @@ The following shortcut functions are available to extract components from the at
   - `index_var()`: the index attribute as a string, i.e. `"date"`,
   - `coords()`: a character vector of length two representing the coordinate pairs, i.e. `"long" "lat"`, and
   - `spatial()`: the tibble object for the spatial variables.
+
+# Creation and coercion
+
+A cubble can be created from:  
+
+  - separate spatial and temporal tables
+  - a `tibble` object
+  - NetCDF data
+  - an `stars` object
+  - an `sftime` object 
+
+## Create from separate spatial and temporal tables
+
+In many cases, spatio-temporal data arrive in separate tables for analysis. For example, in climate data, analysts may initially receive station data containing geographic location information, recorded variables and their recording periods. They can then query the temporal variables using the stations of interest to obtain the relevant temporal data. Alternatively, analyses may begin as purely spatial or temporal, and analysts may obtain additional temporal or spatial data to expand the result to spatio-temporal.
+
+The function `make_cubble()` composes a cubble object from a spatial table (`spatial`) and a temporal table (`temporal`), along with the three attributes `key`, `index`, and `coords` introduced above. The following code creates the nested `cubble`: 
+
+```{r}
+make_cubble(spatial = stations, temporal = meteo,
+            key = id, index = date, coords = c(long, lat))
+```
+
+The spatial and temporal tables can also be sf and tsibble objects, in which case some of the attributes can be omitted. See [Compatibility with tsibble and sf](#compatibility-with-tsibble-and-sf) below.
+
+## Coerce from foreign objects
+
+### The `tibble` objects
+
+The dataset `climate_flat` combines the spatial data, `stations`, with the temporal data, `meteo`, into a single tibble object. It can be coerced into a cubble using:
+
+```{r}
+climate_flat |> as_cubble(key = id, index = date, coords = c(long, lat))
+```
+
+### The NetCDF data
+
+In `R`, there are several packages available for wrangling NetCDF data, including `ncdf4`, `RNetCDF`, and `tidync`. The code below converts a NetCDF object of class ncdf4 into a cubble object:
+
+```{r echo = TRUE}
+path <- system.file("ncdf/era5-pressure.nc", package = "cubble")
+raw <- ncdf4::nc_open(path)
+as_cubble(raw)
+```
+
+Sometimes, analysts may choose to read only a subset of the NetCDF data. In such cases, the `vars`, `long_range` and `lat_range` arguments can be used to subset the data based on the variable and the grid resolution:
+
+```{r echo = TRUE, eval = FALSE}
+as_cubble(raw, vars = "q",
+          long_range = seq(-180, 180, 1), lat_range = seq(-90, 90, 1))
+```
+
+### The `stars` objects 
+  
+```{r}
+tif <- system.file("tif/L7_ETMs.tif", package = "stars")
+x <- stars::read_stars(tif)
+as_cubble(x, index = band)
+```
+
+When the `dimensions` object is too complex for the `cubble` package to handle, a warning message will be generated.
+
+### The `sftime` objects 
+
+```{r}
+dt <- climate_flat |> 
+  sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("OGC:CRS84")) |> 
+  sftime::st_as_sftime()
+dt |> as_cubble(key = id, index = date)
+```
+
+# Compatibility with tsibble and sf
+
+Analysts often have their preferred spatial or temporal data structure that they prefer to use for spatio-temporal analysis. For example, the `tbl_ts` class from the tsibble package [@tsibble] is commonly used in time series forecasting and the sf class [@sf] is frequently used in spatial data science. In cubble, analysts have the flexibility to combine these two structures together by allowing the spatial component to be an sf object and the temporal component to also be a tsibble object.
+
+## Using a tsibble for the temporal component
+
+The `key` and `index` arguments in a cubble object corresponds to the tsibble counterparts and they can be safely omitted, if the temporal component is a tsibble object, i.e. `meteo_ts` in the example below. The tsibble class from the input will be carried over to the cubble object:
+
+```{r echo = TRUE}
+ts_nested <- make_cubble(
+  spatial = stations, temporal = meteo_ts, coords = c(long, lat))
+(ts_long <- face_temporal(ts_nested))
+class(ts_long)
+```
+
+The long cubble shows `[tsibble]` in the header to indicate the object also being in a `tbl_ts` class. Methods applies to the `tbl_ts` class can also be applied to the temporal cubble objects, for example, checking whether the data contain temporal gaps:
+
+```{r echo = TRUE}
+ts_long |> has_gaps()
+```
+
+An existing cubble object can promote its temporal component to a tsibble object by applying `make_temporal_tsibble()`. The promoted cubble object (`ts_long2`) will be the same as the one created with a tsibble component initially (`ts_long`):
+
+```{r echo = TRUE}
+ts_long2 <- make_cubble(
+  stations, meteo, 
+  key = id, index = date, coords = c(long, lat)) |> 
+  face_temporal() |> 
+  make_temporal_tsibble() 
+identical(ts_long2, ts_long)
+```
+
+## A spatial component with sf
+
+Similarly, an sf object can be supplied as the spatial component to create a cubble object, with the `coords` argument being omitted. This opens up the possibility to represent fixed area with polygons or multipolygons and the `coords` argument will be calculated as the centroids of the (multi)polygons. The `[sf]` print in the cubble header suggest an spatial component being also a sf object:
+
+```{r echo = TRUE}
+(sf_nested <- make_cubble(
+  spatial = stations_sf, temporal = meteo, 
+  key = id, index = date))
+class(sf_nested)
+```
+
+Both components can be supplied at once. The class attributes from sf and tsibble will be carried over to the nested and long cubble:
+
+```{r echo = TRUE}
+(res <- make_cubble(spatial = stations_sf, temporal = meteo_ts))
+class(res)
+class(res$ts[[1]])
+```
+
+The following code shows how to perform coordinate transformation with `st_transform` on a cubble object:
+
+```{r echo =TRUE, message=FALSE}
+sf_nested |> sf::st_transform(crs = "EPSG:3857")
+```
+
+The counterpart to promote the spatial component in an existing cubble to be an sf object is `make_spatial_sf()`:
+
+```{r echo = TRUE}
+(sf_nested2 <- make_cubble(
+  stations, meteo, 
+  key = id, index = date, coords = c(long, lat)) |> 
+  make_spatial_sf())
+```
+
+# Common questions
+
+## Why summarising of temporal data by station is not in temporal form?
+
+Q: I'm trying to summarise the average maximum temperature by station. I'm not sure why the summarise function is not returning a temporal object. 
+  
+```{r}
+climate_mel |> 
+  face_temporal() |> 
+  summarise(tmax_avg = mean(tmax, na.rm=TRUE))
+```
+
+**A: This operation should be performed in the spatial form. The form to use for an operation depends on the structure of the result. If the result has each key in a row without temporal index, it should be operated in the spatial form (example here):**
+
+```{r}
+climate_mel |> 
+  rowwise() |> 
+  mutate(tmax_avg = mean(ts$tmax, na.rm=TRUE))
+```
+
+The same treatment applies, if your spatial cubble is also an sf object.
+
+# Reference

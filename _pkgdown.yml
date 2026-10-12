@@ -1,6 +1,8 @@
+url: https://huizezhang-sherry.github.io/cubble/
+
 template:
-  params:
-    bootswatch: cosmo
+  bootstrap: 5
+  bootswatch: flatly
 
 reference:
 - title: "The cubble class"

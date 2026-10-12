@@ -16,6 +16,10 @@ cubble addresses are those collected at unique fixed locations, allowing
 for irregularity in the temporal dimension, such as the weather station
 data.
 
+Beyond data wrangling, cubble makes glyph maps native to ggplot2:
+`geom_glyph()` draws each location’s time series as a small plot at that
+location, so spatial and temporal patterns can be seen in a single plot.
+
 ## Installation
 
 You can install the released version of cubble from
@@ -71,22 +75,65 @@ attribute:
 The two forms can be pivoted back and forth with the pair of verb:
 `face_spatial()` and `face_temporal()`.
 
-<img src="man/figures/cubble-operations.png" width="80%" style="display: block; margin: auto;" />
+<img src="man/figures/cubble-operations.png" alt="" width="80%" style="display: block; margin: auto;" />
+
+## Glyph maps
+
+A glyph map draws each location’s time series as a small plot, a glyph,
+at that location. cubble provides `geom_glyph()`, with
+`geom_glyph_box()` and `geom_glyph_line()` for reference boxes and
+lines, as ggplot2 layers. They take four aesthetics: `x_major` and
+`y_major` for the location, and `x_minor` and `y_minor` for the time
+series inside each glyph. Below, each glyph shows the proportion of
+water samples above the bacteria guideline in the 0–6 days after heavy
+rain at Sydney swim sites: ocean beaches clear within two days, while
+inner harbour sites stay polluted for longer.
+
+``` r
+library(ggplot2)
+beach <- read.csv(system.file("extdata/sydney-beach.csv", package = "cubble"))
+sydney <- sf::st_read(system.file("extdata/sydney-land.geojson", package = "cubble"), 
+                      quiet = TRUE)
+
+ggplot(beach, aes(x_major = long, y_major = lat,
+                  x_minor = days_after_rain, y_minor = unsafe,
+                  colour = water, group = swim_site)) +
+  geom_sf(data = sydney, fill = "#ECEAE4", colour = NA, inherit.aes = FALSE) +
+  geom_glyph_box(width = 0.028, height = 0.012, colour = "#9CADB7") +
+  geom_glyph(width = 0.028, height = 0.012, linewidth = 0.6, key_glyph = "path") +
+  scale_colour_manual(values = c("#BF5700", "#005F86"), name = NULL) +
+  coord_sf(xlim = c(151.11, 151.32), ylim = c(-34.0, -33.72)) +
+  theme_void() +
+  theme(legend.position = "bottom",
+        panel.background = element_rect(fill = "#e8f3ff", colour = NA))
+```
+
+<img src="man/figures/README-glyph-map-1.png" alt="" width="70%" style="display: block; margin: auto;" />
+
+For summaries that are an interval rather than a single value, such as
+the daily minimum and maximum temperature, the
+[sugarglider](https://www.malinypo.com/sugarglider/) package extends
+cubble’s glyph maps with `geom_glyph_segment()` and
+`geom_glyph_ribbon()`.
 
 ## Roadmap
 
-- To learn more about the cubble class: [1. The cubble
+- To learn about the cubble class, how to create a cubble or coerce an
+  existing R object into a cubble, and how to incorporate sf or tsibble
+  in a cubble: [1. The cubble
   class](https://huizezhang-sherry.github.io/cubble/articles/cb1class.html)
-- To create a cubble or coerce an existing R object into a cubble: [2.
-  Creation and
-  coercion](https://huizezhang-sherry.github.io/cubble/articles/cb2create.html)
-- To incorporate sf or tsibble in a cubble: [3. Compatibility with
-  tsibble and
-  sf](https://huizezhang-sherry.github.io/cubble/articles/cb3tsibblesf.html)
-- To create glyph map, match multiple data sources, and create
-  interactive graphics with cubble: [4. Making a glyph
-  map](https://huizezhang-sherry.github.io/cubble/articles/cb4glyph.html),
-  [5. Matching different data
-  sources](https://huizezhang-sherry.github.io/cubble/articles/cb5match.html),
-  and [6. Interactive
-  graphics](https://huizezhang-sherry.github.io/cubble/articles/cb6interactive.html)
+- To match multiple data sources: [2. Application: matching different
+  data
+  sources](https://huizezhang-sherry.github.io/cubble/articles/cb2match.html)
+- To make glyph maps:
+  - why glyph maps are useful and the `geom_glyph()` syntax: [3.
+    Visualization: glyph map
+    basics](https://huizezhang-sherry.github.io/cubble/articles/cb3glyph.html)
+  - a worked example with Sydney beach water quality: [4. Visualization:
+    glyph map
+    examples](https://huizezhang-sherry.github.io/cubble/articles/cb4glyphexample.html)
+  - interval glyphs (segments and ribbons): the
+    [sugarglider](https://www.malinypo.com/sugarglider/) package
+- To create interactive graphics with cubble: [5. Visualization:
+  interactive
+  graphics](https://huizezhang-sherry.github.io/cubble/articles/cb5interactive.html)

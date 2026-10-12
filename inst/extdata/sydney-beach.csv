@@ -1,0 +1,141 @@
+swim_site,region,long,lat,days_after_rain,unsafe,n,water
+Balmoral Baths,Sydney Harbour,151.253476,-33.826888,0,0.4118,17,Ocean & outer harbour
+Balmoral Baths,Sydney Harbour,151.253476,-33.826888,1,0.6,10,Ocean & outer harbour
+Balmoral Baths,Sydney Harbour,151.253476,-33.826888,2,0.3846,13,Ocean & outer harbour
+Balmoral Baths,Sydney Harbour,151.253476,-33.826888,3,0.375,8,Ocean & outer harbour
+Balmoral Baths,Sydney Harbour,151.253476,-33.826888,4,0.2,5,Ocean & outer harbour
+Balmoral Baths,Sydney Harbour,151.253476,-33.826888,5,0.1,10,Ocean & outer harbour
+Balmoral Baths,Sydney Harbour,151.253476,-33.826888,6,0,9,Ocean & outer harbour
+Bondi Beach,Sydney City,151.278267,-33.891157,0,0.2941,17,Ocean & outer harbour
+Bondi Beach,Sydney City,151.278267,-33.891157,1,0.5,12,Ocean & outer harbour
+Bondi Beach,Sydney City,151.278267,-33.891157,2,0.2105,19,Ocean & outer harbour
+Bondi Beach,Sydney City,151.278267,-33.891157,3,0.1333,15,Ocean & outer harbour
+Bondi Beach,Sydney City,151.278267,-33.891157,4,0.1667,12,Ocean & outer harbour
+Bondi Beach,Sydney City,151.278267,-33.891157,5,0.1429,14,Ocean & outer harbour
+Bondi Beach,Sydney City,151.278267,-33.891157,6,0,5,Ocean & outer harbour
+Cabarita Beach,Sydney Harbour,151.11863,-33.841448,0,0.2941,17,Inner harbour
+Cabarita Beach,Sydney Harbour,151.11863,-33.841448,1,0.8,10,Inner harbour
+Cabarita Beach,Sydney Harbour,151.11863,-33.841448,2,0.7692,13,Inner harbour
+Cabarita Beach,Sydney Harbour,151.11863,-33.841448,3,0.625,8,Inner harbour
+Cabarita Beach,Sydney Harbour,151.11863,-33.841448,4,0,5,Inner harbour
+Cabarita Beach,Sydney Harbour,151.11863,-33.841448,5,0,10,Inner harbour
+Cabarita Beach,Sydney Harbour,151.11863,-33.841448,6,0.1111,9,Inner harbour
+Chinamans Beach,Sydney Harbour,151.248971,-33.814094,0,0.2941,17,Ocean & outer harbour
+Chinamans Beach,Sydney Harbour,151.248971,-33.814094,1,0.6,10,Ocean & outer harbour
+Chinamans Beach,Sydney Harbour,151.248971,-33.814094,2,0.4615,13,Ocean & outer harbour
+Chinamans Beach,Sydney Harbour,151.248971,-33.814094,3,0.25,8,Ocean & outer harbour
+Chinamans Beach,Sydney Harbour,151.248971,-33.814094,4,0,5,Ocean & outer harbour
+Chinamans Beach,Sydney Harbour,151.248971,-33.814094,5,0,10,Ocean & outer harbour
+Chinamans Beach,Sydney Harbour,151.248971,-33.814094,6,0,9,Ocean & outer harbour
+Coogee Beach,Sydney City,151.25817,-33.92076,0,0.5294,17,Ocean & outer harbour
+Coogee Beach,Sydney City,151.25817,-33.92076,1,0.6429,14,Ocean & outer harbour
+Coogee Beach,Sydney City,151.25817,-33.92076,2,0.3684,19,Ocean & outer harbour
+Coogee Beach,Sydney City,151.25817,-33.92076,3,0.375,16,Ocean & outer harbour
+Coogee Beach,Sydney City,151.25817,-33.92076,4,0.3333,12,Ocean & outer harbour
+Coogee Beach,Sydney City,151.25817,-33.92076,5,0.2,15,Ocean & outer harbour
+Coogee Beach,Sydney City,151.25817,-33.92076,6,0.4,5,Ocean & outer harbour
+Darling Harbour,Sydney Harbour,151.20069,-33.87129,0,0.75,16,Inner harbour
+Darling Harbour,Sydney Harbour,151.20069,-33.87129,1,0.8,10,Inner harbour
+Darling Harbour,Sydney Harbour,151.20069,-33.87129,2,0.8462,13,Inner harbour
+Darling Harbour,Sydney Harbour,151.20069,-33.87129,3,0.5714,7,Inner harbour
+Darling Harbour,Sydney Harbour,151.20069,-33.87129,4,0.6,5,Inner harbour
+Darling Harbour,Sydney Harbour,151.20069,-33.87129,5,0.2,10,Inner harbour
+Darling Harbour,Sydney Harbour,151.20069,-33.87129,6,0.25,8,Inner harbour
+Davidson Reserve,Sydney Harbour,151.200343,-33.767929,0,0.5294,17,Inner harbour
+Davidson Reserve,Sydney Harbour,151.200343,-33.767929,1,0.9091,11,Inner harbour
+Davidson Reserve,Sydney Harbour,151.200343,-33.767929,2,1,12,Inner harbour
+Davidson Reserve,Sydney Harbour,151.200343,-33.767929,3,0.625,8,Inner harbour
+Davidson Reserve,Sydney Harbour,151.200343,-33.767929,4,0.2,5,Inner harbour
+Davidson Reserve,Sydney Harbour,151.200343,-33.767929,5,0.1,10,Inner harbour
+Davidson Reserve,Sydney Harbour,151.200343,-33.767929,6,0.2222,9,Inner harbour
+Dawn Fraser Pool,Sydney Harbour,151.172823,-33.853237,0,0.3529,17,Inner harbour
+Dawn Fraser Pool,Sydney Harbour,151.172823,-33.853237,1,0.8,10,Inner harbour
+Dawn Fraser Pool,Sydney Harbour,151.172823,-33.853237,2,0.7692,13,Inner harbour
+Dawn Fraser Pool,Sydney Harbour,151.172823,-33.853237,3,0.375,8,Inner harbour
+Dawn Fraser Pool,Sydney Harbour,151.172823,-33.853237,4,0.4,5,Inner harbour
+Dawn Fraser Pool,Sydney Harbour,151.172823,-33.853237,5,0,10,Inner harbour
+Dawn Fraser Pool,Sydney Harbour,151.172823,-33.853237,6,0.1111,9,Inner harbour
+Dee Why Beach,Northern Sydney,151.297338,-33.753299,0,0.2353,17,Ocean & outer harbour
+Dee Why Beach,Northern Sydney,151.297338,-33.753299,1,0.5714,14,Ocean & outer harbour
+Dee Why Beach,Northern Sydney,151.297338,-33.753299,2,0.0588,17,Ocean & outer harbour
+Dee Why Beach,Northern Sydney,151.297338,-33.753299,3,0,6,Ocean & outer harbour
+Dee Why Beach,Northern Sydney,151.297338,-33.753299,4,0,10,Ocean & outer harbour
+Dee Why Beach,Northern Sydney,151.297338,-33.753299,5,0.125,16,Ocean & outer harbour
+Dee Why Beach,Northern Sydney,151.297338,-33.753299,6,0.2222,9,Ocean & outer harbour
+Freshwater Beach,Northern Sydney,151.29076,-33.78164,0,0.2353,17,Ocean & outer harbour
+Freshwater Beach,Northern Sydney,151.29076,-33.78164,1,0.5385,13,Ocean & outer harbour
+Freshwater Beach,Northern Sydney,151.29076,-33.78164,2,0.2353,17,Ocean & outer harbour
+Freshwater Beach,Northern Sydney,151.29076,-33.78164,3,0.1667,6,Ocean & outer harbour
+Freshwater Beach,Northern Sydney,151.29076,-33.78164,4,0,10,Ocean & outer harbour
+Freshwater Beach,Northern Sydney,151.29076,-33.78164,5,0.125,16,Ocean & outer harbour
+Freshwater Beach,Northern Sydney,151.29076,-33.78164,6,0.1111,9,Ocean & outer harbour
+Gurney Crescent Baths,Sydney Harbour,151.235278,-33.793451,0,0.3529,17,Ocean & outer harbour
+Gurney Crescent Baths,Sydney Harbour,151.235278,-33.793451,1,0.8,10,Ocean & outer harbour
+Gurney Crescent Baths,Sydney Harbour,151.235278,-33.793451,2,0.7692,13,Ocean & outer harbour
+Gurney Crescent Baths,Sydney Harbour,151.235278,-33.793451,3,0.625,8,Ocean & outer harbour
+Gurney Crescent Baths,Sydney Harbour,151.235278,-33.793451,4,0.2,5,Ocean & outer harbour
+Gurney Crescent Baths,Sydney Harbour,151.235278,-33.793451,5,0,10,Ocean & outer harbour
+Gurney Crescent Baths,Sydney Harbour,151.235278,-33.793451,6,0.1111,9,Ocean & outer harbour
+Hayes Street Beach,Sydney Harbour,151.219382,-33.841715,0,0.3529,17,Ocean & outer harbour
+Hayes Street Beach,Sydney Harbour,151.219382,-33.841715,1,0.8,10,Ocean & outer harbour
+Hayes Street Beach,Sydney Harbour,151.219382,-33.841715,2,0.4615,13,Ocean & outer harbour
+Hayes Street Beach,Sydney Harbour,151.219382,-33.841715,3,0.125,8,Ocean & outer harbour
+Hayes Street Beach,Sydney Harbour,151.219382,-33.841715,4,0.2,5,Ocean & outer harbour
+Hayes Street Beach,Sydney Harbour,151.219382,-33.841715,5,0,10,Ocean & outer harbour
+Hayes Street Beach,Sydney Harbour,151.219382,-33.841715,6,0,9,Ocean & outer harbour
+Little Bay Beach,Sydney City,151.251417,-33.979882,0,0.4118,17,Ocean & outer harbour
+Little Bay Beach,Sydney City,151.251417,-33.979882,1,0.5385,13,Ocean & outer harbour
+Little Bay Beach,Sydney City,151.251417,-33.979882,2,0.2105,19,Ocean & outer harbour
+Little Bay Beach,Sydney City,151.251417,-33.979882,3,0.1429,14,Ocean & outer harbour
+Little Bay Beach,Sydney City,151.251417,-33.979882,4,0.3333,12,Ocean & outer harbour
+Little Bay Beach,Sydney City,151.251417,-33.979882,5,0.2143,14,Ocean & outer harbour
+Little Bay Beach,Sydney City,151.251417,-33.979882,6,0.2,5,Ocean & outer harbour
+Malabar Beach,Sydney City,151.252247,-33.96436,0,0.3529,17,Ocean & outer harbour
+Malabar Beach,Sydney City,151.252247,-33.96436,1,0.6429,14,Ocean & outer harbour
+Malabar Beach,Sydney City,151.252247,-33.96436,2,0.1579,19,Ocean & outer harbour
+Malabar Beach,Sydney City,151.252247,-33.96436,3,0.25,16,Ocean & outer harbour
+Malabar Beach,Sydney City,151.252247,-33.96436,4,0.3077,13,Ocean & outer harbour
+Malabar Beach,Sydney City,151.252247,-33.96436,5,0.1333,15,Ocean & outer harbour
+Malabar Beach,Sydney City,151.252247,-33.96436,6,0.2,5,Ocean & outer harbour
+Maroubra Beach,Sydney City,151.257459,-33.948896,0,0.2941,17,Ocean & outer harbour
+Maroubra Beach,Sydney City,151.257459,-33.948896,1,0.3077,13,Ocean & outer harbour
+Maroubra Beach,Sydney City,151.257459,-33.948896,2,0.1053,19,Ocean & outer harbour
+Maroubra Beach,Sydney City,151.257459,-33.948896,3,0.0667,15,Ocean & outer harbour
+Maroubra Beach,Sydney City,151.257459,-33.948896,4,0.25,12,Ocean & outer harbour
+Maroubra Beach,Sydney City,151.257459,-33.948896,5,0.0714,14,Ocean & outer harbour
+Maroubra Beach,Sydney City,151.257459,-33.948896,6,0,5,Ocean & outer harbour
+Nielsen Park,Sydney Harbour,151.266231,-33.849925,0,0.2941,17,Ocean & outer harbour
+Nielsen Park,Sydney Harbour,151.266231,-33.849925,1,0.3636,11,Ocean & outer harbour
+Nielsen Park,Sydney Harbour,151.266231,-33.849925,2,0.2308,13,Ocean & outer harbour
+Nielsen Park,Sydney Harbour,151.266231,-33.849925,3,0,7,Ocean & outer harbour
+Nielsen Park,Sydney Harbour,151.266231,-33.849925,4,0,5,Ocean & outer harbour
+Nielsen Park,Sydney Harbour,151.266231,-33.849925,5,0,11,Ocean & outer harbour
+Nielsen Park,Sydney Harbour,151.266231,-33.849925,6,0,9,Ocean & outer harbour
+North Curl Curl Beach,Northern Sydney,151.298194,-33.767605,0,0.2353,17,Ocean & outer harbour
+North Curl Curl Beach,Northern Sydney,151.298194,-33.767605,1,0.6923,13,Ocean & outer harbour
+North Curl Curl Beach,Northern Sydney,151.298194,-33.767605,2,0.3529,17,Ocean & outer harbour
+North Curl Curl Beach,Northern Sydney,151.298194,-33.767605,3,0,6,Ocean & outer harbour
+North Curl Curl Beach,Northern Sydney,151.298194,-33.767605,4,0.1,10,Ocean & outer harbour
+North Curl Curl Beach,Northern Sydney,151.298194,-33.767605,5,0.1875,16,Ocean & outer harbour
+North Curl Curl Beach,Northern Sydney,151.298194,-33.767605,6,0.1111,9,Ocean & outer harbour
+Rose Bay Beach,Sydney Harbour,151.265932,-33.870027,0,0.4118,17,Ocean & outer harbour
+Rose Bay Beach,Sydney Harbour,151.265932,-33.870027,1,0.7273,11,Ocean & outer harbour
+Rose Bay Beach,Sydney Harbour,151.265932,-33.870027,2,0.5385,13,Ocean & outer harbour
+Rose Bay Beach,Sydney Harbour,151.265932,-33.870027,3,0.25,8,Ocean & outer harbour
+Rose Bay Beach,Sydney Harbour,151.265932,-33.870027,4,0.2,5,Ocean & outer harbour
+Rose Bay Beach,Sydney Harbour,151.265932,-33.870027,5,0.1818,11,Ocean & outer harbour
+Rose Bay Beach,Sydney Harbour,151.265932,-33.870027,6,0.4444,9,Ocean & outer harbour
+Shelly Beach (Manly),Northern Sydney,151.297668,-33.800514,0,0.2353,17,Ocean & outer harbour
+Shelly Beach (Manly),Northern Sydney,151.297668,-33.800514,1,0.5385,13,Ocean & outer harbour
+Shelly Beach (Manly),Northern Sydney,151.297668,-33.800514,2,0.1765,17,Ocean & outer harbour
+Shelly Beach (Manly),Northern Sydney,151.297668,-33.800514,3,0,6,Ocean & outer harbour
+Shelly Beach (Manly),Northern Sydney,151.297668,-33.800514,4,0.1,10,Ocean & outer harbour
+Shelly Beach (Manly),Northern Sydney,151.297668,-33.800514,5,0.1875,16,Ocean & outer harbour
+Shelly Beach (Manly),Northern Sydney,151.297668,-33.800514,6,0.1111,9,Ocean & outer harbour
+Tambourine Bay,Sydney Harbour,151.161315,-33.828066,0,0.3529,17,Inner harbour
+Tambourine Bay,Sydney Harbour,151.161315,-33.828066,1,0.9,10,Inner harbour
+Tambourine Bay,Sydney Harbour,151.161315,-33.828066,2,0.7692,13,Inner harbour
+Tambourine Bay,Sydney Harbour,151.161315,-33.828066,3,0.75,8,Inner harbour
+Tambourine Bay,Sydney Harbour,151.161315,-33.828066,4,0.2,5,Inner harbour
+Tambourine Bay,Sydney Harbour,151.161315,-33.828066,5,0,10,Inner harbour
+Tambourine Bay,Sydney Harbour,151.161315,-33.828066,6,0.1111,9,Inner harbour
