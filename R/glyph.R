@@ -46,12 +46,12 @@
 #'              aes(x_major = long, x_minor = day,
 #'                  y_major = lat, y_minor = surftemp),
 #'                  width = rel(0.8), height = 1) +
-#'    theme_bw()
+#'    theme_minimal()
 #' print_p(p)
 #'
 #' # apply a re-scaling on Y and use polar coordinate
 #' p <-
-#'   GGally::nasa |> 
+#'   GGally::nasa |>
 #'   ggplot(aes(x_major = long, x_minor = day,
 #'              y_major = lat, y_minor = ozone)) +
 #'     geom_glyph_box(fill=NA) +
@@ -262,7 +262,7 @@ glyph_data_setup <- function(data, params){
   if (has_scale(params$x_scale)) {
     x_scale <- get_scale(params$x_scale)
     data <-
-      data |> 
+      data |>
       dplyr::mutate(
         x_minor = x_scale(.data$x_minor)
       )
@@ -271,7 +271,7 @@ glyph_data_setup <- function(data, params){
   if (has_scale(params$y_scale)) {
     y_scale <- get_scale(params$y_scale)
     data <-
-      data |> 
+      data |>
       dplyr::mutate(
         y_minor = y_scale(.data$y_minor)
       )
@@ -283,7 +283,7 @@ glyph_data_setup <- function(data, params){
     data[["x_minor"]] <- as.numeric(data[["x_minor"]])
   }
 
-  data <- data |> 
+  data <- data |>
     dplyr::mutate(
       polar = params$polar,
       width = ifelse(!is.rel(params$width), unclass(params$width),
@@ -299,14 +299,14 @@ glyph_data_setup <- function(data, params){
     theta <- 2 * pi * rescale01(data$x_minor)
     r <- rescale01(data$y_minor)
 
-    data <- data |> 
+    data <- data |>
       dplyr::mutate(x = .data$x_major + .data$width / 2 * r * sin(theta),
-                    y = .data$y_major + .data$height / 2 * r * cos(theta)) |> 
+                    y = .data$y_major + .data$height / 2 * r * cos(theta)) |>
       dplyr::arrange(.data$x_major, .data$x_minor)
 
   } else {
     if (isTRUE(params$global_rescale)) data <- data |>  dplyr::ungroup()
-    data <- data |> 
+    data <- data |>
       dplyr::mutate(
         x = .data$x_major + rescale11(.data$x_minor) * .data$width / 2,
         y = .data$y_major + rescale11(.data$y_minor) * .data$height / 2)
@@ -327,10 +327,10 @@ calc_ref_line <- function(data, params){
       y = .data$y_major + .data$height / 4 * cos(theta)
     )
   } else{
-    ref_line <- ref_line |> 
+    ref_line <- ref_line |>
       dplyr::mutate(group = .data$group,
                     x = .data$x_major + .data$width/ 2,
-                    y = .data$y_major) |> 
+                    y = .data$y_major) |>
       rbind(ref_line |>  dplyr::mutate(group = .data$group,
                                        x = .data$x_major - .data$width / 2,
                                        y = .data$y_major))
@@ -341,7 +341,7 @@ calc_ref_line <- function(data, params){
 
 
 calc_ref_box <- function(data, params){
-  ref_box <- data |> 
+  ref_box <- data |>
     dplyr::mutate(xmin = .data$x_major - .data$width / 2,
                    xmax = .data$x_major + .data$width / 2,
                    ymin = .data$y_major - .data$height / 2,
