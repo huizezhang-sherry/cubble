@@ -62,8 +62,8 @@ geom_glyph <- function(mapping = NULL, data = NULL, stat = "identity",
                        position = "identity", ..., x_major = NULL,
                        x_minor = NULL, y_major = NULL, y_minor = NULL,
                        x_scale = identity, y_scale = identity,
-                       polar = FALSE, width = ggplot2::rel(2.1),
-                       height = ggplot2::rel(1.8), global_rescale = TRUE,
+                       polar = FALSE, width = ggplot2::rel(2),
+                       height = ggplot2::rel(2), global_rescale = TRUE,
                        show.legend = NA,
                        inherit.aes = TRUE) {
   ggplot2::layer(
